@@ -1,0 +1,51 @@
+{
+  "name": "japanese-studio",
+  "version": "1.0.0",
+  "description": "Japanese Learning Studio - Electron App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^41.5.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.japanese-studio.app",
+    "productName": "Japanese Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "style.css",
+      "*.json",
+      "media/**/*",
+      "node_modules/sql.js/dist/sql-wasm.js",
+      "node_modules/sql.js/dist/sql-wasm.wasm"
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "icon": "icon.icns"
+    },
+    "win": {
+      "icon": "icon.ico"
+    },
+    "linux": {
+      "icon": "icon.png",
+      "category": "Education"
+    }
+  },
+  "dependencies": {
+    "diff": "^9.0.0",
+    "sql.js": "^1.12.0"
+  }
+}

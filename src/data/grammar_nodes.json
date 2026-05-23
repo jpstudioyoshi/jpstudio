@@ -1,0 +1,453 @@
+[
+  {
+    "id": "desu",
+    "label": "です copula",
+    "genki": 1,
+    "group": "foundation",
+    "prerequisites": [],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "question_ka",
+    "label": "Question か",
+    "genki": 1,
+    "group": "foundation",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_no_possession",
+    "label": "の possession",
+    "genki": 1,
+    "group": "particle",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "word_order",
+    "label": "SOV word order",
+    "genki": 1,
+    "group": "foundation",
+    "prerequisites": [],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "kore_sore_are",
+    "label": "これ／それ／あれ",
+    "genki": 2,
+    "group": "foundation",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "koko_soko_asoko",
+    "label": "ここ／そこ／あそこ",
+    "genki": 2,
+    "group": "foundation",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_mo",
+    "label": "も also/too",
+    "genki": 2,
+    "group": "particle",
+    "prerequisites": ["particle_wa"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "noun_ja_arimasen",
+    "label": "じゃありません noun negative",
+    "genki": 2,
+    "group": "foundation",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particles_ne_yo",
+    "label": "ね／よ sentence enders",
+    "genki": 2,
+    "group": "particle",
+    "prerequisites": ["desu"],
+    "evidence": ["speaking"]
+  },
+
+  {
+    "id": "particle_wa",
+    "label": "は topic particle",
+    "genki": 3,
+    "group": "particle",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "present_tense_masu",
+    "label": "〜ます present tense",
+    "genki": 3,
+    "group": "morphology",
+    "prerequisites": ["verb_groups", "word_order"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "verb_groups",
+    "label": "Verb groups (u/ru/irregular)",
+    "genki": 3,
+    "group": "morphology",
+    "prerequisites": [],
+    "evidence": ["conjugation_drill"]
+  },
+  {
+    "id": "particle_wo",
+    "label": "を object particle",
+    "genki": 3,
+    "group": "particle",
+    "prerequisites": ["verb_groups"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_ni_time",
+    "label": "に time particle",
+    "genki": 3,
+    "group": "particle",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_de_place",
+    "label": "で place of action",
+    "genki": 3,
+    "group": "particle",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_he",
+    "label": "へ direction particle",
+    "genki": 3,
+    "group": "particle",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "time_reference",
+    "label": "Time expressions",
+    "genki": 3,
+    "group": "foundation",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "frequency_adverbs",
+    "label": "Frequency adverbs (よく、たまに…)",
+    "genki": 3,
+    "group": "foundation",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "past_tense_masu",
+    "label": "〜ました past tense (polite)",
+    "genki": 4,
+    "group": "morphology",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "aru_iru",
+    "label": "ある／いる existence verbs",
+    "genki": 4,
+    "group": "foundation",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "location_words",
+    "label": "Location words (うえ、した、まえ…)",
+    "genki": 4,
+    "group": "foundation",
+    "prerequisites": ["aru_iru"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "particle_to",
+    "label": "と and/with particle",
+    "genki": 4,
+    "group": "particle",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "duration_of_time",
+    "label": "Duration expressions (〜時間、〜分)",
+    "genki": 4,
+    "group": "foundation",
+    "prerequisites": ["time_reference"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "i_adjective",
+    "label": "い-adjective (present/past/negative)",
+    "genki": 5,
+    "group": "morphology",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "na_adjective",
+    "label": "な-adjective",
+    "genki": 5,
+    "group": "morphology",
+    "prerequisites": ["desu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "suki_kirai",
+    "label": "すき／きらい + が",
+    "genki": 5,
+    "group": "foundation",
+    "prerequisites": ["na_adjective", "particle_ga"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "counting",
+    "label": "Counters (〜つ、〜個…)",
+    "genki": 5,
+    "group": "foundation",
+    "prerequisites": [],
+    "evidence": ["counter_drill"]
+  },
+  {
+    "id": "masho",
+    "label": "〜ましょう let's",
+    "genki": 5,
+    "group": "morphology",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "te_form",
+    "label": "て-form (critical hub)",
+    "genki": 6,
+    "group": "morphology",
+    "prerequisites": ["verb_groups", "past_tense_masu"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "te_kudasai",
+    "label": "〜てください request",
+    "genki": 6,
+    "group": "functional",
+    "prerequisites": ["te_form"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "te_mo_ii",
+    "label": "〜てもいい permission",
+    "genki": 6,
+    "group": "functional",
+    "prerequisites": ["te_form"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "te_wa_ikemasen",
+    "label": "〜てはいけない prohibition",
+    "genki": 6,
+    "group": "functional",
+    "prerequisites": ["te_form"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "kara_reason",
+    "label": "〜から reason/because",
+    "genki": 6,
+    "group": "clause",
+    "prerequisites": ["present_tense_masu", "past_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "te_iru",
+    "label": "〜ている progressive/state",
+    "genki": 7,
+    "group": "functional",
+    "prerequisites": ["te_form"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "te_form_joining",
+    "label": "て-form joining sentences",
+    "genki": 7,
+    "group": "functional",
+    "prerequisites": ["te_form"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "ni_iku",
+    "label": "〜に行く purpose of movement",
+    "genki": 7,
+    "group": "functional",
+    "prerequisites": ["te_form", "particle_ni_time"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "short_forms_plain",
+    "label": "Plain/short forms (present)",
+    "genki": 8,
+    "group": "morphology",
+    "prerequisites": ["present_tense_masu", "verb_groups"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "particle_ga",
+    "label": "が subject particle (vs は)",
+    "genki": 8,
+    "group": "particle",
+    "prerequisites": ["particle_wa"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "nai_de_kudasai",
+    "label": "〜ないでください negative request",
+    "genki": 8,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "verbs_as_nouns",
+    "label": "Verb の nominalization",
+    "genki": 8,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "short_form_past",
+    "label": "Plain/short forms (past)",
+    "genki": 9,
+    "group": "morphology",
+    "prerequisites": ["short_forms_plain", "past_tense_masu"],
+    "evidence": ["conjugation_drill", "writing", "speaking"]
+  },
+  {
+    "id": "qualifying_nouns",
+    "label": "Verb/adjective modifying nouns",
+    "genki": 9,
+    "group": "clause",
+    "prerequisites": ["short_forms_plain", "i_adjective"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "kara_explanation",
+    "label": "〜から explanation (sentence-internal)",
+    "genki": 9,
+    "group": "clause",
+    "prerequisites": ["short_form_past", "kara_reason"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "mada_te_imasen",
+    "label": "まだ〜ていません not yet",
+    "genki": 9,
+    "group": "functional",
+    "prerequisites": ["te_iru"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "tsumori",
+    "label": "〜つもり intention",
+    "genki": 10,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "comparison",
+    "label": "Comparison (〜より、いちばん)",
+    "genki": 10,
+    "group": "functional",
+    "prerequisites": ["i_adjective", "na_adjective"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "naru",
+    "label": "〜になる to become",
+    "genki": 10,
+    "group": "functional",
+    "prerequisites": ["particle_ni_time", "i_adjective"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "tai",
+    "label": "〜たい want to",
+    "genki": 11,
+    "group": "functional",
+    "prerequisites": ["present_tense_masu"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "tari_tari_suru",
+    "label": "〜たり〜たりする listing actions",
+    "genki": 11,
+    "group": "functional",
+    "prerequisites": ["short_form_past"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "koto_ga_aru",
+    "label": "〜たことがある experience",
+    "genki": 11,
+    "group": "functional",
+    "prerequisites": ["short_form_past"],
+    "evidence": ["writing", "speaking"]
+  },
+
+  {
+    "id": "n_desu",
+    "label": "〜んです explanation/emphasis",
+    "genki": 12,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain", "short_form_past"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "ho_ga_ii",
+    "label": "〜ほうがいい had better",
+    "genki": 12,
+    "group": "functional",
+    "prerequisites": ["short_form_past"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "nakucha_ikemasen",
+    "label": "〜なくちゃいけない must",
+    "genki": 12,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "node_because",
+    "label": "〜ので because (softer)",
+    "genki": 12,
+    "group": "clause",
+    "prerequisites": ["short_forms_plain", "kara_reason"],
+    "evidence": ["writing", "speaking"]
+  },
+  {
+    "id": "desho",
+    "label": "〜でしょう probably",
+    "genki": 12,
+    "group": "functional",
+    "prerequisites": ["short_forms_plain"],
+    "evidence": ["writing", "speaking"]
+  }
+]

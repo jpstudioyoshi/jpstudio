@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lesson Session</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --teal:       #30d5c8;
+    --teal-dim:   rgba(48,213,200,0.15);
+    --teal-glow:  rgba(48,213,200,0.08);
+    --gold:       #ffd60a;
+    --red:        #e05050;
+    --red-dim:    rgba(224,80,80,0.18);
+    --paper:      #1c1c1e;
+    --paper-mid:  #252527;
+    --paper-dark: #3d3d40;
+    --ink:        #f5f5f7;
+    --ink-mid:    rgba(245,245,247,0.55);
+    --ink-dim:    rgba(245,245,247,0.25);
+    --ink-ghost:  rgba(245,245,247,0.08);
+    --border:     rgba(255,255,255,0.09);
+    --border-hi:  rgba(255,255,255,0.16);
+    --mono:       'JetBrains Mono', monospace;
+    --sans:       'Inter', -apple-system, sans-serif;
+    --r:          6px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 12px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-app-region: drag;
+    border: 1px solid var(--border-hi);
+    border-radius: 10px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TITLEBAR ────────────────────────────────────────── */
+  .titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    height: 34px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .titlebar-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-mid);
+    text-transform: uppercase;
+  }
+  .titlebar-name span { color: var(--teal); }
+  .titlebar-controls {
+    display: flex;
+    gap: 4px;
+    -webkit-app-region: no-drag;
+  }
+  .ctrl-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    -webkit-app-region: no-drag;
+    line-height: 1;
+  }
+  .ctrl-btn:hover { background: var(--ink-ghost); color: var(--ink); border-color: var(--border-hi); }
+  .ctrl-btn.close:hover { background: var(--red-dim); color: var(--red); border-color: rgba(224,80,80,0.35); }
+
+  /* ── SCROLLABLE CONTENT ──────────────────────────────── */
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── SECTION WRAPPER ─────────────────────────────────── */
+  .section {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    -webkit-app-region: no-drag;
+  }
+  .section-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* ── REC BAR ─────────────────────────────────────────── */
+  .rec-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-rec {
+    -webkit-app-region: no-drag;
+    border: none;
+    border-radius: var(--r);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    padding: 0 14px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.12s, transform 0.08s, background 0.15s;
+    flex-shrink: 0;
+    background: var(--red);
+    color: #fff;
+  }
+  .btn-rec:hover { opacity: 0.88; }
+  .btn-rec:active { transform: scale(0.97); }
+  .btn-rec.recording {
+    background: var(--paper-dark);
+    color: var(--ink);
+    border: 1px solid var(--border-hi);
+  }
+  .btn-rec.recording:hover { background: rgba(255,255,255,0.12); opacity: 1; }
+
+  .rec-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .btn-rec .rec-dot { background: rgba(255,255,255,0.85); }
+
+  #recTimer {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--red);
+    letter-spacing: 0.04em;
+    min-width: 38px;
+    display: none;
+  }
+  #recStatus {
+    font-size: 10px;
+    color: var(--ink-mid);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-teams {
+    -webkit-app-region: no-drag;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--ink-dim);
+    border-radius: var(--r);
+    height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--sans);
+    font-weight: 500;
+    transition: background 0.12s, color 0.12s;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .btn-teams:hover { background: var(--ink-ghost); color: var(--ink); border-color: var(--border-hi); }
+
+  /* ── AUDIO LEVELS ────────────────────────────────────── */
+  .audio-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .audio-ch {
+    display: grid;
+    grid-template-columns: 48px 1fr 14px;
+    align-items: center;
+    gap: 8px;
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+  .level-track {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .level-fill {
+    height: 100%;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.07s linear;
+    position: relative;
+  }
+  .level-fill.mic      { background: var(--teal); }
+  .level-fill.loopback { background: var(--gold); }
+  .level-fill.silent   { background: var(--red); }
+
+  /* Segment marks on the track */
+  .level-track::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 20%;
+    width: 1px; height: 100%;
+    background: rgba(255,255,255,0.15);
+    pointer-events: none;
+  }
+
+  .ch-warn {
+    font-size: 10px;
+    color: var(--red);
+    text-align: center;
+  }
+  .ch-device {
+    grid-column: 2 / 4;
+    font-size: 9px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: -4px;
+    padding-left: 0;
+  }
+
+  /* ── MARKERS ─────────────────────────────────────────── */
+  .marker-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .btn-mark {
+    -webkit-app-region: no-drag;
+    background: var(--teal-dim);
+    border: 1px solid rgba(48,213,200,0.3);
+    color: var(--teal);
+    border-radius: var(--r);
+    height: 28px;
+    padding: 0 12px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    transition: background 0.12s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-mark:hover { background: rgba(48,213,200,0.25); }
+  .btn-mark:active { transform: scale(0.97); }
+  .markers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+    min-height: 28px;
+    align-items: center;
+  }
+  .marker-chip {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--teal);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  /* ── TRANSLATE ───────────────────────────────────────── */
+  .translate-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 10px 12px;
+    gap: 8px;
+    -webkit-app-region: no-drag;
+  }
+  .translate-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .translate-input-row {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    -webkit-app-region: no-drag;
+  }
+  .translate-input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-hi);
+    color: var(--ink);
+    border-radius: var(--r);
+    padding: 0 10px;
+    height: 34px;
+    font-size: 13px;
+    font-family: var(--sans);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-app-region: no-drag;
+  }
+  .translate-input::placeholder { color: var(--ink-dim); }
+  .translate-input:focus {
+    border-color: var(--teal);
+    background: var(--teal-glow);
+  }
+  .btn-translate {
+    background: var(--teal);
+    border: none;
+    color: #000;
+    border-radius: var(--r);
+    width: 34px; height: 34px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.12s;
+    flex-shrink: 0;
+    -webkit-app-region: no-drag;
+  }
+  .btn-translate:hover { opacity: 0.85; }
+  .btn-translate:active { transform: scale(0.96); }
+
+  .translate-history {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    -webkit-app-region: no-drag;
+  }
+  .translate-history::-webkit-scrollbar { width: 3px; }
+  .translate-history::-webkit-scrollbar-track { background: transparent; }
+  .translate-history::-webkit-scrollbar-thumb { background: var(--paper-dark); border-radius: 2px; }
+
+  .tr-entry {
+    border-radius: var(--r);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: opacity 0.2s;
+  }
+  .tr-entry.pending { opacity: 0.45; }
+  .tr-entry.fresh { animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(3px); } to { opacity:1; transform: none; } }
+
+  .tr-row {
+    padding: 6px 9px;
+    font-size: 12px;
+    line-height: 1.45;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .tr-row + .tr-row {
+    border-top: 1px solid var(--border);
+  }
+  .tr-lang {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    flex-shrink: 0;
+    width: 22px;
+  }
+  .tr-in  { color: var(--ink-mid); }
+  .tr-out {
+    background: var(--teal-glow);
+    color: var(--teal);
+  }
+  .tr-out .tr-text { color: var(--teal); }
+  .tr-text { flex: 1; }
+
+  .translate-hint {
+    color: var(--ink-dim);
+    font-size: 11px;
+    text-align: center;
+    padding: 16px 0;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<!-- TITLEBAR -->
+<div class="titlebar">
+  <span class="titlebar-name">ヨシ <span>SESSION</span></span>
+  <div class="titlebar-controls">
+    <button class="ctrl-btn" onclick="window.overlayAPI?.toggleOnTop()" title="Pin on top">⌖</button>
+    <button class="ctrl-btn close" onclick="window.close()" title="Close">✕</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- RECORD BAR -->
+  <div class="section">
+    <div class="rec-bar">
+      <button id="recBtn" class="btn-rec" onclick="toggleRecording()">
+        <span class="rec-dot" id="recDot"></span><span id="recBtnLabel">REC</span>
+      </button>
+      <span id="recTimer">0:00</span>
+      <button id="transcribeBtn" onclick="overlayTranscribe()" style="display:none;-webkit-app-region:no-drag;background:var(--teal);color:#1c1c1e;border:none;border-radius:var(--r);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.04em;cursor:pointer;padding:0 12px;height:26px;flex-shrink:0">⚙ Transcribe</button>
+      <span id="recStatus"></span>
+      <button class="btn-teams" onclick="window.overlayAPI?.openTeams()">↗ Teams</button>
+    </div>
+  </div>
+
+  <!-- AUDIO LEVELS -->
+  <div class="section">
+    <div class="section-label">Levels</div>
+    <div class="audio-channels" id="audioStatus">
+      <div>
+        <div class="audio-ch">
+          <span class="ch-label">Mic</span>
+          <div class="level-track"><div class="level-fill mic" id="micLevel"></div></div>
+          <span class="ch-warn" id="micWarn" style="display:none">!</span>
+        </div>
+        <span class="ch-device" id="micLabel" style="display:block;margin-top:3px;padding-left:56px">scanning…</span>
+      </div>
+      <div>
+        <div class="audio-ch">
+          <span class="ch-label">Loop</span>
+          <div class="level-track"><div class="level-fill loopback" id="loopLevel"></div></div>
+          <span class="ch-warn" id="loopWarn" style="display:none">!</span>
+        </div>
+        <span class="ch-device" id="loopLabel" style="display:block;margin-top:3px;padding-left:56px">scanning…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKERS -->
+  <div class="section">
+    <div class="section-label">Markers</div>
+    <div class="marker-row">
+      <button class="btn-mark" onclick="addMarker()">⏱ MARK</button>
+      <div class="markers-list" id="markersList">
+        <span style="font-size:10px;color:var(--ink-dim)">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSLATE -->
+  <div class="translate-section">
+    <div class="translate-label">Translate</div>
+    <div class="translate-input-row">
+      <input
+        type="text"
+        class="translate-input"
+        id="translateInput"
+        placeholder="JP → EN or EN → JP…"
+        onkeydown="if(event.key==='Enter')doTranslate()"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      >
+      <button class="btn-translate" onclick="doTranslate()">訳</button>
+    </div>
+    <div class="translate-history" id="translateHistory">
+      <div class="translate-hint">Press Enter to translate</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let _startTime = Date.now();
+  let _markers = [];
+  let _history = [];
+  let _apiKey = null;
+  let _recTimerInterval = null;
+  let _recSecs = 0;
+
+  window.overlayAPI?.getApiKey().then(k => { if (k) _apiKey = k; });
+
+  // ── Recording ─────────────────────────────────────────
+  let _isRecording = false;
+
+  function _setRecState(recording) {
+    _isRecording = recording;
+    if (recording) {
+      const tb = document.getElementById('transcribeBtn');
+      if (tb) { tb.style.display = 'none'; tb.textContent = '⚙ Transcribe'; tb.disabled = false; tb.style.opacity = '1'; }
+    }
+    const btn = document.getElementById('recBtn');
+    const lbl = document.getElementById('recBtnLabel');
+    const dot = document.getElementById('recDot');
+    const timer = document.getElementById('recTimer');
+    if (recording) {
+      btn.classList.add('recording');
+      dot.style.borderRadius = '1px';
+      lbl.textContent = 'STOP';
+      timer.style.display = '';
+    } else {
+      btn.classList.remove('recording');
+      dot.style.borderRadius = '50%';
+      lbl.textContent = 'REC';
+      timer.style.display = 'none';
+      clearInterval(_recTimerInterval);
+      _recTimerInterval = null;
+    }
+  }
+
+  function toggleRecording() {
+    if (_isRecording) overlayStopRecording();
+    else overlayStartRecording();
+  }
+
+  function _setRecStatus(msg, color) {
+    const el = document.getElementById('recStatus');
+    el.textContent = msg;
+    el.style.color = color || 'var(--ink-mid)';
+  }
+
+  function _updateTimer() {
+    _recSecs++;
+    const m = Math.floor(_recSecs/60), s = _recSecs%60;
+    document.getElementById('recTimer').textContent = m + ':' + String(s).padStart(2,'0');
+  }
+
+  async function overlayStartRecording() {
+    const result = await window.overlayAPI?.startRecording();
+    if (result?.error) { _setRecStatus('Error: ' + result.error, 'var(--red)'); return; }
+    _setRecState(true);
+    _recSecs = 0;
+    document.getElementById('recTimer').textContent = '0:00';
+    _setRecStatus('');
+    _recTimerInterval = setInterval(_updateTimer, 1000);
+  }
+
+  async function overlayStopRecording() {
+    clearInterval(_recTimerInterval); _recTimerInterval = null;
+    _setRecStatus('Stopping…');
+    await window.overlayAPI?.stopRecording();
+    _setRecState(false);
+    _setRecStatus('✓ Saved', 'var(--teal)');
+    const tb = document.getElementById('transcribeBtn');
+    if (tb) tb.style.display = '';
+  }
+
+  async function overlayTranscribe() {
+    const btn = document.getElementById('transcribeBtn');
+    if (btn) { btn.textContent = '⏳ Transcribing…'; btn.disabled = true; btn.style.opacity = '0.6'; }
+    _setRecStatus('Transcribing…', 'var(--gold)');
+    // Send transcribe signal via marker channel (repurposed as signal)
+    // Main window listens for RECORDING_READY via AppEvents and auto-transcribes
+    try {
+      await window.overlayAPI?.addMarker({ type: 'transcribe', time: 0 });
+    } catch(e) {}
+    // Update status — main window will show progress
+    if (btn) { btn.textContent = '↗ Open main app'; btn.disabled = false; btn.style.opacity = '1'; }
+    _setRecStatus('Go to main app to track progress', 'var(--gold)');
+  }
+
+  window.overlayAPI?.onEvent(({ name, data }) => {
+    if (name === 'RECORDING_STARTED') { _setRecState(true); }
+    if (name === 'RECORDING_TICK') {
+      const m = Math.floor(data.secs/60), s = data.secs%60;
+      document.getElementById('recTimer').textContent = m + ':' + String(s).padStart(2,'0');
+      _recSecs = data.secs;
+    }
+    if (name === 'RECORDING_STOPPED') { _setRecState(false); _setRecStatus('✓ Saved', 'var(--teal)'); const tb = document.getElementById('transcribeBtn'); if (tb) tb.style.display = ''; }
+    if (name === 'RECORDING_ERROR')   { _setRecState(false); _setRecStatus('Error: '+(data?.message||''), 'var(--red)'); }
+  });
+
+  // ── Markers ───────────────────────────────────────────
+  function formatTime(ms) {
+    const s = Math.floor(ms/1000), m = Math.floor(s/60);
+    return m + ':' + String(s%60).padStart(2,'0');
+  }
+
+  function addMarker() {
+    const elapsed = Date.now() - _startTime;
+    _markers.unshift(formatTime(elapsed));
+    renderMarkers();
+    if (window.overlayAPI) window.overlayAPI.addMarker({ time: elapsed });
+  }
+
+  function renderMarkers() {
+    const list = document.getElementById('markersList');
+    if (!_markers.length) { list.innerHTML = '<span style="font-size:10px;color:var(--ink-dim)">—</span>'; return; }
+    list.innerHTML = _markers.slice(0,5).map(t =>
+      '<span class="marker-chip">' + t + '</span>'
+    ).join('');
+  }
+
+  // ── Translate ─────────────────────────────────────────
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  async function doTranslate() {
+    const input = document.getElementById('translateInput').value.trim();
+    if (!input) return;
+    document.getElementById('translateInput').value = '';
+    _history.unshift({ input, output: '…', pending: true });
+    if (_history.length > 12) _history.pop();
+    renderHistory();
+    if (!_apiKey) { _history[0] = { input, output: 'No API key' }; renderHistory(); return; }
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': _apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 150,
+          system: 'Translate concisely. Japanese→English: meaning only. English→Japanese: kana + kanji if common. One line, no explanation.',
+          messages: [{ role: 'user', content: input }]
+        }),
+      });
+      const data = await resp.json();
+      _history[0] = { input, output: data.content?.[0]?.text?.trim() || '?' };
+    } catch(e) { _history[0] = { input, output: 'Error' }; }
+    renderHistory(true);
+  }
+
+  function renderHistory(animate) {
+    const el = document.getElementById('translateHistory');
+    if (!_history.length) {
+      el.innerHTML = '<div class="translate-hint">Press Enter to translate</div>';
+      return;
+    }
+    el.innerHTML = _history.map((h, i) => `
+      <div class="tr-entry${h.pending?' pending':''}${animate&&i===0?' fresh':''}">
+        <div class="tr-row tr-in">
+          <span class="tr-lang">IN</span>
+          <span class="tr-text">${escHtml(h.input)}</span>
+        </div>
+        <div class="tr-row tr-out">
+          <span class="tr-lang">JP</span>
+          <span class="tr-text">${escHtml(h.output)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Audio monitor ─────────────────────────────────────
+  const _audio = { ctx:null, micAnalyser:null, loopAnalyser:null, micStream:null, loopStream:null, buf:null, timer:null };
+
+  async function _startAudioMonitor() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const inputs  = devices.filter(d => d.kind === 'audioinput');
+      const loopDev = inputs.find(d => /blackhole|loopback|virtual|zoom/i.test(d.label));
+      _audio.ctx = new AudioContext();
+      _audio.buf = new Uint8Array(64);
+
+      try {
+        _audio.micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false } });
+        const t = _audio.micStream.getAudioTracks()[0];
+        document.getElementById('micLabel').textContent = (t?.label||'unknown').replace(/\s*\(.*\)/,'').trim().slice(0,36);
+        _audio.micAnalyser = _audio.ctx.createAnalyser(); _audio.micAnalyser.fftSize = 128;
+        _audio.ctx.createMediaStreamSource(_audio.micStream).connect(_audio.micAnalyser);
+      } catch(e) {
+        document.getElementById('micLabel').textContent = 'no access';
+        document.getElementById('micWarn').style.display = '';
+      }
+
+      if (loopDev) {
+        try {
+          _audio.loopStream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: loopDev.deviceId }, echoCancellation: false } });
+          document.getElementById('loopLabel').textContent = loopDev.label.replace(/\s*\(.*\)/,'').trim().slice(0,36);
+          _audio.loopAnalyser = _audio.ctx.createAnalyser(); _audio.loopAnalyser.fftSize = 128;
+          _audio.ctx.createMediaStreamSource(_audio.loopStream).connect(_audio.loopAnalyser);
+        } catch(e) {
+          document.getElementById('loopLabel').textContent = loopDev.label.slice(0,28) + ' — no access';
+          document.getElementById('loopWarn').style.display = '';
+        }
+      } else {
+        document.getElementById('loopLabel').textContent = 'not found';
+        document.getElementById('loopWarn').style.display = '';
+      }
+      _tickAudio();
+    } catch(e) { console.warn('[overlay] audio monitor:', e.message); }
+  }
+
+  let _audioReady = false;
+  setTimeout(() => { _audioReady = true; }, 2000);
+  const _silentFrames = { mic: 0, loop: 0 };
+  const SILENT_THRESHOLD = 20; // ~1.6s at 80ms per tick
+
+  function _tickAudio() {
+    const SILENT = 6;
+    function peak(a) {
+      if (!a) return 0;
+      a.getByteTimeDomainData(_audio.buf);
+      let p = 0;
+      for (let i = 0; i < _audio.buf.length; i++) { const v = Math.abs(_audio.buf[i]-128); if(v>p)p=v; }
+      return p;
+    }
+    const mp = peak(_audio.micAnalyser), lp = peak(_audio.loopAnalyser);
+    const mf = document.getElementById('micLevel');
+    const lf = document.getElementById('loopLevel');
+    const mw = document.getElementById('micWarn');
+    const lw = document.getElementById('loopWarn');
+
+    if (mf) {
+      mf.style.width = Math.min(100, Math.round(mp/127*250)) + '%';
+      mf.className = 'level-fill mic' + (mp < SILENT ? ' silent' : '');
+    }
+    if (lf && _audio.loopAnalyser) {
+      lf.style.width = Math.min(100, Math.round(lp/127*250)) + '%';
+      lf.className = 'level-fill loopback' + (lp < SILENT ? ' silent' : '');
+    }
+
+    _silentFrames.mic  = (_audio.micAnalyser  && mp < SILENT) ? _silentFrames.mic  + 1 : 0;
+    _silentFrames.loop = (_audio.loopAnalyser && lp < SILENT) ? _silentFrames.loop + 1 : 0;
+
+    if (mw) mw.style.display = (_audioReady && _isRecording && _silentFrames.mic  > SILENT_THRESHOLD) ? '' : 'none';
+    if (lw) lw.style.display = (_audioReady && _isRecording && _silentFrames.loop > SILENT_THRESHOLD) ? '' : 'none';
+
+    _audio.timer = setTimeout(_tickAudio, 80);
+  }
+
+  _startAudioMonitor();
+
+  navigator.mediaDevices.addEventListener('devicechange', () => {
+    clearTimeout(_audio.timer);
+    if (_audio.ctx) _audio.ctx.close();
+    if (_audio.micStream)  _audio.micStream.getTracks().forEach(t=>t.stop());
+    if (_audio.loopStream) _audio.loopStream.getTracks().forEach(t=>t.stop());
+    setTimeout(_startAudioMonitor, 500);
+  });
+</script>
+</body>
+</html>
