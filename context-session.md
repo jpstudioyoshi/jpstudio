@@ -98,9 +98,9 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 
 ### Medium-term cleanup
 - App registry cleanup — redundant window[] in core-anki, core-counters, core-kana, features-kana, features-times, features-video, features-voice-drill, services/*
-- Storage rationalisation — localStorage / Storage / kvAPI coexist
+- Storage rationalisation — ✅ mostly done. LOCAL_ONLY_KEYS are intentional. API key double-write removed. importedDocSessions raw localStorage bypass is a known documented exception. No further action needed.
 - Yoshi → app data flow — extracted vocab/grammar not fed back into vocab drill or GrammarModel
-- lnCreateFromPaste — logged but not apiUsageTrack'd
+- lnCreateFromPaste — ✅ apiUsageTrack added
 
 ### Future features (frozen)
 - DrillRecord unified history, TextEntry migration, AudioStrip, Phone PWA
@@ -138,4 +138,4 @@ Two separate systems:
 ## Next Recommended Action
 1. Self-study session with app
 2. Next lesson: Lesson Notes analysis → filter [LN] → bring back 4 log lines
-3. Next dev session: model string upgrade → then CSS variable retrofit (start small files)
+3. Next dev session: model string upgrade (`claude-sonnet-4-20250514` → `claude-sonnet-4-6`) → then CSS variable retrofit (start small files: core-writing.js, features-times.js, core-vocab.js)
