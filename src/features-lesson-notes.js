@@ -18,6 +18,7 @@ const LessonNotesState = {
   grammar:             [],
   grammarHidden:       new Set(),
   currentStory:        null,
+  lnFuriOn:            false,
   grammarDetail:       null,
   grammarDrillSentences: [],
   grammarDrillIdx:     0,
@@ -25,11 +26,6 @@ const LessonNotesState = {
   grammarDrillRevealed:false,
   grammarDrillFeedback:'',
   grammarQA:           [],
-  phrasesDrillIdx:     0,
-  phrasesDrillRevealed:0,
-  phrasesDrillActive:  false,
-  phrasesDrillMode:    'phrase2meaning',
-  skippedPhrases:      new Set(),
   extracting:          false,
   showHiddenGrammar:   false,
   // Recording (ln = lesson notes recorder)
@@ -255,12 +251,6 @@ function lessonNotesGetFullPanelHTML() {
     html += '<button class="yoshi-read-btn btn-icon' + (_vm==='keyphrases'?' active':'') + '" onclick="lessonNotesSetView(\'keyphrases\')">🔑 Phrases (' + _cur.keyPhrases.length + ')</button>';
     html += '<button class="yoshi-read-btn btn-icon' + (_vm==='grammar'||_vm==='grammardetail'?' active':'') + '" onclick="lessonNotesSetView(\'grammar\')">📝 Grammar (' + _cur.grammar.length + ')</button>';
     html += '<button class="yoshi-read-btn btn-icon' + (_vm==='errors'?' active':'') + '" onclick="lessonNotesSetView(\'errors\')">❌ Errors (' + _cur.errors.length + ')</button>';
-    if (_vm === 'keyphrases' && _cur.keyPhrases.length > 0 && !LessonNotesState.phrasesDrillActive) {
-      html += '<div style="margin-left:auto;display:flex;gap:6px">';
-      html += '<button onclick="lnPhrasesDrillStart(\'phrase2meaning\')" class="yoshi-read-btn btn-icon">🎯 Drill</button>';
-      html += '<button onclick="lnPhrasesDrillStart(\'listening\')" class="yoshi-read-btn btn-icon">🔊 Listen</button>';
-      html += '</div>';
-    }
     html += lnRecordingTabButton(currentSession);
     html += '</div>';
   }
@@ -582,12 +572,9 @@ function lnRenderLinkedRecording(session) {
     const _hasAlign = session.waAlignments && Object.keys(session.waAlignments).length > 0;
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)">';
     html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">TRANSCRIPT</span>';
-    html += '<div style="margin-left:auto;display:flex;align-items:center;gap:6px">';
-    html += '<input type="text" id="lnTranscriptSearch" placeholder="Search…" oninput="lnTranscriptDoSearch(this.value)" style="padding:5px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.88rem;border-radius:4px;outline:none;width:130px">';
-    html += '</div>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.82rem;padding:5px 14px">\u{1F399} Audio</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.82rem;padding:5px 14px">\u{1F500} Timeline</button>';
-    html += '<button id="lnAlignBtn" class="yoshi-read-btn btn-icon" onclick="lnAlignTimeline()" style="font-size:0.82rem;padding:5px 14px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
+    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
+    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
+    html += '<button id="lnAlignBtn" class="yoshi-read-btn btn-icon" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
     html += '</div>';
 
     // Transcript area — preserve content across re-renders
@@ -602,7 +589,6 @@ function lnRenderLinkedRecording(session) {
     if (!_taContent) {
       LessonNotesState._transcriptRecId = recId;
       setTimeout(function() { lnLoadTranscript(recId, LessonNotesState.transcriptMode || 'timeline'); }, 50);
-      setTimeout(function() { (App.kanaToolbar || window.kanaToolbar)?.('lnTranscriptSearch', {defaultMode:'romaji'}); }, 80);
     }
   }
 
@@ -704,7 +690,7 @@ async function lnLoadTranscript(recId, mode) {
       }
       const label = t.speaker === 'teacher' ? '🧑‍🏫' : '🙋';
       const row = document.createElement('div');
-      row.style.cssText = 'display:flex;gap:10px;padding:9px 6px;border-radius:4px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04)';
+      row.style.cssText = 'display:flex;gap:10px;padding:5px 6px;border-radius:4px;cursor:pointer';
       row.onmouseover = function() { row.style.background = 'var(--paper-dark)'; };
       row.onmouseout  = function() { row.style.background = ''; };
       row.onclick = (function(sec) { return function() { lnSeekToTime(sec); }; })(ts);
@@ -721,39 +707,6 @@ async function lnLoadTranscript(recId, mode) {
 }
 
 
-function lnTranscriptSearchToggleKana() {
-  const inp = document.getElementById('lnTranscriptSearch');
-  const btn = document.getElementById('lnSearchKanaBtn');
-  if (!inp) return;
-  const isOn = inp.dataset.kana === '1';
-  if (isOn) {
-    (App.kanaOff || window.kanaOff)?.(inp);
-    inp.dataset.kana = '0';
-    if (btn) { btn.style.color = 'var(--ink-light)'; btn.style.borderColor = 'var(--field-border)'; }
-  } else {
-    (App.kanaOn || window.kanaOn)?.(inp);
-    inp.dataset.kana = '1';
-    if (btn) { btn.style.color = 'var(--teal)'; btn.style.borderColor = 'var(--teal)'; }
-  }
-}
-
-function lnTranscriptDoSearch(term) {
-  const area = document.getElementById("lnTranscriptArea");
-  if (!area) return;
-  const rows = area.querySelectorAll("div");
-  const lo = term.toLowerCase();
-  rows.forEach(function(row) {
-    const textEl = row.querySelector("span:last-child");
-    if (!textEl) return;
-    const text = textEl.textContent || "";
-    if (!term) { row.style.display = ""; return; }
-    if (text.toLowerCase().includes(lo)) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-}
 function lnShowTranscriptContainer(recId) {
   // Deprecated — transcript now renders inline in lnRenderLinkedRecording
   // Keep stub so existing calls don't error
@@ -1087,9 +1040,6 @@ function lessonNotesRenderErrors() {
 }
 
 function lessonNotesRenderKeyPhrases() {
-  if (LessonNotesState.phrasesDrillActive) {
-    return `<div id="lnPhrasesDrillArea">${lnRenderPhrasesDrillCard()}</div>`;
-  }
   return `
     ${LessonNotesState.keyPhrases.length === 0 ? `
       <div style="text-align:center;padding:40px;color:var(--ink-light);font-family:var(--ui)">
@@ -2152,7 +2102,7 @@ function lessonNotesRenderStoryText() {
     if (isNewline(w)) { html += '<br>'; return; }
     if (isPunct(w)) { html += `<span style="color:var(--ink-light)">${w}</span>`; return; }
     if (!isJP(w)) { html += `<span>${w}</span>`; return; }
-    if (_qrFuriOn && seg.reading && hasKanji(w)) {
+    if (LessonNotesState.lnFuriOn && seg.reading && hasKanji(w)) {
       html += `<ruby class="qr-ruby qr-boundary" data-idx="${i}">${w}<rt style="font-size:0.65em;color:var(--ink-light);pointer-events:none">${seg.reading}</rt></ruby>`;
     } else {
       html += `<span class="qr-word qr-boundary" data-idx="${i}">${w}</span>`;
@@ -2188,7 +2138,7 @@ function lessonNotesRenderReading() {
   return `
     <div class="qr-reader-box">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-        <button class="qr-btn-sec ${_qrFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:0.78rem;${_qrFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
+        <button class="qr-btn-sec ${LessonNotesState.lnFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
         <button id="lnSpeakBtn" class="qr-btn-sec" onclick="lessonNotesToggleSpeak()" title="Read aloud / Stop">🔊 Read</button>
         <button class="qr-btn-sec" onclick="lessonNotesCopyStory()" title="Copy text without furigana">📋 Copy</button>
         <button class="qr-btn-sec" onclick="lessonNotesSetView('stories')">← Stories</button>
@@ -2841,11 +2791,11 @@ function lessonNotesCopyStory() {
 }
 
 function lessonNotesToggleFuri() {
-  _qrFuriOn = !_qrFuriOn;
+  LessonNotesState.lnFuriOn = !LessonNotesState.lnFuriOn;
   // Update button state
   const btn = document.querySelector('#lessonNotesViewMain .qr-btn-sec');
   if (btn) {
-    if (_qrFuriOn) {
+    if (LessonNotesState.lnFuriOn) {
       btn.style.color = 'var(--teal)';
       btn.style.borderColor = 'var(--teal)';
       btn.classList.add('active');
@@ -2893,114 +2843,6 @@ function lessonNotesToggleSpeak() {
 }
 
 // Keep old function for compatibility
-
-function lnPhrasesDrillStart(mode) {
-  LessonNotesState.phrasesDrillIdx = 0;
-  LessonNotesState.phrasesDrillRevealed = 0;
-  LessonNotesState.phrasesDrillActive = true;
-  LessonNotesState.skippedPhrases = new Set();
-  LessonNotesState.phrasesDrillMode = mode || 'phrase2meaning';
-  lessonNotesRender();
-  if (mode === 'listening') lnPhrasesDrillSpeak();
-}
-
-function lnPhrasesDrillExit() {
-  LessonNotesState.phrasesDrillActive = false;
-  lessonNotesRender();
-}
-
-function lnPhrasesDrillReveal() {
-  LessonNotesState.phrasesDrillRevealed = (LessonNotesState.phrasesDrillRevealed + 1) % 3;
-  const area = document.getElementById('lnPhrasesDrillArea');
-  if (area) area.innerHTML = lnRenderPhrasesDrillCard();
-}
-
-function lnPhrasesDrillNext() {
-  LessonNotesState.phrasesDrillIdx = (LessonNotesState.phrasesDrillIdx + 1) % LessonNotesState.keyPhrases.length;
-  LessonNotesState.phrasesDrillRevealed = 0;
-  const area = document.getElementById('lnPhrasesDrillArea');
-  if (area) {
-    area.innerHTML = lnRenderPhrasesDrillCard();
-    if (LessonNotesState.phrasesDrillMode === 'listening') lnPhrasesDrillSpeak();
-  }
-}
-
-function lnPhrasesDrillPrev() {
-  LessonNotesState.phrasesDrillIdx = (LessonNotesState.phrasesDrillIdx - 1 + LessonNotesState.keyPhrases.length) % LessonNotesState.keyPhrases.length;
-  LessonNotesState.phrasesDrillRevealed = 0;
-  const area = document.getElementById('lnPhrasesDrillArea');
-  if (area) {
-    area.innerHTML = lnRenderPhrasesDrillCard();
-    if (LessonNotesState.phrasesDrillMode === 'listening') lnPhrasesDrillSpeak();
-  }
-}
-
-function lnPhrasesDrillSkip() {
-  const kp = LessonNotesState.keyPhrases[LessonNotesState.phrasesDrillIdx];
-  if (kp) LessonNotesState.skippedPhrases.add(LessonNotesState.phrasesDrillIdx);
-  // Remove from active and advance
-  const active = LessonNotesState.keyPhrases
-    .map((k,i) => i)
-    .filter(i => !LessonNotesState.skippedPhrases.has(i));
-  if (active.length === 0) { lnPhrasesDrillExit(); return; }
-  // Find next non-skipped index
-  let next = active.find(i => i > LessonNotesState.phrasesDrillIdx);
-  if (next === undefined) next = active[0];
-  LessonNotesState.phrasesDrillIdx = next;
-  LessonNotesState.phrasesDrillRevealed = 0;
-  const area = document.getElementById('lnPhrasesDrillArea');
-  if (area) {
-    area.innerHTML = lnRenderPhrasesDrillCard();
-    if (LessonNotesState.phrasesDrillMode === 'listening') lnPhrasesDrillSpeak();
-  }
-}
-
-function lnPhrasesDrillSpeak() {
-  const kp = LessonNotesState.keyPhrases[LessonNotesState.phrasesDrillIdx];
-  if (kp?.phrase) (App.jpSpeak || window.jpSpeak)?.(kp.phrase);
-}
-
-function lnRenderPhrasesDrillCard() {
-  const phrases = LessonNotesState.keyPhrases;
-  if (!phrases.length) return '<div style="text-align:center;color:var(--ink-light);font-family:var(--ui)">No phrases extracted yet</div>';
-
-  const kp = phrases[LessonNotesState.phrasesDrillIdx];
-  const skipped = LessonNotesState.skippedPhrases.size;
-  const progress = `${LessonNotesState.phrasesDrillIdx + 1} / ${phrases.length}${skipped > 0 ? ' (' + skipped + ' hidden)' : ''}`;
-  const isListening = LessonNotesState.phrasesDrillMode === 'listening';
-  const rev = LessonNotesState.phrasesDrillRevealed;
-
-  const promptHtml = isListening
-    ? `<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-bottom:16px">🔊 <button class="btn-icon" onclick="lnPhrasesDrillSpeak()">Replay</button></div>`
-    : `<div style="font-family:'Shippori Mincho',serif;font-size:1.8rem;color:var(--ink);margin-bottom:4px">${kp.phrase}</div>`;
-
-  const meaningHtml = `<div style="font-family:var(--ui);font-size:1rem;color:var(--teal);margin-top:8px;${rev >= 1 ? '' : 'visibility:hidden'}">${kp.meaning || ''}</div>`;
-  const exampleHtml = kp.example
-    ? `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink);margin-top:10px;padding:8px;background:var(--paper-dark);border-radius:4px;${rev >= 2 ? '' : 'visibility:hidden'}">${kp.example}</div>`
-    : '';
-
-  let btnLabel = rev === 0 ? 'Reveal' : rev === 1 ? 'Example' : 'Hide';
-
-  return `
-    <div style="text-align:center;padding:16px">
-      <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:12px">${progress}</div>
-      ${promptHtml}
-      <div style="min-height:80px;margin:12px 0">
-        ${meaningHtml}
-        ${exampleHtml}
-      </div>
-      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="lnPhrasesDrillPrev()">← Prev</button>
-        <button onclick="lnPhrasesDrillReveal()" style="padding:8px 20px;background:var(--gold);border:1px solid var(--gold);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:#1c1c1e;cursor:pointer">${btnLabel}</button>
-        <button class="btn-ghost" onclick="lnPhrasesDrillNext()">Next →</button>
-        <button class="btn-ghost" onclick="lnPhrasesDrillSpeak()">🔊 Listen</button>
-        <button class="btn-ghost" onclick="lnPhrasesDrillSkip()">⏭ Hide</button>
-        <button class="btn-ghost" onclick="lnPhrasesDrillExit()">✕ Exit</button>
-      </div>
-    </div>
-  `;
-}
-
 function lessonNotesRenderDrillCard() {
   if (LessonNotesState.vocab.length === 0) return '<div style="text-align:center;color:var(--ink-light);font-family:var(--ui)">No vocab extracted yet</div>';
   
@@ -4261,7 +4103,7 @@ function yoshiConfirmCloze() {
 
   const score = document.getElementById('yoshiClozeScore');
   if (score) score.textContent = skipped > 0
-    ? `✓ ${lines.length} confirmed → Read (${skipped} paragraph${skipped>1?'s':''} with unfilled blanks hidden)`
+    ? `✓ ${lines.length} confirmed → Read (${skipped} paragraph${skipped>1?'s':''} with unfilled blanks skipped)`
     : `✓ ${lines.length} paragraph${lines.length>1?'s':''} confirmed → Read`;
 }
 
