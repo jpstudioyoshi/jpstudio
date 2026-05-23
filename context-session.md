@@ -139,3 +139,40 @@ Two separate systems:
 1. Self-study session with app
 2. Next lesson: Lesson Notes analysis → filter [LN] → bring back 4 log lines
 3. Next dev session: model string upgrade (`claude-sonnet-4-20250514` → `claude-sonnet-4-6`) → then CSS variable retrofit (start small files: core-writing.js, features-times.js, core-vocab.js)
+
+## Lesson Notes — Architectural Reconstruction Plan
+Status: PLANNED — do not add features to current implementation until reconstruction begins.
+
+### Current state (broken)
+All extracted content (vocab, phrases, grammar, stories) stored as one JSON blob in kvAPI, unlinked from lesson_sessions SQL table. features-lesson-notes.js is 4,500 lines with tangled dependencies on features-reading.js private vars (_qrFuriOn, _qrSegments). Recording+transcript render cycle breaks when other features touch the same DOM.
+
+### Target architecture
+
+**Vocab** → extracted words pushed into existing `words` SQL table with source='lesson' and lesson_id FK. Standard vocab drill reads from there. Lesson Notes becomes a tagger, not a drill host.
+
+**Phrases** → new `lesson_phrases` SQL table: id, lesson_id, phrase, reading, meaning, example, created_at. Standard DrillCard reads from there.
+
+**Grammar** → extraction pushes grammar points into Grammar Sentences feature (features-grammar.js). Lesson Notes shows read-only summary + "Send to Grammar" button. No parallel drill system.
+
+**Stories** → thin wrapper around existing reading panel. Reading panel gets a setText() entry point. Lesson Notes passes the story text in.
+
+**WhatsApp notes + alignment** → stay in kvAPI blob. Independent of extracted content. Display and search stay in Lesson Notes panel.
+
+**Recording + transcript** → stays in lesson_sessions SQL table. Cleaner once other features stop sharing its render cycle. Wall-clock display and transcript highlight deferred until render cycle is stable.
+
+### Migration strategy
+- Existing kvAPI blobs remain readable (no data loss)
+- New extractions write to SQL going forward
+- Reconstruct one feature at a time: Vocab first (simplest, table exists), then Phrases, then Grammar, then Stories
+- Keep current Lesson Notes working throughout — each feature gets a SQL path added alongside the existing blob path, then blob path retired
+
+### SQL additions needed
+- `words` table: add lesson_id column (check existing schema first)
+- New table: lesson_phrases (id, lesson_id, phrase, reading, meaning, example, created_at)
+- Grammar: no new table — feed into existing grammar_sentences flow
+
+### Session 3 completed work (before reconstruction decision)
+- Split features-yoshi.js → features-lesson-notes.js (4,565 lines)
+- Fixed: Test/Session/Recordings buttons hidden when session exists
+- Fixed: Story tiles broken by _qrFuriOn private var reference
+- Rolled back: phrases drill, transcript search, audio wall-clock (too fragile in current architecture)
