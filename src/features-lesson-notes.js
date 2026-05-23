@@ -1505,6 +1505,22 @@ ${docContent.slice(0, 10000)}` }]
     LessonNotesState.vocab = _lnParseJsonArray(text);
     LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
     console.log('[LN] vocab extracted:', LessonNotesState.vocab.length, 'items', LessonNotesState.vocab.slice(0,3).map(v=>v.word||v.phrase||v.jp||'?'));
+    // Write extracted vocab into words SQL table
+    try {
+      const _lessonId = LessonNotesState.currentLessonId || null;
+      for (const v of LessonNotesState.vocab) {
+        if (!v.word || !v.reading || !v.meaning) continue;
+        await window.db.run(
+          `INSERT INTO words (word, reading, meaning, level, list_source, lesson_id, source, example)
+           VALUES (?,?,?,?,?,?,?,?)
+           ON CONFLICT(word) DO UPDATE SET
+             lesson_id = COALESCE(excluded.lesson_id, lesson_id),
+             source    = COALESCE(excluded.source, source)`,
+          [v.word, v.reading, v.meaning, 'custom', 'lesson', _lessonId, 'lesson', v.sourceText || null]
+        );
+      }
+      console.log('[LN] vocab written to SQL:', LessonNotesState.vocab.length, 'words');
+    } catch(e) { console.warn('[LN] vocab SQL write failed:', e.message); }
   } catch (e) { console.error('[vocab extraction] failed:', e.message, e); }
 }
 
