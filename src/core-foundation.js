@@ -1141,8 +1141,7 @@ const LOCAL_ONLY_KEYS = new Set([
   // Written before Storage.init() — must stay local
   'jpQTHistory',
   'listenTrackNames',
-  // Legacy
-  'agentManualContext',
+  // Legacy — none
 ]);
 
 // ── Keys to purge from localStorage on migration (dead/test keys only) ──────
@@ -1332,11 +1331,11 @@ const Storage = {
   // API keys — always localStorage (sensitive, device-specific)
   // API keys — write to both localStorage (synchronous fallback) and kvAPI (persistent)
   getApiKey()       { return _kvCache[STORAGE_KEYS.API_KEY]    || localStorage.getItem(STORAGE_KEYS.API_KEY)    || ''; },
-  setApiKey(v)      { _kvCache[STORAGE_KEYS.API_KEY] = v;    localStorage.setItem(STORAGE_KEYS.API_KEY, v);    window.kvAPI?.set(STORAGE_KEYS.API_KEY, v).catch(()=>{}); },
+  setApiKey(v)      { _kvCache[STORAGE_KEYS.API_KEY] = v;    window.kvAPI?.set(STORAGE_KEYS.API_KEY, v).catch(()=>{}); },
   getOpenAIKey()    { return _kvCache[STORAGE_KEYS.OPENAI_KEY] || localStorage.getItem(STORAGE_KEYS.OPENAI_KEY) || ''; },
-  setOpenAIKey(v)   { _kvCache[STORAGE_KEYS.OPENAI_KEY] = v; localStorage.setItem(STORAGE_KEYS.OPENAI_KEY, v); window.kvAPI?.set(STORAGE_KEYS.OPENAI_KEY, v).catch(()=>{}); },
+  setOpenAIKey(v)   { _kvCache[STORAGE_KEYS.OPENAI_KEY] = v; window.kvAPI?.set(STORAGE_KEYS.OPENAI_KEY, v).catch(()=>{}); },
   getHFToken()      { return _kvCache[STORAGE_KEYS.HF_TOKEN]   || localStorage.getItem(STORAGE_KEYS.HF_TOKEN)   || ''; },
-  setHFToken(v)     { _kvCache[STORAGE_KEYS.HF_TOKEN] = v;   localStorage.setItem(STORAGE_KEYS.HF_TOKEN, v);   window.kvAPI?.set(STORAGE_KEYS.HF_TOKEN, v).catch(()=>{}); },
+  setHFToken(v)     { _kvCache[STORAGE_KEYS.HF_TOKEN] = v;   window.kvAPI?.set(STORAGE_KEYS.HF_TOKEN, v).catch(()=>{}); },
 
   // Main app state
   getState()        { return this.getJSON(STORAGE_KEYS.STATE); },

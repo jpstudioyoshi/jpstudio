@@ -948,112 +948,112 @@
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1435,
+    "line": 1434,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer"
   },
   {
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1437,
+    "line": 1436,
     "desc": "const input = document.createElement('input');"
   },
   {
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1456,
+    "line": 1455,
     "desc": "Storage.clearAll();"
   },
   {
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1466,
+    "line": 1465,
     "desc": "STATE"
   },
   {
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1488,
+    "line": 1487,
     "desc": "Storage.setState(state); }"
   },
   {
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1491,
+    "line": 1490,
     "desc": "const today = new Date().toDateString();"
   },
   {
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1508,
+    "line": 1507,
     "desc": "API KEY BAR"
   },
   {
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1537,
+    "line": 1536,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1551,
+    "line": 1550,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1656,
+    "line": 1655,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1678,
+    "line": 1677,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1714,
+    "line": 1713,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1722,
+    "line": 1721,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1733,
+    "line": 1732,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1812,
+    "line": 1811,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1834,
+    "line": 1833,
     "desc": "const btns = document.querySelectorAll(`[data-btn-group=\"${group}\"]`);"
   },
   {
@@ -1074,7 +1074,7 @@
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1585,
+    "line": 1584,
     "desc": "Storage.set"
   },
   {
