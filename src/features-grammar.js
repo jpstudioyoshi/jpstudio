@@ -1836,6 +1836,8 @@ async function particleDrillStart() {
     const data = await resp.json();
     const raw = (data.content?.[0]?.text || '');
     console.log('[particleDrill] raw response:', raw.slice(0,200));
+    console.warn('[API] Claude call · feature="particle-drill" · in=' + (data.usage?.input_tokens ?? '?') + ' out=' + (data.usage?.output_tokens ?? '?') + ' tokens');
+    (App.apiUsageTrack || window.apiUsageTrack)?.('particle-drill', data.usage?.input_tokens ?? 0, data.usage?.output_tokens ?? 0);
     const arrayMatch = raw.match(/\[[\s\S]*\]/);
     if (!arrayMatch) throw new Error('No JSON array in response: ' + raw.slice(0,100));
     _pdExercises = JSON.parse(arrayMatch[0]);
