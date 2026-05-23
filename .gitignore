@@ -7,3 +7,8 @@ src/services/.DS_Store
 management-log.json
 index.json
 audit-*.md
+.DS_Store
+*.bak
+management-log.json
+index.json
+audit-*.md
