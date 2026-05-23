@@ -539,6 +539,7 @@ async function lnCreateFromPaste() {
       });
       var data = await resp.json();
       console.warn('[API] Claude call · feature="lesson-paste" · in=' + (data.usage?.input_tokens ?? '?') + ' out=' + (data.usage?.output_tokens ?? '?') + ' tokens');
+      (App.apiUsageTrack || window.apiUsageTrack)?.('lesson-paste', data.usage?.input_tokens ?? 0, data.usage?.output_tokens ?? 0);
       var text = (data.content && data.content[0] && data.content[0].text) || '';
       var parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
       vocab = parsed.vocab || [];

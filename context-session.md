@@ -1,6 +1,10 @@
 # Japanese Studio — Session Context
 Last updated: 2026-05-23 (session 2)
 
+## User Preferences
+- Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
+- Management window is deprioritised — was too buggy and expensive to debug via Claude. Terminal approach is preferred for all edits.
+
 ## Current Mode
 STABILIZATION — not feature expansion.
 - Prefer minimal edits over redesigns
@@ -11,15 +15,27 @@ STABILIZATION — not feature expansion.
 ## Terminal Workflow
 All edits are done via terminal — no file upload/download. ~90% token saving.
 
+**Shell aliases (in ~/.zshrc — permanent):**
+- `jp` — `cd ~/Documents/jpStudio`
+- `jpstart` — kill app, restart, cd to project
+- `setopt NO_BANG_HIST` — disables zsh `!` history expansion so `node -e` works freely
+
 **Standard patterns:**
-- `cd ~/Documents/jpStudio` — always required first
+- `jp` — jump to project (always required first)
 - `grep -n "pattern" src/file.js` — locate lines
 - `sed -n 'X,Yp' src/file.js | pbcopy` — read a block, pipe to clipboard, paste here
 - Edits: write a `/tmp/fix-xxx.js` node script using `fs.readFileSync/writeFileSync` with exact string matching, run with `node /tmp/fix-xxx.js`
 - Always run `node check-syntax.js` after every edit
 - Bump version after every index.html or JS change: `sed -i '' 's/?v=CURRENT/?v=NEW/g' index.html`
-- Restart app: `kill $(pgrep -f "jpStudio") 2>/dev/null; cd ~/Documents/jpStudio && npm start`
+- Restart app: `jpstart`
 - Hard reload after restart: Cmd+Shift+R in app window
+
+**Git workflow (initialised 2026-05-23, commit 840b90e):**
+- Before every dev session: `git add -A && git commit -m "before session YYYY-MM-DD"`
+- Emergency rollback: `git checkout -- .`
+- Pre-commit hook installed: runs `check-syntax.js` automatically, blocks commit on error
+- `.gitignore` covers `node_modules/`
+- Files to consider adding to .gitignore: `.DS_Store`, `*.bak`, `management-log.json`, `index.json`, `audit-*.md`
 
 **Critical lessons learned:**
 - When using `node -e "..."` in zsh, `!` causes "event not found". Use `/tmp/fix-xxx.js` files instead.

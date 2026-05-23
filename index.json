@@ -7605,189 +7605,189 @@
     "type": "function",
     "name": "lnHandleFile",
     "file": "src/features-tools.js",
-    "line": 581,
+    "line": 582,
     "desc": "if (!files || !files[0]) return;"
   },
   {
     "type": "function",
     "name": "lnHandleDrop",
     "file": "src/features-tools.js",
-    "line": 594,
+    "line": 595,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "yoshiSaveWhatsappInline",
     "file": "src/features-tools.js",
-    "line": 600,
+    "line": 601,
     "desc": "const el = document.getElementById('waInput_' + sessionId);"
   },
   {
     "type": "function",
     "name": "yoshiRetranscribe",
     "file": "src/features-tools.js",
-    "line": 614,
+    "line": 615,
     "desc": ""
   },
   {
     "type": "function",
     "name": "yoshiOpenOverlay",
     "file": "src/features-tools.js",
-    "line": 634,
+    "line": 635,
     "desc": "if (window.electronAPI?.openLessonOverlay) {"
   },
   {
     "type": "function",
     "name": "yoshiOpenTeams",
     "file": "src/features-tools.js",
-    "line": 662,
+    "line": 663,
     "desc": "const url = 'https://teams.live.com/meet/9387084365462?p=cBmSFutAH5IRELtQxD';"
   },
   {
     "type": "function",
     "name": "yoshiTestChannels",
     "file": "src/features-tools.js",
-    "line": 671,
+    "line": 672,
     "desc": "Result is persisted to failure_events for post-session forensics."
   },
   {
     "type": "function",
     "name": "yoshiRunPreflight",
     "file": "src/features-tools.js",
-    "line": 699,
+    "line": 700,
     "desc": "── Full preflight (optional yoshiRunPreflight() call) ────────────────────────"
   },
   {
     "type": "function",
     "name": "_renderPreflightBadge",
     "file": "src/features-tools.js",
-    "line": 724,
+    "line": 725,
     "desc": "── Preflight rendering helpers ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "_preflightReportHtml",
     "file": "src/features-tools.js",
-    "line": 738,
+    "line": 739,
     "desc": "const pfRow = (label, ok, detail, isWarn) => {"
   },
   {
     "type": "function",
     "name": "_pfShortLabel",
     "file": "src/features-tools.js",
-    "line": 784,
+    "line": 785,
     "desc": "if (!label) return '—';"
   },
   {
     "type": "function",
     "name": "mgSelectCat",
     "file": "src/features-tools.js",
-    "line": 994,
+    "line": 995,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "mgSetPairs",
     "file": "src/features-tools.js",
-    "line": 999,
+    "line": 1000,
     "desc": "MatchingPairsState.pairs = n;"
   },
   {
     "type": "function",
     "name": "mgSetTimer",
     "file": "src/features-tools.js",
-    "line": 1004,
+    "line": 1005,
     "desc": "MatchingPairsState.timer = n;"
   },
   {
     "type": "function",
     "name": "mgSetReading",
     "file": "src/features-tools.js",
-    "line": 1009,
+    "line": 1010,
     "desc": "MatchingPairsState.reading = v;"
   },
   {
     "type": "function",
     "name": "mgShowSetup",
     "file": "src/features-tools.js",
-    "line": 1015,
+    "line": 1016,
     "desc": "document.getElementById('mg-setup').style.display = '';"
   },
   {
     "type": "function",
     "name": "mgStart",
     "file": "src/features-tools.js",
-    "line": 1022,
+    "line": 1023,
     "desc": "const cat = VG_CATEGORIES[MatchingPairsState.cat];"
   },
   {
     "type": "function",
     "name": "mgUpdateTimer",
     "file": "src/features-tools.js",
-    "line": 1081,
+    "line": 1082,
     "desc": "const el = document.getElementById('mg-timer');"
   },
   {
     "type": "function",
     "name": "mgClickKanji",
     "file": "src/features-tools.js",
-    "line": 1090,
+    "line": 1091,
     "desc": "if (document.querySelector('.mg-kanji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgClickEmoji",
     "file": "src/features-tools.js",
-    "line": 1099,
+    "line": 1100,
     "desc": "if (document.querySelector('.mg-emoji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgCheckMatch",
     "file": "src/features-tools.js",
-    "line": 1107,
+    "line": 1108,
     "desc": "if (MatchingPairsState.kanjiSel === null || MatchingPairsState.emojiSel === null) return;"
   },
   {
     "type": "function",
     "name": "mgFinish",
     "file": "src/features-tools.js",
-    "line": 1131,
+    "line": 1132,
     "desc": "clearInterval(MatchingPairsState.timerInt);"
   },
   {
     "type": "function",
     "name": "mgEnd",
     "file": "src/features-tools.js",
-    "line": 1145,
+    "line": 1146,
     "desc": "mgFinish(false); }"
   },
   {
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 1244,
+    "line": 1245,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 1255,
+    "line": 1256,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrClear",
     "file": "src/features-tools.js",
-    "line": 1281,
+    "line": 1282,
     "desc": "const inp = document.getElementById('qrInput');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 1293,
+    "line": 1294,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {
