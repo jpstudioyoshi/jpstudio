@@ -176,3 +176,14 @@ All extracted content (vocab, phrases, grammar, stories) stored as one JSON blob
 - Fixed: Test/Session/Recordings buttons hidden when session exists
 - Fixed: Story tiles broken by _qrFuriOn private var reference
 - Rolled back: phrases drill, transcript search, audio wall-clock (too fragile in current architecture)
+
+## Session 3 corrections to Pending Work
+
+### Lesson Notes work — SUPERSEDED
+All Lesson Notes feature work (phrases drill, transcript search, jump-to, audio wall-clock) is SUSPENDED pending architectural reconstruction. See Lesson Notes Architectural Reconstruction Plan above. Do not add features to features-lesson-notes.js until reconstruction begins.
+
+### Updated Next Recommended Action
+1. Check words table schema in main.js before starting reconstruction
+2. Start Lesson Notes reconstruction: Vocab → SQL (simplest, table exists)
+3. Model string upgrade (claude-sonnet-4-20250514 → claude-sonnet-4-6) — still pending
+4. CSS variable retrofit — still pending, start with small files
