@@ -39,7 +39,7 @@ const DrillCard = (() => {
 
     const dots = _results.map((r, i) =>
       `<div style="width:8px;height:8px;border-radius:50%;background:${
-        r === 'ok' ? 'var(--teal)' : r === 'miss' ? 'var(--red,#e05050)' : i === _idx ? 'var(--ink)' : 'var(--border)'
+        r === 'ok' ? 'var(--teal)' : r === 'miss' ? 'var(--red)' : i === _idx ? 'var(--ink)' : 'var(--border)'
       }"></div>`
     ).join('');
 
@@ -142,8 +142,8 @@ const DrillCard = (() => {
     } else {
       _wrong++;
       fb.innerHTML = '✗ &nbsp;<span style="color:var(--teal)">' + answer + '</span>';
-      fb.style.color = 'var(--red,#e05050)';
-      inp.style.borderColor = 'var(--red,#e05050)';
+      fb.style.color = 'var(--red)';
+      inp.style.borderColor = 'var(--red)';
       if (_cfg.onWrong) _cfg.onWrong(item, typed);
       // show Next button
       const nextBtn = document.getElementById('dc-next');
