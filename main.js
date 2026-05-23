@@ -451,6 +451,14 @@ function createSchema() {
     console.log('Migrated schema to v6 (error_history table)');
   }
 
+  if (currentVersion < 7) {
+    // v7: add lesson_id and source to words for lesson-extracted vocab
+    const wc7 = (db.exec("PRAGMA table_info(words)")[0]?.values || []).map(r => r[1]);
+    if (!wc7.includes('lesson_id')) db.run('ALTER TABLE words ADD COLUMN lesson_id INTEGER REFERENCES lesson_sessions(id)');
+    if (!wc7.includes('source'))    db.run('ALTER TABLE words ADD COLUMN source TEXT');
+    db.run('UPDATE schema_version SET version = 7');
+    console.log('Migrated schema to v7 (lesson_id, source on words)');
+  }
   console.log('Schema created/verified');
 }
 
@@ -548,8 +556,8 @@ ipcMain.handle('words:upsert', (event, w) => {
   if (!db) return { error: 'Database not available' };
   try {
     db.run(
-      `INSERT INTO words (word, reading, meaning, level, pitch, frequency, pos, verb_class, is_auxiliary, list_source)
-       VALUES (?,?,?,?,?,?,?,?,?,?)
+      `INSERT INTO words (word, reading, meaning, level, pitch, frequency, pos, verb_class, is_auxiliary, list_source, lesson_id, source)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
        ON CONFLICT(word) DO UPDATE SET
          reading      = excluded.reading,
          meaning      = excluded.meaning,
@@ -559,10 +567,13 @@ ipcMain.handle('words:upsert', (event, w) => {
          pos          = COALESCE(excluded.pos, pos),
          verb_class   = COALESCE(excluded.verb_class, verb_class),
          is_auxiliary = COALESCE(excluded.is_auxiliary, is_auxiliary),
-         list_source  = COALESCE(excluded.list_source, list_source)`,
+         list_source  = COALESCE(excluded.list_source, list_source),
+         lesson_id    = COALESCE(excluded.lesson_id, lesson_id),
+         source       = COALESCE(excluded.source, source)`,
       [w.word, w.reading, w.meaning, w.level ?? 'custom', w.pitch ?? null,
        w.frequency ?? null, w.pos ?? null, w.verb_class ?? null,
-       w.is_auxiliary ?? 0, w.list_source ?? 'custom']
+       w.is_auxiliary ?? 0, w.list_source ?? 'custom',
+       w.lesson_id ?? null, w.source ?? null]
     );
     saveDatabase();
     return { ok: true };
