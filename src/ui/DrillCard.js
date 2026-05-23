@@ -90,6 +90,33 @@ const DrillCard = (() => {
     }
   }
 
+  function _sessionSave() {
+    if (!_cfg || !_cfg.sessionKey) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const data = JSON.stringify({ date: today, idx: _idx, run: _run, correct: _correct, wrong: _wrong, results: _results });
+    try { Storage.set(_cfg.sessionKey, data); } catch(e) {}
+  }
+
+  function _sessionLoad() {
+    if (!_cfg || !_cfg.sessionKey || _cfg.allowResume === false) return false;
+    try {
+      const raw = Storage.get(_cfg.sessionKey, null);
+      if (!raw) return false;
+      const s = JSON.parse(raw);
+      const today = new Date().toISOString().slice(0, 10);
+      if (s.date !== today) return false;
+      const freshQueue = _cfg.getQueue();
+      if (s.idx >= freshQueue.length || s.run > (_cfg.runsPerSession || 1)) return false;
+      _queue   = freshQueue;
+      _idx     = s.idx;
+      _run     = s.run;
+      _correct = s.correct;
+      _wrong   = s.wrong;
+      _results = s.results || new Array(_queue.length).fill(null);
+      return true;
+    } catch(e) { return false; }
+  }
+
   function _check() {
     if (_checked) { _advance(); return; }
     const inp  = document.getElementById('dc-input');
@@ -128,6 +155,7 @@ const DrillCard = (() => {
 
   function _advance() {
     _idx++;
+    _sessionSave();
     _showQuestion();
   }
 
@@ -167,12 +195,13 @@ const DrillCard = (() => {
 
   function run(cfg) {
     _cfg     = cfg;
+    _checked = false;
+    if (_sessionLoad()) { _showQuestion(); return; }
     _queue   = cfg.getQueue();
     _idx     = 0;
     _run     = 1;
     _correct = 0;
     _wrong   = 0;
-    _checked = false;
     _results = new Array(_queue.length).fill(null);
     _showQuestion();
   }
