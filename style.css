@@ -18,6 +18,7 @@
     --field-focus: #30d5c8;
     --ui: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     --serif: Georgia, 'Times New Roman', serif;
+    --jp: 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 17px; }
