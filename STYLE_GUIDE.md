@@ -29,8 +29,8 @@ _Last updated: 2026-05-23_
 ### ⚠️ Undefined Variables (needs fixing)
 | Variable | Status | Notes |
 |----------|--------|-------|
-| `--jp` | **Not defined** | Used everywhere for Japanese font. Needs explicit declaration e.g. `'Hiragino Sans', 'Yu Gothic', sans-serif` |
-| `--panel` | **Not defined** | Used as background in a few panels. Audit usages and replace or define. |
+| `--jp` | ✅ Defined | `'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', sans-serif` |
+| `--panel` | ✅ Defined | `#2c2c2e` — sidebar hover/active bg, dot border. Between --paper and --paper-dark. |
 
 ### Typography
 | Variable | Value | Usage |
