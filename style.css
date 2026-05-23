@@ -19,6 +19,8 @@
     --ui: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     --serif: Georgia, 'Times New Roman', serif;
     --jp: 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+    --panel: #2c2c2e;
+    --panel: #2c2c2e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 17px; }
