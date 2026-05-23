@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-23 (session 2)
+Last updated: 2026-05-23 (session 3)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
@@ -51,6 +51,16 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 ## Stabilization Status
 All immediate stabilization tasks complete. DrillCard migration in progress.
 
+### Completed (2026-05-23 session 3)
+- `.gitignore` — added .DS_Store, *.bak, management-log.json, index.json, audit-*.md
+- `lnCreateFromPaste` — apiUsageTrack added (was logged but not tracked in cost dashboard)
+- `features-grammar.js` particle drill — undocumented raw fetch found and tracked with [API] log + apiUsageTrack
+- `DrillCard` — session save/resume added via `sessionKey` config option. Uses Storage (SQL-backed). `allowResume: false` to skip.
+- `style.css` — `--jp` defined: Hiragino Sans stack. `--panel` defined: #2c2c2e.
+- `STYLE_GUIDE.md` — created at project root. Full variable reference, color semantics, button/input/feedback patterns, typography scale, component inventory.
+- `DrillCard` — removed `var(--red,#e05050)` fallbacks, `--red` is defined.
+- Model audit — all calls use `claude-sonnet-4-20250514` (Sonnet 4.5) or `claude-haiku-4-5-20251001`. Haiku usage in lnCreateFromPaste and particle drill is intentional. Upgrade to `claude-sonnet-4-6` noted for next session.
+
 ### Completed (2026-05-23 session 2)
 - `features-kana.js` — double-click on A/ひ/カ toolbar buttons saves that mode as default for that input location via `kvAPI` (`kana_default:{inputId}`). Loaded async on `kanaToolbar()` init.
 - `features-yoshi.js` — Lesson Notes grammar drill JSON shape normalised: `{english,japanese}` → `{en,jp}` matching grammar panel. Prerequisite for shared renderer.
@@ -75,7 +85,8 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 
 ### Short-term
 - **Listening → Four Strands** — ALREADY WIRED at core-listen.js line ~496. No action needed.
-- **DrillCard → counters migration** — add `srsKey` config option + session save/resume to DrillCard first, then migrate counters.
+- **Model string upgrade** — swap `claude-sonnet-4-20250514` → `claude-sonnet-4-6` across all 30+ call sites. Deliberate task, needs smoke test of grammar drill, lesson notes, voice conversation after.
+- **DrillCard → counters migration** — session save now in DrillCard. Wire counters next.
 - **ADJ_I / ADJ_NA word list** — only 8 i-adj / 6 na-adj. Deferred.
 
 ### DrillCard migration roadmap
@@ -96,8 +107,17 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 - Voice drill → DB, SRS for custom drill, Progress charts
 - overlay:transcribe IPC, BlackHole pre-session check, Management serial success check
 
+### CSS Variable Retrofit (multi-session track)
+**Goal: replace all hardcoded hex colors with CSS variables before handing UI to a designer.**
+- All new UI must use variables — STYLE_GUIDE.md is the reference
+- Retrofit existing files one at a time, screenshot test after each
+- Hardcoded color counts: index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17), features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9) — ~181 total across all files
+- Start with low-count files: core-writing.js(1), features-times.js(1), core-vocab.js(2)
+- features-progress.js last — chart colors may need new variables
+- After retrofit complete: hand to Claude for a UI design pass
+
 ### Dedicated tasks (next session start)
-- **STYLE_GUIDE.md** — scan style.css for all variables and class names, document full design system: colors, typography, buttons, inputs, cards, feedback patterns, progress indicators, layout patterns, component inventory. Living document — all new UI references it before writing CSS or inline styles. Build semi-automatically then annotate.
+- ~~STYLE_GUIDE.md~~ — done
 
 ### Housekeeping
 - src/features.js — delete if still present (19,035 lines, confirmed dead)
@@ -118,4 +138,4 @@ Two separate systems:
 ## Next Recommended Action
 1. Self-study session with app
 2. Next lesson: Lesson Notes analysis → filter [LN] → bring back 4 log lines
-3. Next dev session: add srsKey + session save to DrillCard → migrate counters
+3. Next dev session: model string upgrade → then CSS variable retrofit (start small files)
