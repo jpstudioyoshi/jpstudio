@@ -1047,6 +1047,7 @@ const GrammarErrors = {
 };
 
 let _conjTrackingPaused = false;
+let _conjHintUsed = false; // true if kanji stem was pre-filled for current question
 
 const ConjSession = {
   todayStr() { return new Date().toISOString().slice(0, 10); },
@@ -1569,6 +1570,7 @@ function renderConjDrillG() {
   // Pre-fill kanji stem to reduce typos — user types the ending only
   const _t = item.word.type;
   const _stem = _t === 'na-adj' ? item.word.dict : item.word.dict.slice(0, -1);
+  _conjHintUsed = !!_stem;
   if (_stem) { inp.value = _stem; }
   inp.focus();
 }
@@ -1671,7 +1673,8 @@ function checkConjG() {
     conjRevealed = true;
     if (correct) { 
       conjOk++; 
-      conjResults[conjIdx] = 'ok'; 
+      conjResults[conjIdx] = 'ok';
+      conjTypedAnswers[conjIdx] = { val, hintUsed: _conjHintUsed };
       conjSessionCorrect[item.key] = (conjSessionCorrect[item.key] || 0) + 1;
       // Record to SRS for mastery tracking
       if (!_conjTrackingPaused) {
@@ -1693,7 +1696,7 @@ function checkConjG() {
       }
       conjMiss++; 
       conjResults[conjIdx] = levClass.severity === 'slip' ? 'slip' : 'miss';
-      conjTypedAnswers[conjIdx] = val;
+      conjTypedAnswers[conjIdx] = { val, hintUsed: _conjHintUsed };
       conjSessionWrong[item.key] = (conjSessionWrong[item.key] || 0) + 1;
     }
   }

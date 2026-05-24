@@ -162,7 +162,10 @@ function lnSaveSessions(arr) {
 }
 function lnCurrentSession() {
   const sessions = lnGetSessions();
-  return (_lnCurrentIdx !== null && sessions[_lnCurrentIdx]) ? sessions[_lnCurrentIdx] : null;
+  if (_lnCurrentIdx !== null && sessions[_lnCurrentIdx]) return sessions[_lnCurrentIdx];
+  const LNS = window.LessonNotesState || (App && App.LessonNotesState);
+  if (LNS && LNS.currentIdx !== null && sessions[LNS.currentIdx]) return sessions[LNS.currentIdx];
+  return null;
 }
 
 
@@ -287,22 +290,62 @@ function lnOpenStory(i) {
 function lnRenderKeyPhrases(cur) {
   var kp = cur.keyPhrases || [];
   if (!kp.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No key phrases extracted.</div>';
-  var h = ['<div style="display:flex;flex-direction:column;gap:10px">'];
-  kp.forEach(function(p) {
-    var phrase = (p.phrase||'').replace(/'/g,'&#39;');
-    h.push('<div style="background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.25);border-radius:8px;padding:14px">');
-    h.push('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">');
-    h.push('<span style="font-family:var(--jp);font-size:1.1rem;color:var(--ink)">' + (p.phrase||'') + '</span>');
-    h.push('<button class="btn-ghost" style="padding:1px 5px;font-size:0.7rem" onclick="jpSpeak(\'' + phrase + '\')">&#128266;</button>');
-    h.push('</div>');
-    if (p.meaning) h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">' + p.meaning + '</div>');
-    if (p.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">' + p.example + '</div>');
-    h.push('</div>');
-  });
+  var mode = window._lnPhraseMode || 'browse';
+  var btnStyle = function(m) {
+    return 'padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:' + (mode===m ? 'var(--teal)' : 'var(--paper-dark)') + ';color:' + (mode===m ? '#fff' : 'var(--ink)');
+  };
+  var h = [];
+  h.push('<div style="display:flex;gap:6px;margin-bottom:14px">');
+  h.push('<button style="' + btnStyle('browse') + '" onclick="window._lnPhraseMode=\'browse\';lnRefreshTab(\'keyphrases\')">Browse</button>');
+  h.push('<button style="' + btnStyle('en-jp') + '" onclick="window._lnPhraseMode=\'en-jp\';lnStartPhraseDrill()">EN&rarr;JP</button>');
+  h.push('<button style="' + btnStyle('jp-en') + '" onclick="window._lnPhraseMode=\'jp-en\';lnStartPhraseDrill()">JP&rarr;EN</button>');
   h.push('</div>');
+  if (mode === 'browse') {
+    h.push('<div style="display:flex;flex-direction:column;gap:10px">');
+    kp.forEach(function(p) {
+      var phrase = (p.phrase||'').replace(/'/g,'&#39;');
+      h.push('<div style="background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.25);border-radius:8px;padding:14px">');
+      h.push('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">');
+      h.push('<span style="font-family:var(--jp);font-size:1.1rem;color:var(--ink)">' + (p.phrase||'') + '</span>');
+      h.push('<button class="btn-ghost" style="padding:1px 5px;font-size:0.7rem" onclick="jpSpeak(\'' + phrase + '\')">&#128266;</button>');
+      h.push('</div>');
+      if (p.meaning) h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">' + p.meaning + '</div>');
+      if (p.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">' + p.example + '</div>');
+      h.push('</div>');
+    });
+    h.push('</div>');
+  } else {
+    h.push('<div id="ln-phrase-drill-container"></div>');
+  }
   return h.join('');
 }
-
+function lnStartPhraseDrill() {
+  lnRefreshTab('keyphrases');
+  var cur = lnCurrentSession();
+  var kp = (cur && cur.keyPhrases) || [];
+  if (!kp.length) return;
+  var mode = window._lnPhraseMode || 'en-jp';
+  var DC = App.DrillCard || window.DrillCard;
+  if (!DC) { console.warn('[LN] DrillCard not found'); return; }
+  DC.run({
+    containerId: 'ln-phrase-drill-container',
+    allowResume: false,
+    getQueue: function() { return kp.slice().sort(function() { return Math.random()-0.5; }); },
+    getPrompt: function(item) {
+      if (mode === 'en-jp') return '<span style="font-family:var(--ui);font-size:1.3rem;color:var(--ink)">' + (item.meaning||'') + '</span>';
+      return '<span style="font-family:var(--jp)">' + (item.phrase||'') + '</span>';
+    },
+    getAnswer: function(item) {
+      return mode === 'en-jp' ? (item.phrase||'') : (item.meaning||'');
+    },
+    onSpeak: function(item) {
+      var speak = App.jpSpeak || window.jpSpeak;
+      if (speak && item.phrase) speak(item.phrase);
+    },
+    inputPlaceholder: mode === 'en-jp' ? 'Type Japanese...' : 'Type English...',
+    trackingLabel: 'ln-phrases'
+  });
+}
 function lnRenderCorrections(cur) {
   var corrections = cur.corrections || [];
   if (!corrections.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No corrections recorded.</div>';

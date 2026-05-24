@@ -52,6 +52,7 @@ const DrillCard = (() => {
         </div>
         <div style="text-align:center;margin-bottom:16px;font-family:var(--jp);font-size:2.2rem;color:var(--teal)">
           ${_cfg.getPrompt(item)}
+          ${_cfg.onSpeak ? '<button onclick="DrillCard._speak()" style=\"margin-left:8px;background:none;border:none;font-size:1.4rem;cursor:pointer;vertical-align:middle\">🔊</button>' : ''}
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
           <input id="dc-input" type="text"
@@ -137,6 +138,7 @@ const DrillCard = (() => {
       fb.style.color = 'var(--teal)';
       inp.style.borderColor = 'var(--teal)';
       if (_cfg.onCorrect) _cfg.onCorrect(item);
+      if (_cfg.onSpeak) _cfg.onSpeak(item);
       // auto-advance after 800ms
       setTimeout(_advance, 800);
     } else {
@@ -193,6 +195,9 @@ const DrillCard = (() => {
     `);
   }
 
+  function _speak() {
+    if (_cfg && _cfg.onSpeak && _queue[_idx]) _cfg.onSpeak(_queue[_idx]);
+  }
   function run(cfg) {
     _cfg     = cfg;
     _checked = false;
@@ -211,7 +216,7 @@ const DrillCard = (() => {
     run(_cfg);
   }
 
-  return { run, restart };
+  return { run, restart, _speak };
 })();
 try { Object.assign(App, { DrillCard }); } catch(e) {}
 window["DrillCard"] = DrillCard;

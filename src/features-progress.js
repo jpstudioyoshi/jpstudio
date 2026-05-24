@@ -536,7 +536,8 @@ function _accuracyFromHistory(history, view, entry) {
   if (hist.length) {
     let entries = _filterHistory(hist, view);
     const periodEmpty = view !== 'all' && !entries.length;
-    if (periodEmpty) entries = hist; // fallback to all-time history
+    if (periodEmpty && view === 'last') return null; // no data today — show grey, not stale
+    if (periodEmpty) entries = hist; // fallback to all-time for week/month views
     if (entries.length) {
       const correct = entries.filter(h => h.correct).length;
       return { pct: Math.round((correct / entries.length) * 100), fallback: periodEmpty };
@@ -884,7 +885,7 @@ function renderCounterMastery() {
     <table style="border-collapse:collapse;width:100%;font-family:var(--ui);font-size:0.75rem">
       <thead><tr>
         <th style="text-align:left;padding:4px 8px 4px 0;color:var(--ink-light);font-weight:500;min-width:52px"></th>
-        ${NUMS.map(n => `<th style="text-align:center;padding:4px 3px;color:var(--ink-light);font-weight:400;min-width:26px">${n}</th>`).join('')}
+        ${NUMS.map(n => `<th style="text-align:center;padding:4px 3px;color:var(--ink-light);font-weight:400;min-width:42px">${n}</th>`).join('')}
         <th style="text-align:right;padding:4px 0 4px 8px;color:var(--ink-light);font-weight:400;min-width:36px">score</th>
       </tr></thead>
       <tbody>`;
@@ -899,13 +900,13 @@ function renderCounterMastery() {
     const cells = NUMS.map(n => {
       const entry = cmData[`${key}-${n}`];
 
-      if (!entry) return `<td style="text-align:center;padding:2px 3px"><div style="width:20px;height:20px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.3"></div></td>`;
+      if (!entry) return `<td style="text-align:center;padding:2px 3px"><div style="width:36px;height:28px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.3"></div></td>`;
 
       const hist      = entry.history || [];
       const accResult = _accuracyFromHistory(hist, _masteryView, entry);
 
       if (accResult === null) {
-        return `<td style="text-align:center;padding:2px 3px"><div style="width:20px;height:20px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.4" title="${key}-${n}: no data"></div></td>`;
+        return `<td style="text-align:center;padding:2px 3px"><div style="width:36px;height:28px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.4" title="${key}-${n}: no data"></div></td>`;
       }
 
       const acc      = accResult.pct;
@@ -923,7 +924,7 @@ function renderCounterMastery() {
       const title = `${key}-${n}: ${acc}%${fallback ? ' (all time)' : ''} (${usedEntries.filter(h=>h.correct).length}/${usedEntries.length})`;
 
       return `<td style="text-align:center;padding:2px 3px" title="${title}">
-        <div style="width:20px;height:20px;border-radius:3px;background:${color};margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.58rem;color:#000;font-weight:600;opacity:${fallback ? '0.6' : '1'}">${acc}%</div>
+        <div style="width:36px;height:28px;border-radius:3px;background:${color};margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#000;font-weight:600;opacity:${fallback ? '0.6' : '1'}">${acc}%</div>
       </td>`;
     });
 
@@ -1259,12 +1260,11 @@ function errorShowPopup(key) {
   const rows = examples.map(e => {
     const input = e.input || e.userText || '';
     const corr  = e.corrected || e.correction || '';
-    return '<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06)">'
+    return '<div style="padding:10px 0;border-bottom:2px solid var(--border);margin-bottom:2px">'
       + (input && corr && input !== corr
-          ? '<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink-light);'
-            + 'text-decoration:line-through;margin-bottom:2px">' + input + '</div>'
-            + '<div style="font-family:var(--jp);font-size:0.92rem;color:var(--ink)">' + corr + '</div>'
-          : '<div style="font-family:var(--jp);font-size:0.92rem;color:var(--ink)">' + (corr || input) + '</div>')
+          ? '<div style="font-family:var(--jp);font-size:1rem;color:#ff3333;margin-bottom:6px;line-height:1.4">' + input + '</div>'
+            + '<div style="font-family:var(--jp);font-size:1rem;color:#5ddb8f;line-height:1.4">' + corr + '</div>'
+          : '<div style="font-family:var(--jp);font-size:1rem;color:#5ddb8f;line-height:1.4">' + (corr || input) + '</div>')
       + '</div>';
   }).join('');
 

@@ -57,6 +57,7 @@ const LessonNotesState = {
   transcriptMode:      'timeline',
   _transcriptRecId:    null,
 };
+window.LessonNotesState = LessonNotesState;
 
 function lessonNotesGetSessions() {
   return LessonNotesState.sessions;
@@ -996,6 +997,30 @@ function lessonNotesSetView(mode) {
   const tc = document.getElementById('lnTranscriptContainer');
   if (tc && mode !== 'recording') tc.style.display = 'none';
   lessonNotesRender();
+  if (mode === 'keyphrases' && window._lnPhraseMode && window._lnPhraseMode !== 'browse') {
+    setTimeout(function() {
+      var DC = (typeof App !== 'undefined' && App.DrillCard) || window.DrillCard;
+      var kp = LessonNotesState.keyPhrases || [];
+      if (!DC || !kp.length) return;
+      var m = window._lnPhraseMode;
+      DC.run({
+        containerId: 'ln-phrase-drill-container',
+        allowResume: false,
+        getQueue: function() { return kp.slice().sort(function() { return Math.random()-0.5; }); },
+        getPrompt: function(item) {
+          if (m === 'en-jp') return '<span style="font-family:var(--ui);font-size:1.3rem;color:var(--ink)">' + (item.meaning||'') + '</span>';
+          return '<span style="font-family:var(--jp)">' + (item.phrase||'') + '</span>';
+        },
+        getAnswer: function(item) { return m === 'en-jp' ? (item.phrase||'') : (item.meaning||''); },
+        onSpeak: function(item) {
+          var speak = (typeof App !== 'undefined' && App.jpSpeak) || window.jpSpeak;
+          if (speak && item.phrase) speak(item.phrase);
+        },
+        inputPlaceholder: m === 'en-jp' ? 'Type Japanese...' : 'Type English...',
+        trackingLabel: 'ln-phrases'
+      });
+    }, 50);
+  }
 }
 
 function lessonNotesRenderStories() {
@@ -1048,12 +1073,18 @@ function lessonNotesRenderKeyPhrases() {
         <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn btn-icon">🔑 Extract Key Phrases</button>
       </div>
     ` : `
+      <div style="display:flex;f      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${!window._lnPhraseMode||window._lnPhraseMode==='browse'?'var(--teal)':'var(--paper-dark)'};color:${!window._lnPhraseMode||window._lnPhraseMode==='browse'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='browse';lessonNotesSetView('keyphrases')">Browse</button>
+        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${window._lnPhraseMode==='en-jp'?'var(--teal)':'var(--paper-dark)'};color:${window._lnPhraseMode==='en-jp'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='en-jp';lessonNotesSetView('keyphrases')">EN&rarr;JP</button>
+        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${window._lnPhraseMode==='jp-en'?'var(--teal)':'var(--paper-dark)'};color:${window._lnPhraseMode==='jp-en'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='jp-en';lessonNotesSetView('keyphrases')">JP&rarr;EN</button>
+      </div>
+      ${!window._lnPhraseMode || window._lnPhraseMode === 'browse' ? `
       <div style="display:flex;flex-direction:column;gap:10px">
         ${LessonNotesState.keyPhrases.map((kp, i) => `
           <div style="background:linear-gradient(135deg, rgba(212,165,116,0.08), rgba(212,165,116,0.02));border:1px solid rgba(212,165,116,0.3);border-radius:8px;padding:14px">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
               <span style="font-family:var(--jp);font-size:1.15rem;color:var(--ink)">${kp.phrase}</span>
-              <button class="btn-icon" onclick="jpSpeak('${(kp.phrase||'').replace(/'/g,"\\'")}')">🔊</button>
+              <button class="btn-icon" onclick="jpSpeak('${(kp.phrase||'').replace(/'/g,"\'")}')">🔊</button>
             </div>
             <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink-light)">${kp.meaning || ''}</div>
             ${kp.example ? `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">${kp.example}</div>` : ''}
@@ -1063,6 +1094,7 @@ function lessonNotesRenderKeyPhrases() {
       <div style="margin-top:12px;text-align:center">
         <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn btn-icon">🔄 Re-extract</button>
       </div>
+      ` : `<div id="ln-phrase-drill-container" style="margin-top:8px"></div>`}
     `}
   `;
 }

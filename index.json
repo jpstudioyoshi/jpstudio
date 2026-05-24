@@ -4448,182 +4448,182 @@
     "type": "function",
     "name": "conjAddFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1138,
+    "line": 1139,
     "desc": "const batch = FREQ_VERBS_ORDERED.slice(_conjFreqVerbsAdded, _conjFreqVerbsAdded + 10);"
   },
   {
     "type": "function",
     "name": "conjResetFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1151,
+    "line": 1152,
     "desc": "window._conjExtraVerbs = [];"
   },
   {
     "type": "function",
     "name": "conjUpdateFreqCount",
     "file": "src/features-grammar.js",
-    "line": 1157,
+    "line": 1158,
     "desc": "const el = document.getElementById('conjFreqVerbCount');"
   },
   {
     "type": "function",
     "name": "startConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1176,
+    "line": 1177,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "_conjUpdateSpecialFilterUI",
     "file": "src/features-grammar.js",
-    "line": 1246,
+    "line": 1247,
     "desc": "const ruOnly = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "conjUpdateOptions",
     "file": "src/features-grammar.js",
-    "line": 1260,
+    "line": 1261,
     "desc": "conjUpdateFreqCount();"
   },
   {
     "type": "function",
     "name": "conjForceNewSession",
     "file": "src/features-grammar.js",
-    "line": 1265,
+    "line": 1266,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "conjResumeSession",
     "file": "src/features-grammar.js",
-    "line": 1317,
+    "line": 1318,
     "desc": "conjQueue = saved.queue.map(item => {"
   },
   {
     "type": "function",
     "name": "conjDeConsecutive",
     "file": "src/features-grammar.js",
-    "line": 1347,
+    "line": 1348,
     "desc": "if (queue.length <= 5) return queue;"
   },
   {
     "type": "function",
     "name": "conjBuildRunQueue",
     "file": "src/features-grammar.js",
-    "line": 1377,
+    "line": 1378,
     "desc": "window._conjVerbTypes = verbTypes;"
   },
   {
     "type": "function",
     "name": "renderConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1437,
+    "line": 1438,
     "desc": "const area = document.getElementById('conjDrillAreaG');"
   },
   {
     "type": "function",
     "name": "conjNextRun",
     "file": "src/features-grammar.js",
-    "line": 1576,
+    "line": 1578,
     "desc": "conjRun++;"
   },
   {
     "type": "function",
     "name": "handleConjKeyG",
     "file": "src/features-grammar.js",
-    "line": 1581,
+    "line": 1583,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "conjAutoConvertG",
     "file": "src/features-grammar.js",
-    "line": 1593,
+    "line": 1595,
     "desc": "Enter handling is done in handleConjKeyG — no global listener needed"
   },
   {
     "type": "function",
     "name": "conjClassifyError",
     "file": "src/features-grammar.js",
-    "line": 1617,
+    "line": 1619,
     "desc": "const dist = cmLevenshtein(typed, correct);"
   },
   {
     "type": "function",
     "name": "checkConjG",
     "file": "src/features-grammar.js",
-    "line": 1661,
+    "line": 1663,
     "desc": "const input = document.getElementById('conjInputG');"
   },
   {
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1732,
+    "line": 1735,
     "desc": "conjAutoConvertG();"
   },
   {
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1743,
+    "line": 1746,
     "desc": "if (conjIdx <= 0) return;"
   },
   {
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1757,
+    "line": 1760,
     "desc": "if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }"
   },
   {
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 1765,
+    "line": 1768,
     "desc": "Grammar2State.lastSubtab = name;"
   },
   {
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 1818,
+    "line": 1821,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';"
   },
   {
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 1864,
+    "line": 1867,
     "desc": "const area = document.getElementById('particleDrillArea');"
   },
   {
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 1947,
+    "line": 1950,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered"
   },
   {
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 1955,
+    "line": 1958,
     "desc": "if (_pdResults[exIdx] !== null) return;"
   },
   {
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 1963,
+    "line": 1966,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;"
   },
   {
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2001,
+    "line": 2004,
     "desc": "if (!conjCurrentAnswer) return;"
   },
   {
@@ -4637,7 +4637,7 @@
     "type": "storage",
     "name": "CONJ_SESSION",
     "file": "src/features-grammar.js",
-    "line": 1063,
+    "line": 1064,
     "desc": "Storage.set"
   },
   {
@@ -6170,77 +6170,77 @@
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 561,
+    "line": 562,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 571,
+    "line": 572,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 770,
+    "line": 771,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 854,
+    "line": 855,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 962,
+    "line": 963,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1050,
+    "line": 1051,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1116,
+    "line": 1117,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1141,
+    "line": 1142,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1183,
+    "line": 1184,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1228,
+    "line": 1229,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1246,
+    "line": 1247,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
@@ -6464,371 +6464,378 @@
     "type": "function",
     "name": "lnRenderTab",
     "file": "src/features-tools.js",
-    "line": 169,
+    "line": 172,
     "desc": "if (!cur) return '';"
   },
   {
     "type": "function",
     "name": "lnSwitchTab",
     "file": "src/features-tools.js",
-    "line": 181,
+    "line": 184,
     "desc": "document.querySelectorAll('[id^=\"lnTab-\"]').forEach(function(b) {"
   },
   {
     "type": "function",
     "name": "lnRenderVocab",
     "file": "src/features-tools.js",
-    "line": 191,
+    "line": 194,
     "desc": "var vocab = cur.vocab || [];"
   },
   {
     "type": "function",
     "name": "lnSetDrillMode",
     "file": "src/features-tools.js",
-    "line": 247,
+    "line": 250,
     "desc": "window._lnDrillMode = mode; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnDrillReveal",
     "file": "src/features-tools.js",
-    "line": 248,
+    "line": 251,
     "desc": "window._lnDrillRevealed = true; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnDrillNext",
     "file": "src/features-tools.js",
-    "line": 249,
+    "line": 252,
     "desc": "window._lnDrillIdx = (window._lnDrillIdx||0) + 1; window._lnDrillRevealed = false; lnRefreshTab('voc"
   },
   {
     "type": "function",
     "name": "lnDrillPrev",
     "file": "src/features-tools.js",
-    "line": 250,
+    "line": 253,
     "desc": "window._lnDrillIdx = Math.max(0, (window._lnDrillIdx||0) - 1); window._lnDrillRevealed = false; lnRe"
   },
   {
     "type": "function",
     "name": "lnDrillJump",
     "file": "src/features-tools.js",
-    "line": 251,
+    "line": 254,
     "desc": "window._lnDrillIdx = i; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnRefreshTab",
     "file": "src/features-tools.js",
-    "line": 252,
+    "line": 255,
     "desc": "var btn = document.getElementById('lnTab-' + tab);"
   },
   {
     "type": "function",
     "name": "lnRenderStories",
     "file": "src/features-tools.js",
-    "line": 260,
+    "line": 263,
     "desc": "var stories = cur.stories || [];"
   },
   {
     "type": "function",
     "name": "lnOpenStory",
     "file": "src/features-tools.js",
-    "line": 274,
+    "line": 277,
     "desc": "var cur = lnCurrentSession();"
   },
   {
     "type": "function",
     "name": "lnRenderKeyPhrases",
     "file": "src/features-tools.js",
-    "line": 287,
+    "line": 290,
     "desc": "var kp = cur.keyPhrases || [];"
+  },
+  {
+    "type": "function",
+    "name": "lnStartPhraseDrill",
+    "file": "src/features-tools.js",
+    "line": 322,
+    "desc": "lnRefreshTab('keyphrases');"
   },
   {
     "type": "function",
     "name": "lnRenderCorrections",
     "file": "src/features-tools.js",
-    "line": 306,
+    "line": 349,
     "desc": "var corrections = cur.corrections || [];"
   },
   {
     "type": "function",
     "name": "lnRenderGrammar",
     "file": "src/features-tools.js",
-    "line": 320,
+    "line": 363,
     "desc": "var grammar = cur.grammar || [];"
   },
   {
     "type": "function",
     "name": "lnToggleGrammarHide",
     "file": "src/features-tools.js",
-    "line": 353,
+    "line": 396,
     "desc": "if (!window._lnGrammarHidden) window._lnGrammarHidden = new Set();"
   },
   {
     "type": "function",
     "name": "lnToggleShowHidden",
     "file": "src/features-tools.js",
-    "line": 359,
+    "line": 402,
     "desc": "window._lnShowHidden = !window._lnShowHidden;"
   },
   {
     "type": "function",
     "name": "lnRenderTopics",
     "file": "src/features-tools.js",
-    "line": 364,
+    "line": 407,
     "desc": "var topics = cur.topics || [];"
   },
   {
     "type": "function",
     "name": "lnRenderFullDoc",
     "file": "src/features-tools.js",
-    "line": 378,
+    "line": 421,
     "desc": "var raw = cur.rawText || '';"
   },
   {
     "type": "function",
     "name": "lnRenderRecording",
     "file": "src/features-tools.js",
-    "line": 384,
+    "line": 427,
     "desc": "var recordings = window._lessonRecordingSessions || [];"
   },
   {
     "type": "function",
     "name": "lnFilterTranscript",
     "file": "src/features-tools.js",
-    "line": 444,
+    "line": 487,
     "desc": "document.querySelectorAll('.lesson-transcript-row').forEach(function(r) {"
   },
   {
     "type": "function",
     "name": "lnToggleRecPlayer",
     "file": "src/features-tools.js",
-    "line": 452,
+    "line": 495,
     "desc": "── Recording list handlers ──────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "lnDeleteRecording",
     "file": "src/features-tools.js",
-    "line": 458,
+    "line": 501,
     "desc": "const recs = window._lessonRecordingSessions || [];"
   },
   {
     "type": "function",
     "name": "lnNewSession",
     "file": "src/features-tools.js",
-    "line": 478,
+    "line": 521,
     "desc": "_lnCurrentIdx = null;"
   },
   {
     "type": "function",
     "name": "lnLoadSession",
     "file": "src/features-tools.js",
-    "line": 483,
+    "line": 526,
     "desc": "_lnCurrentIdx = idx >= 0 ? idx : null;"
   },
   {
     "type": "function",
     "name": "lnDeleteSession",
     "file": "src/features-tools.js",
-    "line": 488,
+    "line": 531,
     "desc": "if (!confirm('Delete this lesson session?')) return;"
   },
   {
     "type": "function",
     "name": "lnCreateFromPaste",
     "file": "src/features-tools.js",
-    "line": 497,
+    "line": 540,
     "desc": "var raw = (document.getElementById('lnPasteArea') || {}).value || '';"
   },
   {
     "type": "function",
     "name": "lnHandleFile",
     "file": "src/features-tools.js",
-    "line": 582,
+    "line": 625,
     "desc": "if (!files || !files[0]) return;"
   },
   {
     "type": "function",
     "name": "lnHandleDrop",
     "file": "src/features-tools.js",
-    "line": 595,
+    "line": 638,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "yoshiSaveWhatsappInline",
     "file": "src/features-tools.js",
-    "line": 601,
+    "line": 644,
     "desc": "const el = document.getElementById('waInput_' + sessionId);"
   },
   {
     "type": "function",
     "name": "yoshiRetranscribe",
     "file": "src/features-tools.js",
-    "line": 615,
+    "line": 658,
     "desc": ""
   },
   {
     "type": "function",
     "name": "yoshiOpenOverlay",
     "file": "src/features-tools.js",
-    "line": 635,
+    "line": 678,
     "desc": "if (window.electronAPI?.openLessonOverlay) {"
   },
   {
     "type": "function",
     "name": "yoshiOpenTeams",
     "file": "src/features-tools.js",
-    "line": 663,
+    "line": 706,
     "desc": "const url = 'https://teams.live.com/meet/9387084365462?p=cBmSFutAH5IRELtQxD';"
   },
   {
     "type": "function",
     "name": "yoshiTestChannels",
     "file": "src/features-tools.js",
-    "line": 672,
+    "line": 715,
     "desc": "Result is persisted to failure_events for post-session forensics."
   },
   {
     "type": "function",
     "name": "yoshiRunPreflight",
     "file": "src/features-tools.js",
-    "line": 700,
+    "line": 743,
     "desc": "── Full preflight (optional yoshiRunPreflight() call) ────────────────────────"
   },
   {
     "type": "function",
     "name": "_renderPreflightBadge",
     "file": "src/features-tools.js",
-    "line": 725,
+    "line": 768,
     "desc": "── Preflight rendering helpers ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "_preflightReportHtml",
     "file": "src/features-tools.js",
-    "line": 739,
+    "line": 782,
     "desc": "const pfRow = (label, ok, detail, isWarn) => {"
   },
   {
     "type": "function",
     "name": "_pfShortLabel",
     "file": "src/features-tools.js",
-    "line": 785,
+    "line": 828,
     "desc": "if (!label) return '—';"
   },
   {
     "type": "function",
     "name": "mgSelectCat",
     "file": "src/features-tools.js",
-    "line": 995,
+    "line": 1038,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "mgSetPairs",
     "file": "src/features-tools.js",
-    "line": 1000,
+    "line": 1043,
     "desc": "MatchingPairsState.pairs = n;"
   },
   {
     "type": "function",
     "name": "mgSetTimer",
     "file": "src/features-tools.js",
-    "line": 1005,
+    "line": 1048,
     "desc": "MatchingPairsState.timer = n;"
   },
   {
     "type": "function",
     "name": "mgSetReading",
     "file": "src/features-tools.js",
-    "line": 1010,
+    "line": 1053,
     "desc": "MatchingPairsState.reading = v;"
   },
   {
     "type": "function",
     "name": "mgShowSetup",
     "file": "src/features-tools.js",
-    "line": 1016,
+    "line": 1059,
     "desc": "document.getElementById('mg-setup').style.display = '';"
   },
   {
     "type": "function",
     "name": "mgStart",
     "file": "src/features-tools.js",
-    "line": 1023,
+    "line": 1066,
     "desc": "const cat = VG_CATEGORIES[MatchingPairsState.cat];"
   },
   {
     "type": "function",
     "name": "mgUpdateTimer",
     "file": "src/features-tools.js",
-    "line": 1082,
+    "line": 1125,
     "desc": "const el = document.getElementById('mg-timer');"
   },
   {
     "type": "function",
     "name": "mgClickKanji",
     "file": "src/features-tools.js",
-    "line": 1091,
+    "line": 1134,
     "desc": "if (document.querySelector('.mg-kanji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgClickEmoji",
     "file": "src/features-tools.js",
-    "line": 1100,
+    "line": 1143,
     "desc": "if (document.querySelector('.mg-emoji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgCheckMatch",
     "file": "src/features-tools.js",
-    "line": 1108,
+    "line": 1151,
     "desc": "if (MatchingPairsState.kanjiSel === null || MatchingPairsState.emojiSel === null) return;"
   },
   {
     "type": "function",
     "name": "mgFinish",
     "file": "src/features-tools.js",
-    "line": 1132,
+    "line": 1175,
     "desc": "clearInterval(MatchingPairsState.timerInt);"
   },
   {
     "type": "function",
     "name": "mgEnd",
     "file": "src/features-tools.js",
-    "line": 1146,
+    "line": 1189,
     "desc": "mgFinish(false); }"
   },
   {
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 1245,
+    "line": 1288,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 1256,
+    "line": 1299,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrClear",
     "file": "src/features-tools.js",
-    "line": 1282,
+    "line": 1325,
     "desc": "const inp = document.getElementById('qrInput');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 1294,
+    "line": 1337,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {

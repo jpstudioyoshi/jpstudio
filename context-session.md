@@ -171,3 +171,28 @@ Status: IN PROGRESS
 
 ### Future housekeeping
 - App registry cross-reference: document which functions are HTML-only (need `window[]`), JS-only (App registry), or both. Would make redundant export cleanup faster. check-syntax.js audit already lists all exports — just needs a one-time classification pass.
+
+### DrillCard migration — status update
+Counters migration postponed indefinitely. Counter drill has complex state (session resume, SRS via CM, object mode, audio, lookup popup) that doesn't fit DrillCard's simple model without either hacking DrillCard or stripping counter features. Working code — leave alone.
+Conjugation and Grammar sentences also deferred (marked complex, last).
+DrillCard migration effectively complete at Dates. Roadmap closed.
+
+### Vocab/Conjugation drill word sourcing — future feature
+Currently vocab drill and conjugation drill draw from static word lists. Goal: feed both from a dynamic weighted list (priority score, SRS state, lesson-extracted words). This should happen AFTER Lesson Notes reconstruction is stable and lesson-extracted vocab is flowing into the words SQL table reliably. Prerequisite: confirm lesson_id FK is being set (currentLessonId is currently always null).
+
+### Vocab priority engine — integration gaps
+The priority system in `wordPriorityScore` (core-vocab.js) is sophisticated but has two integration gaps:
+1. `entry.lessonDoc` (+15 bonus) — flag for lesson-extracted words. Currently `source='lesson'` is written to SQL but `lessonDoc` is a corpus field not read from SQL. Lesson-extracted words are NOT getting their +15 bonus. Needs wire-up in `vcBuildPriorityList` / `vcBuildList` to set `lessonDoc=true` when `source='lesson'`.
+2. `currentLessonId` — always null in Lesson Notes extraction, so lesson FK on words/phrases rows is unset. Needs wiring to the recording pipeline session id.
+Both gaps should be fixed together once lesson recording → Lesson Notes flow is stable.
+
+### Conjugation hint tracking — future feature
+`_conjHintUsed` flag and `conjTypedAnswers` now store `{val, hintUsed}` objects (added 2026-05-24). Data is collected per-run in memory but NOT yet persisted to DrillSRS history. To enable mastery filtering by hint usage:
+1. Extend `DrillSRS.record()` to accept optional metadata `{hintUsed}`
+2. Store `hintUsed` in SRS history entries
+3. Modify `_accuracyFromHistory` to accept a filter param
+4. Add checkbox UI to conjugation/adjective mastery panels in progress page
+Foundation is in place — collection is happening.
+
+### Progress mastery view fix (2026-05-24)
+`_filterHistory` view values are 'last' (today), 'week' (this week), 'prev' (last week) — NOT 'today'. Fixed `_accuracyFromHistory` to return null when view='last' and period is empty, so cells correctly show grey instead of falling back to all-time data when "Today" is selected and nothing has been drilled.
