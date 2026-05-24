@@ -1278,7 +1278,7 @@ function vcMergeEntry(word, cached, corpusEntry) {
     chatCount, lastChat, firstChat,
     produced,
     encountered:   lookupCount > 0 || produced,
-    lessonDoc:     cached?.first_seen_panel === 'lesson_doc',
+    lessonDoc:     cached?.first_seen_panel === 'lesson_doc' || !!(window._lessonWordSet?.has(word.w)),
   };
 }
 

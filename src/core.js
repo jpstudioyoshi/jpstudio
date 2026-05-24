@@ -503,6 +503,14 @@ initKanaDrill();
 
 // Data-dependent inits deferred until SQLite cache is populated
 document.addEventListener('storageReady', function() {
+  // Load lesson-sourced words into memory for vcBuildList lessonDoc bonus
+  window._lessonWordSet = new Set();
+  if (window.db) {
+    window.db.query('SELECT word FROM words WHERE source = ?', ['lesson']).then(rows => {
+      (rows || []).forEach(r => window._lessonWordSet.add(r.word));
+      console.log('[LN] lesson word set loaded:', window._lessonWordSet.size, 'words');
+    }).catch(e => console.warn('[LN] lesson word set load failed:', e.message));
+  }
   initApiKeyBar();
   renderVocab();
   startConjDrill();
