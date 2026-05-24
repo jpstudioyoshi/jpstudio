@@ -65,6 +65,25 @@ function qrSpeakRaw() {
   }
 }
 
+// Entry point for external callers — loads text into Quick Read and segments it
+async function qrLoadText(text) {
+  if (!text) return;
+  // Save existing content first
+  const existing = document.getElementById('qrInput')?.value?.trim();
+  if (existing && existing.length >= 10) {
+    (App.qrSaveToHistory || window.qrSaveToHistory)?.(existing, []);
+  }
+  // Navigate to reading panel
+  (App.showPanel || window.showPanel)?.('read');
+  await new Promise(r => setTimeout(r, 100));
+  // Show paste area and set text
+  qrShowPaste();
+  const inp = document.getElementById('qrInput');
+  if (inp) { inp.value = text; inp.dispatchEvent(new Event('input')); }
+  // Auto-segment
+  await qrSegment();
+}
+
 function qrShowPaste() {
   const rw = document.getElementById('qrReaderWrap');
   const pa = document.getElementById('readPasteArea');
@@ -1351,7 +1370,7 @@ function qrRestoreSession() {
 // ── App registry ─────────────────────────────────────────
 try {
   Object.assign(App, {
-    qrSpeakRaw,
+    qrSpeakRaw, qrLoadText,
     qrClear,
     qrLoadHistory,
     qrDeleteHistory,

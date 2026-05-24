@@ -1008,6 +1008,7 @@ function lessonNotesRenderStories() {
           onmouseover="this.style.borderColor='var(--teal)'"
           onmouseout="this.style.borderColor='var(--border)'">
           <div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:8px;line-height:1.4">${s.title}</div>
+          <button class="btn-ghost" onclick="event.stopPropagation();(App.qrLoadText||window.qrLoadText)?.(LessonNotesState.stories[${i}]?.text)" style="font-size:0.72rem;padding:2px 8px;margin-bottom:6px">Read →</button>
           <div style="font-family:var(--jp);font-size:0.8rem;color:var(--ink-light);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${s.text.substring(0, 60)}…</div>
         </div>
       `).join('')}
