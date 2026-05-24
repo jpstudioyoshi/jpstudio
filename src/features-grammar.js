@@ -444,6 +444,8 @@ async function gramSentPracticePattern(pattern) {
   if (!pattern) return;
   (App.showPanel || window.showPanel)?.('grammar2');
   await new Promise(r => setTimeout(r, 150)); // let panel render
+  gram2Switch('sent');
+  await new Promise(r => setTimeout(r, 50));
   const inp = document.getElementById('gramSentInput');
   if (inp) { inp.value = pattern; inp.dispatchEvent(new Event('input')); }
   await gramSentGenerate();

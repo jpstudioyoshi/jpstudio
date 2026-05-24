@@ -168,3 +168,6 @@ Status: IN PROGRESS
 - ✅ v7: `lesson_id` and `source` on `words` table
 - Next: v8 — new `lesson_phrases` table
 - Grammar: no new table needed
+
+### Future housekeeping
+- App registry cross-reference: document which functions are HTML-only (need `window[]`), JS-only (App registry), or both. Would make redundant export cleanup faster. check-syntax.js audit already lists all exports — just needs a one-time classification pass.
