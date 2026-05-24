@@ -268,7 +268,7 @@ async function lessonNotesPanelHandlePaste(event) {
   const sessions = lessonNotesGetSessions();
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
   const title = firstLine + (firstLine.length >= 30 ? '...' : '');
-  const newSession = { title, vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -311,7 +311,7 @@ async function lessonNotesPanelHandleFile(files) {
   // Create new session
   const sessions = lessonNotesGetSessions();
   const title = file.name.replace(/\.(docx|txt|md)$/i, '');
-  const newSession = { title, vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -390,7 +390,7 @@ function lessonNotesNewFromPanel() {
   if (!title) return;
   
   const sessions = lessonNotesGetSessions();
-  sessions.unshift({ title, vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' });
+  sessions.unshift({ title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' });
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
   LessonNotesState.vocab = [];
@@ -3352,6 +3352,20 @@ function lessonNotesLoadSession(idx) {
       LessonNotesState.rawText = sessions[idx].rawText || '';
       LessonNotesState.docImages = sessions[idx].images || [];
       LessonNotesState.docContent = sessions[idx].docContent || [];
+
+      // Look up lesson_sessions SQL row by date to set currentLessonId
+      LessonNotesState.currentLessonId = null;
+      const _lnDate = sessions[idx].date ? sessions[idx].date.slice(0,10) : null;
+      if (_lnDate && window.db) {
+        (async () => {
+          try {
+            const _lnRows = await window.db.query('SELECT id FROM lesson_sessions WHERE date = ? LIMIT 1', [_lnDate]);
+            const _lnId = _lnRows?.[0]?.id || null;
+            LessonNotesState.currentLessonId = _lnId;
+            if (_lnId) console.log('[LN] lesson_id linked:', _lnId, 'for date', _lnDate);
+          } catch(e) { console.warn('[LN] lesson_id lookup failed:', e.message); }
+        })();
+      }
       
       // Auto-extract if we have doc content but missing extracted data
       // Only auto-extract for NEW sessions (no vocab yet) - don't re-extract old sessions
@@ -3577,7 +3591,7 @@ ${text}` }]
         stories: [], 
         errors: [],
         images: LessonNotesState.docImages || [],
-        date: new Date().toISOString() 
+        date: new Date().toISOString().slice(0,10) 
       };
       
       if (LessonNotesState.currentIdx !== null) {
