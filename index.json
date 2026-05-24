@@ -38,49 +38,49 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 482,
+    "line": 512,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');"
   },
   {
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 810,
+    "line": 879,
     "desc": "const dir = path.join(app.getPath('userData'), 'lessons');"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 816,
+    "line": 885,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 826,
+    "line": 895,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1077,
+    "line": 1146,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1128,
+    "line": 1197,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1207,
+    "line": 1276,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
@@ -141,93 +141,114 @@
   },
   {
     "type": "storage",
-    "name": "INSERT",
+    "name": "UPDATE",
     "file": "main.js",
-    "line": 575,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 643,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "main.js",
-    "line": 700,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 717,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "main.js",
-    "line": 725,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 841,
+    "line": 490,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 905,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 986,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1002,
+    "line": 506,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1006,
+    "line": 593,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 644,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 712,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 769,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 786,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 794,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 910,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1020,
+    "line": 974,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1055,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1071,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 1075,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1089,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1060,
+    "line": 1129,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1061,
+    "line": 1130,
     "desc": "db.run"
   },
   {
@@ -282,6 +303,20 @@
   {
     "type": "ipc-handle",
     "name": "db:get",
+    "file": "main.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-handle",
+    "name": "pitch:import",
+    "file": "main.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-handle",
+    "name": "pitch:lookup",
     "file": "main.js",
     "line": 0,
     "desc": ""
@@ -555,6 +590,20 @@
   {
     "type": "ipc-invoke",
     "name": "db:isAvailable",
+    "file": "preload.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-invoke",
+    "name": "pitch:import",
+    "file": "preload.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-invoke",
+    "name": "pitch:lookup",
     "file": "preload.js",
     "line": 0,
     "desc": ""

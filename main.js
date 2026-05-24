@@ -476,6 +476,36 @@ function createSchema() {
     db.run('UPDATE schema_version SET version = 8');
     console.log('Migrated schema to v8 (lesson_phrases table)');
   }
+  // v9: pitch_data lookup table + pitch column on words
+  if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 9) {
+    db.run(`CREATE TABLE IF NOT EXISTS pitch_data (
+      id       INTEGER PRIMARY KEY AUTOINCREMENT,
+      kanji    TEXT NOT NULL,
+      reading  TEXT NOT NULL,
+      pitch    TEXT NOT NULL
+    )`);
+    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_kanji ON pitch_data(kanji)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_reading ON pitch_data(reading)');
+    db.run(`ALTER TABLE words ADD COLUMN pitch TEXT`);
+    db.run('UPDATE schema_version SET version = 9');
+    console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
+  }
+  // v9: pitch_data lookup table + pitch column on words
+  const vRow9 = db.exec('SELECT version FROM schema_version');
+  const v9 = vRow9[0]?.values[0]?.[0] || 0;
+  if (v9 < 9) {
+    db.run(`CREATE TABLE IF NOT EXISTS pitch_data (
+      id       INTEGER PRIMARY KEY AUTOINCREMENT,
+      kanji    TEXT NOT NULL,
+      reading  TEXT NOT NULL,
+      pitch    TEXT NOT NULL
+    )`);
+    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_kanji ON pitch_data(kanji)');
+    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_reading ON pitch_data(reading)');
+    db.run(`ALTER TABLE words ADD COLUMN pitch TEXT`);
+    db.run('UPDATE schema_version SET version = 9');
+    console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
+  }
   console.log('Schema created/verified');
 }
 
@@ -544,6 +574,45 @@ ipcMain.handle('db:get', (event, sql, params = []) => {
     const { columns, values } = result[0];
     return Object.fromEntries(columns.map((c, i) => [c, values[0][i]]));
   } catch(e) { return { error: e.message }; }
+});
+
+ipcMain.handle('pitch:import', async (event) => {
+  if (!db) return { error: 'Database not available' };
+  try {
+    const count = db.exec('SELECT COUNT(*) as n FROM pitch_data')[0]?.values[0]?.[0] || 0;
+    if (count > 0) return { skipped: true, count };
+    const tsvPath = path.join(__dirname, 'data', 'kanjium-accents.txt');
+    const text = fs.readFileSync(tsvPath, 'utf8');
+    const lines = text.split('\n').filter(l => l.trim());
+    db.run('BEGIN TRANSACTION');
+    let inserted = 0;
+    for (const line of lines) {
+      const parts = line.split('\t');
+      if (parts.length < 3) continue;
+      const [kanji, reading, pitch] = parts;
+      db.run('INSERT INTO pitch_data (kanji, reading, pitch) VALUES (?, ?, ?)', [kanji.trim(), reading.trim(), pitch.trim()]);
+      inserted++;
+    }
+    db.run('COMMIT');
+    console.log('[pitch] Imported', inserted, 'entries');
+    return { inserted };
+  } catch(e) {
+    try { db.run('ROLLBACK'); } catch(_) {}
+    return { error: e.message };
+  }
+});
+
+ipcMain.handle('pitch:lookup', (event, kanji, reading) => {
+  if (!db) return null;
+  try {
+    const res = db.exec('SELECT pitch FROM pitch_data WHERE kanji = ? LIMIT 1', [kanji]);
+    if (res[0]?.values[0]) return res[0].values[0][0];
+    if (reading) {
+      const res2 = db.exec('SELECT pitch FROM pitch_data WHERE reading = ? LIMIT 1', [reading]);
+      if (res2[0]?.values[0]) return res2[0].values[0][0];
+    }
+    return null;
+  } catch(e) { return null; }
 });
 
 ipcMain.handle('db:run', (event, sql, params = []) => {

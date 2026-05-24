@@ -29,6 +29,12 @@ contextBridge.exposeInMainWorld('db', {
   isAvailable: () => ipcRenderer.invoke('db:isAvailable'),
 });
 
+// ── Pitch accent API ────────────────────────────────────────────────────────
+contextBridge.exposeInMainWorld('pitchAPI', {
+  import: () => ipcRenderer.invoke('pitch:import'),
+  lookup: (kanji, reading) => ipcRenderer.invoke('pitch:lookup', kanji, reading),
+});
+
 // ── Lesson recording API ─────────────────────────────────────────────────────
 contextBridge.exposeInMainWorld('lessonAPI', {
   startRecording:    ()                       => ipcRenderer.invoke('lesson:startRecording'),

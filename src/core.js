@@ -511,6 +511,15 @@ document.addEventListener('storageReady', function() {
       console.log('[LN] lesson word set loaded:', window._lessonWordSet.size, 'words');
     }).catch(e => console.warn('[LN] lesson word set load failed:', e.message));
   }
+  // Pitch accent data import (one-time, skipped if already populated)
+  if (window.pitchAPI) {
+    window.pitchAPI.import().then(res => {
+      if (res?.inserted) console.log('[pitch] Imported', res.inserted, 'pitch entries');
+      else if (res?.skipped) console.log('[pitch] Pitch data already loaded:', res.count, 'entries');
+      else if (res?.error) console.warn('[pitch] Import failed:', res.error);
+    }).catch(e => console.warn('[pitch] Import error:', e));
+  }
+
   initApiKeyBar();
   renderVocab();
   startConjDrill();
