@@ -63,8 +63,13 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - `features-tools.js` — removed dead `yoshiRenderRecordingTab` function (120 lines) — superseded by `lnRenderRecording`
 - `features-tools.js` — removed `_origYoshiInitUI` monkey-patch block (was suppressing `Orchestrator.loadSessions()` but `yoshiInitUI` is never called anyway)
 - `features-tools.js` — removed `yoshiRenderRecordingTab` from App registry export list
-- Git commit: "cleanup: remove orphaned yoshi code"
+- `core-writing.js` — replaced hardcoded `#1c1c1e` with `var(--paper-dark)`
+- `features-times.js` — removed `#c8a951` fallback from `var(--gold,#c8a951)` → `var(--gold)`
+- `core-vocab.js` — 2 hardcoded colors are in print-only stylesheet, intentionally light/neutral, left alone
 - Confirmed: redundant window[] exports are mostly intentional (HTML onchange handlers, monkey-patches, dynamic HTML) — not safe to bulk-remove
+- Confirmed: grammar → Grammar Sentences wiring already done (missing session)
+- Confirmed: model strings already on `claude-sonnet-4-6` (missing session)
+- Confirmed: v8 `lesson_phrases` table already done (missing session)
 
 ### Completed (2026-05-24 session 1 — missing session, reconstructed)
 - `main.js` — v7 schema migration: added `lesson_id` (INTEGER, FK) and `source` (TEXT) to `words` table
@@ -72,8 +77,9 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - `main.js` — `words:upsert` IPC handler updated to accept `lesson_id` and `source`
 - `features-lesson-notes.js` — vocab extraction writes to `words` SQL table with `source='lesson'` and `lesson_id` (currently always null)
 - `features-lesson-notes.js` — phrases extraction writes to `lesson_phrases` SQL table with `lesson_id` (currently always null)
-- Model strings — all call sites upgraded to `claude-sonnet-4-6` (was `claude-sonnet-4-20250514`)
-- `LessonNotesState.currentLessonId` — referenced at write sites but never set. Always null. Wiring is blocked: lesson notes session blobs have no reliable date field to match against `lesson_sessions.date`. Needs architectural decision (see Pending).
+- `features-lesson-notes.js` — grammar extraction wired to Grammar Sentences via `gramSentPracticePattern()`
+- Model strings — all call sites upgraded to `claude-sonnet-4-6`
+- `LessonNotesState.currentLessonId` — referenced at write sites but never set. Always null. Wiring blocked: lesson notes session blobs have no reliable date field to match against `lesson_sessions.date`.
 
 ### Completed (2026-05-23 session 3)
 - `.gitignore` — added .DS_Store, *.bak, management-log.json, index.json, audit-*.md
@@ -83,17 +89,12 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - `style.css` — `--jp` and `--panel` defined
 - `STYLE_GUIDE.md` — created at project root
 - `DrillCard` — removed `var(--red,#e05050)` fallbacks
-- Model audit completed — all upgraded in missing session
 
 ### Completed (2026-05-23 session 2)
 - `features-kana.js` — double-click on A/ひ/カ toolbar buttons saves default mode via kvAPI
 - `features-yoshi.js` — Lesson Notes grammar drill JSON shape normalised
-- `features-yoshi.js` — `[LN]` logging added to all 4 silent extraction functions
 - `features-grammar.js` — conjugation drill `_conjTrackingPaused` flag added
 - `src/ui/TextEntry.js` — added to index.html load order
-- `features-grammar.js` — `ConjSession` removed from App registry
-- `features-kana.js` — `shuffle` removed from App registry and window exports
-- `index.html` — `features-corpus-seed.js` removed from load order
 - `src/ui/DrillCard.js` — created, added to index.html
 - `core-counters.js` — `daysOfMonthDrill` migrated to DrillCard
 
@@ -114,20 +115,22 @@ Note: context-static.md file table is out of date for these three files — use 
 ## Pending Work (priority order)
 
 ### Short-term
-- **lesson_id linkage** — `LessonNotesState.currentLessonId` is never set. Two options:
-  1. Store a `date` field (YYYY-MM-DD) on lesson notes session blob at creation time, then look up `lesson_sessions` by date in `lessonNotesLoadSession`
+- **lesson_id linkage** — `LessonNotesState.currentLessonId` never set. Two options:
+  1. Store `date: new Date().toISOString().slice(0,10)` on session blob at all creation paths, then look up `lesson_sessions` by date in `lessonNotesLoadSession`
   2. Accept null for now — words/phrases still write to SQL, just without the FK link
-  Option 2 is current state. Option 1 requires auditing all session creation paths to add date field consistently.
-- **Lesson Notes reconstruction: Grammar** — push extracted grammar into Grammar Sentences feature. Add "Send to Grammar" button. No new table needed.
-- **DrillCard → counters migration** — still pending (deprioritised, see note below).
+  Option 2 is current state. Option 1 requires auditing all session creation paths.
+- **lessonDoc flag wire-up** — words written to SQL with `source='lesson'` don't get +15 priority bonus. `lessonDoc` flag in `vcBuildList` reads from translate cache `first_seen_panel`, not SQL. Fix requires async SQL read in `vcBuildList` — medium complexity, do after lesson_id wiring.
 - **ADJ_I / ADJ_NA word list** — only 8 i-adj / 6 na-adj. Deferred.
 
-### DrillCard migration — CLOSED
-DrillCard migration complete at Dates only. Counters, conjugation, grammar sentences all deferred — too complex without stripping features. Roadmap closed.
+### CSS Variable Retrofit (multi-session track)
+Remaining hardcoded color counts (approximate):
+- index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17)
+- features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9)
+- core-writing.js ✅, features-times.js ✅, core-vocab.js ✅ (print-only, leave)
+- features-progress.js last — chart colors may need new variables
 
-### Medium-term cleanup
-- App registry cleanup — redundant window[] exports are mostly intentional, not safe to bulk-remove
-- Yoshi → app data flow — vocab and phrases now writing to SQL. Grammar still pending.
+### DrillCard migration — CLOSED
+Complete at Dates only. Counters, conjugation, grammar sentences deferred — too complex.
 
 ### Future features (frozen)
 - DrillRecord unified history, TextEntry migration, AudioStrip
@@ -135,14 +138,8 @@ DrillCard migration complete at Dates only. Counters, conjugation, grammar sente
 - overlay:transcribe IPC, BlackHole pre-session check
 - iPhone companion app (PWA)
 
-### CSS Variable Retrofit (multi-session track)
-- Hardcoded color counts: index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17), features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9) — ~181 total
-- Start with low-count files: core-writing.js(1), features-times.js(1), core-vocab.js(2)
-- features-progress.js last — chart colors may need new variables
-
 ### Housekeeping
 - src/features.js — delete if still present (19,035 lines, confirmed dead)
-- features-pictures.js vg* dead code — safe to remove
 - context-static.md file table — needs update for yoshi/lesson-notes/tools line counts
 
 ## Console Filter Reference
@@ -152,24 +149,23 @@ DrillCard migration complete at Dates only. Counters, conjugation, grammar sente
 - `[AppEvents]` — recording pipeline events
 
 ## Yoshi Pipeline Summary
-Two separate systems:
-- **Recording pipeline** (teal): User → Orchestrator → AudioService → AppEvents → YoshiUI. Clean event-driven, traceable via [AppEvents].
-- **Lesson Notes** (coral): Paste/import → features-lesson-notes.js → Claude API calls (4 silent extractions) → lessonNotesRender() directly. No events. Traceable via [LN] logs.
+- **Recording pipeline** (teal): User → Orchestrator → AudioService → AppEvents → YoshiUI
+- **Lesson Notes** (coral): Paste/import → features-lesson-notes.js → Claude API → lessonNotesRender()
 
 ## Lesson Notes — Architecture Status
-- **Vocab** → ✅ writes to `words` SQL table, `source='lesson'`, `lesson_id` always null
-- **Phrases** → ✅ writes to `lesson_phrases` SQL table, `lesson_id` always null
-- **Grammar** → ❌ not yet wired to Grammar Sentences feature
+- **Vocab** → ✅ writes to `words` SQL, `source='lesson'`, `lesson_id` always null
+- **Phrases** → ✅ writes to `lesson_phrases` SQL, `lesson_id` always null
+- **Grammar** → ✅ wired to Grammar Sentences via `gramSentPracticePattern()`
 - **Stories** → stays in kvAPI blob
 - **WhatsApp notes** → stays in kvAPI blob
 - **Recording + transcript** → stays in `lesson_sessions` SQL table
 
 ## Vocab Priority Engine — Integration Gaps
-1. `entry.lessonDoc` (+15 bonus) — lesson-extracted words not getting bonus. `source='lesson'` written to SQL but `lessonDoc` flag not set in `vcBuildPriorityList`. Needs wire-up.
-2. `currentLessonId` — always null. Both gaps should be fixed together once lesson_id wiring is resolved.
+1. `lessonDoc` (+15 bonus) — not firing for SQL-sourced lesson words. `vcBuildList` reads translate cache only. Fix after lesson_id wiring.
+2. `currentLessonId` — always null. Fix together with lessonDoc gap.
 
 ## Conjugation Hint Tracking
-`_conjHintUsed` flag and `conjTypedAnswers` store `{val, hintUsed}` objects. Data collected per-run but NOT persisted to DrillSRS history. Foundation in place.
+`_conjHintUsed` and `conjTypedAnswers` collect `{val, hintUsed}` per-run but NOT persisted to DrillSRS. Foundation in place.
 
 ## Progress Mastery View
-`_filterHistory` view values: 'last' (today), 'week' (this week), 'prev' (last week). Fixed in session 1: returns null when view='last' and period empty, so cells show grey correctly.
+`_filterHistory` view values: 'last' (today), 'week', 'prev'. Returns null when view='last' and period empty — cells show grey correctly.
