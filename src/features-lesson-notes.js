@@ -27,6 +27,7 @@ const LessonNotesState = {
   grammarDrillFeedback:'',
   grammarQA:           [],
   extracting:          false,
+  extractionWarning:   null,
   showHiddenGrammar:   false,
   // Recording (ln = lesson notes recorder)
   lnIsRecording:       false,
@@ -203,6 +204,14 @@ function lessonNotesGetFullPanelHTML() {
   }
   html += '</div>';
   html += '<div id="yoshiTranscribeBar" style="display:none;align-items:center;gap:8px;margin-bottom:8px"></div>';
+
+  // Extraction warning banner
+  if (LessonNotesState.extractionWarning && LessonNotesState.extractionWarning.length) {
+    html += `<div style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.4);border-radius:6px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+      <span style="font-family:var(--ui);font-size:0.78rem;color:var(--gold)">⚠ Extraction incomplete: ${LessonNotesState.extractionWarning.join(', ')} came back empty. Check your API key or retry.</span>
+      <button class="btn-ghost" style="font-size:0.72rem;flex-shrink:0" onclick="LessonNotesState.extractionWarning=null;lessonNotesAutoExtractAll()">🔄 Retry</button>
+    </div>`;
+  }
 
   // If extracting, show loading
   if (LessonNotesState.extracting) {
@@ -1482,6 +1491,20 @@ async function lessonNotesAutoExtractAll() {
   
   LessonNotesState.extracting = false;
   lessonNotesSaveCurrentSession();
+
+  // Warn if any extraction came back empty
+  const _lnFailed = [];
+  if (LessonNotesState.vocab.length === 0)       _lnFailed.push('vocab');
+  if (LessonNotesState.stories.length === 0)      _lnFailed.push('stories');
+  if (LessonNotesState.keyPhrases.length === 0)   _lnFailed.push('key phrases');
+  if (LessonNotesState.grammar.length === 0)      _lnFailed.push('grammar');
+  if (_lnFailed.length) {
+    console.warn('[LN] extraction returned empty for:', _lnFailed.join(', '));
+    LessonNotesState.extractionWarning = _lnFailed;
+  } else {
+    LessonNotesState.extractionWarning = null;
+  }
+
   lessonNotesRender();
   lessonNotesRenderPanel();
 }
