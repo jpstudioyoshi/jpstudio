@@ -14,7 +14,6 @@ function _fy_getApiKey()      { return (App.getApiKey  || window.getApiKey)?.();
 // ═══════════════════════════════════════════════════════
 const YOSHI_KEY = 'jpStudioYoshiSessions';
 let yoshiCurrentIdx = null;
-let yoshiAudioURL = null;
 
 function yoshiGetSessions() {
   return JSON.parse(localStorage.getItem(YOSHI_KEY) || '[]');
@@ -79,19 +78,6 @@ function yoshiLiveTitle(val) {
   });
 }
 
-function yoshiAttachAudio() {
-  const fileEl = document.getElementById('yoshiAudioFile');
-  if (!fileEl || !fileEl.files[0]) { alert('Select an audio file first.'); return; }
-  if (yoshiCurrentIdx === null) { alert('Open a session first.'); return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    const sessions = yoshiGetSessions();
-    sessions[yoshiCurrentIdx].audio = e.target.result;
-    yoshiSaveSessions(sessions);
-    yoshiShowSession(sessions[yoshiCurrentIdx]);
-  };
-  reader.readAsDataURL(fileEl.files[0]);
-}
 
 // ── Yoshi read state ─────────────────────────────────────────────────────────
 const YoshiReadState = {
@@ -507,8 +493,4 @@ function yoshiShowImportInline() {
     </div>
   </div>`;
 }
-
-// ═══════════════════════════════════════════════════════
-// LESSON NOTES - Extract vocab from teacher's notes
-// ═══════════════════════════════════════════════════════
 // ── Lesson notes state ───────────────────────────────────────────────────────

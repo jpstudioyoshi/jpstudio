@@ -11,127 +11,6 @@ function lessonNotesUpdateDropdown() {
   // No-op stub. Dropdown update is handled by lessonNotesRenderPanel.
 }
 
-function yoshiRenderRecordingTab(currentSession) {
-  const sessions = window._lessonRecordingSessions || [];
-
-  // Extract YYYY-MM-DD from lesson note session.
-  // Titles are formatted as "[DD.MM.YY, HH:MM:SS]" — convert to match recording date format.
-  function extractLessonDate(session) {
-    if (!session) return '';
-    if (session.date) return session.date.slice(0, 10);
-    const title = session.title || '';
-    const m = title.match(/\[?(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{2,4})/);
-    if (!m) return '';
-    let [, dd, mm, yy] = m;
-    if (yy.length === 2) yy = '20' + yy;
-    return yy + '-' + mm.padStart(2, '0') + '-' + dd.padStart(2, '0');
-  }
-
-  const lessonDate = extractLessonDate(currentSession);
-  const matched = sessions.filter(s => (s.date || '').slice(0,10) === lessonDate);
-
-  let html = '<div style="margin-bottom:14px">';
-
-  if (!matched.length) {
-    html += '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);margin-bottom:12px">No recording for this lesson yet.</div>';
-    if (typeof _lessonProcessing !== 'undefined' && _lessonProcessing) {
-      html += '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--gold)">⏳ Transcription in progress…</div>';
-    }
-  }
-
-  for (const s of matched) {
-    const dur = s.audio_duration_s ? Math.floor(s.audio_duration_s/60) + 'm ' + (s.audio_duration_s%60) + 's' : '?';
-    const done = s.processed_at;
-    html += '<div style="padding:10px;border:1px solid var(--border);border-radius:6px;margin-bottom:10px">';
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-    html += '<span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink)">' + (s.date || '') + ' · ' + dur + '</span>';
-    html += (done ? '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--teal)">✓ transcribed</span>' : '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--gold)">processing…</span>');
-    html += '<button class="btn-ghost" style="margin-left:auto;font-size:0.68rem;color:var(--red);border-color:var(--red)" onclick="yoshiDeleteLessonSession(' + s.id + ')">Delete</button>';
-    html += '</div>';
-
-    if (s.transcript_json) {
-      const turns = (() => { try { return JSON.parse(s.transcript_json); } catch(e) { return []; } })();
-      const audioSrc = s.audio_path ? 'file://' + s.audio_path : null;
-      const teacherSrc = s.audio_path ? 'file://' + s.audio_path.replace('.webm', '_teacher.webm') : null;
-
-      if (audioSrc) {
-        html += '<div style="background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin-bottom:10px">';
-        html += '<div style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);margin-bottom:6px">PLAYBACK</div>';
-        html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-        html += '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--teal)">🙋 You</span>';
-        html += '<audio id="lessonAudioStudent" src="' + audioSrc + '" controls style="flex:1;height:28px;accent-color:var(--teal)"></audio>';
-        html += '</div>';
-        html += '<div style="display:flex;align-items:center;gap:8px">';
-        html += '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--teal)">🧑‍🏫 Teacher</span>';
-        html += '<audio id="lessonAudioTeacher" src="' + teacherSrc + '" controls style="flex:1;height:28px;accent-color:var(--gold)"></audio>';
-        html += '</div>';
-        html += '</div>';
-      }
-
-      html += '<input id="lessonTranscriptSearch" placeholder="Search transcript…" oninput="yoshiFilterTranscript(this.value)" '
-        + 'style="width:100%;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);box-sizing:border-box;margin-bottom:8px">';
-
-      html += '<div id="lessonTranscriptList" style="max-height:55vh;overflow-y:auto;font-size:0.85rem">';
-      for (const t of turns) {
-        const ts = Math.round(t.start);
-        const m = Math.floor(ts/60), sec = ts%60;
-        const tStr = m + ':' + String(sec).padStart(2,'0');
-        const spk = (t.speaker === 'TEACHER' || t.speaker === 'teacher') ? '🧑‍🏫' : '🙋';
-        const col = (t.speaker === 'TEACHER' || t.speaker === 'teacher') ? 'var(--teal)' : 'var(--ink)';
-        const audioId = (t.speaker === 'TEACHER' || t.speaker === 'teacher') ? 'lessonAudioTeacher' : 'lessonAudioStudent';
-        html += '<div class="lesson-transcript-row" data-text="' + t.text.replace(/"/g,'&quot;').toLowerCase() + '" '
-          + 'onclick="yoshiSeekTo(' + t.start + ',&quot;' + audioId + '&quot;)"'
-          + ' style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);cursor:pointer">'
-          + '<span style="font-family:var(--ui);font-size:0.65rem;color:var(--teal);flex-shrink:0;width:32px;padding-top:2px">' + tStr + '</span>'
-          + '<span style="flex-shrink:0">' + spk + '</span>'
-          + '<span style="font-family:var(--jp);color:' + col + ';flex:1">' + t.text + '</span>'
-          + '</div>';
-      }
-      html += '</div>';
-
-      let waMsgs = [];
-      try {
-        const notesRaw = s.notes_text || '';
-        if (notesRaw.startsWith('{')) {
-          const parsed = JSON.parse(notesRaw);
-          waMsgs = (parsed.messages || []).filter(m => m.synced && m.timestamp_s !== undefined);
-        }
-      } catch(e) {}
-      if (waMsgs.length) {
-        html += '<div style="margin-top:10px;padding:8px;background:rgba(255,214,10,0.05);border:1px solid rgba(255,214,10,0.3);border-radius:6px">';
-        html += '<div style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.08em;color:var(--gold);margin-bottom:6px">WHATSAPP (' + waMsgs.length + ' messages synced)</div>';
-        for (const m of waMsgs.slice(0, 10)) {
-          const ts = Math.round(m.timestamp_s || 0);
-          const min = Math.floor(ts/60), sec2 = ts%60;
-          html += '<div style="display:flex;gap:8px;padding:3px 0;font-family:var(--ui);font-size:0.72rem;cursor:pointer" '
-            + 'onclick="yoshiSeekTo(' + (m.timestamp_s||0) + ',&quot;lessonAudioTeacher&quot;)">'
-            + '<span style="color:var(--gold);flex-shrink:0;width:32px">' + min + ':' + String(sec2).padStart(2,'0') + '</span>'
-            + '<span style="color:var(--ink-light);flex-shrink:0;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (m.sender||'') + '</span>'
-            + '<span style="color:var(--ink);flex:1">' + (m.text||'') + '</span>'
-            + '</div>';
-        }
-        if (waMsgs.length > 10) html += '<div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);margin-top:4px">+' + (waMsgs.length-10) + ' more</div>';
-        html += '</div>';
-      }
-    }
-    html += '</div>';
-  }
-
-  const hasTranscript = matched.some(s => s.transcript_json);
-  if (hasTranscript) {
-    html += '<div style="margin-top:12px;padding:10px;border:1px solid var(--border);border-radius:6px">';
-    html += '<div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:6px">PASTE WHATSAPP THREAD</div>';
-    html += '<textarea id="lessonWhatsappPaste" rows="4" placeholder="Paste WhatsApp conversation here…" '
-      + 'style="width:100%;padding:8px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);resize:vertical;box-sizing:border-box"></textarea>';
-    const sid = matched[0].id;
-    html += '<button class="btn-ghost" style="margin-top:6px" onclick="yoshiSaveWhatsapp(' + sid + ')">Save &amp; sync →</button>';
-    html += '</div>';
-  }
-
-  html += '</div>';
-  return html;
-}
-
 function yoshiParseWhatsapp(raw) {
   const lines = raw.split('\n');
   const msgs = [];
@@ -666,14 +545,6 @@ async function yoshiRetranscribe(sessionId) {
 
 // ── Manual lesson notes (unrecorded sessions — WhatsApp threads) ──────────────
 
-// Wire recording buttons via YoshiUI without triggering full panel re-render
-const _origYoshiInitUI = window['yoshiInitUI'];
-window['yoshiInitUI'] = function() {
-  // Only wire buttons - don't call loadSessions which triggers SESSIONS_LOADED → re-render
-  if (window.YoshiUI && typeof window.YoshiUI.wireButtons === 'function') {
-    window.YoshiUI.wireButtons();
-  }
-};
 
 function yoshiOpenOverlay() {
   if (window.electronAPI?.openLessonOverlay) {
@@ -1240,7 +1111,6 @@ window['mgShowSetup']  = mgShowSetup;
   window["yoshiAIComplete"] = yoshiAIComplete;
   window["yoshiAIVocab"] = yoshiAIVocab;
   window["yoshiAddVocab"] = yoshiAddVocab;
-  window["yoshiAttachAudio"] = yoshiAttachAudio;
   window["yoshiCheckCloze"] = yoshiCheckCloze;
   window["yoshiConfirmCloze"] = yoshiConfirmCloze;
   window["yoshiImport"] = yoshiImport;
@@ -1408,5 +1278,5 @@ function qrPrintPage() {
 
 // ── App registry — features-tools.js exports ───────────────────────────
 Object.assign(App, {
-  lessonNotesUpdateDropdown, yoshiRenderRecordingTab, yoshiParseWhatsapp, lnSwitchTab, lnSetDrillMode, lnDrillReveal, lnDrillNext, lnDrillPrev, lnDrillJump, lnRefreshTab, lnOpenStory, lnToggleGrammarHide, lnToggleShowHidden, lnFilterTranscript, lnToggleRecPlayer, lnDeleteRecording, lnNewSession, lnLoadSession, lnDeleteSession, lnCreateFromPaste, lnHandleFile, lnHandleDrop, yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiInitUI, yoshiOpenOverlay, yoshiOpenTeams, yoshiTestChannels, yoshiRunPreflight, mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading, mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
+  lessonNotesUpdateDropdown, yoshiParseWhatsapp, lnSwitchTab, lnSetDrillMode, lnDrillReveal, lnDrillNext, lnDrillPrev, lnDrillJump, lnRefreshTab, lnOpenStory, lnToggleGrammarHide, lnToggleShowHidden, lnFilterTranscript, lnToggleRecPlayer, lnDeleteRecording, lnNewSession, lnLoadSession, lnDeleteSession, lnCreateFromPaste, lnHandleFile, lnHandleDrop, yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiInitUI, yoshiOpenOverlay, yoshiOpenTeams, yoshiTestChannels, yoshiRunPreflight, mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading, mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
 });
