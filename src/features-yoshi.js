@@ -494,3 +494,158 @@ function yoshiShowImportInline() {
   </div>`;
 }
 // ── Lesson notes state ───────────────────────────────────────────────────────
+
+// ── Cloze rendering ───────────────────────────────────────────────────────
+function yoshiRenderCloze(s) {
+  const body = document.getElementById('yoshiClozeBody');
+  if (!body) return;
+  if (!s.cloze && !s.blanks.length) {
+    body.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">No cloze text for this session.</div>';
+    return;
+  }
+
+  // If explicit blanks (＿), render those directly
+  if (s.cloze && (s.cloze.includes('＿') || s.cloze.includes('__'))) {
+    let idx = 0;
+    const html = s.cloze.split('\n').filter(l=>l.trim()).map(line => {
+      const parts = line.split(/(＿+|_{2,})/);
+      const rendered = parts.map(part => {
+        if (/^[＿_]+$/.test(part)) {
+          const answer = (s.blanks[idx] || {}).answer || '';
+          const bi = idx++;
+          return `<span class="yoshi-blank" id="yblank${bi}"><input type="text" data-answer="${answer}" data-idx="${bi}" style="width:${Math.max(50,answer.length*18)}px" placeholder="　"></span>`;
+        }
+        return part;
+      }).join('');
+      return `<p>${rendered}</p>`;
+    }).join('');
+    body.innerHTML = html;
+    setTimeout(() => {
+      body.querySelectorAll('input[type=text]').forEach(inp => kanaOn(inp));
+      body.querySelectorAll('.yoshi-blank').forEach(span => {
+        span.addEventListener('click', () => span.querySelector('input')?.focus());
+      });
+    }, 0);
+    return;
+  }
+
+  // Diff-based: show cloze text with blank slots where words were removed
+  if (s.blanks.length) {
+    let blankIdx = 0;
+    // Show cloze paragraphs with inline blank inputs inserted at gap positions
+    const html = (s.cloze || s.complete).split('\n').filter(l=>l.trim()).map(line => {
+      // Insert blanks where answers were found missing (use blanks array sequentially)
+      let out = line;
+      // Replace sequences of spaces (the gap left by missing kanji) with inputs
+      out = out.replace(/\s{2,}|(?<=[\u3000-\u9fff])\s+(?=[\u3000-\u9fff])/g, () => {
+        if (blankIdx >= s.blanks.length) return ' ';
+        const answer = s.blanks[blankIdx].answer;
+        const bi = blankIdx++;
+        return `<span class="yoshi-blank" id="yblank${bi}"><input type="text" data-answer="${answer}" data-idx="${bi}" style="width:${Math.max(50,answer.length*18)}px" placeholder="　"></span>`;
+      });
+      return `<p>${out}</p>`;
+    }).join('');
+    body.innerHTML = html || '<p>' + (s.cloze || '') + '</p>';
+    setTimeout(() => {
+      body.querySelectorAll('input[type=text]').forEach(inp => kanaOn(inp));
+      body.querySelectorAll('.yoshi-blank').forEach(span => {
+        span.addEventListener('click', () => span.querySelector('input')?.focus());
+      });
+    }, 0);
+  } else {
+    // No blanks computed — just show cloze text as-is
+    body.innerHTML = s.cloze.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('');
+  }
+}
+
+function yoshiCheckCloze() {
+  const inputs = document.querySelectorAll('#yoshiClozeBody .yoshi-blank input');
+  let correct = 0;
+  inputs.forEach(inp => {
+    const answer = inp.dataset.answer;
+    const blank = document.getElementById('yblank' + inp.dataset.idx);
+    if (!answer) return;
+    if (inp.value.trim() === answer.trim()) {
+      blank.className = 'yoshi-blank correct'; correct++;
+    } else {
+      blank.className = 'yoshi-blank wrong';
+    }
+  });
+  const total = [...inputs].filter(i => i.dataset.answer).length;
+  document.getElementById('yoshiClozeScore').textContent = total ? `${correct} / ${total} correct` : '';
+}
+
+function yoshiRevealAll() {
+  document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {
+    inp.value = inp.dataset.answer || '';
+    const blank = document.getElementById('yblank' + inp.dataset.idx);
+    if (blank) blank.className = 'yoshi-blank revealed';
+  });
+}
+
+function yoshiResetCloze() {
+  document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {
+    inp.value = '';
+    const blank = document.getElementById('yblank' + inp.dataset.idx);
+    if (blank) blank.className = 'yoshi-blank';
+  });
+  document.getElementById('yoshiClozeScore').textContent = '';
+}
+
+
+function yoshiConfirmCloze() {
+  if (yoshiCurrentIdx === null) return;
+  const body = document.getElementById('yoshiClozeBody');
+  if (!body) return;
+
+  // Build confirmed text: only promote paragraphs where ALL blanks are filled
+  const paras = body.querySelectorAll('p');
+  const lines = [];
+  let skipped = 0;
+  paras.forEach(p => {
+    const inputs = p.querySelectorAll('.yoshi-blank input');
+    // Check all blanks in this paragraph are filled
+    const allFilled = Array.from(inputs).every(inp => inp.value.trim().length > 0);
+    if (inputs.length > 0 && !allFilled) { skipped++; return; }
+    // Clone and replace blanks with their values
+    const clone = p.cloneNode(true);
+    clone.querySelectorAll('.yoshi-blank input').forEach(inp => {
+      const val = inp.value.trim() || inp.dataset.answer || '';
+      inp.closest('.yoshi-blank').replaceWith(document.createTextNode(val));
+    });
+    const line = clone.textContent.trim();
+    if (line) lines.push(line);
+  });
+
+  if (!lines.length) return;
+
+  // Merge with any previously confirmed text
+  const sessions = yoshiGetSessions();
+  const s = sessions[yoshiCurrentIdx];
+  const existing = (s.complete || '').trim();
+  // Add only new lines not already confirmed
+  const existingLines = existing ? existing.split('\n').map(l=>l.trim()) : [];
+  const newLines = lines.filter(l => !existingLines.includes(l));
+  const merged = [...existingLines, ...newLines].filter(Boolean).join('\n');
+  s.complete = merged;
+  delete s.furigana; // text changed — stale furigana discarded
+  yoshiSaveSessions(sessions);
+
+  // Switch to Read tab
+  YoshiReadState.paraFurigana = {};
+  yoshiRenderRead();
+  const readBtn = Array.from(document.querySelectorAll('.yoshi-subtab')).find(b => b.textContent.includes('Read'));
+  if (readBtn) {
+    document.querySelectorAll('.yoshi-subtab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.yoshi-subpanel').forEach(p => p.classList.remove('active'));
+    readBtn.classList.add('active');
+    document.getElementById('yoshi-sub-read').classList.add('active');
+  }
+
+  const score = document.getElementById('yoshiClozeScore');
+  if (score) score.textContent = skipped > 0
+    ? `✓ ${lines.length} confirmed → Read (${skipped} paragraph${skipped>1?'s':''} with unfilled blanks skipped)`
+    : `✓ ${lines.length} paragraph${lines.length>1?'s':''} confirmed → Read`;
+}
+
+// ── Vocab ─────────────────────────────────────────────────────────────────

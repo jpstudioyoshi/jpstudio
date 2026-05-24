@@ -4187,6 +4187,41 @@
   },
   {
     "type": "function",
+    "name": "yoshiRenderCloze",
+    "file": "src/features-yoshi.js",
+    "line": 499,
+    "desc": "── Lesson notes state ───────────────────────────────────────────────────────"
+  },
+  {
+    "type": "function",
+    "name": "yoshiCheckCloze",
+    "file": "src/features-yoshi.js",
+    "line": 561,
+    "desc": "const inputs = document.querySelectorAll('#yoshiClozeBody .yoshi-blank input');"
+  },
+  {
+    "type": "function",
+    "name": "yoshiRevealAll",
+    "file": "src/features-yoshi.js",
+    "line": 578,
+    "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
+  },
+  {
+    "type": "function",
+    "name": "yoshiResetCloze",
+    "file": "src/features-yoshi.js",
+    "line": 586,
+    "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
+  },
+  {
+    "type": "function",
+    "name": "yoshiConfirmCloze",
+    "file": "src/features-yoshi.js",
+    "line": 596,
+    "desc": "if (yoshiCurrentIdx === null) return;"
+  },
+  {
+    "type": "function",
     "name": "gdGenerate",
     "file": "src/features-grammar.js",
     "line": 34,
