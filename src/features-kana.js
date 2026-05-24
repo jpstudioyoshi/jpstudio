@@ -269,8 +269,9 @@ function kanaInputHandler(e) {
   
   // Convert quotation marks to Japanese brackets in the new portion only
   let quoteOpen = false;
-  // Count existing open quotes in preserved portion
-  for (const c of preserved) {
+  // Count existing open quotes in preserved portion + already-converted quotes in result
+  const scanBase = preserved + result;
+  for (const c of scanBase) {
     if (c === '「') quoteOpen = true;
     if (c === '」') quoteOpen = false;
   }

@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-24 (session 4 — end)
+Last updated: 2026-05-24 (session 5 — end)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
@@ -10,7 +10,7 @@ Last updated: 2026-05-24 (session 4 — end)
 - At end of session: ask Claude to write the full updated file as a terminal `cat >` command. Run it, then upload the updated file to Claude project Knowledge to replace the old one.
 
 ## Current Mode
-MAINTENANCE — stabilization complete. Ongoing: context files updated at session end as needed.
+MAINTENANCE — stabilization complete. New features added incrementally.
 - Prefer minimal edits over redesigns
 - Prefer wrappers over refactors
 - Do not introduce new abstractions unless they solve a concrete current problem
@@ -57,82 +57,90 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - Username is `paulandres` — path is `/Users/paulandres/Documents/jpStudio/`
 - `window.db` in renderer only exposes `query` (async, returns row objects) — no `exec`. Use `await window.db.query(sql, params)`.
 - Always `jp` first — grep/sed from wrong directory returns nothing silently.
+- Schema migrations: all version checks in same function scope — use inline expression not `const vN =` (causes duplicate declaration errors).
 
 ## Stabilization Status
 
+### Completed (2026-05-24 session 5)
+- v9 schema migration: `pitch_data` table (kanji, reading, pitch) + `pitch` column on `words`
+- Kanjium accent data (124,137 entries) imported into SQLite on first startup, skipped thereafter
+- `window.pitchAPI.import()` and `window.pitchAPI.lookup(kanji, reading)` exposed via preload.js
+- `data/kanjium-accents.txt` committed to project (3.1MB)
+- Confirmed working: `[pitch] Pitch data already loaded: 124137 entries` on second startup
+
 ### Completed (2026-05-24 session 4)
-- Cloze functions (yoshiRenderCloze, yoshiCheckCloze, yoshiRevealAll, yoshiResetCloze, yoshiConfirmCloze) moved from `features-lesson-notes.js` → `features-yoshi.js`
-- `features-lesson-notes.js` split into two files at line 2554 (clean function boundary)
-- `features-ln-p2.js` created, added to load order in index.html immediately after `features-lesson-notes.js`
-- Further 3-way split deferred — files now at acceptable size, further splitting not worth the risk given interleaving
-- Stabilization declared complete — moving to maintenance mode
+- Cloze functions moved from `features-lesson-notes.js` → `features-yoshi.js`
+- `features-lesson-notes.js` split at line 2554 → `features-lesson-notes.js` + `features-ln-p2.js`
+- `features-ln-p2.js` added to load order in index.html
+- Stabilization declared complete — moving to maintenance + feature mode
+- Confirmed: lessonNotes storage split already resolved in earlier session — single kvAPI path
 
 ### Completed (2026-05-24 session 3)
-- `features-lesson-notes.js` — date field added to all 4 session creation paths (`YYYY-MM-DD` format)
-- `features-lesson-notes.js` — `lessonNotesLoadSession` now does async SQL lookup by date to set `LessonNotesState.currentLessonId`
-- `core.js` — `window._lessonWordSet` loaded from SQL on `storageReady` (words where `source='lesson'`)
-- `core-vocab.js` — `lessonDoc` flag in `vcMergeEntry` now checks `_lessonWordSet` — lesson words get +15 priority bonus
-- `features-lesson-notes.js` — `extractionWarning` state added, banner shown after failed extractions with retry button
-- Confirmed: Orchestrator recording pipeline already has solid error handling — no fixes needed
+- `features-lesson-notes.js` — date field added to all 4 session creation paths
+- `lessonNotesLoadSession` — async SQL lookup by date sets `LessonNotesState.currentLessonId`
+- `core.js` — `window._lessonWordSet` loaded from SQL on `storageReady`
+- `core-vocab.js` — `lessonDoc` flag checks `_lessonWordSet` — lesson words get +15 priority bonus
+- `features-lesson-notes.js` — `extractionWarning` state + retry banner added
 
-### Completed (2026-05-24 session 2)
-- `features-yoshi.js` — removed orphaned `yoshiAudioURL` var, `yoshiAttachAudio` function, trailing comment stub
-- `features-tools.js` — removed dead `yoshiRenderRecordingTab` function (120 lines)
-- `features-tools.js` — removed `_origYoshiInitUI` monkey-patch block
-- `core-writing.js` — replaced hardcoded `#1c1c1e` with `var(--paper-dark)`
-- `features-times.js` — removed `#c8a951` fallback → `var(--gold)`
-- Confirmed: model strings already on `claude-sonnet-4-6`
-- Confirmed: v8 `lesson_phrases` table already done
-
-### Completed (2026-05-24 session 1 — reconstructed)
-- `main.js` — v7/v8 schema migrations: `lesson_id`, `source` on `words`; new `lesson_phrases` table
-- `features-lesson-notes.js` — vocab/phrases/grammar extraction wired to SQL and Grammar Sentences
+### Completed (2026-05-24 sessions 1-2)
+- Dead code removed from features-yoshi.js, features-tools.js
+- CSS hardcoded colors replaced in core-writing.js, features-times.js
 - Model strings upgraded to `claude-sonnet-4-6`
-
-### Completed (2026-05-23 sessions 1-3)
-- API call logging, double-transcription guard, Whisper logging, Four Strands coverage
-- Conjugation drill kanji stem pre-fill, API key status fix, renderAdjMastery
-- `features-kana.js` — double-click toolbar buttons saves default mode
-- DrillCard created, daysOfMonthDrill migrated
-- `.gitignore`, `STYLE_GUIDE.md`, CSS var definitions
+- v7/v8 schema migrations: lesson_id, source on words; lesson_phrases table
 
 ### Confirmed done (undocumented sessions)
 - ADJ_I / ADJ_NA word list expanded
-- `src/features.js` deleted (was 19,035 lines, dead code)
-- overlay:transcribe IPC — working well enough, single track only (teacher not using headset — acceptable)
+- `src/features.js` deleted (19,035 lines, dead code)
+- overlay:transcribe IPC — single track, working well enough
+- lessonNotes storage — already on single kvAPI path before session 4
 
 ## File Structure (updated)
 | File | Lines | Contents |
 |------|-------|----------|
-| `src/features-yoshi.js` | ~651 | Yoshi session CRUD, UI shell, AI helpers, cloze import, cloze rendering |
+| `src/features-yoshi.js` | ~651 | Yoshi session CRUD, UI shell, AI helpers, cloze rendering |
 | `src/features-lesson-notes.js` | ~2553 | LN state, session CRUD, WhatsApp parser, recording helpers, story/reading render, sentence furigana |
 | `src/features-ln-p2.js` | ~1959 | Sentence recording, drill, extraction, session load/new/delete, docx parser, timeline, recordings browser |
-| `src/features-tools.js` | ~1280 | LN utils, WhatsApp parse, recording helpers, matching pairs, shared state |
+| `src/features-tools.js` | ~1280 | LN utils, recording helpers, matching pairs, shared state |
+| `data/kanjium-accents.txt` | 124,137 lines | Kanjium pitch accent source data (imported to SQLite on first run) |
 
 Note: context-static.md file table is out of date for these files — use above.
 
 ## Pending Work
 
-### CSS Variable Retrofit (ongoing, low priority)
-Remaining hardcoded color counts (approximate):
-- index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17)
-- features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9)
-- features-progress.js last — chart colors may need new variables
+### Pitch Accent — next session
+Data layer complete. Next steps:
+1. Write `renderPitchCurve(word, pitchStr)` SVG function in `core-foundation.js`
+2. Wire into vocab card render as proof of concept
+3. Show curve + speak via VoiceVox simultaneously (lookup → render → jpSpeak)
+4. Roll out to: quick translate, lesson notes vocab, grammar sentence drill, voice drill
 
-### Phone Companion — Audio Player (next feature, planned)
+**Architecture note:** VoiceVox already produces correct pitch in audio. The SVG curve gives the visual association. Best learning outcome: show curve at the same moment jpSpeak() fires.
+
+**pitch_data table:** kanji | reading | pitch (string, may contain multiple values e.g. "0,2")
+**pitchAPI:** `window.pitchAPI.lookup(kanji, reading)` → pitch string or null
+
+### Phone Companion — Audio Player (planned)
 **Goal:** Play lesson audio while walking. Sync via Dropbox.
 
-**Dropbox path:** `~/Dropbox/` (main account, personal files)
+**Dropbox path:** `~/Dropbox/` (main personal account confirmed)
 **Export target:** `~/Dropbox/jpStudio-audio/`
 
 **Plan:**
 - Export button in lesson notes/recording panel
 - Runs ffmpeg to convert lesson WebM → M4A
 - Saves as `YYYY-MM-DD-lesson.m4a` to `~/Dropbox/jpStudio-audio/`
-- Dropbox auto-syncs to phone — play via Dropbox app (no PWA needed yet)
-- PWA with drills/progress sync comes later (will need a small backend e.g. Supabase/PocketBase)
+- Play via Dropbox app on phone (no PWA needed yet)
+- PWA with drills/progress sync comes later
 
-**Decision pending:** Where to put the export button — lesson notes panel when recording is linked, or recording browser?
+**Decision pending:** Export button location — lesson notes panel when recording is linked, or recording browser?
+
+### CSS Variable Retrofit (low priority, ongoing)
+Remaining hardcoded color counts (approximate):
+- index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17)
+- features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9)
+
+### Known issue
+- `yoshiInitUI is not defined` error in features-tools.js on startup — pre-existing, not blocking anything
 
 ### Future (frozen)
 - DrillRecord unified history, TextEntry migration, AudioStrip
@@ -140,6 +148,7 @@ Remaining hardcoded color counts (approximate):
 - iPhone PWA with drills and progress sync (backend TBD)
 
 ## Console Filter Reference
+- `[pitch]` — pitch accent import/load status
 - `[LN]` — Lesson Notes extractions + lesson_id linkage + word set load
 - `[API]` — all Claude API calls
 - `[STT]` — Whisper transcription
@@ -154,13 +163,25 @@ Remaining hardcoded color counts (approximate):
 - **WhatsApp notes** → stays in kvAPI blob
 - **Recording + transcript** → stays in `lesson_sessions` SQL table
 
+## SQLite Schema (v9)
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
+
+### pitch_data
+```sql
+id, kanji, reading, pitch
+```
+- Indexed on kanji and reading
+- 124,137 entries from Kanjium
+- Access via `window.pitchAPI.lookup(kanji, reading)` — returns pitch string or null
+- Pitch string format: single number or comma-separated e.g. "0", "2", "0,2"
+- 0 = heiban (flat), 1+ = drops after that mora
+
+### words (updated)
+Added: `pitch TEXT` — populated from pitch_data on word add/backfill (not yet implemented)
+
 ## Vocab Priority Engine
-Both integration gaps resolved:
 1. `lessonDoc` (+15 bonus) — fires for SQL-sourced lesson words via `_lessonWordSet`
 2. `currentLessonId` — set async on session load when date matches a `lesson_sessions` row
 
 ## Conjugation Hint Tracking
 `_conjHintUsed` and `conjTypedAnswers` collect `{val, hintUsed}` per-run but NOT persisted to DrillSRS. Foundation in place.
-
-## Progress Mastery View
-`_filterHistory` view values: 'last' (today), 'week', 'prev'. Returns null when view='last' and period empty — cells show grey correctly.
