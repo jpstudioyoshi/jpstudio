@@ -602,8 +602,4 @@ try {
   window['drillPrev']         = drillPrev;
   window['drillMark']         = drillMark;
   window['drillToggleRecord'] = drillToggleRecord;
-  window['customBuildDeck']   = customBuildDeck;
-  window['customNext']        = customNext;
-  window['customPrev']        = customPrev;
-  window['customToggleRecord']= customToggleRecord;
 } catch(e) {}

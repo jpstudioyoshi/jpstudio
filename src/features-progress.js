@@ -491,6 +491,7 @@ function renderFourStrandRecency() {
 }
 
 window['renderFourStrandRecency'] = renderFourStrandRecency;
+window['drillLastCompletedWrite'] = drillLastCompletedWrite;
 
 // ── Conjugation mastery display ───────────────────────────────────────────────
 // Shows SRS-based mastery for each grammar pattern (form|pol|reg).

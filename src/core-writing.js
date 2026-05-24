@@ -680,6 +680,4 @@ try {
     wbUpdateCount,
     highlightCorrectedParticles,
   });
-  window['errorDenylistAdd']    = errorDenylistAdd;
-  window['errorDenylistRemove'] = errorDenylistRemove;
 } catch(e) { console.error('[core-writing] App registry failed:', e); }

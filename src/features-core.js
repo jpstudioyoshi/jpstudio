@@ -745,10 +745,6 @@ try {
   window['testVoice']              = testVoice;
   window['vvToggle']               = vvToggle;
   window['vvSetSpeaker']           = vvSetSpeaker;
-  window['vocabSpeak']             = vocabSpeak;
-  window['conjSpeak']              = conjSpeak;
   window['toggleConjListenMode']   = toggleConjListenMode;
   window['toggleResourcesSettings']= toggleResourcesSettings;
-  window['audioBufferToWav']       = audioBufferToWav;
-  window['trimSilence']            = trimSilence;
 } catch(e) { console.error('[features-core] App registry failed:', e); }

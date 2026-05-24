@@ -415,7 +415,6 @@ function kanaSpeakCurrent() {
     jpSpeak(KanaDrillState.currentKana.char, 0.8);
   }
 }
-window['kanaSpeakCurrent'] = kanaSpeakCurrent;
 
 function setupMultipleChoice() {
   const btns = document.querySelectorAll('.multi-choice-btn');
@@ -739,9 +738,5 @@ try {
     handleKanaKey, handleKanaInput,
     updateDrillStats, renderDrillProgress,
   });
-  window['WS']                 = WS;
-  window['kanaShowMastery']    = kanaShowMastery;
-  window['kanaStartFreshSession'] = kanaStartFreshSession;
   window['kanaSpeakCurrent']   = kanaSpeakCurrent;
-  window['initKanaDrill']      = initKanaDrill;
 } catch(e) { console.error('[core-kana] App registry failed:', e); }

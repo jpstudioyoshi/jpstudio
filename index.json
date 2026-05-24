@@ -1410,84 +1410,84 @@
     "type": "function",
     "name": "setupMultipleChoice",
     "file": "src/core-kana.js",
-    "line": 420,
+    "line": 419,
     "desc": "const btns = document.querySelectorAll('.multi-choice-btn');"
   },
   {
     "type": "function",
     "name": "startCardTimer",
     "file": "src/core-kana.js",
-    "line": 444,
+    "line": 443,
     "desc": "let timeLeft = kanaTimerSeconds;"
   },
   {
     "type": "function",
     "name": "stopCardTimer",
     "file": "src/core-kana.js",
-    "line": 464,
+    "line": 463,
     "desc": "if (kanaCardTimer) { clearInterval(kanaCardTimer); kanaCardTimer = null; }"
   },
   {
     "type": "function",
     "name": "cardTimerExpired",
     "file": "src/core-kana.js",
-    "line": 472,
+    "line": 471,
     "desc": "if (!KanaDrillState.currentKana || kanaCardTimerRevealed) return;"
   },
   {
     "type": "function",
     "name": "checkAnswer",
     "file": "src/core-kana.js",
-    "line": 494,
+    "line": 493,
     "desc": "const _inp = document.getElementById('answerInput');"
   },
   {
     "type": "function",
     "name": "skipKana",
     "file": "src/core-kana.js",
-    "line": 590,
+    "line": 589,
     "desc": "if (!KanaDrillState.currentKana) {"
   },
   {
     "type": "function",
     "name": "handleKanaKey",
     "file": "src/core-kana.js",
-    "line": 608,
+    "line": 607,
     "desc": "if (e.key !== 'Enter') return;"
   },
   {
     "type": "function",
     "name": "handleKanaInput",
     "file": "src/core-kana.js",
-    "line": 651,
+    "line": 650,
     "desc": "if (kanaCardTimerRevealed) return; // wrong answer pending Enter"
   },
   {
     "type": "function",
     "name": "updateDrillStats",
     "file": "src/core-kana.js",
-    "line": 671,
+    "line": 670,
     "desc": "document.getElementById('drillCorrect').textContent = KanaDrillState.correctCount;"
   },
   {
     "type": "function",
     "name": "renderDrillProgress",
     "file": "src/core-kana.js",
-    "line": 678,
+    "line": 677,
     "desc": "const el = document.getElementById('drillProgress');"
   },
   {
     "type": "function",
     "name": "showDrillComplete",
     "file": "src/core-kana.js",
-    "line": 685,
+    "line": 684,
     "desc": "stopCardTimer();"
   },
   {
     "type": "function",
     "name": "renderKanaGrid",
     "file": "src/core-kana.js",
-    "line": 710,
+    "line": 709,
     "desc": "const allKana = (KanaDrillState.mode === 'katakana' || KanaDrillState.mode === 'words') ? KATAKANA :"
   },
   {
@@ -6121,168 +6121,168 @@
     "type": "function",
     "name": "_weekBounds",
     "file": "src/features-progress.js",
-    "line": 502,
+    "line": 503,
     "desc": "const now  = new Date();"
   },
   {
     "type": "function",
     "name": "_todayBounds",
     "file": "src/features-progress.js",
-    "line": 513,
+    "line": 514,
     "desc": "const now = new Date();"
   },
   {
     "type": "function",
     "name": "_filterHistory",
     "file": "src/features-progress.js",
-    "line": 519,
+    "line": 520,
     "desc": "if (!history || !history.length) return [];"
   },
   {
     "type": "function",
     "name": "_accuracyFromHistory",
     "file": "src/features-progress.js",
-    "line": 531,
+    "line": 532,
     "desc": "Falls back to all-time history when period is empty."
   },
   {
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 560,
+    "line": 561,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 570,
+    "line": 571,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 769,
+    "line": 770,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 853,
+    "line": 854,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 961,
+    "line": 962,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1049,
+    "line": 1050,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1115,
+    "line": 1116,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1140,
+    "line": 1141,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1182,
+    "line": 1183,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1227,
+    "line": 1228,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1245,
+    "line": 1246,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1286,
+    "line": 1287,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1294,
+    "line": 1295,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1365,
+    "line": 1366,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1409,
+    "line": 1410,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1419,
+    "line": 1420,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1448,
+    "line": 1449,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1505,
+    "line": 1506,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1560,
+    "line": 1561,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1574,
+    "line": 1575,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {

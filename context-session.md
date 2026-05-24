@@ -1,9 +1,13 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-23 (session 3)
+Last updated: 2026-05-24 (session 1)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
 - Management window is deprioritised — was too buggy and expensive to debug via Claude. Terminal approach is preferred for all edits.
+
+## Context File Update Process
+- `context-session.md` lives at project root (`~/Documents/jpStudio/context-session.md`)
+- At end of session: ask Claude to write the full updated file as a terminal `cat >` command. Run it, then upload the updated file to Claude project Knowledge to replace the old one.
 
 ## Current Mode
 STABILIZATION — not feature expansion.
@@ -34,8 +38,7 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - Before every dev session: `git add -A && git commit -m "before session YYYY-MM-DD"`
 - Emergency rollback: `git checkout -- .`
 - Pre-commit hook installed: runs `check-syntax.js` automatically, blocks commit on error
-- `.gitignore` covers `node_modules/`
-- Files to consider adding to .gitignore: `.DS_Store`, `*.bak`, `management-log.json`, `index.json`, `audit-*.md`
+- `.gitignore` covers `node_modules/`, `.DS_Store`, `*.bak`, `management-log.json`, `index.json`, `audit-*.md`
 
 **Critical lessons learned:**
 - When using `node -e "..."` in zsh, `!` causes "event not found". Use `/tmp/fix-xxx.js` files instead.
@@ -47,31 +50,39 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - Use `| pbcopy` to copy output to clipboard instead of flipping terminal windows.
 - When `NOT FOUND` in patch script — check exact whitespace with `JSON.stringify`. Extra blank lines are common culprit.
 - Slice-based patching (`src.slice(0,start) + neu + src.slice(end)`) is more reliable than string matching for large blocks.
+- String-replace anchors often fail due to whitespace/newline mismatch — when in doubt use line-index splice instead.
+- Always indicate whether a command runs in terminal or console (dev tools).
 
 ## Stabilization Status
-All immediate stabilization tasks complete. DrillCard migration in progress.
+Lesson Notes reconstruction in progress.
+
+### Completed (2026-05-24 session 1)
+- `main.js` — v7 schema migration: added `lesson_id` (INTEGER, FK to lesson_sessions) and `source` (TEXT) columns to `words` table
+- `main.js` — `words:upsert` IPC handler updated to accept and persist `lesson_id` and `source`
+- `features-lesson-notes.js` — after vocab extraction, writes all extracted words into `words` SQL table with `source='lesson'`. Uses `ON CONFLICT DO UPDATE` so existing JLPT words are not duplicated. Verified: 23 words written in test session, confirmed in DB.
+- `LessonNotesState.currentLessonId` is currently always `null` — lesson_id linkage pending
 
 ### Completed (2026-05-23 session 3)
 - `.gitignore` — added .DS_Store, *.bak, management-log.json, index.json, audit-*.md
 - `lnCreateFromPaste` — apiUsageTrack added (was logged but not tracked in cost dashboard)
 - `features-grammar.js` particle drill — undocumented raw fetch found and tracked with [API] log + apiUsageTrack
 - `DrillCard` — session save/resume added via `sessionKey` config option. Uses Storage (SQL-backed). `allowResume: false` to skip.
-- `style.css` — `--jp` defined: Hiragino Sans stack. `--panel` defined: #2c2c2e.
+- `style.css` — `--jp` defined: Hiragana Sans stack. `--panel` defined: #2c2c2e.
 - `STYLE_GUIDE.md` — created at project root. Full variable reference, color semantics, button/input/feedback patterns, typography scale, component inventory.
 - `DrillCard` — removed `var(--red,#e05050)` fallbacks, `--red` is defined.
 - Model audit — all calls use `claude-sonnet-4-20250514` (Sonnet 4.5) or `claude-haiku-4-5-20251001`. Haiku usage in lnCreateFromPaste and particle drill is intentional. Upgrade to `claude-sonnet-4-6` noted for next session.
 
 ### Completed (2026-05-23 session 2)
 - `features-kana.js` — double-click on A/ひ/カ toolbar buttons saves that mode as default for that input location via `kvAPI` (`kana_default:{inputId}`). Loaded async on `kanaToolbar()` init.
-- `features-yoshi.js` — Lesson Notes grammar drill JSON shape normalised: `{english,japanese}` → `{en,jp}` matching grammar panel. Prerequisite for shared renderer.
-- `features-yoshi.js` — `[LN]` logging added to all 4 silent extraction functions: vocab, stories, key phrases, grammar. Filter console by `[LN]` during Lesson Notes analysis to see counts and samples.
-- `features-grammar.js` — conjugation drill `_conjTrackingPaused` flag. "pause tracking" checkbox in stats bar suppresses SRS, GrammarErrors, grammarEvidence, drillLastCompletedWrite when checked. Resets on new session.
-- `src/ui/TextEntry.js` — was missing from index.html load order. Added before YoshiUI.js. Fixes missing input in Yoshi grammar drill.
-- `features-grammar.js` — `ConjSession` removed from App registry (referenced before its `const` declaration, causing registry failure).
-- `features-kana.js` — `shuffle` removed from App registry and window exports (defined in features-times.js which loads later).
+- `features-yoshi.js` — Lesson Notes grammar drill JSON shape normalised: `{english,japanese}` → `{en,jp}` matching grammar panel.
+- `features-yoshi.js` — `[LN]` logging added to all 4 silent extraction functions.
+- `features-grammar.js` — conjugation drill `_conjTrackingPaused` flag added.
+- `src/ui/TextEntry.js` — added to index.html load order. Fixes missing input in Yoshi grammar drill.
+- `features-grammar.js` — `ConjSession` removed from App registry (referenced before its `const` declaration).
+- `features-kana.js` — `shuffle` removed from App registry and window exports.
 - `index.html` — `features-corpus-seed.js` removed from load order (file does not exist).
-- `src/ui/DrillCard.js` — created, added to index.html before TextEntry.js. Shared drill loop: config-driven with getQueue, getPrompt, getAnswer, onCorrect, onWrong, onComplete, runsPerSession, trackingLabel, inputPlaceholder.
-- `core-counters.js` — `daysOfMonthDrill` migrated to DrillCard. `daysNext/daysCheck` replaced with no-ops.
+- `src/ui/DrillCard.js` — created, added to index.html. Shared drill loop, config-driven.
+- `core-counters.js` — `daysOfMonthDrill` migrated to DrillCard.
 
 ### Completed (2026-05-23 session 1)
 - API call logging, double-transcription guard, Whisper logging, Four Strands coverage
@@ -84,9 +95,11 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 ## Pending Work (priority order)
 
 ### Short-term
-- **Listening → Four Strands** — ALREADY WIRED at core-listen.js line ~496. No action needed.
-- **Model string upgrade** — swap `claude-sonnet-4-20250514` → `claude-sonnet-4-6` across all 30+ call sites. Deliberate task, needs smoke test of grammar drill, lesson notes, voice conversation after.
-- **DrillCard → counters migration** — session save now in DrillCard. Wire counters next.
+- **lesson_id linkage** — `LessonNotesState.currentLessonId` is never set. Find where `lessonNotesLoadSession` runs and wire in the SQL `lesson_sessions.id`.
+- **Lesson Notes reconstruction: Phrases** — new `lesson_phrases` SQL table (id, lesson_id, phrase, reading, meaning, example, created_at). v8 migration block in main.js. Wire extraction to write there.
+- **Lesson Notes reconstruction: Grammar** — push extracted grammar into Grammar Sentences feature. Add "Send to Grammar" button. No new table.
+- **Model string upgrade** — swap `claude-sonnet-4-20250514` → `claude-sonnet-4-6` across all 30+ call sites.
+- **DrillCard → counters migration** — still pending.
 - **ADJ_I / ADJ_NA word list** — only 8 i-adj / 6 na-adj. Deferred.
 
 ### DrillCard migration roadmap
@@ -98,34 +111,28 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 
 ### Medium-term cleanup
 - App registry cleanup — redundant window[] in core-anki, core-counters, core-kana, features-kana, features-times, features-video, features-voice-drill, services/*
-- Storage rationalisation — ✅ mostly done. LOCAL_ONLY_KEYS are intentional. API key double-write removed. importedDocSessions raw localStorage bypass is a known documented exception. No further action needed.
-- Yoshi → app data flow — extracted vocab/grammar not fed back into vocab drill or GrammarModel
-- lnCreateFromPaste — ✅ apiUsageTrack added
+- Storage rationalisation — ✅ mostly done.
+- Yoshi → app data flow — ✅ vocab now writing to SQL. Phrases and grammar still pending.
 
 ### Future features (frozen)
-- DrillRecord unified history, TextEntry migration, AudioStrip, Phone PWA
+- DrillRecord unified history, TextEntry migration, AudioStrip
 - Voice drill → DB, SRS for custom drill, Progress charts
-- overlay:transcribe IPC, BlackHole pre-session check, Management serial success check
+- overlay:transcribe IPC, BlackHole pre-session check
+- iPhone companion app (PWA served from Mac over WiFi) — audio player + SRS vocab recall + sentence drill + POST results back to SQLite. Discussed, not started.
 
 ### CSS Variable Retrofit (multi-session track)
 **Goal: replace all hardcoded hex colors with CSS variables before handing UI to a designer.**
-- All new UI must use variables — STYLE_GUIDE.md is the reference
-- Retrofit existing files one at a time, screenshot test after each
-- Hardcoded color counts: index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17), features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9) — ~181 total across all files
+- Hardcoded color counts: index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17), features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9) — ~181 total
 - Start with low-count files: core-writing.js(1), features-times.js(1), core-vocab.js(2)
 - features-progress.js last — chart colors may need new variables
-- After retrofit complete: hand to Claude for a UI design pass
-
-### Dedicated tasks (next session start)
-- ~~STYLE_GUIDE.md~~ — done
 
 ### Housekeeping
 - src/features.js — delete if still present (19,035 lines, confirmed dead)
-- features-pictures.js vg* dead code — safe to remove functions
+- features-pictures.js vg* dead code — safe to remove
 - window[] export cleanup — ongoing
 
 ## Console Filter Reference
-- `[LN]` — Lesson Notes extractions (vocab, stories, key phrases, grammar — fire on analysis trigger)
+- `[LN]` — Lesson Notes extractions
 - `[API]` — all Claude API calls
 - `[STT]` — Whisper transcription
 - `[AppEvents]` — recording pipeline events
@@ -133,57 +140,31 @@ All immediate stabilization tasks complete. DrillCard migration in progress.
 ## Yoshi Pipeline Summary
 Two separate systems:
 - **Recording pipeline** (teal): User → Orchestrator → AudioService → AppEvents → YoshiUI. Clean event-driven, traceable via [AppEvents].
-- **Lesson Notes** (coral): Paste/import → features-yoshi.js → Claude API calls (4 silent extractions) → lessonNotesRender() directly. No events. Traceable via [LN] logs.
+- **Lesson Notes** (coral): Paste/import → features-lesson-notes.js → Claude API calls (4 silent extractions) → lessonNotesRender() directly. No events. Traceable via [LN] logs.
 
 ## Next Recommended Action
-1. Self-study session with app
-2. Next lesson: Lesson Notes analysis → filter [LN] → bring back 4 log lines
-3. Next dev session: model string upgrade (`claude-sonnet-4-20250514` → `claude-sonnet-4-6`) → then CSS variable retrofit (start small files: core-writing.js, features-times.js, core-vocab.js)
+1. Wire `LessonNotesState.currentLessonId` — assign SQL lesson_sessions.id when session loads
+2. Lesson Notes reconstruction: Phrases → lesson_phrases SQL table (v8 migration)
+3. Model string upgrade (claude-sonnet-4-20250514 → claude-sonnet-4-6)
+4. CSS variable retrofit — start with small files (core-writing.js, features-times.js, core-vocab.js)
 
 ## Lesson Notes — Architectural Reconstruction Plan
-Status: PLANNED — do not add features to current implementation until reconstruction begins.
-
-### Current state (broken)
-All extracted content (vocab, phrases, grammar, stories) stored as one JSON blob in kvAPI, unlinked from lesson_sessions SQL table. features-lesson-notes.js is 4,500 lines with tangled dependencies on features-reading.js private vars (_qrFuriOn, _qrSegments). Recording+transcript render cycle breaks when other features touch the same DOM.
+Status: IN PROGRESS
 
 ### Target architecture
-
-**Vocab** → extracted words pushed into existing `words` SQL table with source='lesson' and lesson_id FK. Standard vocab drill reads from there. Lesson Notes becomes a tagger, not a drill host.
-
-**Phrases** → new `lesson_phrases` SQL table: id, lesson_id, phrase, reading, meaning, example, created_at. Standard DrillCard reads from there.
-
-**Grammar** → extraction pushes grammar points into Grammar Sentences feature (features-grammar.js). Lesson Notes shows read-only summary + "Send to Grammar" button. No parallel drill system.
-
-**Stories** → thin wrapper around existing reading panel. Reading panel gets a setText() entry point. Lesson Notes passes the story text in.
-
-**WhatsApp notes + alignment** → stay in kvAPI blob. Independent of extracted content. Display and search stay in Lesson Notes panel.
-
-**Recording + transcript** → stays in lesson_sessions SQL table. Cleaner once other features stop sharing its render cycle. Wall-clock display and transcript highlight deferred until render cycle is stable.
+- **Vocab** → ✅ DONE. Writes to `words` SQL table with source='lesson' and lesson_id FK.
+- **Phrases** → new `lesson_phrases` SQL table. v8 migration pending.
+- **Grammar** → feeds into Grammar Sentences feature. "Send to Grammar" button pending.
+- **Stories** → thin wrapper around existing reading panel. setText() entry point pending.
+- **WhatsApp notes + alignment** → stays in kvAPI blob.
+- **Recording + transcript** → stays in lesson_sessions SQL table.
 
 ### Migration strategy
 - Existing kvAPI blobs remain readable (no data loss)
 - New extractions write to SQL going forward
-- Reconstruct one feature at a time: Vocab first (simplest, table exists), then Phrases, then Grammar, then Stories
-- Keep current Lesson Notes working throughout — each feature gets a SQL path added alongside the existing blob path, then blob path retired
+- Reconstruct one at a time: ✅ Vocab → Phrases → Grammar → Stories
 
-### SQL additions needed
-- `words` table: add lesson_id column (check existing schema first)
-- New table: lesson_phrases (id, lesson_id, phrase, reading, meaning, example, created_at)
-- Grammar: no new table — feed into existing grammar_sentences flow
-
-### Session 3 completed work (before reconstruction decision)
-- Split features-yoshi.js → features-lesson-notes.js (4,565 lines)
-- Fixed: Test/Session/Recordings buttons hidden when session exists
-- Fixed: Story tiles broken by _qrFuriOn private var reference
-- Rolled back: phrases drill, transcript search, audio wall-clock (too fragile in current architecture)
-
-## Session 3 corrections to Pending Work
-
-### Lesson Notes work — SUPERSEDED
-All Lesson Notes feature work (phrases drill, transcript search, jump-to, audio wall-clock) is SUSPENDED pending architectural reconstruction. See Lesson Notes Architectural Reconstruction Plan above. Do not add features to features-lesson-notes.js until reconstruction begins.
-
-### Updated Next Recommended Action
-1. Check words table schema in main.js before starting reconstruction
-2. Start Lesson Notes reconstruction: Vocab → SQL (simplest, table exists)
-3. Model string upgrade (claude-sonnet-4-20250514 → claude-sonnet-4-6) — still pending
-4. CSS variable retrofit — still pending, start with small files
+### SQL additions
+- ✅ v7: `lesson_id` and `source` on `words` table
+- Next: v8 — new `lesson_phrases` table
+- Grammar: no new table needed

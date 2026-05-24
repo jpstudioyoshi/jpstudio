@@ -608,7 +608,6 @@ function toggleKanaDakuten() {
   initKanaDrill(); // restart with new pool
 }
 
-window['toggleKanaDakuten'] = toggleKanaDakuten;
 
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -627,7 +626,5 @@ try {
     setKanaMode,
     toggleKanaDakuten,
   });
-  window['KM']               = KM;
-  window['KanaDrillState']   = KanaDrillState;
   window['toggleKanaDakuten']= toggleKanaDakuten;
 } catch(e) { console.error('[core-kana-drill] App registry failed:', e); }

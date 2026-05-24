@@ -1064,13 +1064,4 @@ try {
   window['kanaAddToggle']      = kanaAddToggle;
   window['kanaSetMode']        = kanaSetMode;
   window['kanaToolbar']        = kanaToolbar;
-  window['kanjiPickerShow']    = kanjiPickerShow;
-  window['kajiPickerClose']    = kajiPickerClose;
-  window['setGlobalQTMode']    = setGlobalQTMode;
-  window['setChatInputMode']   = setChatInputMode;
-  window['listenTransSetMode'] = listenTransSetMode;
-  window['setVtDictateMode']   = setVtDictateMode;
-  window['setGramSentQMode']   = setGramSentQMode;
-  window['setWritingMode']     = setWritingMode;
-  window['transDoKanjiConvert']= transDoKanjiConvert;
 } catch(e) { console.error('[features-kana] App registry failed:', e); }
