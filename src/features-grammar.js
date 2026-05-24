@@ -726,10 +726,6 @@ async function gramSentAskQuestion() {
 
 function gramSentInit() {
   gramSentPopulateHistory();
-  // Restore kana mode for question input
-  kanaRestoreMode('gramSentQuestion', 'gramSentQKana', {
-    romaji: 'gramSentQRomajiBtn', hira: 'gramSentQHiraBtn', kata: 'gramSentQKataBtn'
-  });
 }
 
 // ═══════════════════════════════════════════════════════
