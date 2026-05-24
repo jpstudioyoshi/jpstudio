@@ -334,7 +334,7 @@ function wbAddItem(entry, idx) {
     const current = textSpan.textContent;
     const inp = document.createElement('input');
     inp.value = current;
-    inp.style.background = '#1c1c1e'; inp.style.border = '1px solid var(--teal)'; inp.style.color = 'var(--ink)'; inp.style.fontFamily = "'Noto Sans JP',sans-serif"; inp.style.fontSize = '1rem'; inp.style.padding = '2px 6px'; inp.style.borderRadius = '4px'; inp.style.width = '100%';
+    inp.style.background = 'var(--paper-dark)'; inp.style.border = '1px solid var(--teal)'; inp.style.color = 'var(--ink)'; inp.style.fontFamily = "'Noto Sans JP',sans-serif"; inp.style.fontSize = '1rem'; inp.style.padding = '2px 6px'; inp.style.borderRadius = '4px'; inp.style.width = '100%';
     textSpan.replaceWith(inp);
     kanaOn(inp);
     inp.focus();

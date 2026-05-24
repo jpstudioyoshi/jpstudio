@@ -371,7 +371,7 @@ function startTdTimer() {
     bar.style.transition = 'width 0.1s linear';
     bar.style.width = pct + '%';
     if (pct < 30) bar.style.background = 'var(--red)';
-    else if (pct < 60) bar.style.background = 'var(--gold,#c8a951)';
+    else if (pct < 60) bar.style.background = 'var(--gold)';
     if (elapsed >= total) {
       clearTdTimer();
       if (!TimesState.answered) timeOut();
