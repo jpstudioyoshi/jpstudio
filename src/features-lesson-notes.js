@@ -1753,7 +1753,7 @@ async function lessonNotesGrammarCheckDrill() {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 400,
         messages: [{ role: 'user', content: `A Japanese learner is practicing the grammar pattern "${grammar.pattern}".
 
@@ -1845,7 +1845,7 @@ async function lessonNotesGrammarAsk() {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         messages: [
           { role: 'user', content: `You are helping a Japanese learner understand this grammar point:
@@ -2064,7 +2064,7 @@ async function lessonNotesParseStory(text) {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 3000,
         messages: [{ role: 'user', content:
           `Segment this Japanese text into words and give the hiragana reading for each word that contains kanji. Return ONLY a valid JSON array, nothing else:
@@ -2339,7 +2339,7 @@ async function lnParseSentenceFurigana() {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         messages: [{ role: 'user', content: `Segment this Japanese sentence and provide readings for each segment.
 
@@ -2985,7 +2985,7 @@ async function lessonNotesDrillBackground() {
       : '';
     
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 400,
         messages: [{ role: 'user', content: `Give brief background on this Japanese word for a learner:
 
@@ -3117,7 +3117,7 @@ async function lessonNotesBreakdown(word) {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 500,
         messages: [{ role: 'user', content: `Break down this Japanese word into its components: ${word}
 
@@ -3166,7 +3166,7 @@ async function lessonNotesExamples(word) {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 600,
         messages: [{ role: 'user', content: `Give 4 example sentences using the Japanese word: ${word}
 
@@ -3490,7 +3490,7 @@ async function lessonNotesExtract() {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 2000,
         messages: [{ role: 'user', content: `Extract vocabulary from these Japanese lesson notes and provide English translations.
 
@@ -3571,7 +3571,7 @@ async function lessonNotesExtractStories(text, sessionIdx) {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 3000,
         messages: [{ role: 'user', content: `Extract continuous Japanese text passages, stories, or anecdotes from these lesson notes.
 
@@ -3640,7 +3640,7 @@ async function lessonNotesExtractErrors(text, sessionIdx) {
   
   try {
     const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 2000,
         messages: [{ role: 'user', content: `Extract error corrections from these Japanese lesson notes.
 

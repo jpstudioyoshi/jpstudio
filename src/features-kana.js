@@ -798,7 +798,7 @@ async function kanaToKanji(el, btn) {
   
   try {
     const data = await (App.claudeAPI || window.claudeAPI)({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 400,
         messages: [{ role: 'user', content: `Convert this Japanese text to use appropriate kanji. Give 3-4 different conversion options.
 

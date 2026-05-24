@@ -484,7 +484,7 @@ async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
       'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
-      model:      'claude-sonnet-4-20250514',
+      model:      'claude-sonnet-4-6',
       max_tokens: 400,
       stream:     true,
       system:     systemPrompt,
@@ -1187,7 +1187,7 @@ Be warm, encouraging, and conversational. React to their answers before asking t
   
   try {
     const data = await _fv_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{ role: 'user', content: systemPrompt }]
     ,
@@ -1252,7 +1252,7 @@ Only include fields where you learned something. If they gave unclear or off-top
 
   try {
     const data = await _fv_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 200,
         messages: [{ role: 'user', content: systemPrompt }]
     ,
@@ -2121,7 +2121,7 @@ Keep issues to 2-3 max. Keep actions to 2-3 max. Be concise.`;
     }
     
     const response = await _fv_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 800,
         messages: [{ role: 'user', content: prompt }]
     ,
@@ -2646,7 +2646,7 @@ Or if no errors:
   
   try {
     const data = await _fv_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 400,
         system: systemPrompt,
         messages: messages

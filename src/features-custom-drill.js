@@ -209,7 +209,7 @@ async function cdJpBlur(i, jpVal) {
     const _claudeAPI  = App.claudeAPI  || window.claudeAPI;
     const _claudeText = App.claudeText || window.claudeText;
     const data = await _claudeAPI({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 100,
       messages: [{ role: 'user', content:
         `Translate this Japanese sentence to natural English in 10 words or fewer. Reply with only the translation, nothing else.\n\n${jpVal}` }],

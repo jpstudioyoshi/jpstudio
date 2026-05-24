@@ -956,7 +956,7 @@ async function claudeAPI(opts) {
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: opts.model || 'claude-sonnet-4-20250514',
+      model: opts.model || 'claude-sonnet-4-6',
       max_tokens: opts.max_tokens || 1024,
       system: opts.system,
       messages: opts.messages

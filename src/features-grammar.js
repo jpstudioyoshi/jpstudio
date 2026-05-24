@@ -72,7 +72,7 @@ Reply ONLY with a JSON array, no markdown:
     area.innerHTML = `<div class="gd-idle"><div class="gd-idle-char" style="animation: pulse-border 1s infinite">…</div><div>Generating ${count} sentences…</div></div>`;
 
     const data = await claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
     ,
@@ -221,7 +221,7 @@ function gdToggleVocabHint(btn) {
     if (!apiKey) { hint.innerHTML = '<em>No API key</em>'; return; }
     hint.innerHTML = '<em style="color:var(--ink-light);font-size:0.8rem">Loading…</em>';
     claudeAPI({
-        model: 'claude-sonnet-4-20250514', max_tokens: 400,
+        model: 'claude-sonnet-4-6', max_tokens: 400,
         messages: [{ role: 'user', content: 'List the content words in this Japanese sentence with their dictionary form, reading, and meaning. Show ONLY the dictionary/plain form — not the conjugated form in the sentence.\nSentence: ' + s.jp + '\nFormat: 辞書形（reading）= meaning, one per line. Be concise.' }]
       ,
         track: 'grammar'
@@ -257,7 +257,7 @@ async function gdCheck() {
         ? `Japanese: "${s.jp}". Correct English translation: "${s.en}". Student answered: "${val}". Grade this translation. Be liberal — accept natural paraphrases and synonyms. Reply ONLY with JSON: {"correct":true/false,"feedback":"one sentence — what was right or wrong","correctAnswer":"${s.en}"}`
         : `English: "${s.en}". Target grammar: "${s.hint}". Correct Japanese: "${s.jp}". Student wrote: "${val}". Grade this. Accept natural variations. IMPORTANT: When mentioning any Japanese words with kanji in your feedback, add hiragana reading in brackets after, e.g. 食べる(たべる). Reply ONLY with JSON: {"correct":true/false,"feedback":"one sentence explaining error or confirming","correctAnswer":"${s.jp}"}`;
 
-      const data = await claudeAPI({ model: 'claude-sonnet-4-20250514', max_tokens: 150,
+      const data = await claudeAPI({ model: 'claude-sonnet-4-6', max_tokens: 150,
           messages: [{ role: 'user', content: prompt }] ,
             track: 'grammar'
           });
@@ -474,7 +474,7 @@ Reply ONLY with a JSON array, no markdown:
 
   try {
     const data = await claudeAPI({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 2000,
       messages: [{ role: 'user', content: prompt }],
       track: 'grammar',
@@ -589,7 +589,7 @@ async function gramSentCheck() {
         `Reply ONLY with JSON: {"correct":true/false,"feedback":"one sentence","correctAnswer":"${s.jp}"}`;
 
       const data = await claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }],
         track: 'grammar',
@@ -707,7 +707,7 @@ async function gramSentAskQuestion() {
   try {
     const prompt = `Current sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Student asks: "${q}". Answer concisely for an N4-N5 learner.`;
     const data = await claudeAPI({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 300,
       messages: [{ role: 'user', content: prompt }],
       track: 'grammar',

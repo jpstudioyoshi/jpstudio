@@ -623,7 +623,7 @@ async function vtFuriLine(idx) {
 
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 400,
         messages: [{
           role: 'user',
@@ -758,7 +758,7 @@ Rules:
 
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 900,
         messages: [{ role: 'user', content: prompt }]
     ,
@@ -1178,7 +1178,7 @@ async function vtShowBreakdown() {
   
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1200,
         messages: [{
           role: 'user',
@@ -1768,7 +1768,7 @@ async function resourcesAdd() {
   
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{ role: 'user', content: `Generate metadata for this Japanese learning resource URL: ${url}
 
@@ -2068,7 +2068,7 @@ function vtTranslateWord(word, event) {
   document.addEventListener('click', function dismiss(e) {
     if (!popup.contains(e.target)) { popup.remove(); document.removeEventListener('click', dismiss); }
   });
-  _fvid_claudeAPI({ model:'claude-sonnet-4-20250514', max_tokens:120,
+  _fvid_claudeAPI({ model:'claude-sonnet-4-6', max_tokens:120,
       messages:[{role:'user',content:`Translate the Japanese word/phrase "${word}" to English. Reply with: reading in hiragana, then a dash, then the English meaning. One line only.`}],
         track: 'video'
       }).then(d=>{
@@ -2210,7 +2210,7 @@ async function strokeFetchReadings(chars, word) {
   if (!apiKey) return;
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514', max_tokens: 200,
+        model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `For the Japanese word "${word}", give the reading of each character as it is read IN CONTEXT of that word. Reply ONLY with a JSON object mapping each character to its reading, e.g. {"東":"とう","京":"きょう"}. Characters: ${JSON.stringify(kanji)}` }]
     ,
@@ -2401,7 +2401,7 @@ function vtTranslateWord(word, event) {
   document.addEventListener('click', function dismiss(e) {
     if (!popup.contains(e.target)) { popup.remove(); document.removeEventListener('click', dismiss); }
   });
-  _fvid_claudeAPI({ model:'claude-sonnet-4-20250514', max_tokens:120,
+  _fvid_claudeAPI({ model:'claude-sonnet-4-6', max_tokens:120,
       messages:[{role:'user',content:`Translate the Japanese word/phrase "${word}" to English. Reply with: reading in hiragana, then a dash, then the English meaning. One line only.`}],
         track: 'video'
       }).then(d=>{
@@ -2543,7 +2543,7 @@ async function strokeFetchReadings(chars, word) {
   if (!apiKey) return;
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514', max_tokens: 200,
+        model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `For the Japanese word "${word}", give the reading of each character as it is read IN CONTEXT of that word. Reply ONLY with a JSON object mapping each character to its reading, e.g. {"東":"とう","京":"きょう"}. Characters: ${JSON.stringify(kanji)}` }]
     ,
@@ -2837,7 +2837,7 @@ async function epubGetFurigana(text) {
   const apiKey = _fvid_getApiKey();
   if (!apiKey) return text;
   const data = await _fvid_claudeAPI({
-      model: 'claude-sonnet-4-20250514', max_tokens: 800,
+      model: 'claude-sonnet-4-6', max_tokens: 800,
       messages: [{ role:'user', content:
         `Add furigana to ALL kanji using HTML ruby tags. EVERY kanji must have a reading - do not skip any. Use context-appropriate readings (例えば→たとえば, 今日→きょう, 片付ける→かたづける). For verbs with multiple kanji, tag each separately. Return ONLY the HTML.
 
@@ -2875,7 +2875,7 @@ async function epubOnWordSelect(e) {
     const apiKey = _fvid_getApiKey();
     if (!apiKey) { document.getElementById('epubPopupMeaning').textContent = 'No API key'; return; }
     const data = await _fvid_claudeAPI({
-        model:'claude-sonnet-4-20250514', max_tokens:150,
+        model:'claude-sonnet-4-6', max_tokens:150,
         messages:[{role:'user',content:
           `For the Japanese word "${word}", reply ONLY with a JSON object: {"reading":"hiragana reading","meaning":"short English meaning","pos":"part of speech"}. No explanation.`}]
     ,
@@ -3015,7 +3015,7 @@ async function vtTranslateLine() {
     const apiKey = _fvid_getApiKey();
     if (!apiKey) { enEl.textContent = 'No API key set'; return; }
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514', max_tokens: 200,
+        model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `Translate this Japanese line into natural English. Reply with ONLY the translation, nothing else.
 
@@ -3063,7 +3063,7 @@ async function vtBreakdownLine() {
     }
     
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 800,
         messages: [{ role: 'user', content: `Break down this Japanese sentence for a learner:
 
@@ -3161,7 +3161,7 @@ async function vtGenerateVocabList() {
   
   try {
     const data = await _fvid_claudeAPI({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 2500,
         messages: [{ role: 'user', content: `Extract CONTENT words from this Japanese transcript. Content words are nouns, verbs, adjectives, and adverbs that carry meaning (not particles, copulas, or grammatical words).
 

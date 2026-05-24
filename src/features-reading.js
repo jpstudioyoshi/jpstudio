@@ -172,7 +172,7 @@ async function qrSegment() {
 
   try {
     const data = await (App.claudeAPI || window.claudeAPI)({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 3000,
         messages: [{ role: 'user', content:
           `You are a Japanese text segmenter. Split the text into WORDS (not individual characters). Group kanji+kana that form one word together.
@@ -324,7 +324,7 @@ async function qrWordClick(el, idx) {
 
   try {
     const data = await (App.claudeAPI || window.claudeAPI)({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 120,
         messages: [{ role: 'user', content:
           `Give the English meaning of this Japanese word. Reply ONLY with JSON: {"en":"brief English meaning","pos":"noun/verb/particle/etc"}. Word: ${seg.word}` }]
