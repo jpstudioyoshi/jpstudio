@@ -1582,6 +1582,18 @@ Content: ${docContent.slice(0, 8000)}` }]
     if (jsonMatch) {
       LessonNotesState.keyPhrases = JSON.parse(jsonMatch[0]);
       console.log('[LN] key phrases extracted:', LessonNotesState.keyPhrases.length, 'phrases');
+      // Write to lesson_phrases SQL table
+      try {
+        const _lessonId = LessonNotesState.currentLessonId || null;
+        for (const p of LessonNotesState.keyPhrases) {
+          if (!p.phrase || !p.meaning) continue;
+          await window.db.run(
+            'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example) VALUES (?,?,?,?)',
+            [_lessonId, p.phrase, p.meaning, p.example || null]
+          );
+        }
+        console.log('[LN] phrases written to SQL:', LessonNotesState.keyPhrases.length);
+      } catch(e) { console.warn('[LN] phrases SQL write failed:', e.message); }
     }
   } catch (e) { console.error('Key phrases extraction error:', e); }
 }

@@ -459,6 +459,23 @@ function createSchema() {
     db.run('UPDATE schema_version SET version = 7');
     console.log('Migrated schema to v7 (lesson_id, source on words)');
   }
+
+  // v8: add lesson_phrases table
+  const vRow8 = db.exec('SELECT version FROM schema_version');
+  const v8 = vRow8[0]?.values[0]?.[0] || 0;
+  if (v8 < 8) {
+    db.run(`CREATE TABLE IF NOT EXISTS lesson_phrases (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      lesson_id  INTEGER REFERENCES lesson_sessions(id),
+      phrase     TEXT NOT NULL,
+      reading    TEXT,
+      meaning    TEXT NOT NULL,
+      example    TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    )`);
+    db.run('UPDATE schema_version SET version = 8');
+    console.log('Migrated schema to v8 (lesson_phrases table)');
+  }
   console.log('Schema created/verified');
 }
 
