@@ -20,7 +20,7 @@
 - **CSS diagnostic:** before writing any CSS fix run `getComputedStyle(el).propertyName` in console
 - **@media print block:** index.html has a print block — confirmed print-only, no screen rules present. Do not put screen styles there.
 - **Inline styles for JS-controlled elements:** if JavaScript controls visibility/layout, use inline styles — immune to stylesheet scope issues
-- **Lesson notes storage:** `lessonNotesSaveSessions` uses raw `localStorage.setItem('importedDocSessions', ...)`. `features-tools.js` `lnGetSessions` delegates to `App.lessonNotesGetSessions` (in features-yoshi.js) — same data, different access paths. Do not mix further.
+- **Lesson notes storage:** Single path — kvAPI via `lessonNotesGetSessions` / `lessonNotesSaveSessions`. `lnGetSessions` in features-tools.js delegates through App registry. One-time localStorage migration built in. ✅ Resolved.
 
 ## Load Order
 ```
@@ -58,14 +58,16 @@ src/core-foundation.js → core-anki → core-kana-drill → core-kana → core-
 | `src/features-core.js` | ~700 | DrillFlow, TTS engine + VoiceVox backend, jpSpeak |
 | `src/features-kana.js` | 1,060 | Romaji→kana, kana toolbar, kanaSetMode |
 | `src/features-times.js` | 505 | Times & dates drill |
-| `src/features-yoshi.js` | ~5,075 | Yoshi writing sessions + Lesson Notes panel |
+| `src/features-yoshi.js` | ~651 | Yoshi session CRUD, UI shell, AI helpers, cloze rendering |
 | `src/features-grammar.js` | ~2,100 | Grammar Drill, Conjugation Drill, Particle Drill |
 | `src/features-reading.js` | ~1,376 | Quick Read, furigana, listen mode, Epub |
 | `src/features-video.js` | 3,316 | Video + Transcript, Watch Timer, Comprehension, Shadowing |
 | `src/features-pictures.js` | 521 | Pictures naming game (vg* dead code, harmless) |
 | `src/features-progress.js` | ~1,550 | Progress panel — Four Strands, Mastery, Grammar Coverage, Weights |
 | `src/features-stroke.js` | 507 | Stroke order drill |
-| `src/features-tools.js` | ~1,368 | Lesson notes utils, recording link picker, Matching Pairs |
+| `src/features-tools.js` | ~1,280 | Lesson notes utils, recording link picker, Matching Pairs |
+| `src/features-lesson-notes.js` | ~2,553 | LN state, session CRUD, WhatsApp parser, recording helpers, story/reading render, sentence furigana |
+| `src/features-ln-p2.js` | ~1,959 | Sentence recording, drill, extraction, session load/new/delete, docx parser, timeline, recordings browser |
 | `src/features-voice.js` | ~2,866 | Agent Briefing, Voice Conversation |
 | `src/features-voice-drill.js` | 610 | Sentence drill subtab (練習) |
 | `src/features-corpus-seed.js` | ~380 | Transcript import pipeline |
