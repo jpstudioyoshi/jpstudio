@@ -439,6 +439,15 @@ function gramSentSelectWeakPoint(btn, pattern) {
 async function gramSentCreate() {
   await gramSentGenerate();
 }
+// Entry point for external callers (e.g. Lesson Notes grammar feed)
+async function gramSentPracticePattern(pattern) {
+  if (!pattern) return;
+  (App.showPanel || window.showPanel)?.('grammar2');
+  await new Promise(r => setTimeout(r, 150)); // let panel render
+  const inp = document.getElementById('gramSentInput');
+  if (inp) { inp.value = pattern; inp.dispatchEvent(new Event('input')); }
+  await gramSentGenerate();
+}
 
 async function gramSentGenerate() {
   const area = document.getElementById('gramSentDrillArea');
@@ -845,7 +854,7 @@ function unclassifiedClear() {
 // ── App registry ───────────────────────────────────────
 try {
   Object.assign(App, {
-    gramSentCreate,
+    gramSentCreate, gramSentPracticePattern,
     gramSentGenerate,
     gramSentLoadHistory,
     gramSentToggleMode,

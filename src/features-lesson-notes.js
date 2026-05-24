@@ -1091,6 +1091,7 @@ function lessonNotesRenderGrammar() {
               <button class="btn-ghost" onclick="event.stopPropagation();lessonNotesEditGrammar(${g._idx})" title="Edit">✏️</button>
               <button class="btn-ghost" onclick="event.stopPropagation();lessonNotesToggleGrammarHide(${g._idx})" title="${LessonNotesState.grammarHidden.has(g._idx) ? 'Show' : 'Hide'}">${LessonNotesState.grammarHidden.has(g._idx) ? '👁' : '🙈'}</button>
               <button class="btn-ghost" onclick="event.stopPropagation();lessonNotesDeleteGrammar(${g._idx})" title="Delete">✕</button>
+              <button class="btn-ghost" onclick="event.stopPropagation();(App.gramSentPracticePattern||window.gramSentPracticePattern)?.(g.pattern)" title="Practice in Grammar Drill" style="font-size:0.72rem;padding:2px 6px">Practice →</button>
               <span onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);cursor:pointer">Study →</span>
             </div>
             <div onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);line-height:1.5;cursor:pointer">${g.explanation || ''}</div>
