@@ -135,8 +135,8 @@ const DrillCard = (() => {
     if (correct) {
       _correct++;
       fb.textContent = '✓ ' + answer;
-      fb.style.color = 'var(--teal)';
-      inp.style.borderColor = 'var(--teal)';
+      fb.classList.add('result-correct'); fb.classList.remove('result-wrong');
+      inp.classList.add('input-correct'); inp.classList.remove('input-error');
       if (_cfg.onCorrect) _cfg.onCorrect(item);
       if (_cfg.onSpeak) _cfg.onSpeak(item);
       // auto-advance after 800ms
@@ -144,8 +144,8 @@ const DrillCard = (() => {
     } else {
       _wrong++;
       fb.innerHTML = '✗ &nbsp;<span style="color:var(--teal)">' + answer + '</span>';
-      fb.style.color = 'var(--red)';
-      inp.style.borderColor = 'var(--red)';
+      fb.classList.add('result-wrong'); fb.classList.remove('result-correct');
+      inp.classList.add('input-error'); inp.classList.remove('input-correct');
       if (_cfg.onWrong) _cfg.onWrong(item, typed);
       // show Next button
       const nextBtn = document.getElementById('dc-next');
