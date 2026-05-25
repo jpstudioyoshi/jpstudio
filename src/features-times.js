@@ -229,7 +229,7 @@ function nextTimesQuestion() {
   // In both modes: show ？ until answered
   const displayEl = document.getElementById('tdDisplay');
   displayEl.textContent = '？';
-  displayEl.style.color = 'var(--ink-light)';
+  displayEl.classList.remove('result-correct','result-wrong');
   displayEl.style.fontSize = '3rem';
 
   const subEl = document.getElementById('tdSubDisplay');
@@ -304,7 +304,7 @@ function answerTd(chosen, btn) {
     // Reveal the answer text
     const displayEl = document.getElementById('tdDisplay');
     displayEl.textContent = TimesState.question.display;
-    displayEl.style.color = 'var(--teal)';
+    displayEl.classList.add('result-correct'); displayEl.classList.remove('result-wrong');
     displayEl.style.fontSize = '2.6rem';
 
     if (TimesState.blitz) {
@@ -318,9 +318,7 @@ function answerTd(chosen, btn) {
       // Show reading in reveal panel
       const rev = document.getElementById('tdReveal');
       rev.textContent = '✓ ' + TimesState.question.label + ' — ' + TimesState.question.speech;
-      rev.style.borderColor = 'var(--teal)';
-      rev.style.color = 'var(--teal)';
-      rev.style.background = 'rgba(74,149,149,0.08)';
+      rev.classList.add('btn-active'); rev.classList.remove('btn-active-red');
       rev.style.display = 'block';
       document.getElementById('tdNextBtn').style.display = 'inline-block';
       document.getElementById('tdPlayBtn').style.display = 'none';
@@ -390,16 +388,14 @@ function timeOut() {
   // Reveal correct answer
   const displayEl = document.getElementById('tdDisplay');
   displayEl.textContent = TimesState.question.display;
-  displayEl.style.color = 'var(--red)';
+  displayEl.classList.add('result-wrong'); displayEl.classList.remove('result-correct');
   document.querySelectorAll('.td-choice').forEach(btn => {
     btn.disabled = true;
     if (btn.textContent === TimesState.question.label) btn.classList.add('correct');
   });
   const rev = document.getElementById('tdReveal');
   rev.textContent = '⏱ Time up — ' + TimesState.question.label + ' · ' + TimesState.question.speech;
-  rev.style.borderColor = 'var(--red)';
-  rev.style.color = 'var(--red)';
-  rev.style.background = 'rgba(180,60,60,0.07)';
+  rev.classList.add('btn-active-red'); rev.classList.remove('btn-active');
   rev.style.display = 'block';
   document.getElementById('tdNextBtn').style.display = 'inline-block';
   document.getElementById('tdPlayBtn').style.display = 'none';
