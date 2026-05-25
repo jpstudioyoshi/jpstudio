@@ -448,7 +448,7 @@
   </div>
 
   <!-- INLINE CONFIRM BAR -->
-  <div id="confirmBar" style="display:none;padding:8px 12px;background:var(--paper-dark);border-top:1px solid var(--border-hi);font-family:var(--sans);font-size:11px;color:var(--ink)">
+  <div id="confirmBar" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:10px 12px;background:#2c2c2e;border-top:1px solid var(--border-hi);font-family:var(--sans);font-size:11px;color:var(--ink);z-index:9999;-webkit-app-region:no-drag">
     <div id="confirmMsg" style="margin-bottom:8px;line-height:1.4"></div>
     <div style="display:flex;gap:8px">
       <button onclick="_confirmOk()" style="-webkit-app-region:no-drag;background:var(--teal);color:#1c1c1e;border:none;border-radius:4px;font-size:11px;font-weight:600;padding:4px 14px;cursor:pointer">OK</button>
