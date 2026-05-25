@@ -2744,3 +2744,5 @@
 #voiceRecordBtn:hover { transform: scale(1.05); }
 
 .row-hover:hover { background: var(--paper-dark) !important; cursor: pointer; }
+
+.fe-del:hover { color: var(--red) !important; }
