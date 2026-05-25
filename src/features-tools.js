@@ -1174,8 +1174,7 @@ function buildChatHistoryList() {
     const row = document.createElement('div');
     row.style.cssText = 'padding:6px 8px;font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);cursor:pointer;border-radius:4px;transition:background 0.1s';
     row.textContent = (i + 1) + '. ' + text;
-    row.onmouseover = () => row.style.background = 'var(--paper)';
-    row.onmouseout  = () => row.style.background = 'transparent';
+    row.classList.add('row-hover');
     row.onclick = () => {
       // Find the AI reply after this user message and scroll to top of it
       const allMsgs = [...document.querySelectorAll('#chatMessages .chat-msg')];

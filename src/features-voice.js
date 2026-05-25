@@ -2036,8 +2036,7 @@ function rtShowHistory() {
     sessions.forEach((s, idx) => {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;padding:10px 20px;border-bottom:1px solid var(--border);cursor:pointer;gap:12px';
-      row.onmouseover = () => row.style.background = 'var(--paper-dark)';
-      row.onmouseout  = () => row.style.background = '';
+      row.classList.add('row-hover');
 
       const date = new Date(s.date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
       const hasR2 = s.round2 && s.round2.trim().length > 10;

@@ -491,8 +491,7 @@ function lnShowLinkPicker() {
     const info = document.createElement('div');
     info.style.cssText = 'flex:1;cursor:pointer';
     info.innerHTML = '<span style="color:var(--teal)">' + dt + '</span>' + (dur ? ' · ' + dur : '') + done;
-    info.onmouseover = function() { row.style.background = 'var(--paper-dark)'; };
-    info.onmouseout  = function() { row.style.background = ''; };
+    row.classList.add('row-hover');
     info.onclick = function() { lnLinkRecording(r.id); };
     const delBtn = document.createElement('button');
     delBtn.textContent = '🗑';
@@ -701,8 +700,7 @@ async function lnLoadTranscript(recId, mode) {
       const label = t.speaker === 'teacher' ? '🧑‍🏫' : '🙋';
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;gap:10px;padding:5px 6px;border-radius:4px;cursor:pointer';
-      row.onmouseover = function() { row.style.background = 'var(--paper-dark)'; };
-      row.onmouseout  = function() { row.style.background = ''; };
+      row.classList.add('row-hover');
       row.onclick = (function(sec) { return function() { lnSeekToTime(sec); }; })(ts);
       row.innerHTML =
         '<span title="' + titleStr + '" style="color:var(--teal);flex-shrink:0;font-variant-numeric:tabular-nums;min-width:44px;font-size:0.75rem">' + timeStr + '</span>' +
@@ -801,8 +799,7 @@ async function lnLoadTimeline(recId, _elParam, turns, startMs) {
         timeStr = wallDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       }
       row.style.cssText = 'display:flex;gap:8px;padding:4px 6px;border-radius:4px;cursor:pointer;align-items:baseline';
-      row.onmouseover = function() { row.style.background = 'var(--paper-dark)'; };
-      row.onmouseout  = function() { row.style.background = ''; };
+      row.classList.add('row-hover');
       row.onclick = (function(sec) { return function() { lnSeekToTime(sec); }; })(entry.ts);
       row.innerHTML =
         '<span style="color:var(--teal);flex-shrink:0;font-size:0.72rem;min-width:44px;font-variant-numeric:tabular-nums" title="' + offsetStr + ' from start">' + timeStr + '</span>' +
