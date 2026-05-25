@@ -10,224 +10,210 @@
     "type": "function",
     "name": "getDbPath",
     "file": "main.js",
-    "line": 106,
+    "line": 124,
     "desc": "return path.join(app.getPath('userData'), 'jpstudio.db');"
   },
   {
     "type": "function",
     "name": "initDatabase",
     "file": "main.js",
-    "line": 110,
+    "line": 128,
     "desc": ""
   },
   {
     "type": "function",
     "name": "saveDatabase",
     "file": "main.js",
-    "line": 137,
+    "line": 155,
     "desc": "if (!db) return;"
   },
   {
     "type": "function",
     "name": "createSchema",
     "file": "main.js",
-    "line": 148,
+    "line": 166,
     "desc": "db.run(`"
   },
   {
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 512,
+    "line": 530,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');"
   },
   {
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 879,
+    "line": 897,
     "desc": "const dir = path.join(app.getPath('userData'), 'lessons');"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 885,
+    "line": 903,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 895,
+    "line": 913,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1146,
+    "line": 1164,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1197,
+    "line": 1215,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1276,
+    "line": 1294,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 308,
+    "line": 326,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 321,
+    "line": 339,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 330,
+    "line": 348,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 381,
+    "line": 399,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 434,
+    "line": 452,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 450,
+    "line": 468,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 459,
+    "line": 477,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 476,
+    "line": 494,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 490,
+    "line": 508,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 506,
+    "line": 524,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 593,
+    "line": 611,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 644,
+    "line": 662,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 712,
+    "line": 730,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 769,
+    "line": 787,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 786,
+    "line": 804,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 794,
+    "line": 812,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 910,
+    "line": 928,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 974,
+    "line": 992,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1055,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1071,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 1075,
+    "line": 1073,
     "desc": "db.run"
   },
   {
@@ -239,16 +225,30 @@
   },
   {
     "type": "storage",
-    "name": "DELETE",
+    "name": "INSERT",
     "file": "main.js",
-    "line": 1129,
+    "line": 1093,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1107,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1130,
+    "line": 1147,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 1148,
     "desc": "db.run"
   },
   {
@@ -261,6 +261,13 @@
   {
     "type": "ipc-handle",
     "name": "mgmt:reloadMain",
+    "file": "main.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-handle",
+    "name": "print:htmlToPDF",
     "file": "main.js",
     "line": 0,
     "desc": ""
@@ -772,6 +779,27 @@
   {
     "type": "ipc-invoke",
     "name": "print:toPDF",
+    "file": "preload.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-invoke",
+    "name": "print:htmlToPDF",
+    "file": "preload.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-invoke",
+    "name": "print:htmlToPDF",
+    "file": "preload.js",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "ipc-invoke",
+    "name": "print:htmlToPDF",
     "file": "preload.js",
     "line": 0,
     "desc": ""
@@ -2307,174 +2335,174 @@
     "name": "checkWritingSentence",
     "file": "src/core-writing.js",
     "line": 248,
-    "desc": "const input = document.getElementById('writingInput');"
+    "desc": "const _hdr = document.querySelector('.feedback-panel-header');"
   },
   {
     "type": "function",
     "name": "submitWritingSentence",
     "file": "src/core-writing.js",
-    "line": 275,
+    "line": 277,
     "desc": "const input = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 313,
+    "line": 315,
     "desc": "AppState.wbDragEl — see declaration below"
   },
   {
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 364,
+    "line": 366,
     "desc": "item.remove();"
   },
   {
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 376,
+    "line": 378,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {"
   },
   {
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 390,
+    "line": 392,
     "desc": "const n = writingSentences.length;"
   },
   {
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 396,
+    "line": 398,
     "desc": "AppState.wbDragEl = this;"
   },
   {
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 403,
+    "line": 405,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 408,
+    "line": 410,
     "desc": "this.classList.remove('drag-over');"
   },
   {
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 411,
+    "line": 413,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 428,
+    "line": 430,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');"
   },
   {
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 434,
+    "line": 436,
     "desc": "wbUpdateCount(); } // legacy stub"
   },
   {
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 436,
+    "line": 438,
     "desc": "const inp = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 448,
+    "line": 450,
     "desc": "const container = document.getElementById('feedbackEntries');"
   },
   {
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 497,
+    "line": 499,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');"
   },
   {
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 506,
+    "line": 508,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 515,
+    "line": 517,
     "desc": "writingSentences.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 524,
+    "line": 526,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }"
   },
   {
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 528,
+    "line": 530,
     "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Check or submit "
   },
   {
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 534,
+    "line": 536,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }"
   },
   {
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 544,
+    "line": 546,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 567,
+    "line": 569,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 584,
+    "line": 586,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 596,
+    "line": 598,
     "desc": "const tLen = token.length;"
   },
   {
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 610,
+    "line": 612,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);"
   },
   {
@@ -2635,469 +2663,469 @@
     "type": "function",
     "name": "renderListenSession",
     "file": "src/core-listen.js",
-    "line": 459,
+    "line": 465,
     "desc": "const list = document.getElementById('listenSessionList');"
   },
   {
     "type": "function",
     "name": "listenSessionDelete",
     "file": "src/core-listen.js",
-    "line": 480,
+    "line": 486,
     "desc": "if (i >= 0 && i < ListenState.sessionLookups.length) {"
   },
   {
     "type": "function",
     "name": "updatePlayBtn",
     "file": "src/core-listen.js",
-    "line": 487,
+    "line": 493,
     "desc": "const btn = document.getElementById('listenPlayBtn');"
   },
   {
     "type": "function",
     "name": "listenOnEnded",
     "file": "src/core-listen.js",
-    "line": 492,
+    "line": 498,
     "desc": "listenPlaying = false; updatePlayBtn();"
   },
   {
     "type": "function",
     "name": "listenTimeUpdate",
     "file": "src/core-listen.js",
-    "line": 499,
+    "line": 505,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "setListenLoopPause",
     "file": "src/core-listen.js",
-    "line": 522,
+    "line": 528,
     "desc": "listenLoopPauseSecs = secs;"
   },
   {
     "type": "function",
     "name": "setListenSpeed",
     "file": "src/core-listen.js",
-    "line": 527,
+    "line": 533,
     "desc": "listenCurrentSpeed = rate;"
   },
   {
     "type": "function",
     "name": "listenSkip",
     "file": "src/core-listen.js",
-    "line": 538,
+    "line": 544,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "fmtTime",
     "file": "src/core-listen.js",
-    "line": 543,
+    "line": 549,
     "desc": "if (!s || isNaN(s)) return '0:00';"
   },
   {
     "type": "function",
     "name": "cycleLoop",
     "file": "src/core-listen.js",
-    "line": 553,
+    "line": 559,
     "desc": "if (listenAbLooping || loopSetState === 'a' || loopSetState === 'b') {"
   },
   {
     "type": "function",
     "name": "updateLoopSetUI",
     "file": "src/core-listen.js",
-    "line": 566,
+    "line": 572,
     "desc": "kept as alias for safety"
   },
   {
     "type": "function",
     "name": "clearAbLoop",
     "file": "src/core-listen.js",
-    "line": 618,
+    "line": 624,
     "desc": "listenAbA = null; listenAbB = null; listenAbLooping = false; loopSetState = null;"
   },
   {
     "type": "function",
     "name": "waveformClick",
     "file": "src/core-listen.js",
-    "line": 624,
+    "line": 630,
     "desc": "const canvas = document.getElementById('listenWaveform');"
   },
   {
     "type": "function",
     "name": "updateListenTimeDisplay",
     "file": "src/core-listen.js",
-    "line": 685,
+    "line": 691,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "saveListenNote",
     "file": "src/core-listen.js",
-    "line": 694,
+    "line": 700,
     "desc": "clearTimeout(listenNotesSave);"
   },
   {
     "type": "function",
     "name": "clearListenPlaylist",
     "file": "src/core-listen.js",
-    "line": 706,
+    "line": 712,
     "desc": "listenTracks.forEach(t => URL.revokeObjectURL(t.url));"
   },
   {
     "type": "function",
     "name": "decodeWaveform",
     "file": "src/core-listen.js",
-    "line": 732,
+    "line": 738,
     "desc": "const waveMsg = document.getElementById('listenWaveMsg');"
   },
   {
     "type": "function",
     "name": "findSilenceBoundary",
     "file": "src/core-listen.js",
-    "line": 763,
+    "line": 769,
     "desc": "direction: 'before' scans leftward, 'after' scans rightward."
   },
   {
     "type": "function",
     "name": "drawWaveform",
     "file": "src/core-listen.js",
-    "line": 818,
+    "line": 824,
     "desc": "const canvas = document.getElementById('listenWaveform');"
   },
   {
     "type": "function",
     "name": "toggleDictationMode",
     "file": "src/core-listen.js",
-    "line": 983,
+    "line": 989,
     "desc": "── Toggle dictation mode ─────────────────────────────────"
   },
   {
     "type": "function",
     "name": "newDictSentence",
     "file": "src/core-listen.js",
-    "line": 1025,
+    "line": 1031,
     "desc": "dictSentence = N5_SENTENCES[Math.floor(Math.random() * N5_SENTENCES.length)];"
   },
   {
     "type": "function",
     "name": "playDictSentence",
     "file": "src/core-listen.js",
-    "line": 1035,
+    "line": 1041,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "checkDictation",
     "file": "src/core-listen.js",
-    "line": 1040,
+    "line": 1046,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "showDictReveal",
     "file": "src/core-listen.js",
-    "line": 1092,
+    "line": 1098,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "onDictationInput",
     "file": "src/core-listen.js",
-    "line": 1101,
+    "line": 1107,
     "desc": "if (!dictationActive) return;"
   },
   {
     "type": "function",
     "name": "onDictationInputAudio",
     "file": "src/core-listen.js",
-    "line": 1145,
+    "line": 1151,
     "desc": "onDictationInput(); }"
   },
   {
     "type": "function",
     "name": "cancelDictResume",
     "file": "src/core-listen.js",
-    "line": 1147,
+    "line": 1153,
     "desc": "if (dictResumeTimer)    { clearTimeout(dictResumeTimer);    dictResumeTimer = null; }"
   },
   {
     "type": "function",
     "name": "updateDictCountdown",
     "file": "src/core-listen.js",
-    "line": 1154,
+    "line": 1160,
     "desc": "const cd = document.getElementById('dictCountdown');"
   },
   {
     "type": "function",
     "name": "setDictStatus",
     "file": "src/core-listen.js",
-    "line": 1163,
+    "line": 1169,
     "desc": "const el = document.getElementById('dictStatus');"
   },
   {
     "type": "function",
     "name": "clearDictation",
     "file": "src/core-listen.js",
-    "line": 1178,
+    "line": 1184,
     "desc": "const ta = document.getElementById('dictationText') || document.getElementById('dictationTextAudio')"
   },
   {
     "type": "function",
     "name": "copyDictation",
     "file": "src/core-listen.js",
-    "line": 1185,
+    "line": 1191,
     "desc": "const ta  = document.getElementById('dictationTextAudio') || document.getElementById('dictationText'"
   },
   {
     "type": "function",
     "name": "toggleShadowing",
     "file": "src/core-listen.js",
-    "line": 1208,
+    "line": 1214,
     "desc": ""
   },
   {
     "type": "function",
     "name": "shadowOnEnded",
     "file": "src/core-listen.js",
-    "line": 1253,
+    "line": 1259,
     "desc": "shadowAdvanceOrRepeat();"
   },
   {
     "type": "function",
     "name": "shadowCheckTime",
     "file": "src/core-listen.js",
-    "line": 1258,
+    "line": 1264,
     "desc": "if (!shadowingActive || listenAbB === null) return;"
   },
   {
     "type": "function",
     "name": "shadowAdvanceOrRepeat",
     "file": "src/core-listen.js",
-    "line": 1268,
+    "line": 1274,
     "desc": "shadowRepsDone++;"
   },
   {
     "type": "function",
     "name": "shadowContinue",
     "file": "src/core-listen.js",
-    "line": 1294,
+    "line": 1300,
     "desc": "updateShadowStatus();"
   },
   {
     "type": "function",
     "name": "updateShadowStatus",
     "file": "src/core-listen.js",
-    "line": 1317,
+    "line": 1323,
     "desc": "const el = document.getElementById('shadowStatus');"
   },
   {
     "type": "function",
     "name": "listenPopulateMics",
     "file": "src/core-listen.js",
-    "line": 1331,
+    "line": 1337,
     "desc": "ListenState.sh* — see declaration below"
   },
   {
     "type": "function",
     "name": "listenSetMic",
     "file": "src/core-listen.js",
-    "line": 1364,
+    "line": 1370,
     "desc": "ListenState.selectedMicId = deviceId || null;"
   },
   {
     "type": "function",
     "name": "listenRequestMicAccess",
     "file": "src/core-listen.js",
-    "line": 1374,
+    "line": 1380,
     "desc": "const select = document.getElementById('listenMicSelect');"
   },
   {
     "type": "function",
     "name": "listenShPlayback",
     "file": "src/core-listen.js",
-    "line": 1381,
+    "line": 1387,
     "desc": "if (!ListenState.shRecordedBlob) return;"
   },
   {
     "type": "function",
     "name": "listenShDrawWaveform",
     "file": "src/core-listen.js",
-    "line": 1402,
+    "line": 1408,
     "desc": "const canvas = document.getElementById('listenShWaveform');"
   },
   {
     "type": "function",
     "name": "setListenRecMode",
     "file": "src/core-listen.js",
-    "line": 1455,
+    "line": 1461,
     "desc": "ListenState.recMode — see declaration below"
   },
   {
     "type": "function",
     "name": "updateListenSegmentUI",
     "file": "src/core-listen.js",
-    "line": 1483,
+    "line": 1489,
     "desc": "const countEl = document.getElementById('listenSegmentCount');"
   },
   {
     "type": "function",
     "name": "listenSegDragStart",
     "file": "src/core-listen.js",
-    "line": 1513,
+    "line": 1519,
     "desc": "ListenState.dragIdx — see declaration below"
   },
   {
     "type": "function",
     "name": "listenSegDragOver",
     "file": "src/core-listen.js",
-    "line": 1519,
+    "line": 1525,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "listenSegDrop",
     "file": "src/core-listen.js",
-    "line": 1526,
+    "line": 1532,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "listenSegDragEnd",
     "file": "src/core-listen.js",
-    "line": 1540,
+    "line": 1546,
     "desc": "ListenState.dragIdx = -1;"
   },
   {
     "type": "function",
     "name": "listenShRecord",
     "file": "src/core-listen.js",
-    "line": 1548,
+    "line": 1554,
     "desc": "const btn = document.getElementById('listenShRecordBtn');"
   },
   {
     "type": "function",
     "name": "listenPlaySegment",
     "file": "src/core-listen.js",
-    "line": 1607,
+    "line": 1613,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "listenDeleteSegment",
     "file": "src/core-listen.js",
-    "line": 1613,
+    "line": 1619,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "listenClearSegments",
     "file": "src/core-listen.js",
-    "line": 1619,
+    "line": 1625,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenPlayAllSegments",
     "file": "src/core-listen.js",
-    "line": 1627,
+    "line": 1633,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenCombineSegments",
     "file": "src/core-listen.js",
-    "line": 1647,
+    "line": 1653,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenDownloadSegments",
     "file": "src/core-listen.js",
-    "line": 1697,
+    "line": 1703,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "getVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1787,
+    "line": 1793,
     "desc": ""
   },
   {
     "type": "function",
     "name": "saveVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1794,
+    "line": 1800,
     "desc": ""
   },
   {
     "type": "function",
     "name": "dropVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1805,
+    "line": 1811,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "renderVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1823,
+    "line": 1829,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "updateVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1850,
+    "line": 1856,
     "desc": "const bms = getVocabBookmarks(trackName);"
   },
   {
     "type": "function",
     "name": "parseTimeStr",
     "file": "src/core-listen.js",
-    "line": 1855,
+    "line": 1861,
     "desc": "str = str.trim();"
   },
   {
     "type": "function",
     "name": "updateVocabTime",
     "file": "src/core-listen.js",
-    "line": 1868,
+    "line": 1874,
     "desc": "const secs = parseTimeStr(value);"
   },
   {
     "type": "function",
     "name": "deleteVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1881,
+    "line": 1887,
     "desc": "const bms = getVocabBookmarks(trackName);"
   },
   {
     "type": "function",
     "name": "clearVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1888,
+    "line": 1894,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "seekToBookmark",
     "file": "src/core-listen.js",
-    "line": 1895,
+    "line": 1901,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "jishoLookup",
     "file": "src/core-listen.js",
-    "line": 1901,
+    "line": 1907,
     "desc": "const q = (word || '').trim();"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-listen.js",
-    "line": 1060,
+    "line": 1066,
     "desc": "The student is practising Japanese dictation at N5 level. The sentence that was "
   },
   {
@@ -3832,56 +3860,56 @@
     "type": "function",
     "name": "_initKanaToolbars",
     "file": "src/features-kana.js",
-    "line": 1000,
+    "line": 1005,
     "desc": "console.log('[kana] _initKanaToolbars running, readyState=', document.readyState);"
   },
   {
     "type": "function",
     "name": "setGlobalQTMode",
     "file": "src/features-kana.js",
-    "line": 1022,
+    "line": 1027,
     "desc": "── Mode-setter shims (kept for programmatic callers) ────────────────────────"
   },
   {
     "type": "function",
     "name": "setChatInputMode",
     "file": "src/features-kana.js",
-    "line": 1023,
+    "line": 1028,
     "desc": "All now reference IDs generated by kanaToolbar's naming convention."
   },
   {
     "type": "function",
     "name": "listenTransSetMode",
     "file": "src/features-kana.js",
-    "line": 1024,
+    "line": 1029,
     "desc": "kanaSetMode('listenTranscribeText', mode, 'listenTranscribeTextKana',  { romaji:'listenTranscribeTex"
   },
   {
     "type": "function",
     "name": "setVtDictateMode",
     "file": "src/features-kana.js",
-    "line": 1025,
+    "line": 1030,
     "desc": "kanaSetMode('vtDictateInput',       mode, 'vtDictateInputKana',       { romaji:'vtDictateInputRomaji"
   },
   {
     "type": "function",
     "name": "setGramSentQMode",
     "file": "src/features-kana.js",
-    "line": 1026,
+    "line": 1031,
     "desc": "kanaSetMode('gramSentQuestion',     mode, 'gramSentQuestionKana',     { romaji:'gramSentQuestionRoma"
   },
   {
     "type": "function",
     "name": "setWritingMode",
     "file": "src/features-kana.js",
-    "line": 1027,
+    "line": 1032,
     "desc": "kanaSetMode('writingInput',         mode, 'writingKana',              { romaji:'writingRomajiBtn',  "
   },
   {
     "type": "function",
     "name": "transDoKanjiConvert",
     "file": "src/features-kana.js",
-    "line": 1028,
+    "line": 1033,
     "desc": "const i=document.getElementById('transInput'); if(i) kanaToKanji(i,document.getElementById('transInp"
   },
   {
@@ -4761,408 +4789,415 @@
   },
   {
     "type": "function",
+    "name": "qrDownloadTTS",
+    "file": "src/features-reading.js",
+    "line": 49,
+    "desc": "const text = (document.getElementById('qrInput')?.value || '').trim();"
+  },
+  {
+    "type": "function",
     "name": "qrSpeakRaw",
     "file": "src/features-reading.js",
-    "line": 47,
+    "line": 86,
     "desc": "const text = (document.getElementById('qrInput')?.value || '').trim();"
   },
   {
     "type": "function",
     "name": "qrLoadText",
     "file": "src/features-reading.js",
-    "line": 69,
+    "line": 108,
     "desc": "if (!text) return;"
   },
   {
     "type": "function",
     "name": "qrShowPaste",
     "file": "src/features-reading.js",
-    "line": 87,
+    "line": 126,
     "desc": "const rw = document.getElementById('qrReaderWrap');"
   },
   {
     "type": "function",
     "name": "qrClear",
     "file": "src/features-reading.js",
-    "line": 98,
+    "line": 137,
     "desc": "const inp = document.getElementById('qrInput');"
   },
   {
     "type": "function",
     "name": "qrSendToWrite",
     "file": "src/features-reading.js",
-    "line": 131,
+    "line": 170,
     "desc": "QuickReadState.plainOn — see declaration above"
   },
   {
     "type": "function",
     "name": "qrTogglePlain",
     "file": "src/features-reading.js",
-    "line": 146,
+    "line": 185,
     "desc": "QuickReadState.plainOn = !QuickReadState.plainOn;"
   },
   {
     "type": "function",
     "name": "qrToggleFuri",
     "file": "src/features-reading.js",
-    "line": 162,
+    "line": 201,
     "desc": "QuickReadState.furiOn = !QuickReadState.furiOn;"
   },
   {
     "type": "function",
     "name": "qrSegment",
     "file": "src/features-reading.js",
-    "line": 172,
+    "line": 211,
     "desc": "const rawText = document.getElementById('qrInput').value.trim();"
   },
   {
     "type": "function",
     "name": "qrRender",
     "file": "src/features-reading.js",
-    "line": 266,
+    "line": 305,
     "desc": "const container = document.getElementById('qrReader');"
   },
   {
     "type": "function",
     "name": "qrWordClick",
     "file": "src/features-reading.js",
-    "line": 314,
+    "line": 353,
     "desc": "if (el.classList.contains('qr-active')) { qrClosePopup(); return; }"
   },
   {
     "type": "function",
     "name": "qrPopupHtml",
     "file": "src/features-reading.js",
-    "line": 364,
+    "line": 403,
     "desc": "return `"
   },
   {
     "type": "function",
     "name": "qrClosePopup",
     "file": "src/features-reading.js",
-    "line": 374,
+    "line": 413,
     "desc": "if (QuickReadState.popupEl) { QuickReadState.popupEl.remove(); QuickReadState.popupEl = null; }"
   },
   {
     "type": "function",
     "name": "vgSetTts",
     "file": "src/features-reading.js",
-    "line": 394,
+    "line": 433,
     "desc": "── GAME SPEECH + TTS ────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vgSpeak",
     "file": "src/features-reading.js",
-    "line": 400,
+    "line": 439,
     "desc": "const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];"
   },
   {
     "type": "function",
     "name": "vgAutoSpeak",
     "file": "src/features-reading.js",
-    "line": 406,
+    "line": 445,
     "desc": "if (VehicleGameState.ttsOn) {"
   },
   {
     "type": "function",
     "name": "vgToggleMic",
     "file": "src/features-reading.js",
-    "line": 415,
+    "line": 454,
     "desc": "Vocab game uses custom stt handling"
   },
   {
     "type": "function",
     "name": "vgStopMic",
     "file": "src/features-reading.js",
-    "line": 475,
+    "line": 514,
     "desc": "VehicleGameState.micOn = false;"
   },
   {
     "type": "function",
     "name": "qrLoadHistoryList",
     "file": "src/features-reading.js",
-    "line": 493,
+    "line": 532,
     "desc": "if (_qrHistoryCache !== null) return _qrHistoryCache;"
   },
   {
     "type": "function",
     "name": "qrSaveHistoryList",
     "file": "src/features-reading.js",
-    "line": 498,
+    "line": 537,
     "desc": "_qrHistoryCache = list;"
   },
   {
     "type": "function",
     "name": "qrLoadHistoryFromStorage",
     "file": "src/features-reading.js",
-    "line": 505,
+    "line": 544,
     "desc": ""
   },
   {
     "type": "function",
     "name": "qrUpdateHistoryDropdown",
     "file": "src/features-reading.js",
-    "line": 529,
+    "line": 568,
     "desc": "const select = document.getElementById('qrHistorySelect');"
   },
   {
     "type": "function",
     "name": "qrSaveToHistory",
     "file": "src/features-reading.js",
-    "line": 546,
+    "line": 585,
     "desc": "if (!text || text.trim().length < 10) return; // Don't save very short texts"
   },
   {
     "type": "function",
     "name": "qrLoadHistory",
     "file": "src/features-reading.js",
-    "line": 574,
+    "line": 615,
     "desc": "if (!indexStr && indexStr !== 0) return;"
   },
   {
     "type": "function",
     "name": "qrDeleteHistory",
     "file": "src/features-reading.js",
-    "line": 616,
+    "line": 669,
     "desc": "const select = document.getElementById('qrHistorySelect');"
   },
   {
     "type": "function",
     "name": "qrGetRecordingsForStorage",
     "file": "src/features-reading.js",
-    "line": 640,
+    "line": 693,
     "desc": "return Promise.all(QuickReadState.segmentRecordings.map(async (rec) => {"
   },
   {
     "type": "function",
     "name": "qrToggleSeparateSentences",
     "file": "src/features-reading.js",
-    "line": 670,
+    "line": 723,
     "desc": "QuickReadState.separateSentences = !QuickReadState.separateSentences;"
   },
   {
     "type": "function",
     "name": "qrToggleListenMode",
     "file": "src/features-reading.js",
-    "line": 687,
+    "line": 740,
     "desc": "QuickReadState.sentences* — see declaration above"
   },
   {
     "type": "function",
     "name": "qrUpdateSentenceDisplay",
     "file": "src/features-reading.js",
-    "line": 727,
+    "line": 780,
     "desc": "const counter = document.getElementById('qrSentenceCounter');"
   },
   {
     "type": "function",
     "name": "qrListenPlay",
     "file": "src/features-reading.js",
-    "line": 741,
+    "line": 794,
     "desc": "const btn = document.getElementById('qrListenPlayBtn');"
   },
   {
     "type": "function",
     "name": "qrHighlightSentence",
     "file": "src/features-reading.js",
-    "line": 765,
+    "line": 818,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {
     "type": "function",
     "name": "qrClearSentenceHighlight",
     "file": "src/features-reading.js",
-    "line": 815,
+    "line": 868,
     "desc": "document.querySelectorAll('.qr-sentence-active').forEach(el => {"
   },
   {
     "type": "function",
     "name": "qrListenPrev",
     "file": "src/features-reading.js",
-    "line": 821,
+    "line": 874,
     "desc": "if (QuickReadState.sentenceIdx > 0) {"
   },
   {
     "type": "function",
     "name": "qrListenNext",
     "file": "src/features-reading.js",
-    "line": 830,
+    "line": 883,
     "desc": "if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {"
   },
   {
     "type": "function",
     "name": "qrSetSpeed",
     "file": "src/features-reading.js",
-    "line": 839,
+    "line": 892,
     "desc": "QuickReadState.listenSpeed = speed;"
   },
   {
     "type": "function",
     "name": "qrUpdateSegmentUI",
     "file": "src/features-reading.js",
-    "line": 861,
+    "line": 914,
     "desc": "QuickReadState.recording* — see declaration above"
   },
   {
     "type": "function",
     "name": "qrSegDragStart",
     "file": "src/features-reading.js",
-    "line": 896,
+    "line": 949,
     "desc": "QuickReadState.dragIdx — see declaration above"
   },
   {
     "type": "function",
     "name": "qrSegDragOver",
     "file": "src/features-reading.js",
-    "line": 902,
+    "line": 955,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "qrSegDrop",
     "file": "src/features-reading.js",
-    "line": 907,
+    "line": 960,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "qrSegDragEnd",
     "file": "src/features-reading.js",
-    "line": 925,
+    "line": 978,
     "desc": "e.target.style.opacity = '1';"
   },
   {
     "type": "function",
     "name": "qrStartReplace",
     "file": "src/features-reading.js",
-    "line": 930,
+    "line": 983,
     "desc": "if (QuickReadState.replaceIdx === idx) {"
   },
   {
     "type": "function",
     "name": "qrRecordToggle",
     "file": "src/features-reading.js",
-    "line": 942,
+    "line": 995,
     "desc": "const btn = document.getElementById('qrRecordBtn');"
   },
   {
     "type": "function",
     "name": "qrPlaySegment",
     "file": "src/features-reading.js",
-    "line": 1003,
+    "line": 1056,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "qrDeleteSegment",
     "file": "src/features-reading.js",
-    "line": 1009,
+    "line": 1062,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "qrClearSegments",
     "file": "src/features-reading.js",
-    "line": 1017,
+    "line": 1070,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrPlayAllSegments",
     "file": "src/features-reading.js",
-    "line": 1027,
+    "line": 1080,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrCombineSegments",
     "file": "src/features-reading.js",
-    "line": 1047,
+    "line": 1100,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrDrawWaveform",
     "file": "src/features-reading.js",
-    "line": 1102,
+    "line": 1155,
     "desc": "const canvas = document.getElementById('qrWaveform');"
   },
   {
     "type": "function",
     "name": "qrDownloadCombined",
     "file": "src/features-reading.js",
-    "line": 1139,
+    "line": 1192,
     "desc": "if (!QuickReadState.combinedBlob) return;"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-reading.js",
-    "line": 1152,
+    "line": 1205,
     "desc": "if (!QuickReadState.segments.length) return;"
   },
   {
     "type": "function",
     "name": "addMsg",
     "file": "src/features-reading.js",
-    "line": 1219,
+    "line": 1265,
     "desc": "try { addMessage(role, text); } catch(e) { console.log(text); }"
   },
   {
     "type": "function",
     "name": "vtFullscreen",
     "file": "src/features-reading.js",
-    "line": 1226,
+    "line": 1272,
     "desc": "── Watch: layout modes ──────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vtExitFullscreen",
     "file": "src/features-reading.js",
-    "line": 1238,
+    "line": 1284,
     "desc": "const panel = document.getElementById('panel-video');"
   },
   {
     "type": "function",
     "name": "vtAddMarker",
     "file": "src/features-reading.js",
-    "line": 1293,
+    "line": 1339,
     "desc": "── Watch: markers ───────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vtClearMarkers",
     "file": "src/features-reading.js",
-    "line": 1303,
+    "line": 1349,
     "desc": "VideoState.markers = [];"
   },
   {
     "type": "function",
     "name": "vtRenderMarkers",
     "file": "src/features-reading.js",
-    "line": 1309,
+    "line": 1355,
     "desc": "const list = document.getElementById('vtMarkerList');"
   },
   {
     "type": "function",
     "name": "vtJumpMarker",
     "file": "src/features-reading.js",
-    "line": 1319,
+    "line": 1365,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1327,
+    "line": 1373,
     "desc": "if (!QuickReadState.segments.length) return;"
   },
   {
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1339,
+    "line": 1385,
     "desc": ""
   },
   {

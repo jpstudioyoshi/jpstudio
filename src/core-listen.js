@@ -441,6 +441,12 @@ function listenTransClear() {
 // ListenState.transcribePauseTimeout = null; // kept for compatibility
 
 document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('listenWaveform');
+  if (canvas) {
+    canvas.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') { e.preventDefault(); toggleListenPlay(); }
+    });
+  }
   const inp = document.getElementById('listenTranscribeText');
   if (inp) {
     listenTransSetMode('hiragana');

@@ -42,8 +42,47 @@ function qrOnInput() {
   document.getElementById('qrSegmentBtn').disabled = !val;
   const speakBtn = document.getElementById('qrRawSpeakBtn');
   if (speakBtn) speakBtn.disabled = !val;
+  const dlBtn = document.getElementById('qrDownloadTTSBtn');
+  if (dlBtn) dlBtn.disabled = !val;
 }
 
+async function qrDownloadTTS() {
+  const text = (document.getElementById('qrInput')?.value || '').trim();
+  if (!text) return;
+  const btn = document.getElementById('qrDownloadTTSBtn');
+  const _TTS = App.TTS || window.TTS;
+  if (!_TTS || !_TTS._vvEnabled) {
+    alert('VoiceVox must be running and enabled for audio download.');
+    return;
+  }
+  if (btn) { btn.textContent = '⏳ Generating…'; btn.disabled = true; }
+  try {
+    const clean = text.replace(/[(（][^)）]*[)）]/g, '').replace(/〜/g, '');
+    const qResp = await fetch(
+      `${_TTS.VOICEVOX_URL}/audio_query?text=${encodeURIComponent(clean)}&speaker=${_TTS._vvSpeakerId}`,
+      { method: 'POST' }
+    );
+    if (!qResp.ok) throw new Error('Query failed');
+    const query = await qResp.json();
+    query.speedScale = 0.9;
+    const sResp = await fetch(
+      `${_TTS.VOICEVOX_URL}/synthesis?speaker=${_TTS._vvSpeakerId}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) }
+    );
+    if (!sResp.ok) throw new Error('Synthesis failed');
+    const blob = await sResp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tts-' + new Date().toISOString().slice(0,10) + '.wav';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  } catch(e) {
+    alert('Download failed: ' + e.message);
+  } finally {
+    if (btn) { btn.textContent = '⬇ Audio'; btn.disabled = false; }
+  }
+}
 function qrSpeakRaw() {
   const text = (document.getElementById('qrInput')?.value || '').trim();
   if (!text) return;
@@ -253,8 +292,8 @@ Text: ${textForAI}` }],
     document.getElementById('qrFuriBtn').style.display = '';
     document.getElementById('qrStatus').textContent = '';
     
-    // Save to history (without recordings initially)
-    qrSaveToHistory(rawText, []);
+    // Save to history with segments so reload is instant (no re-analysis)
+    qrSaveToHistory(rawText, [], QuickReadState.segments);
   } catch(e) {
     document.getElementById('qrStatus').textContent = 'Error — check API key';
     console.error(e);
@@ -543,7 +582,7 @@ function qrUpdateHistoryDropdown() {
   });
 }
 
-function qrSaveToHistory(text, recordings) {
+function qrSaveToHistory(text, recordings, segments) {
   if (!text || text.trim().length < 10) return; // Don't save very short texts
   (App.drillLastCompletedWrite || window.drillLastCompletedWrite)?.('reading');
   const history = qrLoadHistoryList();
@@ -554,10 +593,12 @@ function qrSaveToHistory(text, recordings) {
     // Update existing entry
     history[existingIdx].timestamp = Date.now();
     history[existingIdx].recordings = recordings || [];
+    if (segments && segments.length) history[existingIdx].segments = segments;
   } else {
     // Add new entry
     history.unshift({
       text: text,
+      segments: segments || [],
       timestamp: Date.now(),
       recordings: recordings || []
     });
@@ -608,9 +649,21 @@ async function qrLoadHistory(indexStr) {
   // Reset dropdown
   document.getElementById('qrHistorySelect').value = '';
   
-  // Trigger analysis
-  qrOnInput();
-  qrSegment();
+  // Restore segments if cached — avoids re-analysis API call
+  if (item.segments && item.segments.length) {
+    QuickReadState.segments = item.segments;
+    qrOnInput();
+    qrRender(QuickReadState.segments);
+    const rw = document.getElementById('qrReaderWrap');
+    const pa = document.getElementById('qrPasteArea');
+    if (rw) rw.style.display = 'block';
+    if (pa) pa.style.display = 'none';
+    document.getElementById('qrStatus').textContent = '';
+  } else {
+    // No cached segments — fall back to re-analysis
+    qrOnInput();
+    qrSegment();
+  }
 }
 
 function qrDeleteHistory() {
@@ -1152,7 +1205,7 @@ function qrDownloadCombined() {
 function qrPrintPage() {
   if (!QuickReadState.segments.length) return;
 
-  const sep      = QuickReadState.separateSentences;
+  const sep      = true; // always separate sentences for print
   const furiOn   = QuickReadState.furiOn;
   const hasKanji = w => /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF]/.test(w);
 
@@ -1188,34 +1241,27 @@ function qrPrintPage() {
   });
   flushSentence(); // flush any remaining
 
-  // Always recreate iframe to avoid stale content
-  let f = document.getElementById('qrPrintFrame');
-  if (f) f.remove();
-  f = document.createElement('iframe');
-  f.id = 'qrPrintFrame';
-  f.style.cssText = 'position:absolute;left:-9999px;width:210mm;height:297mm;border:none';
-  document.body.appendChild(f);
+  if (window.printAPI && window.printAPI.htmlToPDF) {
+    var style = '@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap");'
+      + 'body{font-family:"Noto Sans JP",sans-serif;font-size:14pt;line-height:2.2;color:black;background:white;padding:20mm 18mm;margin:0}'
+      + 'ruby{ruby-align:center}rt{font-size:0.55em;color:#444}';
+    var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + style + '</style></head><body><div>' + html + '</div></body></html>';
+    window.printAPI.htmlToPDF(fullHtml).then(function(r) {
+      if (r && r.error) alert('PDF failed: ' + r.error);
+    });
+  } else {
+    var f = document.getElementById('qrPrintFrame');
+    if (f) f.remove();
+    f = document.createElement('iframe');
+    f.id = 'qrPrintFrame';
+    f.style.cssText = 'position:absolute;left:-9999px;width:210mm;height:297mm;border:none';
+    document.body.appendChild(f);
+    var doc2 = f.contentDocument || f.contentWindow.document;
+    doc2.open(); doc2.write('<html><body>' + html + '</body></html>'); doc2.close();
+    setTimeout(function() { try { f.contentWindow.focus(); f.contentWindow.print(); } catch(e) {} }, 600);
+  }
 
-  const doc = f.contentDocument || f.contentWindow.document;
-  doc.open();
-  doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap');
-  body { font-family:'Noto Sans JP',sans-serif; font-size:14pt; line-height:2.2;
-         color:black; background:white; padding:20mm 18mm; margin:0; }
-  ruby { ruby-align:center; }
-  rt   { font-size:0.55em; color:#444; }
-  @media print { body { padding:15mm; } }
-</style></head>
-<body><div>${html}</div></body></html>`);
-  doc.close();
-
-  setTimeout(() => {
-    try { f.contentWindow.focus(); f.contentWindow.print(); }
-    catch(e) { console.warn('print failed:', e); }
-  }, 600);
 }
-
 function addMsg(role, text) {
   // Lightweight status message — reuses existing addMessage if available
   try { addMessage(role, text); } catch(e) { console.log(text); }
@@ -1370,7 +1416,7 @@ function qrRestoreSession() {
 // ── App registry ─────────────────────────────────────────
 try {
   Object.assign(App, {
-    qrSpeakRaw, qrLoadText,
+    qrDownloadTTS, qrSpeakRaw, qrLoadText,
     qrClear,
     qrLoadHistory,
     qrDeleteHistory,

@@ -34,6 +34,24 @@ ipcMain.handle('mgmt:reloadMain', () => {
 });
 
 // ── Print to PDF ──────────────────────────────────────────────────────────────
+ipcMain.handle('print:htmlToPDF', async (event, html) => {
+  const { BrowserWindow, dialog } = require('electron');
+  try {
+    const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Save PDF',
+      defaultPath: 'reading-' + new Date().toISOString().slice(0,10) + '.pdf',
+      filters: [{ name: 'PDF', extensions: ['pdf'] }],
+    });
+    if (canceled || !filePath) return { canceled: true };
+    const win = new BrowserWindow({ show: false, webPreferences: { javascript: true } });
+    await win.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html));
+    await new Promise(r => setTimeout(r, 800));
+    const data = await win.webContents.printToPDF({ printBackground: false, pageSize: 'A4' });
+    win.destroy();
+    fs.writeFileSync(filePath, data);
+    return { ok: true, filePath };
+  } catch(e) { return { error: e.message }; }
+});
 ipcMain.handle('print:toPDF', async (event, options = {}) => {
   if (!mainWindow) return { error: 'No main window' };
   try {
@@ -1233,7 +1251,7 @@ ipcMain.handle('overlay:getApiKey', async () => {
   if (!mainWindow || mainWindow.isDestroyed()) return null;
   try {
     const key = await mainWindow.webContents.executeJavaScript(
-      "localStorage.getItem('jpStudioApiKey') || ''"
+      "(App.getApiKey || window.getApiKey)?.() || localStorage.getItem('jpStudioApiKey') || ''"
     );
     return key || null;
   } catch(e) { return null; }

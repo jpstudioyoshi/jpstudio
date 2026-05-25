@@ -852,7 +852,7 @@ function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
     if (active) setButtonGroupActive(btnGroupId, active);
   }
   if (mode === 'romaji') {
-    kanaOff(inp); inp._kanaMode = null; inp.style.caretColor = '';
+    kanaOff(inp); inp._kanaMode = 'romaji'; inp.style.caretColor = '';
   } else if (mode === 'hiragana') {
     kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp.style.caretColor = 'var(--teal)';
   } else if (mode === 'katakana') {
@@ -979,6 +979,11 @@ function kanaToolbar(inputId, opts = {}) {
                     : currentMode === 'hiragana' ? btnIds.hira
                     : btnIds.kata;
     setButtonGroupActive(grp, activeBtn);
+    // Re-apply kana engine if it got switched off (e.g. after kanaOff from mode switch)
+    if (currentMode !== 'romaji' && !inp._kanaOn) {
+      inp._modeSwitchPending = true;
+      kanaSetMode(inputId, currentMode, grp, btnIds);
+    }
   });
 
   return wrap;

@@ -716,7 +716,7 @@ async function gramSentAskQuestion() {
   qRes.textContent = '…';
 
   try {
-    const prompt = `Current sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Student asks: "${q}". Answer concisely for an N4-N5 learner.`;
+    const prompt = `Current sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Student asks: "${q}". Answer concisely for an N4-N5 learner. Always answer in English.`;
     const data = await claudeAPI({
       model: 'claude-sonnet-4-6',
       max_tokens: 300,

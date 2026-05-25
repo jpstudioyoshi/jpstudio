@@ -1845,11 +1845,15 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
         else btn.classList.add('active-hira');
       }
     } else {
-      // Legacy inline-styled buttons — keep old behaviour
-      const color = isActive ? (btn.dataset.activeColor || activeColor) : 'var(--ink-light)';
-      const border = isActive ? color : 'var(--border)';
-      btn.style.color = color;
-      btn.style.borderColor = border;
+      // Class-based active state for all non-btn-kana buttons
+      btn.classList.remove('btn-active', 'btn-active-gold');
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      if (isActive) {
+        const activeCol = btn.dataset.activeColor || activeColor;
+        if (activeCol.includes('gold')) btn.classList.add('btn-active-gold');
+        else btn.classList.add('btn-active');
+      }
     }
   });
 }

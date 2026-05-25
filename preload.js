@@ -79,4 +79,7 @@ contextBridge.exposeInMainWorld('files', {
 // ── Print API ─────────────────────────────────────────────────────────────────
 contextBridge.exposeInMainWorld('printAPI', {
   toPDF: (options) => ipcRenderer.invoke('print:toPDF', options),
+  htmlToPDF: (html) => ipcRenderer.invoke('print:htmlToPDF', html),
+  htmlToPDF: (html) => ipcRenderer.invoke('print:htmlToPDF', html),
+  htmlToPDF: (html) => ipcRenderer.invoke('print:htmlToPDF', html),
 });

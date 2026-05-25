@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-24 (session 5 — end)
+Last updated: 2026-05-25 (session 6 — end)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
@@ -60,6 +60,40 @@ All edits are done via terminal — no file upload/download. ~90% token saving.
 - Schema migrations: all version checks in same function scope — use inline expression not `const vN =` (causes duplicate declaration errors).
 
 ## Stabilization Status
+
+### Completed (2026-05-25 session 6)
+- Space bar play/pause wired to listen panel waveform canvas
+- Kana engine re-applied on focus when _kanaOn was false — fixes typing latin when clicking mid-text
+- inp._kanaMode now set to 'romaji' instead of null — fixes button highlight sync on focus
+- btn-active / btn-active-gold utility CSS classes added to style.css
+- setButtonGroupActive() unified — all buttons now class-based with background fill
+- active-hira / active-kata strengthened — background fill + font-weight: 600
+- Check Input header: .checking class with teal left border during API call (2s)
+- style-audit.md created at project root — 10 categories, 451 instances for future style thread
+- Read panel: segment furigana cached in history — reloads instant, no re-analysis API call
+- Read panel: PDF export via dedicated BrowserWindow (print:htmlToPDF IPC)
+- Read panel: always prints sentence-per-line (sep=true in qrPrintPage)
+- Read panel: TTS download button (VoiceVox → .wav file)
+- Overlay API key fix: IPC now reads from App.getApiKey() not localStorage
+- Grammar Q&A: always answers in English (explicit prompt instruction)
+- Critical lesson: /tmp cleared between terminal sessions — always recreate scripts
+
+### Completed (2026-05-25 session 6)
+- Space bar play/pause wired to listen panel waveform canvas
+- Kana engine re-applied on focus when _kanaOn was false — fixes typing latin when clicking mid-text
+- inp._kanaMode now set to 'romaji' instead of null — fixes button highlight sync on focus
+- btn-active / btn-active-gold utility CSS classes added to style.css
+- setButtonGroupActive() unified — all buttons now class-based with background fill
+- active-hira / active-kata strengthened — background fill + font-weight: 600
+- Check Input header: .checking class with teal left border during API call (2s)
+- style-audit.md created at project root — 10 categories, 451 instances for future style thread
+- Read panel: segment furigana cached in history — reloads instant, no re-analysis API call
+- Read panel: PDF export via dedicated BrowserWindow (print:htmlToPDF IPC)
+- Read panel: always prints sentence-per-line (sep=true in qrPrintPage)
+- Read panel: TTS download button (VoiceVox → .wav file)
+- Overlay API key fix: IPC now reads from App.getApiKey() not localStorage
+- Grammar Q&A: always answers in English (explicit prompt instruction)
+- Critical lesson: /tmp cleared between terminal sessions — always recreate scripts
 
 ### Completed (2026-05-24 session 5)
 - v9 schema migration: `pitch_data` table (kanji, reading, pitch) + `pitch` column on `words`
@@ -139,6 +173,38 @@ Remaining hardcoded color counts (approximate):
 - index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17)
 - features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9)
 
+### Style Retrofit (dedicated future thread)
+- Reference file: style-audit.md at project root
+- 451 JS state style manipulations identified
+- 10 categories: buttons, tabs, toggles, lists, inputs, drill feedback, status, panels, typography, one-offs
+- Goal: all state via CSS utility classes → enables global theming
+- After retrofit: theme switcher in settings, Claude theme, possibly light theme
+
+### PDF print line breaks (pending)
+- Printer version works line-by-line
+- PDF via BrowserWindow saves correctly but ignores display:block on spans
+- Leave for dedicated fix — not blocking
+
+### Writing panel feedback (pending)
+- Kana conversion feedback getting verbose/inconclusive on ambiguous input
+- Consider tighter prompt or switching to corrections-style output
+
+### Style Retrofit (dedicated future thread)
+- Reference file: style-audit.md at project root
+- 451 JS state style manipulations identified
+- 10 categories: buttons, tabs, toggles, lists, inputs, drill feedback, status, panels, typography, one-offs
+- Goal: all state via CSS utility classes → enables global theming
+- After retrofit: theme switcher in settings, Claude theme, possibly light theme
+
+### PDF print line breaks (pending)
+- Printer version works line-by-line
+- PDF via BrowserWindow saves correctly but ignores display:block on spans
+- Leave for dedicated fix — not blocking
+
+### Writing panel feedback (pending)
+- Kana conversion feedback getting verbose/inconclusive on ambiguous input
+- Consider tighter prompt or switching to corrections-style output
+
 ### Known issue
 - `yoshiInitUI is not defined` error in features-tools.js on startup — pre-existing, not blocking anything
 
@@ -146,6 +212,18 @@ Remaining hardcoded color counts (approximate):
 - DrillRecord unified history, TextEntry migration, AudioStrip
 - Voice drill → DB, SRS for custom drill, Progress charts
 - iPhone PWA with drills and progress sync (backend TBD)
+
+## Recommended Session Sequence
+1. Finish stabilisation (yoshiInitUI fix, pitch curve, Dropbox export)
+2. Style retrofit thread (style-audit.md as brief)
+3. Theme support (CSS variable overrides, theme switcher)
+4. Feature development
+
+## Recommended Session Sequence
+1. Finish stabilisation (yoshiInitUI fix, pitch curve, Dropbox export)
+2. Style retrofit thread (style-audit.md as brief)
+3. Theme support (CSS variable overrides, theme switcher)
+4. Feature development
 
 ## Console Filter Reference
 - `[pitch]` — pitch accent import/load status

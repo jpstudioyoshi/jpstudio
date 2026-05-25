@@ -246,6 +246,8 @@ async function wbCallTutor(text, btnEl, btnLabel) {
 let _writingCheckedSentences = new Set();
 
 async function checkWritingSentence() {
+  const _hdr = document.querySelector('.feedback-panel-header');
+  if (_hdr) { _hdr.classList.add('checking'); setTimeout(() => _hdr.classList.remove('checking'), 2000); }
   const input = document.getElementById('writingInput');
   const text = input.value.trim();
   if (!text) return;
