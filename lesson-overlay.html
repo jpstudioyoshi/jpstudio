@@ -447,6 +447,15 @@
     </div>
   </div>
 
+  <!-- INLINE CONFIRM BAR -->
+  <div id="confirmBar" style="display:none;padding:8px 12px;background:var(--paper-dark);border-top:1px solid var(--border-hi);font-family:var(--sans);font-size:11px;color:var(--ink)">
+    <div id="confirmMsg" style="margin-bottom:8px;line-height:1.4"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="_confirmOk()" style="-webkit-app-region:no-drag;background:var(--teal);color:#1c1c1e;border:none;border-radius:4px;font-size:11px;font-weight:600;padding:4px 14px;cursor:pointer">OK</button>
+      <button onclick="_confirmCancel()" style="-webkit-app-region:no-drag;background:none;border:1px solid var(--border-hi);border-radius:4px;font-size:11px;color:var(--ink);padding:4px 14px;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+
   <!-- AUDIO LEVELS -->
   <div class="section">
     <div class="section-label">Levels</div>
@@ -542,6 +551,24 @@
     }
   }
 
+  let _confirmResolve = null;
+
+  function _overlayConfirm(msg) {
+    return new Promise(resolve => {
+      _confirmResolve = resolve;
+      document.getElementById('confirmMsg').textContent = msg;
+      document.getElementById('confirmBar').style.display = '';
+    });
+  }
+  function _confirmOk() {
+    document.getElementById('confirmBar').style.display = 'none';
+    if (_confirmResolve) { _confirmResolve(true); _confirmResolve = null; }
+  }
+  function _confirmCancel() {
+    document.getElementById('confirmBar').style.display = 'none';
+    if (_confirmResolve) { _confirmResolve(false); _confirmResolve = null; }
+  }
+
   function toggleRecording() {
     if (_isRecording) overlayStopRecording();
     else overlayStartRecording();
@@ -572,7 +599,7 @@
   async function overlayStopRecording() {
     if (_recSecs < 60) {
       const m = Math.floor(_recSecs/60), s = _recSecs%60;
-      const ok = confirm('Recording is only ' + m + ':' + String(s).padStart(2,'0') + ' — are you sure you want to stop and save?');
+      const ok = await _overlayConfirm('Recording is only ' + m + ':' + String(s).padStart(2,'0') + ' — stop and save?');
       if (!ok) return;
     }
     clearInterval(_recTimerInterval); _recTimerInterval = null;
