@@ -1307,9 +1307,9 @@
         <div class="trans-box">
           <div class="trans-output empty" id="transOutput" onclick="doTranslate()" style="cursor:pointer" title="Click to translate">Click here to translate…</div>
           <div class="trans-btn-row" id="transOutputBtnRow" style="display:none">
-            <button class="btn-ghost" onclick="transSpeakOutput()" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-light)'">🔊 Hear</button>
-            <button class="btn-ghost" id="transAddVocabBtn" onclick="transAddToVocab()" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-light)'">+ vocab</button>
-            <button class="btn-ghost" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-light)'">⎘ copy</button>
+            <button class="btn-ghost" onclick="transSpeakOutput()">🔊 Hear</button>
+            <button class="btn-ghost" id="transAddVocabBtn" onclick="transAddToVocab()">+ vocab</button>
+            <button class="btn-ghost" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">⎘ copy</button>
           </div>
         </div>
       </div>
