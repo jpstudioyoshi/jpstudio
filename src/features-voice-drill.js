@@ -392,15 +392,15 @@ function drillScore(transcript) {
   result.style.display = '';
 
   if (score >= 0.85) {
-    result.style.color = 'var(--teal)';
+    result.classList.add('result-correct'); result.classList.remove('result-wrong','result-partial');
     result.textContent = '✓ ' + transcript;
     drillMark('ok');
   } else if (score >= 0.55) {
-    result.style.color = 'var(--gold)';
+    result.classList.add('result-partial'); result.classList.remove('result-correct','result-wrong');
     result.textContent = '〜 ' + transcript + '  (heard: ' + Math.round(score * 100) + '%)';
     document.getElementById('drillStatus').textContent = 'Close — try again or tap Again.';
   } else {
-    result.style.color = 'var(--red)';
+    result.classList.add('result-wrong'); result.classList.remove('result-correct','result-partial');
     result.textContent = '✕ ' + transcript + '  (heard: ' + Math.round(score * 100) + '%)';
     document.getElementById('drillStatus').textContent = 'Target shown above — tap Again to retry.';
     drillMark('again');
@@ -555,15 +555,15 @@ function customScore(transcript) {
   if (result) {
     result.style.display = '';
     if (score >= 0.85) {
-      result.style.color = 'var(--teal)';
+      result.classList.add('result-correct'); result.classList.remove('result-wrong','result-partial');
       result.textContent = '✓ ' + transcript;
       setTimeout(() => customNext(), 800);
     } else if (score >= 0.55) {
-      result.style.color = 'var(--gold)';
+      result.classList.add('result-partial'); result.classList.remove('result-correct','result-wrong');
       result.textContent = '〜 ' + transcript + '  (' + Math.round(score*100) + '%)';
       if (status) status.textContent = 'Close — try again.';
     } else {
-      result.style.color = 'var(--red)';
+      result.classList.add('result-wrong'); result.classList.remove('result-correct','result-partial');
       result.textContent = '✕ ' + transcript + '  (' + Math.round(score*100) + '%)';
       if (status) status.textContent = 'Try again.';
     }
