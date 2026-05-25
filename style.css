@@ -1742,11 +1742,11 @@
   .listen-speed-btn {
     border-radius: 5px;
     padding: 5px 10px; border: 1px solid var(--gold); background: var(--paper-dark);
-    font-family: var(--ui); font-size: 0.82rem; color: var(--gold);
+    font-family: var(--ui); font-size: 0.82rem; color: var(--gold); font-weight: 600;
     cursor: pointer; transition: all 0.12s;
   }
   .listen-speed-btn:hover { background: var(--gold); color: var(--paper); border-color: var(--gold); }
-  .listen-speed-btn.active { background: none; color: var(--teal); border-color: var(--teal); font-weight: 600; }
+  .listen-speed-btn.active { background: none; color: var(--teal); border-color: var(--teal); }
   .listen-sm-btn {
     padding: 7px 14px; border: 1px solid var(--gold); background: none;
     font-family: var(--ui); font-size: 0.87rem; color: var(--gold);
@@ -1917,10 +1917,10 @@
   .ctr-group-btn {
     padding: 7px 16px; border: 1px solid var(--border); border-radius: 6px;
     background: none; color: var(--ink-light); font-family: var(--ui);
-    font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+    font-size: 0.82rem; cursor: pointer; transition: all 0.2s; font-weight: 500;
   }
   .ctr-group-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .ctr-group-btn.active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.08); font-weight: 500; }
+  .ctr-group-btn.active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.08); }
 
   .ctr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   @media (max-width: 700px) { .ctr-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -2641,10 +2641,11 @@
   font-size: 0.75rem;
   color: var(--ink-light);
   cursor: pointer;
+  font-weight: 600;
   transition: border-color 0.15s, color 0.15s;
 }
-.btn-kana.active-hira, .btn-active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.12); font-weight: 600; }
-.btn-kana.active-kata, .btn-active-gold { border-color: var(--gold); color: var(--gold); background: rgba(255,193,7,0.12); font-weight: 600; }
+.btn-kana.active-hira, .btn-active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.12); }
+.btn-kana.active-kata, .btn-active-gold { border-color: var(--gold); color: var(--gold); background: rgba(255,193,7,0.12); }
 .btn-kana:hover { color: var(--ink); border-color: var(--ink-light); }
 
 /* ── Button system ──────────────────────────────────────────────────────────── */
