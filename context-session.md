@@ -1,265 +1,187 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-25 (session 6 — end)
+Last updated: 2026-05-25 (session 7 — style retrofit)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements to workflow, terminal usage, or API cost savings where appropriate, but keep suggestions concise and actionable.
 - Management window is deprioritised — was too buggy and expensive to debug via Claude. Terminal approach is preferred for all edits.
 
 ## Context File Update Process
-- `context-session.md` lives at project root (`~/Documents/jpStudio/context-session.md`)
-- At end of session: ask Claude to write the full updated file as a terminal `cat >` command. Run it, then upload the updated file to Claude project Knowledge to replace the old one.
+- context-session.md lives at project root
+- At end of session: ask Claude to write the full updated file, run it, then upload to Claude project Knowledge.
+
+## GitHub Workflow (new — session 7)
+- Repo: https://github.com/jpstudioyoshi/jpstudio (private)
+- Claude reads files directly via GitHub raw API with token auth — no pbcopy needed
+- Token stored in remote URL: git remote set-url origin https://jpstudioyoshi:TOKEN@github.com/jpstudioyoshi/jpstudio.git
+- Claude uses: curl -s -H "Authorization: token TOKEN" "https://raw.githubusercontent.com/jpstudioyoshi/jpstudio/main/FILE"
+- Standard push: git add -A && git commit -m "message" && git push 2>&1 | tee /dev/tty | pbcopy
+- Pre-commit hook runs check-syntax.js automatically
 
 ## Current Mode
-MAINTENANCE — stabilization complete. New features added incrementally.
+MAINTENANCE — stabilization complete. Style retrofit in progress.
 - Prefer minimal edits over redesigns
 - Prefer wrappers over refactors
 - Do not introduce new abstractions unless they solve a concrete current problem
 - Do not expand scope
 
 ## Terminal Workflow
-All edits are done via terminal — no file upload/download. ~90% token saving.
+All edits are done via terminal — no file upload/download.
 
 **Shell aliases (in ~/.zshrc — permanent):**
-- `jp` — `cd ~/Documents/jpStudio`
-- `jpstart` — kill app, restart, cd to project
-- `setopt NO_BANG_HIST` — disables zsh `!` history expansion so `node -e` works freely
+- jp — cd ~/Documents/jpStudio
+- jpstart — kill app, restart, cd to project
+- setopt NO_BANG_HIST — disables zsh ! history expansion
 
 **Standard patterns:**
-- `jp` — jump to project (always required first — grep/sed from wrong directory returns nothing silently)
-- `grep -n "pattern" src/file.js` — locate lines
-- `sed -n 'X,Yp' src/file.js | pbcopy` — read a block, pipe to clipboard, paste here
-- Edits: write a `/tmp/fix-xxx.js` node script using `fs.readFileSync/writeFileSync` with exact string matching, run with `node /tmp/fix-xxx.js`
-- Always run `node check-syntax.js` after every edit
-- Bump version after every index.html or JS change: `sed -i '' 's/?v=CURRENT/?v=NEW/g' index.html`
-- Restart app: `jpstart`
-- Hard reload after restart: Cmd+Shift+R in app window
-- Always use `| tee /dev/tty | pbcopy` not just `| pbcopy` — prevents empty clipboard on errors
-- Always use `{ cmd; echo "---done---"; } | tee /dev/tty | pbcopy` pattern
-
-**Git workflow (initialised 2026-05-23, commit 840b90e):**
-- Before every dev session: `git add -A && git commit -m "before session YYYY-MM-DD"`
-- Emergency rollback: `git checkout -- .`
-- Pre-commit hook installed: runs `check-syntax.js` automatically, blocks commit on error
-- `.gitignore` covers `node_modules/`, `.DS_Store`, `*.bak`, `management-log.json`, `index.json`, `audit-*.md`
+- Always cd ~/Documents/jpStudio first — terminal does not persist directory
+- grep -n "pattern" src/file.js — locate lines
+- sed -n 'X,Yp' src/file.js | pbcopy — read a block
+- Edits: use python3 << 'PYEOF' ... PYEOF for multi-line scripts (safer than heredoc or -c for complex strings)
+- Always use | tee /dev/tty | pbcopy — prevents empty clipboard on errors
 
 **Critical lessons learned:**
-- When using `node -e "..."` in zsh, `!` causes "event not found". Use `/tmp/fix-xxx.js` files instead.
-- `\n` in backtick strings inside `node -e` is NOT interpreted as newline. Use file-based scripts.
-- After patching, verify with `JSON.stringify(src.slice(idx, idx+120))` to see exact bytes including whitespace.
-- IIFE pattern: `window['X'] = X` must be OUTSIDE the IIFE, after `const X = (() => { ... return {...}; })();`
-- Cache busting: bump `?v=` string in index.html after every change, then Cmd+Shift+R.
-- Always `cd ~/Documents/jpStudio` before any command — terminal does not persist directory.
-- Use `| tee /dev/tty | pbcopy` to see output AND copy it.
-- When `NOT FOUND` in patch script — check exact whitespace with `JSON.stringify`. Extra blank lines are common culprit.
-- Slice-based patching (`src.slice(0,start) + neu + src.slice(end)`) is more reliable than string matching for large blocks.
-- String-replace anchors often fail due to whitespace/newline mismatch — when in doubt use line-index splice instead.
-- Always indicate whether a command runs in terminal or console (dev tools).
-- Username is `paulandres` — path is `/Users/paulandres/Documents/jpStudio/`
-- `window.db` in renderer only exposes `query` (async, returns row objects) — no `exec`. Use `await window.db.query(sql, params)`.
-- Always `jp` first — grep/sed from wrong directory returns nothing silently.
-- Schema migrations: all version checks in same function scope — use inline expression not `const vN =` (causes duplicate declaration errors).
+- When using node -e "..." in zsh, ! causes "event not found". Use file-based scripts.
+- Always cd ~/Documents/jpStudio before any command.
+- Username is paulandres — path is /Users/paulandres/Documents/jpStudio/
+- python3 << 'PYEOF' is the most reliable way to run multi-line Python edits.
+- GitHub token is in remote URL — no password prompt needed.
+
+## Style Retrofit — Session 7 Status
+
+### CSS utility classes added to style.css
+- .result-correct — teal text for correct drill answers
+- .result-wrong — red text for wrong answers
+- .result-partial — gold text for partial/close answers
+- .btn-active-red — red border+bg for wrong button states
+- .toggle-on — teal border+bg for toggle buttons (on state)
+- .input-error — red border for input validation
+- .input-correct — teal border for correct input
+- .btn-subtle — borderless small ink-light button, goes ink on hover
+- .row-hover — paper-dark bg on hover for list rows
+- .row-hover-teal — teal-tinted bg on hover
+- .row-hover-gold — gold-tinted bg on hover
+- .voice-upload-btn — voice panel upload label with gold hover
+- .fe-del:hover — red color on hover for delete buttons
+- #voiceRecordBtn:hover — scale(1.05) on hover
+
+### JS files migrated
+- src/features-voice-drill.js — 6 result color lines
+- src/ui/DrillCard.js — 4 feedback color lines
+- src/features-times.js — 8 drill result/toggle lines
+- src/core-anki.js — direction toggle
+- src/features-grammar.js — auto mode toggle + weak point selection
+- src/features-video.js — wave, dictation, epub furi toggles
+- src/features-voice.js — context filled indicator + row hover
+- src/features-tools.js — lnTab group + chatHistory toggle
+- src/features-lesson-notes.js — 3 row hover handlers
+- src/features-ln-p2.js — 2 conversation row hover handlers
+
+### HTML cleanup
+- index.html — removed redundant btn-ghost hover handlers
+- index.html — 3 orphan inline-styled buttons replaced with .btn-subtle
+- index.html — voice upload label → .voice-upload-btn
+- index.html — voiceRecordBtn scale hover → CSS rule
+
+### Intentionally left alone
+- Status indicator dots — color IS their content
+- Recording button gradients — animation states
+- Progress bar backgrounds — dynamic values
+- Transient flash states — self-clearing
+- Template literal hover handlers (~12 remaining)
+- features-stroke.js — cssText elements
+- core-listen.js — solid-fill active states
+
+### Readiness for design review
+~80% ready. Missing: STYLE_GUIDE.md documenting all tokens and utility classes.
+Once written, Claude can do a full design audit.
 
 ## Stabilization Status
 
-### Completed (2026-05-25 session 6)
-- Space bar play/pause wired to listen panel waveform canvas
-- Kana engine re-applied on focus when _kanaOn was false — fixes typing latin when clicking mid-text
-- inp._kanaMode now set to 'romaji' instead of null — fixes button highlight sync on focus
-- btn-active / btn-active-gold utility CSS classes added to style.css
-- setButtonGroupActive() unified — all buttons now class-based with background fill
-- active-hira / active-kata strengthened — background fill + font-weight: 600
-- Check Input header: .checking class with teal left border during API call (2s)
-- style-audit.md created at project root — 10 categories, 451 instances for future style thread
-- Read panel: segment furigana cached in history — reloads instant, no re-analysis API call
-- Read panel: PDF export via dedicated BrowserWindow (print:htmlToPDF IPC)
-- Read panel: always prints sentence-per-line (sep=true in qrPrintPage)
-- Read panel: TTS download button (VoiceVox → .wav file)
-- Overlay API key fix: IPC now reads from App.getApiKey() not localStorage
-- Grammar Q&A: always answers in English (explicit prompt instruction)
-- Critical lesson: /tmp cleared between terminal sessions — always recreate scripts
+### Completed (session 7 — 2026-05-25)
+- Style retrofit complete (see above)
+- GitHub remote set up — Claude reads files via API
+- python3 heredoc pattern established for reliable edits
 
-### Completed (2026-05-25 session 6)
-- Space bar play/pause wired to listen panel waveform canvas
-- Kana engine re-applied on focus when _kanaOn was false — fixes typing latin when clicking mid-text
-- inp._kanaMode now set to 'romaji' instead of null — fixes button highlight sync on focus
-- btn-active / btn-active-gold utility CSS classes added to style.css
-- setButtonGroupActive() unified — all buttons now class-based with background fill
-- active-hira / active-kata strengthened — background fill + font-weight: 600
-- Check Input header: .checking class with teal left border during API call (2s)
-- style-audit.md created at project root — 10 categories, 451 instances for future style thread
-- Read panel: segment furigana cached in history — reloads instant, no re-analysis API call
-- Read panel: PDF export via dedicated BrowserWindow (print:htmlToPDF IPC)
-- Read panel: always prints sentence-per-line (sep=true in qrPrintPage)
-- Read panel: TTS download button (VoiceVox → .wav file)
-- Overlay API key fix: IPC now reads from App.getApiKey() not localStorage
-- Grammar Q&A: always answers in English (explicit prompt instruction)
-- Critical lesson: /tmp cleared between terminal sessions — always recreate scripts
+### Completed (session 6 — 2026-05-25)
+- Space bar play/pause wired to waveform canvas
+- Kana engine re-applied on focus fix
+- btn-active / btn-active-gold utility classes
+- setButtonGroupActive() unified
+- Check Input header .checking class
+- style-audit.md created
+- Read panel: furigana cache, PDF export, TTS download
+- Overlay API key fix
+- Grammar Q&A: English only
 
-### Completed (2026-05-24 session 5)
-- v9 schema migration: `pitch_data` table (kanji, reading, pitch) + `pitch` column on `words`
-- Kanjium accent data (124,137 entries) imported into SQLite on first startup, skipped thereafter
-- `window.pitchAPI.import()` and `window.pitchAPI.lookup(kanji, reading)` exposed via preload.js
-- `data/kanjium-accents.txt` committed to project (3.1MB)
-- Confirmed working: `[pitch] Pitch data already loaded: 124137 entries` on second startup
+### Completed (session 5 — 2026-05-25)
+- v9 schema: pitch_data table + pitch column on words
+- Kanjium accent data (124,137 entries) imported to SQLite
 
-### Completed (2026-05-24 session 4)
-- Cloze functions moved from `features-lesson-notes.js` → `features-yoshi.js`
-- `features-lesson-notes.js` split at line 2554 → `features-lesson-notes.js` + `features-ln-p2.js`
-- `features-ln-p2.js` added to load order in index.html
-- Stabilization declared complete — moving to maintenance + feature mode
-- Confirmed: lessonNotes storage split already resolved in earlier session — single kvAPI path
-
-### Completed (2026-05-24 session 3)
-- `features-lesson-notes.js` — date field added to all 4 session creation paths
-- `lessonNotesLoadSession` — async SQL lookup by date sets `LessonNotesState.currentLessonId`
-- `core.js` — `window._lessonWordSet` loaded from SQL on `storageReady`
-- `core-vocab.js` — `lessonDoc` flag checks `_lessonWordSet` — lesson words get +15 priority bonus
-- `features-lesson-notes.js` — `extractionWarning` state + retry banner added
-
-### Completed (2026-05-24 sessions 1-2)
-- Dead code removed from features-yoshi.js, features-tools.js
-- CSS hardcoded colors replaced in core-writing.js, features-times.js
-- Model strings upgraded to `claude-sonnet-4-6`
-- v7/v8 schema migrations: lesson_id, source on words; lesson_phrases table
-
-### Confirmed done (undocumented sessions)
-- ADJ_I / ADJ_NA word list expanded
-- `src/features.js` deleted (19,035 lines, dead code)
-- overlay:transcribe IPC — single track, working well enough
-- lessonNotes storage — already on single kvAPI path before session 4
-
-## File Structure (updated)
-| File | Lines | Contents |
-|------|-------|----------|
-| `src/features-yoshi.js` | ~651 | Yoshi session CRUD, UI shell, AI helpers, cloze rendering |
-| `src/features-lesson-notes.js` | ~2553 | LN state, session CRUD, WhatsApp parser, recording helpers, story/reading render, sentence furigana |
-| `src/features-ln-p2.js` | ~1959 | Sentence recording, drill, extraction, session load/new/delete, docx parser, timeline, recordings browser |
-| `src/features-tools.js` | ~1280 | LN utils, recording helpers, matching pairs, shared state |
-| `data/kanjium-accents.txt` | 124,137 lines | Kanjium pitch accent source data (imported to SQLite on first run) |
-
-Note: context-static.md file table is out of date for these files — use above.
+### Completed (sessions 1-4 — 2026-05-24)
+- features-lesson-notes.js split → features-ln-p2.js
+- Cloze functions → features-yoshi.js
+- Date field on all session creation paths
+- lessonDoc bonus via _lessonWordSet
+- Dead code removal, model string upgrades
+- v7/v8 schema migrations
 
 ## Pending Work
 
-### Pitch Accent — next session
+### Pitch Accent — next priority
 Data layer complete. Next steps:
-1. Write `renderPitchCurve(word, pitchStr)` SVG function in `core-foundation.js`
-2. Wire into vocab card render as proof of concept
-3. Show curve + speak via VoiceVox simultaneously (lookup → render → jpSpeak)
-4. Roll out to: quick translate, lesson notes vocab, grammar sentence drill, voice drill
+1. renderPitchCurve(word, pitchStr) SVG function in core-foundation.js
+2. Wire into vocab card render
+3. Show curve + VoiceVox speak simultaneously
+4. Roll out to quick translate, lesson notes, grammar drill, voice drill
 
-**Architecture note:** VoiceVox already produces correct pitch in audio. The SVG curve gives the visual association. Best learning outcome: show curve at the same moment jpSpeak() fires.
+pitchAPI: window.pitchAPI.lookup(kanji, reading) → pitch string or null
+Format: "0", "2", "0,2" — 0=heiban, 1+=drops after that mora
 
-**pitch_data table:** kanji | reading | pitch (string, may contain multiple values e.g. "0,2")
-**pitchAPI:** `window.pitchAPI.lookup(kanji, reading)` → pitch string or null
+### Phone Audio Export (planned)
+- ffmpeg converts lesson WebM → M4A
+- Saves to ~/Dropbox/jpStudio-audio/YYYY-MM-DD-lesson.m4a
+- Decision pending: export button location
 
-### Phone Companion — Audio Player (planned)
-**Goal:** Play lesson audio while walking. Sync via Dropbox.
+### STYLE_GUIDE.md (next style session)
+- Document all CSS variables (tokens)
+- Document all utility classes with usage examples
+- Enables: design review, theme switcher
 
-**Dropbox path:** `~/Dropbox/` (main personal account confirmed)
-**Export target:** `~/Dropbox/jpStudio-audio/`
-
-**Plan:**
-- Export button in lesson notes/recording panel
-- Runs ffmpeg to convert lesson WebM → M4A
-- Saves as `YYYY-MM-DD-lesson.m4a` to `~/Dropbox/jpStudio-audio/`
-- Play via Dropbox app on phone (no PWA needed yet)
-- PWA with drills/progress sync comes later
-
-**Decision pending:** Export button location — lesson notes panel when recording is linked, or recording browser?
-
-### CSS Variable Retrofit (low priority, ongoing)
-Remaining hardcoded color counts (approximate):
-- index.html(35), features-progress.js(33), features-stroke.js(17), features-video.js(17)
-- features-tools.js(16), features-voice.js(9), core-listen.js(9), features-grammar.js(9)
-
-### Style Retrofit (dedicated future thread)
-- Reference file: style-audit.md at project root
-- 451 JS state style manipulations identified
-- 10 categories: buttons, tabs, toggles, lists, inputs, drill feedback, status, panels, typography, one-offs
-- Goal: all state via CSS utility classes → enables global theming
-- After retrofit: theme switcher in settings, Claude theme, possibly light theme
-
-### PDF print line breaks (pending)
-- Printer version works line-by-line
-- PDF via BrowserWindow saves correctly but ignores display:block on spans
-- Leave for dedicated fix — not blocking
-
-### Writing panel feedback (pending)
-- Kana conversion feedback getting verbose/inconclusive on ambiguous input
-- Consider tighter prompt or switching to corrections-style output
-
-### Style Retrofit (dedicated future thread)
-- Reference file: style-audit.md at project root
-- 451 JS state style manipulations identified
-- 10 categories: buttons, tabs, toggles, lists, inputs, drill feedback, status, panels, typography, one-offs
-- Goal: all state via CSS utility classes → enables global theming
-- After retrofit: theme switcher in settings, Claude theme, possibly light theme
-
-### PDF print line breaks (pending)
-- Printer version works line-by-line
-- PDF via BrowserWindow saves correctly but ignores display:block on spans
-- Leave for dedicated fix — not blocking
-
-### Writing panel feedback (pending)
-- Kana conversion feedback getting verbose/inconclusive on ambiguous input
-- Consider tighter prompt or switching to corrections-style output
-
-### Known issue
-- `yoshiInitUI is not defined` error in features-tools.js on startup — pre-existing, not blocking anything
+### Known Issues
+- yoshiInitUI is not defined on startup — pre-existing, not blocking
+- PDF print line breaks — BrowserWindow PDF ignores display:block on spans
+- Writing panel feedback — verbose on ambiguous kana input
 
 ### Future (frozen)
 - DrillRecord unified history, TextEntry migration, AudioStrip
 - Voice drill → DB, SRS for custom drill, Progress charts
-- iPhone PWA with drills and progress sync (backend TBD)
+- iPhone PWA
 
 ## Recommended Session Sequence
-1. Finish stabilisation (yoshiInitUI fix, pitch curve, Dropbox export)
-2. Style retrofit thread (style-audit.md as brief)
-3. Theme support (CSS variable overrides, theme switcher)
-4. Feature development
-
-## Recommended Session Sequence
-1. Finish stabilisation (yoshiInitUI fix, pitch curve, Dropbox export)
-2. Style retrofit thread (style-audit.md as brief)
-3. Theme support (CSS variable overrides, theme switcher)
-4. Feature development
+1. Pitch curve SVG (renderPitchCurve + vocab card wiring)
+2. Dropbox audio export button
+3. STYLE_GUIDE.md → design review
+4. Theme switcher
+5. Feature development
 
 ## Console Filter Reference
-- `[pitch]` — pitch accent import/load status
-- `[LN]` — Lesson Notes extractions + lesson_id linkage + word set load
-- `[API]` — all Claude API calls
-- `[STT]` — Whisper transcription
-- `[AppEvents]` — recording pipeline events
-
-## Lesson Notes — Architecture Status
-- **Vocab** → ✅ writes to `words` SQL, `source='lesson'`, `lesson_id` set when recording matched by date
-- **Phrases** → ✅ writes to `lesson_phrases` SQL, `lesson_id` set when recording matched
-- **Grammar** → ✅ wired to Grammar Sentences via `gramSentPracticePattern()`
-- **lessonDoc bonus** → ✅ `_lessonWordSet` loaded at startup, checked in `vcMergeEntry`
-- **Stories** → stays in kvAPI blob
-- **WhatsApp notes** → stays in kvAPI blob
-- **Recording + transcript** → stays in `lesson_sessions` SQL table
+- [pitch] — pitch accent import/load
+- [LN] — Lesson Notes extractions + lesson_id
+- [API] — Claude API calls
+- [STT] — Whisper transcription
+- [AppEvents] — recording pipeline
 
 ## SQLite Schema (v9)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
 
-### pitch_data
-```sql
-id, kanji, reading, pitch
-```
-- Indexed on kanji and reading
-- 124,137 entries from Kanjium
-- Access via `window.pitchAPI.lookup(kanji, reading)` — returns pitch string or null
-- Pitch string format: single number or comma-separated e.g. "0", "2", "0,2"
-- 0 = heiban (flat), 1+ = drops after that mora
+pitch_data: id, kanji, reading, pitch — 124,137 entries
+words: added pitch TEXT column (not yet backfilled)
+Access: window.pitchAPI.lookup(kanji, reading)
 
-### words (updated)
-Added: `pitch TEXT` — populated from pitch_data on word add/backfill (not yet implemented)
-
-## Vocab Priority Engine
-1. `lessonDoc` (+15 bonus) — fires for SQL-sourced lesson words via `_lessonWordSet`
-2. `currentLessonId` — set async on session load when date matches a `lesson_sessions` row
-
-## Conjugation Hint Tracking
-`_conjHintUsed` and `conjTypedAnswers` collect `{val, hintUsed}` per-run but NOT persisted to DrillSRS. Foundation in place.
+## Lesson Notes Architecture
+- Vocab → SQL words, source=lesson, lesson_id by date match
+- Phrases → SQL lesson_phrases, lesson_id by date match
+- Grammar → gramSentPracticePattern()
+- lessonDoc bonus → _lessonWordSet loaded at startup
+- Stories, WhatsApp → kvAPI blob
+- Recording + transcript → lesson_sessions SQL
