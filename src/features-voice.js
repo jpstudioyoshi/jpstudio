@@ -541,7 +541,7 @@ function agentContextUpdateBtn() {
   const p = agentContextLoad();
   const filled = p && Object.keys(p).some(k => p[k]);
   btn.textContent = filled ? 'About me ✓' : 'About me';
-  btn.style.color = filled ? 'var(--teal)' : '';
+  btn.classList.toggle('result-correct', filled);
 }
 
 function agentToggleContext() {
