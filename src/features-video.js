@@ -67,8 +67,7 @@ function vtToggleWaveMode() {
   VideoState.waveMode = !VideoState.waveMode;
   const btn = document.getElementById('vtWaveToggleBtn');
   const canvas = document.getElementById('vtWaveform');
-  btn.style.borderColor = VideoState.waveMode ? 'var(--teal)' : '';
-  btn.style.color = VideoState.waveMode ? 'var(--teal)' : '';
+  btn.classList.toggle('toggle-on', VideoState.waveMode);
   canvas.style.height = VideoState.waveMode ? '80px' : '44px';
   vtDrawWaveform();
 }
@@ -933,9 +932,7 @@ function vtToggleDictation() {
   
   if (VideoState.dictationActive) {
     // Activate dictation mode
-    btn.style.background = 'rgba(48,213,200,0.15)';
-    btn.style.borderColor = 'var(--teal)';
-    btn.style.color = 'var(--teal)';
+    btn.classList.add('toggle-on');
     panel.style.display = 'block';
     videoPanel.classList.add('vt-dictation-active');
     
@@ -959,9 +956,7 @@ function vtToggleDictation() {
     setTimeout(() => inp.focus(), 100);
   } else {
     // Deactivate dictation mode
-    btn.style.background = '';
-    btn.style.borderColor = 'var(--border)';
-    btn.style.color = 'var(--ink-light)';
+    btn.classList.remove('toggle-on');
     panel.style.display = 'none';
     videoPanel.classList.remove('vt-dictation-active');
   }
@@ -2798,7 +2793,7 @@ function epubSetFontSize(val) {
 function epubToggleFuri() {
   EpubState.furi = !EpubState.furi;
   const btn = document.getElementById('epubFuriBtn');
-  if (btn) { btn.style.borderColor = EpubState.furi ? 'var(--teal)' : ''; btn.style.color = EpubState.furi ? 'var(--teal)' : ''; }
+  if (btn) { btn.classList.toggle('toggle-on', EpubState.furi); }
   if (EpubState.furi) epubApplyFuri(); else epubRemoveFuri();
 }
 
