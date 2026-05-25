@@ -2746,3 +2746,6 @@
 .row-hover:hover { background: var(--paper-dark) !important; cursor: pointer; }
 
 .fe-del:hover { color: var(--red) !important; }
+
+.row-hover-teal:hover { background: rgba(48,213,200,0.05) !important; }
+.row-hover-gold:hover { background: rgba(255,214,10,0.05) !important; }

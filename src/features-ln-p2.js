@@ -1820,8 +1820,7 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
     row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,0.04);min-height:28px';
     const left = document.createElement('div');
     left.style.cssText = 'display:flex;gap:8px;padding:5px 10px 5px 4px;cursor:pointer;align-items:flex-start;border-right:1px solid rgba(255,255,255,0.06)';
-    left.onmouseover = function(){ left.style.background = 'rgba(48,213,200,0.05)'; };
-    left.onmouseout  = function(){ left.style.background = ''; };
+    left.classList.add('row-hover-teal');
     left.onclick = (function(sec){ return function(){ lnSeekToTime(sec); }; })(ts);
     left.innerHTML =
       '<span title="' + offsetStr + '" style="color:var(--teal);flex-shrink:0;font-size:0.68rem;font-variant-numeric:tabular-nums;min-width:44px;padding-top:2px;opacity:0.7">' + timeStr + '</span>' +
@@ -1833,8 +1832,7 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
         const msgEl = document.createElement('div');
         msgEl.style.cssText = 'display:flex;gap:6px;align-items:flex-start;cursor:pointer;padding:1px 0';
         msgEl.onclick = (function(sec){ return function(){ lnSeekToTime(sec); }; })(ts);
-        msgEl.onmouseover = function(){ right.style.background = 'rgba(255,214,10,0.05)'; };
-        msgEl.onmouseout  = function(){ right.style.background = ''; };
+        msgEl.classList.add('row-hover-gold');
         const safeText = msg.text.replace(/'/g, "\\'");
         msgEl.innerHTML =
           '<span style="color:var(--gold);flex-shrink:0;font-size:0.68rem;min-width:44px;padding-top:2px;font-variant-numeric:tabular-nums;opacity:0.7">' + esc(msg.time) + '</span>' +
