@@ -396,7 +396,7 @@ function gramSentToggleMode() {
   if (autoPanel) autoPanel.style.display = GramSentState.autoMode ? '' : 'none';
   if (btn) {
     btn.textContent = GramSentState.autoMode ? '✏ Manual' : '🎯 Auto';
-    btn.style.color = GramSentState.autoMode ? 'var(--teal)' : '';
+    btn.classList.toggle('toggle-on', GramSentState.autoMode);
   }
   if (GramSentState.autoMode) gramSentPopulateWeakPoints();
 }
@@ -425,8 +425,8 @@ function gramSentSelectWeakPoint(btn, pattern) {
   const inp = document.getElementById('gramSentInput');
   if (inp) inp.value = pattern;
   // Visual feedback
-  document.querySelectorAll('#gramSentWeakPoints button').forEach(b => b.style.borderColor = '');
-  btn.style.borderColor = 'var(--teal)';
+  document.querySelectorAll('#gramSentWeakPoints button').forEach(b => b.classList.remove('btn-active'));
+  btn.classList.add('btn-active');
   // Switch to manual panel so input is visible
   GramSentState.autoMode = false;
   gramSentToggleMode();
