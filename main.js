@@ -1262,6 +1262,15 @@ ipcMain.handle('overlay:getApiKey', async () => {
 // renderer window does the actual recording. Events are forwarded back to
 // the overlay via webContents.send so it can show timer and status.
 
+ipcMain.handle('overlay:checkTodaySession', async () => {
+  const date = new Date().toISOString().slice(0, 10);
+  if (!db) return null;
+  const r = db.exec(`SELECT id, audio_duration_s FROM lesson_sessions WHERE date='${date}' AND source='recording' ORDER BY created_at DESC LIMIT 1`);
+  if (!r[0]?.values?.length) return null;
+  const [id, dur] = r[0].values[0];
+  return { id, dur };
+});
+
 ipcMain.handle('overlay:startRecording', async () => {
   if (!mainWindow || mainWindow.isDestroyed()) return { error: 'Main window not available' };
   try {
