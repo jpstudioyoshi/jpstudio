@@ -23,6 +23,19 @@ const Orchestrator = (() => {
       return;
     }
 
+    // Check for existing recording today — never silently overwrite
+    const today = new Date().toISOString().slice(0, 10);
+    const existing = await window.db.query(
+      "SELECT id, audio_duration_s FROM lesson_sessions WHERE date=? AND source='recording' ORDER BY created_at DESC LIMIT 1",
+      [today]
+    );
+    if (existing.length) {
+      const dur = existing[0].audio_duration_s;
+      const durStr = dur > 0 ? Math.floor(dur/60) + 'm ' + (dur%60) + 's' : 'unknown duration';
+      const ok = confirm('A recording already exists for today (' + durStr + ').\nStart a new one anyway? (The existing recording will be kept.)');
+      if (!ok) return;
+    }
+
     _currentSession = new LessonSession();
 
     try {

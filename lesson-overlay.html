@@ -570,6 +570,11 @@
   }
 
   async function overlayStopRecording() {
+    if (_recSecs < 60) {
+      const m = Math.floor(_recSecs/60), s = _recSecs%60;
+      const ok = confirm('Recording is only ' + m + ':' + String(s).padStart(2,'0') + ' — are you sure you want to stop and save?');
+      if (!ok) return;
+    }
     clearInterval(_recTimerInterval); _recTimerInterval = null;
     _setRecStatus('Stopping…');
     await window.overlayAPI?.stopRecording();
