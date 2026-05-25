@@ -343,8 +343,7 @@ function ankiToggleDirection() {
   AnkiState.direction = AnkiState.direction === 'jp-en' ? 'en-jp' : 'jp-en';
   const btn = document.getElementById('ankiDirBtn');
   btn.textContent = AnkiState.direction === 'jp-en' ? 'JP → EN' : 'EN → JP';
-  btn.style.color = AnkiState.direction === 'jp-en' ? 'var(--ink-light)' : 'var(--teal)';
-  btn.style.borderColor = AnkiState.direction === 'jp-en' ? 'var(--border)' : 'var(--teal)';
+  btn.classList.toggle('toggle-on', AnkiState.direction !== 'jp-en');
   
   // Re-render current card if one is showing
   if (AnkiState.currentCard) {
