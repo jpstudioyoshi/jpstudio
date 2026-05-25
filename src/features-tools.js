@@ -61,11 +61,9 @@ function lnRenderTab(tab, cur) {
 }
 
 function lnSwitchTab(tab) {
-  document.querySelectorAll('[id^="lnTab-"]').forEach(function(b) {
-    b.style.borderColor = ''; b.style.color = '';
-  });
+  document.querySelectorAll('[id^="lnTab-"]').forEach(function(b) { b.classList.remove('btn-active'); });
   var btn = document.getElementById('lnTab-' + tab);
-  if (btn) { btn.style.borderColor = 'var(--teal)'; btn.style.color = 'var(--teal)'; }
+  if (btn) { btn.classList.add('btn-active'); }
   var content = document.getElementById('lnTabContent');
   if (content) content.innerHTML = lnRenderTab(tab, lnCurrentSession());
 }
@@ -133,7 +131,7 @@ function lnDrillPrev() { window._lnDrillIdx = Math.max(0, (window._lnDrillIdx||0
 function lnDrillJump(i) { window._lnDrillIdx = i; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }
 function lnRefreshTab(tab) {
   var btn = document.getElementById('lnTab-' + tab);
-  if (btn && btn.style.color === 'var(--teal)') {
+  if (btn && btn.classList.contains('btn-active')) {
     var content = document.getElementById('lnTabContent');
     if (content) content.innerHTML = lnRenderTab(tab, lnCurrentSession());
   }
@@ -1161,8 +1159,7 @@ function toggleChatHistory() {
   if (!drawer) return;
   const open = drawer.style.display === 'none';
   drawer.style.display = open ? 'block' : 'none';
-  btn.style.color       = open ? 'var(--teal)' : 'var(--ink-light)';
-  btn.style.borderColor = open ? 'var(--teal)' : 'var(--border)';
+  btn.classList.toggle('toggle-on', open);
   if (open) buildChatHistoryList();
 }
 
