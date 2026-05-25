@@ -2700,6 +2700,21 @@
 }
 .btn-danger:hover { opacity: 0.75; }
 
+/* Subtle — minimal, ink-light fading to ink on hover */
+.btn-subtle {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 6px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--ui);
+  font-size: 0.72rem;
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.btn-subtle:hover { color: var(--ink); }
+
 /* Icon — minimal, no border */
 .btn-icon {
   display: inline-flex; align-items: center; justify-content: center;

@@ -779,8 +779,8 @@
           <!-- Discreet action buttons below sidebar -->
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;padding-right:2px">
             <div style="display:flex;gap:6px;align-items:center">
-              <button id="countObjectModeBtn" onclick="countToggleObjectMode()" style="background:none;border:none;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;padding:4px 6px;border-radius:4px;transition:color 0.15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--ink-light)'">🖼 Objects</button>
-              <button onclick="countForceNewSession2()" style="background:none;border:none;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;padding:4px 6px;border-radius:4px;transition:color 0.15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--ink-light)'">↺ New drill</button>
+              <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-subtle">🖼 Objects</button>
+              <button onclick="countForceNewSession2()" class="btn-subtle">↺ New drill</button>
             </div>
             <button class="btn-ghost" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
           </div>
@@ -2769,7 +2769,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
           <button class="conj-start-btn btn-icon" id="conjStartBtnG" onclick="startConjDrillG()">Start →</button>
-          <button id="conjNewDrillBtn" onclick="conjForceNewSession()" style="display:none;background:none;border:none;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;padding:4px 6px;border-radius:4px;transition:color 0.15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--ink-light)'">↺ New drill</button>
+          <button id="conjNewDrillBtn" onclick="conjForceNewSession()" class="btn-subtle" style="display:none">↺ New drill</button>
           <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowEnG" checked onchange="renderConjDrillG()"> Show English</label>
           <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowReadingG" checked onchange="renderConjDrillG()"> Show reading</label>
           <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowTypeG" onchange="renderConjDrillG()"> Colour verb type</label>
