@@ -1,257 +1,162 @@
 # Japanese Studio — Style Guide
-Last updated: 2026-05-25
 
-Single reference for all visual tokens, button classes, and state utilities.
-When adding any interactive element, use classes from this file — do not write inline styles for colors, borders, or state.
+## CSS Variables (Design Tokens)
 
----
+### Colours
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--ink` | #f5f5f7 | Primary text |
+| `--ink-light` | #c0c0c5 | Secondary text, placeholders, disabled |
+| `--teal` | #30d5c8 | Primary accent — correct, active, selected |
+| `--teal-light` | #5ee7d0 | Teal highlights |
+| `--gold` | #ffd60a | Secondary accent — partial, warning, kata |
+| `--gold-light` | #ffe545 | Gold highlights |
+| `--red` | #ff6b6b | Error, wrong, delete, danger |
+| `--red-light` | #ff8585 | Red highlights |
+| `--sage` | #7ed886 | Positive/bonus indicators |
 
-## Design Tokens (CSS Variables)
-
-All defined in `:root` in `style.css`. Dark theme only (light theme not yet implemented).
-
-### Color — Text
-| Token | Value | Use |
-|-------|-------|-----|
-| `--ink` | `#f5f5f7` | Primary text |
-| `--ink-light` | `#c0c0c5` | Secondary text, labels, hints |
-
-### Color — Surface
-| Token | Value | Use |
-|-------|-------|-----|
-| `--paper` | `#1c1c1e` | Main background |
-| `--paper-dark` | `#3d3d40` | Slightly elevated surface, row hover target |
-| `--paper-mid` | `#4e4e52` | Mid-level surface, icon buttons |
-| `--panel` | `#2c2c2e` | Sidebar, panel backgrounds |
-| `--field` | `#111113` | Input backgrounds |
-
-### Color — Brand / State
-| Token | Value | Use |
-|-------|-------|-----|
-| `--teal` | `#30d5c8` | Primary action, active states, correct |
-| `--teal-light` | `#5ee7d0` | Lighter teal accent |
-| `--gold` | `#ffd60a` | Warning, partial, secondary active |
-| `--gold-light` | `#ffe545` | Lighter gold accent |
-| `--red` | `#ff6b6b` | Error, wrong, destructive, recording |
-| `--red-light` | `#ff8585` | Lighter red accent |
-| `--sage` | `#7ed886` | Positive/success (rare use) |
-
-### Color — Borders
-| Token | Value | Use |
-|-------|-------|-----|
-| `--border` | `rgba(255,255,255,0.22)` | Default borders |
-| `--field-border` | `rgba(255,255,255,0.28)` | Input borders |
-| `--field-focus` | `#30d5c8` | Input focus ring (= teal) |
+### Surfaces
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--paper` | #1c1c1e | Base background |
+| `--paper-dark` | #3d3d40 | Elevated surface, selected rows |
+| `--paper-mid` | #4e4e52 | Hover background, subtle surface |
+| `--panel` | #2c2c2e | Panel background |
+| `--field` | #111113 | Input background |
+| `--border` | rgba(255,255,255,0.22) | Default border |
+| `--field-border` | rgba(255,255,255,0.28) | Input border |
+| `--field-focus` | #30d5c8 | Input focus border (teal) |
 
 ### Typography
-| Token | Use |
-|-------|-----|
-| `--ui` | `-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif` — all UI text |
-| `--jp` | `'Hiragino Sans', 'Yu Gothic UI', 'Noto Sans JP', sans-serif` — Japanese text |
-| `--serif` | `Georgia, 'Times New Roman', serif` — reading/literary content |
+| Token | Usage |
+|-------|-------|
+| `--ui` | UI text — buttons, labels, navigation |
+| `--jp` | Japanese text — Hiragino Sans, Yu Gothic |
+| `--serif` | Serif text — reading panel, prose |
 
 ---
 
 ## Button Classes
 
 ### `.btn-primary`
-Teal filled CTA. Use for the main action in a panel.
+Solid teal background. Use for the main action in a panel.
 ```html
-<button class="btn-primary" onclick="doThing()">Start →</button>
+<button class="btn-primary" onclick="...">Generate</button>
 ```
-- Hover: opacity 0.85
-- Disabled: opacity 0.4
 
 ### `.btn-ghost`
-Bordered secondary button. Use for most interactive buttons.
+Bordered, transparent background. Default button for most actions.
 ```html
-<button class="btn-ghost" onclick="doThing()">Export</button>
+<button class="btn-ghost" onclick="...">Check</button>
 ```
-- Hover: border and text go to `--ink`
-- Disabled: opacity 0.4
-- Note: `.btn-ghost:hover` already handles hover — do NOT add `onmouseover` handlers
+Hover: ink colour. Disabled: 0.4 opacity.
+
+### `.btn-ghost-teal`
+Add alongside `.btn-ghost` for teal hover variant.
+```html
+<button class="btn-ghost btn-ghost-teal" onclick="...">Copy</button>
+```
 
 ### `.btn-danger`
-Red bordered button for destructive actions.
+Red bordered button. Use for destructive actions.
 ```html
-<button class="btn-danger" onclick="deleteItem()">Delete</button>
+<button class="btn-danger" onclick="...">Delete</button>
 ```
 
 ### `.btn-subtle`
-Borderless, small, ink-light text. Use for secondary utility actions (e.g. "↺ New drill", "🖼 Objects").
+No border, ink-light text. Use for low-priority actions.
 ```html
-<button class="btn-subtle" onclick="reset()">↺ New drill</button>
+<button class="btn-subtle" onclick="...">Details</button>
 ```
-- Hover: text goes to `--ink`
-- Font size: 0.72rem
+Hover: ink colour.
 
 ### `.btn-icon`
-Borderless icon/emoji button. Use for inline icon actions.
+Circular icon button, 0.5 opacity at rest. Use for ✎ edit and ✕ delete icons.
 ```html
-<button class="btn-icon" onclick="doThing()">✎</button>
+<button class="btn-icon" onclick="...">✕</button>
 ```
-- Hover: opacity 1 (from 0.85)
+Hover: opacity 1.
+
+### `.btn-icon-teal`
+Add alongside `.btn-icon` for edit buttons — teal on hover.
+```html
+<button class="btn-icon btn-icon-teal" title="Edit">✎</button>
+```
+
+### `.btn-icon-del`
+Add alongside `.btn-icon` for delete buttons — red on hover.
+```html
+<button class="btn-icon btn-icon-del" title="Delete">✕</button>
+```
 
 ### `.btn-kana`
-Kana mode selector buttons (A / ひ / カ). Used across all 10 kana inputs. Do not use for other purposes.
+Kana mode selector button base class.
 
 ---
 
-## State Utility Classes
+## State Classes
 
-Apply these via `classList.add/remove/toggle` — never via inline `style.color` etc.
+### Active / Selected
+| Class | Colour | Usage |
+|-------|--------|-------|
+| `.btn-active` | Teal | Selected button in a group (hira mode, direction toggle) |
+| `.btn-active-gold` | Gold | Selected button — kata mode |
+| `.btn-active-red` | Red | Wrong answer button state |
+| `.toggle-on` | Teal | Toggle button in ON state (loop, shadowing, dictation) |
 
-### Active / Selected States
-
-| Class | Visual | Use |
-|-------|--------|-----|
-| `.btn-active` | Teal border + bg | Button group active item (teal) |
-| `.btn-active-gold` | Gold border + bg | Button group active item (gold) |
-| `.btn-active-red` | Red border + bg | Wrong answer button, error state |
-| `.toggle-on` | Teal border + bg (lighter) | On/off toggle in ON state |
-
-**Button group pattern:**
-```js
-// setButtonGroupActive() handles this — use it
-setButtonGroupActive(containerId, activeId);
-
-// Manual pattern if needed:
-btns.forEach(b => b.classList.remove('btn-active'));
-activeBtn.classList.add('btn-active');
-```
-
-**Toggle pattern:**
-```js
-btn.classList.toggle('toggle-on', isActive);
-```
-
-### Result / Feedback Colors
-
-| Class | Color | Use |
-|-------|-------|-----|
-| `.result-correct` | `--teal` | Correct answer text |
-| `.result-wrong` | `--red` | Wrong answer text |
-| `.result-partial` | `--gold` | Partial/close answer text |
-
-```js
-// Pattern — always remove the others when adding one:
-el.classList.add('result-correct');
-el.classList.remove('result-wrong', 'result-partial');
-
-// Or use toggle with condition:
-el.classList.toggle('result-correct', score >= 0.85);
-```
+### Drill Feedback
+| Class | Colour | Usage |
+|-------|--------|-------|
+| `.result-correct` | Teal | Correct answer text |
+| `.result-wrong` | Red | Wrong answer text |
+| `.result-partial` | Gold | Partial / hint used text |
 
 ### Input States
-
-| Class | Visual | Use |
-|-------|--------|-----|
-| `.input-correct` | Teal border | Input field correct state |
-| `.input-error` | Red border | Input field error/wrong state |
-
-Both use `!important` to override default field border.
-
-### Row Hover
-
-| Class | Visual | Use |
-|-------|--------|-----|
-| `.row-hover` | `--paper-dark` bg on hover | Standard list rows |
-| `.row-hover-teal` | Teal-tinted bg on hover | Conversation left column |
-| `.row-hover-gold` | Gold-tinted bg on hover | Conversation right column |
-
-```js
-// Add once when building the row — CSS handles the rest
-row.classList.add('row-hover');
-```
-
-### Loading / Disabled
-
-| Class | Visual | Use |
-|-------|--------|-----|
-| `.loading` | opacity 0.6, no pointer events | Generic loading state |
-| `.kanji-btn.loading` | opacity 0.5, no pointer events | Kanji fetch in progress |
-| `.vt-furi-btn.loading` | gold pulse animation | Furigana fetch in progress |
+| Class | Usage |
+|-------|-------|
+| `.input-correct` | Teal border — correct input |
+| `.input-error` | Red border — validation error |
 
 ---
 
-## Component-Specific Active Rules
+## Row / List Classes
 
-These exist in `style.css` for components with unique active visual needs. They follow `.componentname.active` pattern and are set via `classList.add('active')`.
-
-**Display toggles (show/hide panels):**
-- `.panel.active` — `display: block`
-- `.yoshi-subpanel.active` — `display: block`
-- `.gramnote-section.active` — `display: block`
-- `.gramnote-section.active` — `display: block`
-
-**Teal outline active (same as toggle-on but component-scoped):**
-- `.mode-btn.active`
-- `.yoshi-session-item.active`
-- `.yoshi-subtab.active`
-- `.yoshi-read-btn.active`
-- `.yoshi-loop-btn.active`
-- `.topic-chip.active`
-- `.listen-speed-btn.active`
-- `.ctr-tab.active`
-- `.ctr-group-btn.active`
-- `.listen-mode-toggle.active`
-- `.te-group-btn.active`
-
-**Ink-filled tabs (inverted — ink bg, paper text):**
-- `.gramnote-tab.active`
-- `.vc-filter-btn.active`
-- `.vc-sort-btn.active`
-
-**Special:**
-- `.trans-dir-btn.active` — red underline
-- `.trans-breakdown-tab.active` — teal underline
-- `.vt-cue.active` — teal left border + bg highlight
-- `.listen-track.active` — paper-mid bg
-- `.vg-card.active` — elevated card state
-- `#dictModeBtn.active` — solid teal fill (panel-open state)
+| Class | Usage |
+|-------|-------|
+| `.row-hover` | Paper-dark bg on hover — default list rows |
+| `.row-hover-teal` | Teal-tinted bg on hover — vocab/corpus rows |
+| `.row-hover-gold` | Gold-tinted bg on hover |
+| `.row-hover-border` | Teal border on hover — card/story items |
+| `.error-row` | Subtle white bg on hover — error list items |
 
 ---
 
-## What NOT to Do
+## Special Components
 
-```js
-// ❌ Never set state via inline style
-btn.style.color = 'var(--teal)';
-btn.style.borderColor = 'var(--teal)';
-btn.style.background = 'rgba(48,213,200,0.08)';
+### `.voice-upload-btn`
+Circular upload button for voice panel. Gold border on hover.
 
-// ✅ Use utility class
-btn.classList.add('toggle-on');
-
-// ❌ Never add onmouseover/onmouseout for colors that CSS handles
-<button onmouseover="this.style.color='var(--teal)'" ...>
-
-// ✅ Let CSS :hover do it, or add a class with :hover rule
-
-// ❌ Never hardcode rgba teal/red/gold literals
-el.style.background = 'rgba(48,213,200,0.12)';
-
-// ✅ Use a class that references the CSS variable
-el.classList.add('btn-active');
-```
-
-## Legitimate Inline Styles
-
-These are intentional and should stay as inline styles:
-
-- `style.display` — JS-controlled visibility (immune to scope issues)
-- `style.width` on progress bars — dynamic percentage values
-- `style.background` on status dots — the color IS the content
-- `style.background` on recording buttons — gradient animation states
-- `cssText` on dynamically constructed canvas/waveform elements
-- Layout values (flex, padding, gap, width, height) on generated elements
+### `.fe-del`
+Inline delete button. Red on hover (via `.fe-del:hover`).
 
 ---
 
-## Remaining Debt (known, not yet fixed)
+## Rules for New Features
 
-- ~12 `onmouseover/onmouseout` handlers inside JS template literals
-- ~980 inline `style=` attributes in `index.html` (layout + color mixed)
-- `--panel` defined twice in `:root` (duplicate, harmless)
-- `.btn-ghost:hover` goes to `--ink` not `--teal` — inconsistent with most hover patterns
-- Component `.active` rules could consolidate into `.toggle-on` over time
+1. **Never write inline hover handlers** — use a CSS class instead
+2. **Button hierarchy:** primary → ghost → subtle → icon. Pick the lowest weight that works.
+3. **Colour meaning is fixed:** teal = correct/active, gold = partial/secondary, red = wrong/danger
+4. **New utility classes** go at the bottom of style.css in the utility block (after line 2734)
+5. **JS-controlled visibility** (show/hide) stays as inline style — immune to CSS scope issues
+6. **Cross-file calls** use `(App.fn || window.fn)?.()`— never bare globals
+
+---
+
+## Do Not Touch
+
+- Status indicator dots — colour IS their meaning
+- Recording button gradients — animation states
+- Progress bar backgrounds — dynamic values set by JS
+- Canvas/waveform drawing colours
+- `core-listen.js` solid-fill active states
+- `features-stroke.js` cssText elements
