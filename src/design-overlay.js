@@ -96,6 +96,21 @@
     targetEl = e.target;
     highlight(targetEl);
     renderClassesSection(targetEl);
+    // Auto-copy element info to clipboard
+    const info = [
+      '<' + targetEl.tagName.toLowerCase() + (targetEl.id ? '#' + targetEl.id : '') + '>',
+      'classes: ' + (targetEl.className || '(none)'),
+      targetEl.style.cssText ? 'inline style: ' + targetEl.style.cssText : null,
+      'html: ' + targetEl.outerHTML.slice(0, 300),
+    ].filter(Boolean).join('\n');
+    navigator.clipboard.writeText(info).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = info;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
   }
 
   function highlight(el) { el.setAttribute('data-do-hl', '1'); }
