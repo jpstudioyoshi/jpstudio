@@ -325,7 +325,7 @@ function wbAddItem(entry, idx) {
     <span class="wb-num">${idx + 1}.</span>
     <span class="wb-text" id="wb-text-${idx}">${entry.original}</span>
     <span style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
-      <button class="wb-edit btn-icon" title="Edit" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">✎</button>
+      <button class="wb-edit btn-icon btn-icon-teal" title="Edit">✎</button>
       <button class="wb-del btn-icon" title="Delete">✕</button>
     </span>
   `;
@@ -474,7 +474,7 @@ function renderFeedback(entry) {
     <div class="fe-header" onclick="feToggle(this.parentElement)">
       <span class="fe-toggle">▾</span>
       <button onclick="event.stopPropagation();deleteWritingEntry(${idx})"
-        class="fe-del" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink-light)'">✕</button>
+        class="fe-del">✕</button>
     </div>
     <div class="fe-body">
       ${!isOk ? `<div class="fe-row"><span class="fe-label">Corrected</span>
@@ -554,11 +554,8 @@ function renderSavedTexts() {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
         <div class="sti-date">${t.date} · ${t.count} sentences</div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button class="btn-ghost" onclick="copySavedText(${i})" id="sti-copy-${i}" title="Copy full text"
-            onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'"
-            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-light)'">⎘ Copy</button>
-          <button class="btn-icon" onclick="deleteSavedText(${i})" title="Delete"
-            onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink-light)'">✕</button>
+          <button class="btn-ghost btn-ghost-teal" onclick="copySavedText(${i})" id="sti-copy-${i}" title="Copy full text">⎘ Copy</button>
+          <button class="btn-icon btn-icon-del" onclick="deleteSavedText(${i})" title="Delete">✕</button>
         </div>
       </div>
       <div class="sti-preview" style="font-family:var(--jp);font-size:0.88rem;line-height:1.8;color:var(--ink);white-space:pre-wrap;user-select:text;cursor:text">${t.text}</div>

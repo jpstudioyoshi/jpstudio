@@ -1235,7 +1235,6 @@ function renderErrorList(listEl, items) {
       return '<button onclick="errorShowPopup(\'' + safePat + '\')" '
         + 'style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;'
         + 'padding:4px 6px;border-radius:4px;width:100%;text-align:left" '
-        + 'onmouseover="this.style.background=\'rgba(255,255,255,0.05)\'" '
         + 'onmouseout="this.style.background=\'none\'">'
         + '<span style="font-size:0.82rem;font-weight:700;color:' + col + ';flex-shrink:0;min-width:20px;text-align:right">' + count + '</span>'
         + '<span style="font-size:0.78rem;color:var(--ink);font-weight:600;flex:1;text-align:left;word-break:break-word">' + display + '</span>'

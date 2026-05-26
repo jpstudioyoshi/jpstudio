@@ -417,7 +417,7 @@ function renderVocabList() {
       padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;
       cursor:pointer;transition:background 0.1s${inSession && !sessionKnown ? ';background:var(--paper-dark)' : ''}"
       onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()"
-      onmouseover="this.style.background='var(--paper-mid)'" onmouseout="this.style.background='${inSession && !sessionKnown ? 'var(--paper-dark)' : ''}'">
+      class="row-hover">
       <span style="font-family:var(--ui);font-size:0.72rem;color:${dotColor};text-align:center">${dot}</span>
       <span style="font-family:var(--jp);font-size:0.95rem">${escHtml(c.jp)}</span>
       <span style="font-family:var(--jp);font-size:0.82rem;color:var(--ink-light)">${escHtml(c.kana||c.reading||'')}</span>

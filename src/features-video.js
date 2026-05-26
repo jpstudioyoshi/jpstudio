@@ -1668,14 +1668,8 @@ function resourcesRender() {
   const renderCard = (r) => `
     <div class="res-card" style="position:relative" id="res-card-${r.originalIndex}">
       <div style="position:absolute;top:8px;right:8px;display:flex;gap:4px">
-        <button class="btn-icon" onclick="event.preventDefault();event.stopPropagation();resourcesEdit(${r.originalIndex})"
-          onmouseover="this.style.opacity='1';this.style.color='var(--teal)'" 
-          onmouseout="this.style.opacity='0.5';this.style.color='var(--ink-light)'"
-          title="Edit">✎</button>
-        <button class="btn-icon" onclick="event.preventDefault();event.stopPropagation();resourcesDelete(${r.originalIndex})"
-          onmouseover="this.style.opacity='1';this.style.color='var(--red)'" 
-          onmouseout="this.style.opacity='0.5';this.style.color='var(--ink-light)'"
-          title="Delete">✕</button>
+        <button class="btn-icon btn-icon-teal" onclick="event.preventDefault();event.stopPropagation();resourcesEdit(${r.originalIndex})" title="Edit">✎</button>
+        <button class="btn-icon btn-icon-del" onclick="event.preventDefault();event.stopPropagation();resourcesDelete(${r.originalIndex})" title="Delete">✕</button>
       </div>
       <a href="${r.url}" target="_blank" style="text-decoration:none;color:inherit;display:block">
         <div class="res-icon">${r.icon || '🔗'}</div>
