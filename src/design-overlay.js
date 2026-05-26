@@ -129,6 +129,29 @@
     sideBtn.onclick = toggleSide;
     header.appendChild(sideBtn);
 
+    let inspecting = true;
+    const pauseBtn = document.createElement('span');
+    pauseBtn.textContent = '⏸';
+    pauseBtn.title = 'Pause inspection (allow normal clicks)';
+    pauseBtn.style.cssText = 'cursor:pointer;font-size:13px;color:#ffd60a;margin-left:8px;';
+    pauseBtn.onclick = () => {
+      inspecting = !inspecting;
+      if (inspecting) {
+        document.addEventListener('click', onDocClick, true);
+        pauseBtn.textContent = '⏸';
+        pauseBtn.style.color = '#ffd60a';
+        pauseBtn.title = 'Pause inspection';
+        document.body.style.cursor = 'crosshair';
+      } else {
+        document.removeEventListener('click', onDocClick, true);
+        pauseBtn.textContent = '▶';
+        pauseBtn.style.color = '#7ed886';
+        pauseBtn.title = 'Resume inspection';
+        document.body.style.cursor = '';
+      }
+    };
+    header.appendChild(pauseBtn);
+
     const body = el('div', 'flex:1;overflow-y:auto;padding:10px 12px;');
 
     classesSection = el('div', '');
