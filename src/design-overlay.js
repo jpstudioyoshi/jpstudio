@@ -114,7 +114,20 @@
     panel.style.cssText = 'display:none;position:fixed;top:0;right:0;width:320px;height:100vh;background:#1c1c1e;border-left:1px solid rgba(255,255,255,0.18);flex-direction:column;z-index:99999;font-family:-apple-system,sans-serif;font-size:12px;color:#f5f5f7;pointer-events:all;overflow:hidden;';
 
     const header = el('div', 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;border-bottom:1px solid rgba(255,255,255,0.12);flex-shrink:0;');
-    header.innerHTML = '<span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#30d5c8;text-transform:uppercase;">⬡ Design Overlay</span><span style="font-size:10px;color:#c0c0c5;">Cmd+Shift+D · Esc</span>';
+    let panelSide = 'right';
+    function toggleSide() {
+      panelSide = panelSide === 'right' ? 'left' : 'right';
+      panel.style.left  = panelSide === 'left'  ? '0' : '';
+      panel.style.right = panelSide === 'right' ? '0' : '';
+      sideBtn.textContent = panelSide === 'right' ? '◀' : '▶';
+    }
+    header.innerHTML = '<span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#30d5c8;text-transform:uppercase;">⬡ Design Overlay</span><span style="font-size:10px;color:#c0c0c5;">Cmd+Shift+E · Esc</span>';
+    const sideBtn = document.createElement('span');
+    sideBtn.textContent = '◀';
+    sideBtn.title = 'Move to left/right';
+    sideBtn.style.cssText = 'cursor:pointer;font-size:13px;color:#c0c0c5;margin-left:8px;';
+    sideBtn.onclick = toggleSide;
+    header.appendChild(sideBtn);
 
     const body = el('div', 'flex:1;overflow-y:auto;padding:10px 12px;');
 
