@@ -1591,6 +1591,12 @@ function handleConjKeyG(e) {
 }
 
 // Enter handling is done in handleConjKeyG — no global listener needed
+// Allow Enter to advance to next run from the summary screen
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const btn = document.querySelector('#conjDrillAreaG .conj-start-btn');
+  if (btn) { e.preventDefault(); conjNextRun(); }
+});
 
 function conjAutoConvertG() {
   // Auto-convert hiragana stem to kanji for the current verb

@@ -307,6 +307,12 @@ function renderVocab() {
   if (vcEn)  vcEn.textContent  = enJp ? (card.jp + (card.kana && card.kana !== card.jp ? '　' + card.kana : '')) : card.en;
   if (_vcBR) _vcBR.textContent = enJp ? '' : (card.kana || card.reading || '');
   if (vcPos) vcPos.textContent = card.pos || '';
+  const vcPitchEl = document.getElementById('vcPitch');
+  if (vcPitchEl) {
+    const kana = card.kana || card.reading || '';
+    const pitchStr = card.pitch != null ? card.pitch : (window.pitchAPI ? window.pitchAPI.lookup(card.jp, kana) : null);
+    vcPitchEl.innerHTML = pitchStr != null ? renderPitchCurve(kana, pitchStr) : '';
+  }
   vocabCardEl.classList.remove('flipped');
 
   const pos = deck.indexOf(vocabIdx);
