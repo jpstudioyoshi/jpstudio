@@ -449,6 +449,7 @@ async function gramSentPracticePattern(pattern) {
   const inp = document.getElementById('gramSentInput');
   if (inp) { inp.value = pattern; inp.dispatchEvent(new Event('input')); }
   await gramSentGenerate();
+  gramSentPopulateHistory();
 }
 
 async function gramSentGenerate() {
