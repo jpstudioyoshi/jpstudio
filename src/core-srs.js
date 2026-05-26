@@ -478,7 +478,7 @@ function kanjiCorpusRecordLookup(word, context) {
     }
     if (word.length > 1 && !corpus[ch].translateMeaning) corpus[ch].translateMeaning = word;
     corpus[ch].lookupCount++;
-    corpus[ch].lookupDates.push(ts);
+    (corpus[ch].lookupDates ??= []).push(ts);
     if (corpus[ch].lookupDates.length > 100) corpus[ch].lookupDates = corpus[ch].lookupDates.slice(-100);
     // SQL dual-write
     _corpusEntriesUpsert(ch, corpus[ch], ts);

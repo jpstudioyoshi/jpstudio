@@ -281,7 +281,7 @@ async function gdCheck() {
   gdResults[gdIdx] = { correct, userAnswer: val };
   if (correct) gdOk++; else gdMiss++;
   gdChecked = true;
-  btn.textContent = 'Next →';
+  btn.textContent = 'Next';
   btn.disabled = false;
   btn.onclick = gdNext;
 
@@ -545,13 +545,15 @@ function gramSentRenderCard() {
         placeholder="Type Japanese…"
         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
         onkeydown="if(event.key==='Enter'){gramSentCheck();}">
-      <div data-kana-for="gramSentAnswerInput" style="margin-top:6px"></div>
-      <div class="gd-feedback" id="gramSentCardFeedback"></div>
-      <div class="gd-btn-row">
-        <button class="conj-check-btn btn-icon" id="gramSentCheckBtn" onclick="gramSentCheck()">Check</button>
-        <button class="conj-skip-btn btn-icon" onclick="gramSentSkip()">Skip →</button>
-        <button class="tts-btn" onclick="jpSpeak('${s.jp.replace(/'/g, "\'")}')">🔊</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px">
+        <div data-kana-for="gramSentAnswerInput"></div>
+        <div class="gd-btn-row" style="margin:0;flex-shrink:0">
+          <button class="btn-action" id="gramSentCheckBtn" onclick="gramSentCheck()">Check</button>
+          <button class="btn-action" onclick="gramSentSkip()">Skip</button>
+          <button class="tts-btn" onclick="jpSpeak('${s.jp.replace(/'/g, "\'")}')">🔊</button>
+        </div>
       </div>
+      <div class="gd-feedback" id="gramSentCardFeedback"></div>
     </div>`;
 
   // Attach kana toolbar to answer input
@@ -644,7 +646,7 @@ async function gramSentCheck() {
   if (correct) GramSentState.ok++; else GramSentState.miss++;
   GramSentState.checked = true;
 
-  if (btn) { btn.textContent = 'Next →'; btn.disabled = false; btn.onclick = gramSentAdvance; }
+  if (btn) { btn.textContent = 'Next'; btn.disabled = false; btn.onclick = gramSentAdvance; }
 
   const dots = document.querySelectorAll('#gramSentDrillArea .gd-dot');
   if (dots[GramSentState.idx]) dots[GramSentState.idx].className = 'gd-dot ' + (correct ? 'ok' : 'miss');
@@ -2002,7 +2004,7 @@ function pdTryMatch(exIdx) {
   // If all done, update button to show Next
   if (_pdResults.every(function(r){ return r !== null; })) {
     var btn = document.getElementById('pdActionBtn');
-    if (btn) { btn.textContent = 'Next →'; btn.onclick = particleDrillStart; }
+    if (btn) { btn.textContent = 'Next'; btn.onclick = particleDrillStart; }
   }
 }
 
