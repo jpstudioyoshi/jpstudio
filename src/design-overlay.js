@@ -81,7 +81,7 @@
   }
 
   function onKeydown(e) {
-    if (e.metaKey && e.shiftKey && e.key === 'D') {
+    if (e.metaKey && e.shiftKey && e.key === 'E') {
       e.preventDefault();
       toggle();
     }
