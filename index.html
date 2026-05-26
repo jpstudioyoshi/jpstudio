@@ -1236,7 +1236,7 @@
             </div>
             <div class="writing-btn-group">
               <button class="writing-util-btn btn-copy" onclick="wbCopyInput()" title="Copy text">Copy</button>
-              <button class="writing-submit" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit →</button>
+              <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
             </div>
           </div>
         </div>
@@ -1247,7 +1247,7 @@
             <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">SENTENCES</span>
             <div style="display:flex;gap:8px;align-items:center">
   
-              <button class="save-text-btn" onclick="saveWritingText()">⬇ Save</button>
+              <button class="btn-action" onclick="saveWritingText()">Save</button>
             </div>
           </div>
           <div id="writingBoard" style="display:flex;flex-direction:column;gap:8px;min-height:40px"></div>
@@ -1262,7 +1262,7 @@
         <div class="feedback-panel-header" onclick="checkWritingSentence()" title="Click to check current sentence">
           <span class="check-prompt">Check Input</span>
           <div style="display:flex;align-items:center;gap:10px">
-            <button class="btn-ghost" onclick="event.stopPropagation();clearWritingFeedback()">Clear</button>
+            <button class="btn-destructive" onclick="event.stopPropagation();clearWritingFeedback()">Clear</button>
             <span id="feedbackCount" style="color:var(--ink)">—</span>
           </div>
         </div>
