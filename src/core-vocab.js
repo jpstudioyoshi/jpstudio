@@ -318,12 +318,18 @@ function renderVocab() {
   const vcPitchEl = document.getElementById('vcPitch');
   if (vcPitchEl) {
     const kana = card.kana || card.reading || '';
+    const _pitchWord = card.jp || kana;
+    function _wrapPitch(svg) {
+      if (!svg) return '';
+      const word = _pitchWord.replace(/'/g, "\\'");
+      return '<div title="Hover to hear" style="cursor:pointer;display:block;margin:0 auto" onmouseenter="this._t=setTimeout(()=>jpSpeak(\'' + word + '\',0.85),600)" onmouseleave="clearTimeout(this._t)">' + svg + '</div>';
+    }
     if (card.pitch != null) {
-      vcPitchEl.innerHTML = renderPitchCurve(kana, card.pitch);
+      vcPitchEl.innerHTML = _wrapPitch(renderPitchCurve(kana, card.pitch));
     } else if (window.pitchAPI && kana) {
       vcPitchEl.innerHTML = '';
       window.pitchAPI.lookup(card.jp, kana).then(function(pitchStr) {
-        if (pitchStr != null) vcPitchEl.innerHTML = renderPitchCurve(kana, pitchStr);
+        if (pitchStr != null) vcPitchEl.innerHTML = _wrapPitch(renderPitchCurve(kana, pitchStr));
       });
     } else {
       vcPitchEl.innerHTML = '';
