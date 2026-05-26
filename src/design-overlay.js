@@ -368,6 +368,7 @@
     return b;
   }
 
+  window.designOverlayToggle = toggle;
   injectStyles();
   init();
   console.log('%c⬡ Design Overlay loaded — Cmd+Shift+D to toggle', 'color:#30d5c8;font-weight:bold;');
