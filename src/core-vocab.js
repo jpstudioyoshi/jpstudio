@@ -333,14 +333,13 @@ function renderVocab() {
   vocabCardEl.classList.remove('flipped');
 
   const pos = deck.indexOf(vocabIdx);
-  vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session`;
-
   const masterCount = state.vocab.filter((_,i) => isWordMastered(i)).length;
-  deckStatusEl.textContent = masterCount > 0 ? `${masterCount} mastered` : '';
-  resetBtnEl.style.display = masterCount > 0 ? 'inline-block' : 'none';
-
+  const masteredStr = masterCount > 0 ? ` · ${masterCount} mastered` : '';
   const sessions = (state.vocabKnownSessions || {})[vocabIdx] || [];
-  if (sessions.length > 0) deckStatusEl.textContent += ` · ✓×${sessions.length}/3`;
+  const sessionStr = sessions.length > 0 ? ` · ✓×${sessions.length}/3` : '';
+  vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session${masteredStr}${sessionStr}`;
+  deckStatusEl.textContent = '';
+  resetBtnEl.style.display = masterCount > 0 ? 'inline-block' : 'none';
 
   if (statusEl) statusEl.textContent = `Session: ${deck.length} left of ${vocabSession.length}`;
   renderVocabList();
