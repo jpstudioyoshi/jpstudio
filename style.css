@@ -1155,7 +1155,7 @@
   .feedback-panel-header .btn-destructive:hover {
     background: var(--red) !important;
     border-color: var(--red) !important;
-    color: #1c1c1e !important;
+    color: var(--ink) !important;
   }
   .feedback-panel-header:active,
   .feedback-panel-header.checking {
@@ -2782,4 +2782,4 @@
 .btn-nav:disabled { opacity: 0.3; cursor: default; }
 
 .btn-destructive { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
-.btn-destructive:hover { background: var(--red); color: #1c1c1e; border-color: var(--red); }
+.btn-destructive:hover { background: var(--red); color: var(--ink); border-color: var(--red); }
