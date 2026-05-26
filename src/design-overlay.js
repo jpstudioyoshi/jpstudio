@@ -69,10 +69,10 @@
     active = !active;
     overlay.style.display = active ? 'block' : 'none';
     panel.style.display   = active ? 'flex'  : 'none';
-    document.body.style.cursor = active ? 'crosshair' : '';
-    if (active) {
+    document.body.style.cursor = (active && inspecting) ? 'crosshair' : '';
+    if (active && inspecting) {
       document.addEventListener('click', onDocClick, true);
-    } else {
+    } else if (!active) {
       document.removeEventListener('click', onDocClick, true);
       clearHighlight();
       targetEl = null;
@@ -129,7 +129,7 @@
     sideBtn.onclick = toggleSide;
     header.appendChild(sideBtn);
 
-    let inspecting = true;
+    let inspecting = false;
     const pauseBtn = document.createElement('span');
     pauseBtn.textContent = '⏸';
     pauseBtn.title = 'Pause inspection (allow normal clicks)';
