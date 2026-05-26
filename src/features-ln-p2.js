@@ -455,11 +455,11 @@ function lessonNotesRenderDrillCard() {
         <div style="${line2Style};${LessonNotesState.drillRevealed >= 2 ? '' : 'visibility:hidden'}">${answerLine2}</div>
       </div>
       <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="lessonNotesDrillPrev()">← Prev</button>
+        <button class="btn-nav" onclick="lessonNotesDrillPrev()">Prev</button>
         <button class="btn-rating ${btnActive?'btn-rating-teal':''}" onclick="lessonNotesDrillReveal()">${btnLabel}</button>
         <button class="btn-nav" onclick="lessonNotesDrillNext()">Next</button>
-        <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()" title="Mark as learned and hide from drill">Learned</button>
-        <button class="btn-ghost" onclick="lessonNotesDrillBackground()" title="Show context and background">Background</button>
+        <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()">Learned</button>
+        <button class="btn-action" onclick="lessonNotesDrillBackground()">Background</button>
       </div>
     </div>
   `;
