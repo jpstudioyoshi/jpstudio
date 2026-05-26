@@ -414,7 +414,7 @@ function lessonNotesRenderDrillCard() {
     }
   } else if (LessonNotesState.drillMode === 'listening') {
     const safeWord = word.replace(/'/g, "\\'");
-    prompt = `🔊 <button class="btn-primary" onclick="jpSpeak('${safeWord}')">Play</button>`;
+    prompt = `🔊 <button class="btn-action" onclick="jpSpeak('${safeWord}')">Play</button>`;
     answerLine1 = reading || '(no reading)';
     answerLine2 = meaning || '(no meaning)';
   }
@@ -1528,7 +1528,7 @@ try {
     bar.innerHTML =
       '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--gold);flex:1">'
       + '⏺ Recording saved — ready to transcribe</span>'
-      + '<button class="btn-primary" id="yoshiTranscribeNowBtn" onclick="yoshiTranscribeNow()" '
+      + '<button class="btn-action" id="yoshiTranscribeNowBtn" onclick="yoshiTranscribeNow()" '
       + 'style="font-size:0.75rem;padding:4px 14px">⚙ Transcribe now</button>';
     window._pendingTranscribeSessionId = data.sessionId;
   });

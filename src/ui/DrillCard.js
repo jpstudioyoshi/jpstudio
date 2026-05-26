@@ -60,7 +60,7 @@ const DrillCard = (() => {
             placeholder="${_cfg.inputPlaceholder || 'Type reading…'}"
             autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
           <div style="display:flex;gap:8px">
-            <button id="dc-check" class="btn-primary">Check</button>
+            <button id="dc-check" class="btn-action">Check</button>
             <button id="dc-next"
               style="display:none;padding:7px 16px;background:var(--gold);border:none;border-radius:6px;color:#1c1c1e;font-family:var(--ui);font-size:0.8rem;font-weight:500;cursor:pointer"
               >Next →</button>

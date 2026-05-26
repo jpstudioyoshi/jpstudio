@@ -1349,7 +1349,7 @@ function voiceSaveConversation() {
         style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box;margin-bottom:16px">
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button class="btn-ghost" onclick="document.getElementById('voiceSaveModal').remove()">Cancel</button>
-        <button class="btn-primary" onclick="voiceDoSave()">Save</button>
+        <button class="btn-action" onclick="voiceDoSave()">Save</button>
       </div>
     </div>
   `;

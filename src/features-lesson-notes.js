@@ -1204,7 +1204,7 @@ function lessonNotesEditGrammar(idx) {
       
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button class="btn-ghost" onclick="document.getElementById('grammarEditModal').remove()">Cancel</button>
-        <button class="btn-primary" onclick="lessonNotesSaveGrammarEdit(${idx})">Save</button>
+        <button class="btn-action" onclick="lessonNotesSaveGrammarEdit(${idx})">Save</button>
       </div>
     </div>
   `;
@@ -1977,7 +1977,7 @@ function lessonNotesRenderGrammarDetail() {
         ` : ''}
         <div style="display:flex;gap:8px;margin-top:12px">
           <button onclick="lessonNotesGrammarPrevDrill()" class="yoshi-read-btn btn-icon" ${LessonNotesState.grammarDrillIdx === 0 ? 'disabled' : ''}>← Prev</button>
-          <button onclick="lessonNotesGrammarCheckDrill()" class="yoshi-read-btn btn-primary">Check</button>
+          <button onclick="lessonNotesGrammarCheckDrill()" class="yoshi-read-btn btn-action">Check</button>
           <button onclick="lessonNotesGrammarNextDrill()" class="yoshi-read-btn btn-icon" ${LessonNotesState.grammarDrillIdx >= LessonNotesState.grammarDrillSentences.length - 1 ? 'disabled' : ''}>Next →</button>
         </div>
       </div>
@@ -2098,7 +2098,7 @@ function lessonNotesRenderFullDoc() {
         style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none"
         onkeydown="if(event.key==='Enter')lessonNotesFullDocDoSearch()"
         oninput="if(!this.value)lessonNotesFullDocClearSearch()">
-      <button class="btn-primary" onclick="lessonNotesFullDocDoSearch()">Search</button>
+      <button class="btn-action" onclick="lessonNotesFullDocDoSearch()">Search</button>
       ${searchTerm ? `<button class="btn-ghost" onclick="lessonNotesFullDocClearSearch()">✕</button>
       <span style="font-family:var(--ui);font-size:0.75rem;color:var(--gold)">${matchCount} found</span>` : ''}
     </div>

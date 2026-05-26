@@ -99,7 +99,7 @@ function cdRenderList() {
         <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);margin-bottom:2px">${doc.name || 'Untitled'}</div>
         <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${doc.pairs?.length || 0} sentences · ${doc.mode === 'hear-repeat' ? 'Hear then repeat' : 'English to speak'} · ${doc.modified || ''}</div>
       </div>
-      <button class="btn-primary" style="font-size:0.72rem;padding:4px 10px;background:var(--gold);border-color:var(--gold);color:#000"
+      <button class="btn-action" style="font-size:0.72rem;padding:4px 10px;background:var(--gold);border-color:var(--gold);color:#000"
         onclick="event.stopPropagation();cdOpenAndDrill('${doc.id}')">Drill</button>
     </div>`).join('');
 }

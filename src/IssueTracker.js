@@ -325,7 +325,7 @@ function issueTrackerRenderFull() {
         </select>
         <input id="itNewPanel" type="text" placeholder="Panel (optional: e.g. voice, anki)"
           style="flex:1;min-width:120px;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);outline:none">
-        <button class="btn-primary" onclick="itAdd()">+ Add</button>
+        <button class="btn-action" onclick="itAdd()">+ Add</button>
       </div>
     </div>
 

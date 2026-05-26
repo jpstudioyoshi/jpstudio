@@ -500,7 +500,7 @@ Reply ONLY with a JSON array, no markdown:
         '<div style="display:flex;gap:8px">' +
           '<button class="btn-ghost" onclick="vcFetchSelectAll(true)">All</button>' +
           '<button class="btn-ghost" onclick="vcFetchSelectAll(false)">None</button>' +
-          '<button class="btn-primary" onclick="vcFetchAdd()">Add selected →</button>' +
+          '<button class="btn-action" onclick="vcFetchAdd()">Add selected →</button>' +
         '</div>' +
       '</div>' +
       '<div style="max-height:280px;overflow-y:auto">' +

@@ -104,11 +104,11 @@ function lnRenderVocab(cur) {
   h.push('<div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">');
   h.push('<button class="btn-ghost" style="font-size:0.75rem" onclick="lnDrillPrev()">&#8592; Prev</button>');
   if (!window._lnDrillRevealed) {
-    h.push('<button class="btn-primary" style="font-size:0.82rem" onclick="lnDrillReveal()">Reveal</button>');
+    h.push('<button class="btn-action" style="font-size:0.82rem" onclick="lnDrillReveal()">Reveal</button>');
   } else {
     var word = (v.jp||v.word||'').replace(/'/g,'&#39;');
     h.push('<button class="btn-ghost" style="font-size:0.75rem" onclick="jpSpeak(\'' + word + '\')">&#128266;</button>');
-    h.push('<button class="btn-primary" style="font-size:0.82rem" onclick="lnDrillNext()">Next &#8594;</button>');
+    h.push('<button class="btn-action" style="font-size:0.82rem" onclick="lnDrillNext()">Next &#8594;</button>');
   }
   h.push('</div>');
   h.push('<div style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:6px"><table style="width:100%;border-collapse:collapse;font-family:var(--ui);font-size:0.78rem">');

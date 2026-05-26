@@ -1530,7 +1530,7 @@ async function weightsRender() {
   }
 
   html += '<div style="display:flex;gap:10px;margin-bottom:32px">';
-  html += '<button class="btn-primary" onclick="(App.weightsSave||window.weightsSave)()">Save weights</button>';
+  html += '<button class="btn-action" onclick="(App.weightsSave||window.weightsSave)()">Save weights</button>';
   html += '<button class="btn-ghost" onclick="(App.weightsReset||window.weightsReset)()">Reset to defaults</button>';
   html += '<span id="wt-status" style="font-family:var(--ui);font-size:0.75rem;color:var(--teal);align-self:center"></span>';
   html += '</div>';

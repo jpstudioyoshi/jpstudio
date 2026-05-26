@@ -935,7 +935,7 @@ function qrUpdateSegmentUI() {
           <span style="font-family:var(--ui);font-size:0.7rem;font-weight:600;color:var(--ink-light)">${i + 1}</span>
         </div>
         <div style="display:flex;gap:6px">
-          <button class="btn-primary" onclick="event.stopPropagation();qrPlaySegment(${i})" title="Play">▶</button>
+          <button class="btn-action" onclick="event.stopPropagation();qrPlaySegment(${i})" title="Play">▶</button>
           <button onclick="event.stopPropagation();qrStartReplace(${i})" title="Re-record" style="width:28px;height:28px;background:${QuickReadState.replaceIdx === i ? 'var(--gold)' : 'var(--paper-mid)'};border:1px solid ${QuickReadState.replaceIdx === i ? 'var(--gold)' : 'var(--border)'};border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:${QuickReadState.replaceIdx === i ? '#1c1c1e' : 'var(--ink-light)'}">⏺</button>
           <button class="btn-ghost" onclick="event.stopPropagation();qrDeleteSegment(${i})" title="Delete">✕</button>
         </div>
