@@ -528,7 +528,7 @@ function lessonNotesExamplesCurrent() {
 // Breakdown cache - separate from translations since it has different content
 const BREAKDOWN_CACHE_KEY = 'jpBreakdownCache';
 // LessonNotesState.breakdownCache — see declaration above
-try { LessonNotesState.breakdownCache = JSON.parse(localStorage.getItem(BREAKDOWN_CACHE_KEY) || '{}'); } catch(e) {}
+try { LessonNotesState.breakdownCache = Storage.getJSON(BREAKDOWN_CACHE_KEY, {}); } catch(e) {}
 
 function breakdownCacheSave() {
   const keys = Object.keys(LessonNotesState.breakdownCache);
@@ -536,7 +536,7 @@ function breakdownCacheSave() {
     const toRemove = keys.slice(0, keys.length - 200);
     toRemove.forEach(k => delete LessonNotesState.breakdownCache[k]);
   }
-  localStorage.setItem(BREAKDOWN_CACHE_KEY, JSON.stringify(LessonNotesState.breakdownCache));
+  Storage.setJSON(BREAKDOWN_CACHE_KEY, LessonNotesState.breakdownCache);
 }
 
 async function lessonNotesBreakdown(word) {

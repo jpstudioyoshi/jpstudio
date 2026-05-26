@@ -1373,18 +1373,18 @@ const QR_SESSION_KEY = 'qrSession';
 function qrSaveSession() {
   if (!QuickReadState.segments.length) return;
   try {
-    localStorage.setItem(QR_SESSION_KEY, JSON.stringify({
+    Storage.setJSON(QR_SESSION_KEY, {
       segments:   QuickReadState.segments,
       text:       document.getElementById('qrInput')?.value || '',
       furiOn:     QuickReadState.furiOn,
       plainOn:    QuickReadState.plainOn,
-    }));
+    });
   } catch(e) {}
 }
 
 function qrRestoreSession() {
   try {
-    const saved = JSON.parse(localStorage.getItem(QR_SESSION_KEY) || 'null');
+    const saved = Storage.getJSON(QR_SESSION_KEY, null);
     if (!saved || !saved.segments?.length) return;
 
     // Restore input text
