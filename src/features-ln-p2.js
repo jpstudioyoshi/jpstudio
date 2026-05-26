@@ -454,11 +454,13 @@ function lessonNotesRenderDrillCard() {
         <div style="${line1Style};${LessonNotesState.drillRevealed >= 1 ? '' : 'visibility:hidden'}">${answerLine1}</div>
         <div style="${line2Style};${LessonNotesState.drillRevealed >= 2 ? '' : 'visibility:hidden'}">${answerLine2}</div>
       </div>
+      <div id="lessonNotesDrillBackground" style="display:none;text-align:left;margin:12px 0;padding:12px;background:rgba(48,213,200,0.06);border:1px solid rgba(48,213,200,0.15);border-radius:6px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);line-height:1.6"></div>
       <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="lessonNotesDrillPrev()">← Prev</button>
         <button onclick="lessonNotesDrillReveal()" style="padding:8px 20px;background:${btnActive?'none':'var(--gold)'};border:1px solid ${btnActive?'var(--border)':'var(--gold)'};border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:${btnActive?'var(--ink-light)':'#1c1c1e'};cursor:pointer">${btnLabel}</button>
         <button class="btn-ghost" onclick="lessonNotesDrillNext()">Next →</button>
         <button class="btn-ghost" onclick="lessonNotesHideCard()" title="Mark as learned and hide from drill">✓ Learned</button>
+        <button class="btn-ghost" onclick="lessonNotesDrillBackground()" title="Show context and background">📖 Background</button>
       </div>
     </div>
   `;
@@ -466,6 +468,31 @@ function lessonNotesRenderDrillCard() {
 
 // LessonNotesState.hiddenWords — see declaration above
 
+async function lessonNotesDrillBackground() {
+  const bgEl = document.getElementById('lessonNotesDrillBackground');
+  if (!bgEl) return;
+  
+  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
+  if (!v) return;
+  
+  const word = v.word || '';
+  const reading = v.reading || '';
+  const meaning = v.meaning || v.en || '';
+  
+  // Find sentences containing this word from the lesson content
+  const docContent = LessonNotesState.docContent || [];
+  const matchingSentences = docContent.filter(line => 
+    line && typeof line === 'string' && line.includes(word)
+  ).slice(0, 3); // Max 3 sentences
+  
+  bgEl.style.display = 'block';
+  bgEl.innerHTML = '<span style="color:var(--ink-light)">Loading background...</span>';
+  
+  const apiKey = _fy_getApiKey();
+  if (!apiKey) {
+    bgEl.innerHTML = '<span style="color:var(--red)">No API key set</span>';
+    return;
+  }
   
   try {
     const contextInfo = matchingSentences.length > 0 
@@ -1566,6 +1593,7 @@ try {
     lessonNotesDrillNext,
     lessonNotesDrillPrev,
     lessonNotesDrillAll,
+    lessonNotesDrillBackground,
     renderRecordingsBrowser,
     recBrowserTranscribe,
     recBrowserDelete,
