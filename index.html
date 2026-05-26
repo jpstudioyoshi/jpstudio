@@ -601,10 +601,11 @@
 
     <!-- Hint toggle sits below card, outside the flip area -->
     <div style="text-align:center;margin:-8px 0 4px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
-      <button class="btn-ghost" id="vcHintToggle" onclick="vcToggleHint()">Hint</button>
-      <button class="btn-ghost" id="vcReadingToggle" onclick="toggleVcReading(event)">Reading</button>
-      <button class="btn-ghost" id="vcPitchToggle" onclick="vcTogglePitch()">Pitch</button>
-      <button class="btn-ghost" id="vcDirectionBtn" onclick="toggleVcDirection()" title="Switch between JP→EN and EN→JP">JP → EN</button>
+      <button class="btn-toggle" id="vcHintToggle" onclick="vcToggleHint()">Hint</button>
+      <button class="btn-toggle" id="vcReadingToggle" onclick="toggleVcReading(event)">Reading</button>
+      <button class="btn-toggle" id="vcPitchToggle" onclick="vcTogglePitch()">Pitch</button>
+      <button class="btn-group" id="vcDirectionBtn" onclick="toggleVcDirection()" title="Switch between JP→EN and EN→JP">JP → EN</button>
+      <button class="btn-action" id="vocabResetBtn" onclick="resetVocabDeck()">Reset deck</button>
     </div>
     <div id="vcHint" style="display:none;text-align:center;font-family:var(--ui);font-size:1rem;
          color:var(--teal);margin-bottom:8px;letter-spacing:0.05em"></div>
@@ -616,11 +617,8 @@
       <button class="btn-rating btn-rating-teal" onclick="markVocab('know')">Known</button>
       <button class="btn-nav" onclick="nextVocab()">Next</button>
     </div>
-    <div style="text-align:center;margin-top:8px;display:flex;gap:8px;justify-content:center;align-items:center">
+    <div style="text-align:center;margin-top:8px">
       <span id="vocabDeckStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)"></span>
-      <button class="btn-ghost" id="vocabResetBtn" onclick="resetVocabDeck()">
-        Reset deck
-      </button>
     </div>
 
     <hr style="border:none;border-top:1px solid var(--border);margin:24px 0 16px">
@@ -630,7 +628,7 @@
       <button class="btn-ghost" id="vocabListToggleBtn" onclick="toggleVocabList()">
         ▶ Show word list
       </button>
-      <button class="btn-ghost" id="vocabListPrintBtn" onclick="printVocabList()">🖨 Print</button>
+      <button class="btn-ghost" id="vocabListPrintBtn" onclick="printVocabList()" style="display:none">Print</button>
     </div>
     <div id="vocabList" style="display:none;max-height:320px;overflow-y:auto;border:1px solid var(--border);margin-bottom:20px"></div>
 
