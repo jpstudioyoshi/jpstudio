@@ -2755,3 +2755,6 @@
 
 .row-hover-teal:hover { background: rgba(48,213,200,0.05) !important; }
 .row-hover-gold:hover { background: rgba(255,214,10,0.05) !important; }
+
+.btn-copy { }
+.btn-copy:hover { background: var(--teal) !important; color: #1c1c1e !important; border-color: var(--teal) !important; }

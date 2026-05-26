@@ -2221,7 +2221,7 @@ function lessonNotesRenderReading() {
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
         <button class="qr-btn-sec ${LessonNotesState.lnFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
         <button id="lnSpeakBtn" class="qr-btn-sec" onclick="lessonNotesToggleSpeak()" title="Read aloud / Stop">🔊 Read</button>
-        <button class="qr-btn-sec" onclick="lessonNotesCopyStory()" title="Copy text without furigana">📋 Copy</button>
+        <button class="qr-btn-sec btn-copy" onclick="lessonNotesCopyStory()" title="Copy text without furigana">Copy</button>
         <button class="qr-btn-sec" onclick="lessonNotesSetView('stories')">← Stories</button>
         <span style="margin-left:auto;font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--ink)">${story.title}</span>
       </div>

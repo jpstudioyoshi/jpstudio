@@ -1235,7 +1235,7 @@
               <button type="button" class="wb-icon-btn" id="writingSpeechBtn" title="Speech input">🎙</button>
             </div>
             <div class="writing-btn-group">
-              <button class="writing-util-btn" onclick="wbCopyInput()" title="Copy text">⎘ Copy</button>
+              <button class="writing-util-btn btn-copy" onclick="wbCopyInput()" title="Copy text">Copy</button>
               <button class="writing-submit" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit →</button>
             </div>
           </div>
@@ -1303,7 +1303,7 @@
           <div class="trans-btn-row" id="transOutputBtnRow" style="display:none">
             <button class="btn-ghost" onclick="transSpeakOutput()">🔊 Hear</button>
             <button class="btn-ghost" id="transAddVocabBtn" onclick="transAddToVocab()">+ vocab</button>
-            <button class="btn-ghost" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">⎘ copy</button>
+            <button class="btn-ghost btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">Copy</button>
           </div>
         </div>
       </div>
@@ -1703,7 +1703,7 @@
                   <option value="4">4s</option>
                 </select>
                 <button class="listen-sm-btn" onclick="clearDictation()">Clear</button>
-                <button class="listen-sm-btn" onclick="copyDictation()">Copy</button>
+                <button class="listen-sm-btn btn-copy" onclick="copyDictation()">Copy</button>
               </div>
             </div>
             <textarea id="dictationTextAudio"
