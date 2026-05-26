@@ -38,49 +38,49 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 530,
+    "line": 532,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');"
   },
   {
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 897,
+    "line": 899,
     "desc": "const dir = path.join(app.getPath('userData'), 'lessons');"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 903,
+    "line": 905,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 913,
+    "line": 915,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1164,
+    "line": 1166,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1215,
+    "line": 1217,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1303,
+    "line": 1305,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
@@ -143,112 +143,112 @@
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 508,
+    "line": 509,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 524,
+    "line": 526,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 611,
+    "line": 613,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 662,
+    "line": 664,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 730,
+    "line": 732,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 787,
+    "line": 789,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 804,
+    "line": 806,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 812,
+    "line": 814,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 928,
+    "line": 930,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 992,
+    "line": 994,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1073,
+    "line": 1075,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1089,
+    "line": 1091,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1093,
+    "line": 1095,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1107,
+    "line": 1109,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1147,
+    "line": 1149,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1148,
+    "line": 1150,
     "desc": "db.run"
   },
   {
@@ -948,217 +948,217 @@
     "type": "function",
     "name": "renderLookupsTable",
     "file": "src/core-foundation.js",
-    "line": 716,
+    "line": 709,
     "desc": "const tbody    = document.getElementById('lookupsTableBody');"
   },
   {
     "type": "function",
     "name": "lookupDelete",
     "file": "src/core-foundation.js",
-    "line": 815,
+    "line": 808,
     "desc": "const tmp = document.createElement('div');"
   },
   {
     "type": "function",
     "name": "clearLookupCache",
     "file": "src/core-foundation.js",
-    "line": 827,
+    "line": 820,
     "desc": "if (!confirm('Clear all cached translations?')) return;"
   },
   {
     "type": "function",
     "name": "apiUsageLoad",
     "file": "src/core-foundation.js",
-    "line": 916,
+    "line": 909,
     "desc": "AppState.apiUsage — see declaration below"
   },
   {
     "type": "function",
     "name": "apiUsageSave",
     "file": "src/core-foundation.js",
-    "line": 923,
+    "line": 916,
     "desc": "Storage.set(STORAGE_KEYS.API_USAGE, JSON.stringify(AppState.apiUsage));"
   },
   {
     "type": "function",
     "name": "apiUsageTrack",
     "file": "src/core-foundation.js",
-    "line": 927,
+    "line": 920,
     "desc": "AppState.apiUsage.inputTokens += inputTokens;"
   },
   {
     "type": "function",
     "name": "apiUsageGetCost",
     "file": "src/core-foundation.js",
-    "line": 940,
+    "line": 933,
     "desc": "return (AppState.apiUsage.inputTokens * COST_PER_INPUT_TOKEN) + (AppState.apiUsage.outputTokens * CO"
   },
   {
     "type": "function",
     "name": "apiUsageReset",
     "file": "src/core-foundation.js",
-    "line": 944,
+    "line": 937,
     "desc": "if (confirm('Reset API usage tracking? This cannot be undone.')) {"
   },
   {
     "type": "function",
     "name": "recordError",
     "file": "src/core-foundation.js",
-    "line": 962,
+    "line": 955,
     "desc": "Writes one row to error_history with a full timestamp."
   },
   {
     "type": "function",
     "name": "getApiKey",
     "file": "src/core-foundation.js",
-    "line": 972,
+    "line": 965,
     "desc": "return Storage.getApiKey(); }"
   },
   {
     "type": "function",
     "name": "getOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 973,
+    "line": 966,
     "desc": "return Storage.getOpenAIKey(); }"
   },
   {
     "type": "function",
     "name": "claudeAPI",
     "file": "src/core-foundation.js",
-    "line": 976,
+    "line": 969,
     "desc": "const apiKey = getApiKey();"
   },
   {
     "type": "function",
     "name": "claudeText",
     "file": "src/core-foundation.js",
-    "line": 1012,
+    "line": 1005,
     "desc": "return data.content?.[0]?.text || '';"
   },
   {
     "type": "function",
     "name": "saveApiKey",
     "file": "src/core-foundation.js",
-    "line": 1016,
+    "line": 1009,
     "desc": "const val = document.getElementById('apikeyInput').value.trim();"
   },
   {
     "type": "function",
     "name": "saveOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 1030,
+    "line": 1023,
     "desc": "saveHFToken removed — diarization removed"
   },
   {
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1464,
+    "line": 1457,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer"
   },
   {
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1466,
+    "line": 1459,
     "desc": "const input = document.createElement('input');"
   },
   {
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1485,
+    "line": 1478,
     "desc": "Storage.clearAll();"
   },
   {
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1495,
+    "line": 1488,
     "desc": "STATE"
   },
   {
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1517,
+    "line": 1510,
     "desc": "Storage.setState(state); }"
   },
   {
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1520,
+    "line": 1513,
     "desc": "const today = new Date().toDateString();"
   },
   {
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1537,
+    "line": 1530,
     "desc": "API KEY BAR"
   },
   {
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1566,
+    "line": 1559,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1580,
+    "line": 1573,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1686,
+    "line": 1679,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1708,
+    "line": 1701,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1744,
+    "line": 1737,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1752,
+    "line": 1745,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1763,
+    "line": 1756,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1842,
+    "line": 1835,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1864,
+    "line": 1857,
     "desc": "const btns = document.querySelectorAll(`[data-btn-group=\"${group}\"]`);"
   },
   {
@@ -1172,14 +1172,14 @@
     "type": "storage",
     "name": "API_USAGE",
     "file": "src/core-foundation.js",
-    "line": 924,
+    "line": 917,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1615,
+    "line": 1608,
     "desc": "Storage.set"
   },
   {
@@ -3158,324 +3158,331 @@
   },
   {
     "type": "function",
+    "name": "vcTogglePitch",
+    "file": "src/core-vocab.js",
+    "line": 41,
+    "desc": "vcPitchVisible = !vcPitchVisible;"
+  },
+  {
+    "type": "function",
     "name": "startNewSession",
     "file": "src/core-vocab.js",
-    "line": 40,
+    "line": 48,
     "desc": "if (!_dataLoaded || !state.vocab.length) return;"
   },
   {
     "type": "function",
     "name": "getSessionDeck",
     "file": "src/core-vocab.js",
-    "line": 143,
+    "line": 151,
     "desc": "return vocabSession.filter(i => !_sessionKnown[i]);"
   },
   {
     "type": "function",
     "name": "markVocab",
     "file": "src/core-vocab.js",
-    "line": 149,
+    "line": 157,
     "desc": "if (!vocabSession.length) return;"
   },
   {
     "type": "function",
     "name": "renderVocab",
     "file": "src/core-vocab.js",
-    "line": 215,
+    "line": 223,
     "desc": "const vocabCardEl   = document.getElementById('vocabCard');"
   },
   {
     "type": "function",
     "name": "prevVocab",
     "file": "src/core-vocab.js",
-    "line": 332,
+    "line": 349,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "nextVocab",
     "file": "src/core-vocab.js",
-    "line": 339,
+    "line": 356,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "flipVocab",
     "file": "src/core-vocab.js",
-    "line": 347,
+    "line": 364,
     "desc": "vocabFlipped = !vocabFlipped;"
   },
   {
     "type": "function",
     "name": "toggleVcDirection",
     "file": "src/core-vocab.js",
-    "line": 352,
+    "line": 369,
     "desc": "vcDirection = vcDirection === 'jp-en' ? 'en-jp' : 'jp-en';"
   },
   {
     "type": "function",
     "name": "resetVocabDeck",
     "file": "src/core-vocab.js",
-    "line": 358,
+    "line": 375,
     "desc": "state.vocabProgress = {};"
   },
   {
     "type": "function",
     "name": "toggleVocabList",
     "file": "src/core-vocab.js",
-    "line": 367,
+    "line": 384,
     "desc": "const list = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "renderVocabList",
     "file": "src/core-vocab.js",
-    "line": 378,
+    "line": 395,
     "desc": "const container = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "deleteVocabCard",
     "file": "src/core-vocab.js",
-    "line": 413,
+    "line": 430,
     "desc": "state.vocab.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "printVocabList",
     "file": "src/core-vocab.js",
-    "line": 429,
+    "line": 446,
     "desc": "const cards = state.vocab;"
   },
   {
     "type": "function",
     "name": "vcFetch",
     "file": "src/core-vocab.js",
-    "line": 449,
+    "line": 466,
     "desc": "const category = document.getElementById('vcFetchCategory').value.trim();"
   },
   {
     "type": "function",
     "name": "vcFetchSelectAll",
     "file": "src/core-vocab.js",
-    "line": 509,
+    "line": 526,
     "desc": "document.querySelectorAll('.vc-fetch-check').forEach(el => el.checked = checked);"
   },
   {
     "type": "function",
     "name": "vcFetchAdd",
     "file": "src/core-vocab.js",
-    "line": 513,
+    "line": 530,
     "desc": "const words = window._vcFetchWords || [];"
   },
   {
     "type": "function",
     "name": "vcToggleHint",
     "file": "src/core-vocab.js",
-    "line": 549,
+    "line": 566,
     "desc": "const hint = document.getElementById('vcHint');"
   },
   {
     "type": "function",
     "name": "transAddToVocab",
     "file": "src/core-vocab.js",
-    "line": 558,
+    "line": 575,
     "desc": "const src = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "renderGrammar",
     "file": "src/core-vocab.js",
-    "line": 580,
+    "line": 597,
     "desc": "GRAMMAR"
   },
   {
     "type": "function",
     "name": "toggleGrammar",
     "file": "src/core-vocab.js",
-    "line": 597,
+    "line": 614,
     "desc": "const el = document.getElementById('ge' + i);"
   },
   {
     "type": "function",
     "name": "appendChatMsg",
     "file": "src/core-vocab.js",
-    "line": 606,
+    "line": 623,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "updateChatMsg",
     "file": "src/core-vocab.js",
-    "line": 643,
+    "line": 660,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "transSpeakOutput",
     "file": "src/core-vocab.js",
-    "line": 691,
+    "line": 708,
     "desc": "const inp = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "chatQuick",
     "file": "src/core-vocab.js",
-    "line": 701,
+    "line": 718,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "sendChat",
     "file": "src/core-vocab.js",
-    "line": 707,
+    "line": 724,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "startChatSpeech",
     "file": "src/core-vocab.js",
-    "line": 749,
+    "line": 766,
     "desc": "sttStart('chatInput', 'chatSpeechBtn', 'ja');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusFilter",
     "file": "src/core-vocab.js",
-    "line": 771,
+    "line": 788,
     "desc": "KanjiCorpusState — see above"
   },
   {
     "type": "function",
     "name": "kanjiCorpusSort",
     "file": "src/core-vocab.js",
-    "line": 780,
+    "line": 797,
     "desc": "KanjiCorpusState.sort = sort;"
   },
   {
     "type": "function",
     "name": "kanjiSetView",
     "file": "src/core-vocab.js",
-    "line": 791,
+    "line": 808,
     "desc": "KanjiCorpusState — see below"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRender",
     "file": "src/core-vocab.js",
-    "line": 802,
+    "line": 819,
     "desc": "const grid   = document.getElementById('kanjiCorpusGrid');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusShowDetail",
     "file": "src/core-vocab.js",
-    "line": 918,
+    "line": 935,
     "desc": "const detail = document.getElementById('kanjiCorpusDetail');"
   },
   {
     "type": "function",
     "name": "vcFilter",
     "file": "src/core-vocab.js",
-    "line": 993,
+    "line": 1010,
     "desc": "VocabCorpusState — see below"
   },
   {
     "type": "function",
     "name": "vcSort",
     "file": "src/core-vocab.js",
-    "line": 1000,
+    "line": 1017,
     "desc": "VocabCorpusState.sort = s;"
   },
   {
     "type": "function",
     "name": "vcLevels",
     "file": "src/core-vocab.js",
-    "line": 1007,
+    "line": 1024,
     "desc": "const levels = new Set();"
   },
   {
     "type": "function",
     "name": "vcRenderTargets",
     "file": "src/core-vocab.js",
-    "line": 1020,
+    "line": 1037,
     "desc": "Target words are now surfaced via the priority score in the Words drill."
   },
   {
     "type": "function",
     "name": "vcRenderTargetsInline",
     "file": "src/core-vocab.js",
-    "line": 1024,
+    "line": 1041,
     "desc": "const list = document.getElementById('vcTargetsList2');"
   },
   {
     "type": "function",
     "name": "vcDrillWord",
     "file": "src/core-vocab.js",
-    "line": 1030,
+    "line": 1047,
     "desc": "try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "vocabPriorityContext",
     "file": "src/core-vocab.js",
-    "line": 1040,
+    "line": 1057,
     "desc": "Returns a compact text block summarising vocabulary state for Claude."
   },
   {
     "type": "function",
     "name": "wordPriorityScore",
     "file": "src/core-vocab.js",
-    "line": 1142,
+    "line": 1159,
     "desc": "srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown."
   },
   {
     "type": "function",
     "name": "wordEnrichWithSRS",
     "file": "src/core-vocab.js",
-    "line": 1205,
+    "line": 1222,
     "desc": "Enrich a vcMergeEntry with its SRS data and priority score."
   },
   {
     "type": "function",
     "name": "vcBuildPriorityList",
     "file": "src/core-vocab.js",
-    "line": 1219,
+    "line": 1236,
     "desc": "Build a priority-sorted word list. Thin wrapper over vcBuildList that adds"
   },
   {
     "type": "function",
     "name": "vcBuildList",
     "file": "src/core-vocab.js",
-    "line": 1225,
+    "line": 1242,
     "desc": "const corpus = kanjiCorpusGet(); // personal encounter data keyed by word"
   },
   {
     "type": "function",
     "name": "vcMergeEntry",
     "file": "src/core-vocab.js",
-    "line": 1255,
+    "line": 1272,
     "desc": "const lookupCount   = cached?.count || 0;"
   },
   {
     "type": "function",
     "name": "vcRender",
     "file": "src/core-vocab.js",
-    "line": 1291,
+    "line": 1308,
     "desc": "const tbody  = document.getElementById('vcTableBody');"
   },
   {
     "type": "function",
     "name": "vcShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1366,
+    "line": 1383,
     "desc": "const detail = document.getElementById('vcDetail');"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-vocab.js",
-    "line": 463,
+    "line": 480,
     "desc": "Give me ${…} Japanese vocabulary words in the category: \"${…}\". Level: N5-N4 beg"
   },
   {

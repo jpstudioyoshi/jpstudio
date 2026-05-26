@@ -504,7 +504,8 @@ function createSchema() {
     )`);
     db.run('CREATE INDEX IF NOT EXISTS idx_pitch_kanji ON pitch_data(kanji)');
     db.run('CREATE INDEX IF NOT EXISTS idx_pitch_reading ON pitch_data(reading)');
-    db.run(`ALTER TABLE words ADD COLUMN pitch TEXT`);
+    const wc9 = (db.exec("PRAGMA table_info(words)")[0]?.values || []).map(r => r[1]);
+    if (!wc9.includes('pitch')) db.run('ALTER TABLE words ADD COLUMN pitch TEXT');
     db.run('UPDATE schema_version SET version = 9');
     console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
   }
@@ -520,7 +521,8 @@ function createSchema() {
     )`);
     db.run('CREATE INDEX IF NOT EXISTS idx_pitch_kanji ON pitch_data(kanji)');
     db.run('CREATE INDEX IF NOT EXISTS idx_pitch_reading ON pitch_data(reading)');
-    db.run(`ALTER TABLE words ADD COLUMN pitch TEXT`);
+    const wc9 = (db.exec("PRAGMA table_info(words)")[0]?.values || []).map(r => r[1]);
+    if (!wc9.includes('pitch')) db.run('ALTER TABLE words ADD COLUMN pitch TEXT');
     db.run('UPDATE schema_version SET version = 9');
     console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
   }

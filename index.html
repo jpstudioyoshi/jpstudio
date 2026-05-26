@@ -586,6 +586,7 @@
           <div class="vocab-front">
             <div class="vocab-jp" id="vcJp">—</div>
             <div class="vocab-reading" id="vcReading" style="display:none"></div>
+            <div class="vocab-pitch" id="vcPitch"></div>
             <div class="vocab-tap-hint">tap to reveal</div>
           </div>
           <div class="vocab-back">
@@ -600,15 +601,10 @@
 
     <!-- Hint toggle sits below card, outside the flip area -->
     <div style="text-align:center;margin:-8px 0 4px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
-      <button class="btn-ghost" id="vcHintToggle" onclick="vcToggleHint()">
-        ▸ Reading hint
-      </button>
-      <button class="btn-ghost" id="vcReadingToggle" onclick="toggleVcReading(event)">
-        Show reading
-      </button>
-      <button class="btn-ghost" id="vcDirectionBtn" onclick="toggleVcDirection()" title="Switch between JP→EN and EN→JP">
-        JP → EN
-      </button>
+      <button class="btn-ghost" id="vcHintToggle" onclick="vcToggleHint()">Hint</button>
+      <button class="btn-ghost" id="vcReadingToggle" onclick="toggleVcReading(event)">Reading</button>
+      <button class="btn-ghost" id="vcPitchToggle" onclick="vcTogglePitch()">Pitch</button>
+      <button class="btn-ghost" id="vcDirectionBtn" onclick="toggleVcDirection()" title="Switch between JP→EN and EN→JP">JP → EN</button>
     </div>
     <div id="vcHint" style="display:none;text-align:center;font-family:var(--ui);font-size:1rem;
          color:var(--teal);margin-bottom:8px;letter-spacing:0.05em"></div>

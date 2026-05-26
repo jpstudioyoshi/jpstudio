@@ -688,30 +688,23 @@ function renderPitchCurve(kana, pitchStr) {
   const moras = kana.match(/.[ァィゥェォャュョぁぃぅぇぉゃゅょ]?/g) || [];
   if (!moras.length) return '';
   const drops = String(pitchStr).split(',').map(Number);
-  const drop = drops[0]; // use first pattern
+  const drop = drops[0];
   const n = moras.length;
   const W = 28 + n * 22;
-  const H = 36;
-  const high = 8, low = 26;
-  // determine height of each mora: heiban(0)=low-start-then-high, else drop after mora[drop]
+  const H = 24;
+  const high = 4, low = 18;
   const heights = moras.map((_, i) => {
-    if (drop === 0) return i === 0 ? low : high; // heiban: low then high
-    if (drop === 1) return i === 0 ? high : low; // atamadaka: high then low
-    return i === 0 ? low : i < drop ? high : low; // nakadaka/odaka
+    if (drop === 0) return i === 0 ? low : high;
+    if (drop === 1) return i === 0 ? high : low;
+    return i === 0 ? low : i < drop ? high : low;
   });
-  const cx = i => 14 + i * 22;
-  let path = heights.map((h, i) => (i === 0 ? 'M' : 'L') + cx(i) + ',' + h).join(' ');
-  let dots = moras.map((m, i) => {
-    const isLH = i < n - 1 && heights[i] < heights[i+1];
-    const isHL = i < n - 1 && heights[i] > heights[i+1];
-    const isDrop = isHL; // mark drop point on the higher mora
-    return `<circle cx="${cx(i)}" cy="${heights[i]}" r="3.5" fill="${isDrop ? 'var(--gold)' : 'var(--teal)'}" />
-    <text x="${cx(i)}" y="${H}" font-size="10" text-anchor="middle" fill="var(--ink-light)">${m}</text>`;
+  const cx = function(i) { return 14 + i * 22; };
+  const path = heights.map(function(h, i) { return (i === 0 ? 'M' : 'L') + cx(i) + ',' + h; }).join(' ');
+  const dots = moras.map(function(m, i) {
+    const isDrop = i < n - 1 && heights[i] > heights[i + 1];
+    return '<circle cx="' + cx(i) + '" cy="' + heights[i] + '" r="3.5" fill="' + (isDrop ? 'var(--gold)' : 'var(--teal)') + '" />';
   }).join('');
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin:4px auto 0">
-    <path d="${path}" stroke="var(--teal)" stroke-width="1.5" fill="none" opacity="0.7"/>
-    ${dots}
-  </svg>`;
+  return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" style="display:block;margin:6px auto 0"><path d="' + path + '" stroke="var(--teal)" stroke-width="1.5" fill="none" opacity="0.7"/>' + dots + '</svg>';
 }
 function renderLookupsTable() {
   const tbody    = document.getElementById('lookupsTableBody');

@@ -37,6 +37,14 @@ function toggleVcReading(e) {
   if (btn) btn.textContent = vcReadingVisible ? 'Hide reading' : 'Show reading';
 }
 
+let vcPitchVisible = true;
+function vcTogglePitch() {
+  vcPitchVisible = !vcPitchVisible;
+  const el = document.getElementById('vcPitch');
+  const btn = document.getElementById('vcPitchToggle');
+  if (el) el.style.display = vcPitchVisible ? 'block' : 'none';
+  if (btn) btn.classList.toggle('btn-active', vcPitchVisible);
+}
 function startNewSession() {
   // Don't run before data is loaded — renderVocab will call us again once ready
   if (!_dataLoaded || !state.vocab.length) return;
@@ -310,9 +318,18 @@ function renderVocab() {
   const vcPitchEl = document.getElementById('vcPitch');
   if (vcPitchEl) {
     const kana = card.kana || card.reading || '';
-    const pitchStr = card.pitch != null ? card.pitch : (window.pitchAPI ? window.pitchAPI.lookup(card.jp, kana) : null);
-    vcPitchEl.innerHTML = pitchStr != null ? renderPitchCurve(kana, pitchStr) : '';
+    if (card.pitch != null) {
+      vcPitchEl.innerHTML = renderPitchCurve(kana, card.pitch);
+    } else if (window.pitchAPI && kana) {
+      vcPitchEl.innerHTML = '';
+      window.pitchAPI.lookup(card.jp, kana).then(function(pitchStr) {
+        if (pitchStr != null) vcPitchEl.innerHTML = renderPitchCurve(kana, pitchStr);
+      });
+    } else {
+      vcPitchEl.innerHTML = '';
+    }
   }
+
   vocabCardEl.classList.remove('flipped');
 
   const pos = deck.indexOf(vocabIdx);
