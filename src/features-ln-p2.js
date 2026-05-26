@@ -454,83 +454,18 @@ function lessonNotesRenderDrillCard() {
         <div style="${line1Style};${LessonNotesState.drillRevealed >= 1 ? '' : 'visibility:hidden'}">${answerLine1}</div>
         <div style="${line2Style};${LessonNotesState.drillRevealed >= 2 ? '' : 'visibility:hidden'}">${answerLine2}</div>
       </div>
-      <div id="lessonNotesDrillBackground" style="display:none;text-align:left;margin:12px 0;padding:12px;background:rgba(48,213,200,0.06);border:1px solid rgba(48,213,200,0.15);border-radius:6px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);line-height:1.6"></div>
       <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="lessonNotesDrillPrev()">← Prev</button>
-        <button onclick="lessonNotesDrillReveal()" style="padding:8px 20px;background:${btnActive?'none':'var(--gold)'};border:1px solid ${btnActive?'var(--border)':'var(--gold)'};border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:${btnActive?'var(--ink-light)':'#1c1c1e'};cursor:pointer">${btnLabel}</button>
-        <button class="btn-ghost" onclick="lessonNotesDrillNext()">Next →</button>
-        <button class="btn-ghost" onclick="lessonNotesHideCard()" title="Mark as learned and hide from drill">✓ Learned</button>
-        <button class="btn-ghost" onclick="lessonNotesDrillBackground()" title="Show context and background">📖 Background</button>
+        <button class="btn-rating ${btnActive?'btn-rating-teal':''}" onclick="lessonNotesDrillReveal()">${btnLabel}</button>
+        <button class="btn-nav" onclick="lessonNotesDrillNext()">Next</button>
+        <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()" title="Mark as learned and hide from drill">Learned</button>
+        <button class="btn-ghost" onclick="lessonNotesDrillBackground()" title="Show context and background">Background</button>
       </div>
     </div>
   `;
 }
 
 // LessonNotesState.hiddenWords — see declaration above
-
-async function lessonNotesDrillBackground() {
-  const bgEl = document.getElementById('lessonNotesDrillBackground');
-  if (!bgEl) return;
-  
-  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
-  if (!v) return;
-  
-  const word = v.word || '';
-  const reading = v.reading || '';
-  const meaning = v.meaning || v.en || '';
-  
-  // Find sentences containing this word from the lesson content
-  const docContent = LessonNotesState.docContent || [];
-  const matchingSentences = docContent.filter(line => 
-    line && typeof line === 'string' && line.includes(word)
-  ).slice(0, 3); // Max 3 sentences
-  
-  bgEl.style.display = 'block';
-  bgEl.innerHTML = '<span style="color:var(--ink-light)">Loading background...</span>';
-  
-  const apiKey = _fy_getApiKey();
-  if (!apiKey) {
-    bgEl.innerHTML = '<span style="color:var(--red)">No API key set</span>';
-    return;
-  }
-  
-  try {
-    const contextInfo = matchingSentences.length > 0 
-      ? `\n\nSentences from lesson where this word appears:\n${matchingSentences.map(s => `• ${s}`).join('\n')}`
-      : '';
-    
-    const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 400,
-        messages: [{ role: 'user', content: `Give brief background on this Japanese word for a learner:
-
-Word: ${word}
-Reading: ${reading}
-Meaning: ${meaning}${contextInfo}
-
-Provide:
-1. Any kanji breakdown (if applicable) - what each kanji means
-2. Common usage notes or nuances
-3. Related words or expressions (1-2)
-${matchingSentences.length > 0 ? '4. Brief comment on how it\'s used in the example sentences' : ''}
-
-Keep it concise and helpful. Use simple formatting.` }]
-    ,
-      track: 'lesson'
-    });
-    
-    const text = (data.content?.[0]?.text || 'No response').trim();
-    
-    let html = '';
-    if (matchingSentences.length > 0) {
-      html += `<div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)"><strong style="color:var(--gold)">From lesson:</strong><br>${matchingSentences.map(s => `<span style="color:var(--ink-light)">「${s}」</span>`).join('<br>')}</div>`;
-    }
-    html += text.replace(/\n/g, '<br>');
-    bgEl.innerHTML = html;
-  } catch (e) {
-    bgEl.innerHTML = '<span style="color:var(--red)">Error loading background</span>';
-  }
-}
 
 const LEARNED_WORDS_KEY = 'lessonNotesLearnedWords';
 
@@ -1593,7 +1528,6 @@ try {
     lessonNotesDrillNext,
     lessonNotesDrillPrev,
     lessonNotesDrillAll,
-    lessonNotesDrillBackground,
     renderRecordingsBrowser,
     recBrowserTranscribe,
     recBrowserDelete,
