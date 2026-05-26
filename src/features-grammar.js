@@ -360,7 +360,7 @@ const GramSentState = {
 // ── History ────────────────────────────────────────────
 
 function gramSentHistoryLoad() {
-  try { return JSON.parse(localStorage.getItem(GRAM_SENT_HISTORY_KEY) || '[]'); }
+  try { return Storage.getJSON(GRAM_SENT_HISTORY_KEY, []); }
   catch { return []; }
 }
 
@@ -368,7 +368,7 @@ function gramSentHistorySave(target) {
   if (!target) return;
   const hist = gramSentHistoryLoad().filter(h => h !== target);
   hist.unshift(target);
-  localStorage.setItem(GRAM_SENT_HISTORY_KEY, JSON.stringify(hist.slice(0, GRAM_SENT_MAX_HISTORY)));
+  Storage.setJSON(GRAM_SENT_HISTORY_KEY, hist.slice(0, GRAM_SENT_MAX_HISTORY));
 }
 
 function gramSentPopulateHistory() {

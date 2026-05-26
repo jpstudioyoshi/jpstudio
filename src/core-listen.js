@@ -1792,16 +1792,16 @@ const VOCAB_BM_KEY = 'listenVocabBookmarks';
 
 function getVocabBookmarks(trackName) {
   try {
-    const all = JSON.parse(localStorage.getItem(VOCAB_BM_KEY) || '{}');
+    const all = Storage.getJSON(VOCAB_BM_KEY, {});
     return all[trackName] || [];
   } catch { return []; }
 }
 
 function saveVocabBookmarks(trackName, bms) {
   try {
-    const all = JSON.parse(localStorage.getItem(VOCAB_BM_KEY) || '{}');
+    const all = Storage.getJSON(VOCAB_BM_KEY, {});
     all[trackName] = bms;
-    localStorage.setItem(VOCAB_BM_KEY, JSON.stringify(all));
+    Storage.setJSON(VOCAB_BM_KEY, all);
   } catch {}
 }
 
