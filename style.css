@@ -1152,6 +1152,11 @@
     background: rgba(48,213,200,0.08);
     border-bottom-color: var(--teal);
   }
+  .feedback-panel-header .btn-destructive:hover {
+    background: var(--red) !important;
+    border-color: var(--red) !important;
+    color: #1c1c1e !important;
+  }
   .feedback-panel-header:active,
   .feedback-panel-header.checking {
     background: rgba(48,213,200,0.45);
@@ -2762,3 +2767,19 @@
 .btn-action { color: var(--ink) !important; border-radius: 5px !important; border: 1px solid rgba(255,255,255,0.6) !important; padding: 5px 12px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; background: none; transition: all 0.15s; }
 .btn-action:hover { background: var(--teal) !important; color: #1c1c1e !important; border-color: var(--teal) !important; }
 .btn-action:disabled { opacity: 0.4; cursor: default; }
+
+.btn-toggle { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink-light); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.btn-toggle:hover { border-color: var(--teal); color: var(--teal); }
+.btn-toggle.toggle-on { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.1); }
+
+.btn-group { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink-light); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.btn-group:hover { border-color: var(--ink); color: var(--ink); }
+.btn-group.btn-active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.1); font-weight: 600; }
+.btn-group.btn-active-gold { border-color: var(--gold); color: var(--gold); background: rgba(255,214,10,0.1); font-weight: 600; }
+
+.btn-nav { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink-light); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.btn-nav:hover { border-color: var(--ink); color: var(--ink); }
+.btn-nav:disabled { opacity: 0.3; cursor: default; }
+
+.btn-destructive { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.btn-destructive:hover { background: var(--red); color: #1c1c1e; border-color: var(--red); }
