@@ -824,8 +824,9 @@ Text: ${kana}` }]
     try {
       candidates = JSON.parse(raw.replace(/```json|```/g,'').trim());
     } catch(e) {
-      // Fallback: only use if it looks like Japanese, not raw prose
-      candidates = /^[\u3000-\u9fff\uff00-\uffef]+/.test(raw.trim()) ? [raw] : [];
+      // Try extracting array from anywhere in the response
+      const m = raw.match(/\[.*?\]/s);
+      try { candidates = m ? JSON.parse(m[0]) : []; } catch(e2) { candidates = []; }
     }
     if (candidates && candidates.length) {
       kanjiPickerShow(candidates, el, btn);

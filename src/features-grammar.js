@@ -652,10 +652,10 @@ async function gramSentCheck() {
     fbCol.innerHTML = `<div style="margin-bottom:8px;font-weight:500;color:${correct ? 'var(--teal)' : 'var(--red)'}">${correct ? '✓ Correct' : '✗ Incorrect'}</div>` + feedbackHtml;
   }
 
-  // Inline feedback in card
+  // Inline feedback in card — minimal, full detail is in right column
   const cardFb = document.getElementById('gramSentCardFeedback');
   if (cardFb) {
-    cardFb.innerHTML = feedbackHtml;
+    cardFb.innerHTML = correct ? '<span style="color:var(--teal)">✓</span>' : `<div class="gd-correct-ans">→ ${s.jp}</div>`;
     cardFb.className = 'gd-feedback show ' + (correct ? 'ok' : 'bad');
   }
 
