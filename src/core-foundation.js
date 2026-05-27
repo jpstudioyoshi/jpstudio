@@ -1658,8 +1658,9 @@ function showPanel(id) {
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
   if (id === 'yoshi') yoshiRender();
   if (id === 'lessonnotes') {
-    const _lnSavedId = (App.Storage || window.Storage)?.get('lnLastSessionId');
+    const _lnSavedId = localStorage.getItem('lnLastSessionId');
     const _lnRestore = () => {
+      console.log('[LN restore] savedId:', _lnSavedId);
       if (_lnSavedId) {
         const _sessions = (App.lnGetSessions || window.lnGetSessions)?.();
         if (_sessions) {
