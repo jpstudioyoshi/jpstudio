@@ -1658,6 +1658,11 @@ function showPanel(id) {
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
   if (id === 'yoshi') yoshiRender();
   if (id === 'lessonnotes') {
+    // Restore last selected session
+    const _lnSaved = (App.Storage || window.Storage)?.get('lnLastIdx');
+    if (_lnSaved !== null && _lnSaved !== '' && typeof lnLoadSession === 'function') {
+      lnLoadSession(parseInt(_lnSaved, 10));
+    }
     // Load sessions first, then render — ensures recordings list is populated
     if (typeof Orchestrator !== 'undefined') {
       Orchestrator.loadSessions().then(() => lessonNotesRenderPanel());

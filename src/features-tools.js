@@ -402,6 +402,7 @@ function lnNewSession() {
 
 function lnLoadSession(idx) {
   _lnCurrentIdx = idx >= 0 ? idx : null;
+  (App.Storage || window.Storage)?.set('lnLastIdx', _lnCurrentIdx !== null ? String(_lnCurrentIdx) : '');
   lessonNotesRenderPanel();
 }
 
