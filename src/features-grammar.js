@@ -452,69 +452,80 @@ async function gramSentPracticePattern(pattern) {
   gramSentPopulateHistory();
 }
 
+async function _gramSentGenerateOne(target, level, theme, avoidJp) {
+  const _vpc = (App.vocabPriorityContext || window.vocabPriorityContext);
+  const vocabCtx = _vpc ? _vpc() : '';
+  const vocabNote = vocabCtx ? `Where natural, prefer vocabulary from this learner profile — do not force it:\n${vocabCtx}` : '';
+  const avoidNote = avoidJp && avoidJp.length ? `Avoid repeating these sentences: ${avoidJp.join(' / ')}` : '';
+  const themeNote = theme ? `Set the sentence in the context of: ${theme}.` : '';
+  const prompt = `Generate 1 Japanese sentence for a ${level} learner practising: "${target}".\n${themeNote}\n${vocabNote}\n${avoidNote}\nThe sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).\nReply ONLY with a JSON object, no markdown:\n{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}`;
+  const data = await claudeAPI({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 400,
+    messages: [{ role: 'user', content: prompt }],
+    track: 'grammar',
+  });
+  const text = data.content?.[0]?.text || '{}';
+  return JSON.parse(text.replace(/```json|```/g, '').trim());
+}
+
+function _gramSentAvoidList() {
+  const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
+  const recent = sessions.filter(s => s.target === GramSentState.target).slice(-3);
+  const pastJp = recent.flatMap(s => (s.sentences || []).map(x => x.jp)).filter(Boolean).slice(-10);
+  const currentJp = GramSentState.sentences.map(s => s.jp).filter(Boolean);
+  return [...pastJp, ...currentJp];
+}
+
+async function _gramSentPrefetch() {
+  if (GramSentState.generating) return;
+  if (GramSentState.sentences.length >= GRAM_SENT_TOTAL) return;
+  GramSentState.generating = true;
+  try {
+    const level = document.getElementById('gramSentLevel')?.value || 'N4';
+    const theme = document.getElementById('gramSentTheme')?.value?.trim() || '';
+    const s = await _gramSentGenerateOne(GramSentState.target, level, theme, _gramSentAvoidList());
+    GramSentState.nextSentence = s;
+  } catch(e) {
+    console.warn('[gramSent] prefetch failed:', e.message);
+    GramSentState.nextSentence = null;
+  }
+  GramSentState.generating = false;
+}
+
 async function gramSentGenerate() {
   const area = document.getElementById('gramSentDrillArea');
   if (!area) return;
-
   const target = document.getElementById('gramSentInput')?.value?.trim();
   if (!target) {
     area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:0.85rem">⚠ Enter a grammar point first.</div>';
     return;
   }
-
   const apiKey = getApiKey();
   if (!apiKey) {
     area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:0.85rem">⚠ No API key — open ⚙ Settings and save your Anthropic key.</div>';
     return;
   }
-
   const level = document.getElementById('gramSentLevel')?.value || 'N4';
-  const count = document.querySelector('input[name=gramSentCount]:checked')?.value || '5';
   const theme = document.getElementById('gramSentTheme')?.value?.trim() || '';
-
   const btn = document.getElementById('gramSentCreateBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
 
-  area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating ' + count + ' sentences…</div>';
 
-  const themeNote = theme ? `Set sentences in the context of: ${theme}.` : '';
-  // Vocab priority context
-  const _vpc = (App.vocabPriorityContext || window.vocabPriorityContext);
-  const vocabCtx = _vpc ? _vpc() : '';
-  const vocabNote = vocabCtx ? `Where natural, prefer vocabulary from this learner profile — do not force it, but use these words when they fit:\n${vocabCtx}` : '';
-  // Variety — avoid repeating recent sentences for same target
-  const _sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
-  const _recent = _sessions.filter(s => s.target === target).slice(-3);
-  const _recentJp = _recent.flatMap(s => (s.sentences || []).map(x => x.jp)).filter(Boolean).slice(-10);
-  const varietyNote = _recentJp.length ? `Avoid repeating these sentences from recent sessions: ${_recentJp.join(' / ')}` : '';
-  const prompt = `Generate ${count} Japanese sentences for a ${level} learner practising: "${target}".
-${themeNote}
-${vocabNote}
-${varietyNote}
-Each sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).
-Reply ONLY with a JSON array, no markdown:
-[{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}]`;
-
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+  area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating…</div>';
   try {
-    const data = await claudeAPI({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-      track: 'grammar',
-    });
-    const text  = data.content?.[0]?.text || '[]';
-    const clean = text.replace(/```json|```/g, '').trim();
-    const sentences = JSON.parse(clean);
-    if (!sentences.length) throw new Error('No sentences returned');
-
-    GramSentState.sentences = sentences;
-    GramSentState.target    = target;
-    GramSentState.idx       = 0;
-    GramSentState.ok        = 0;
-    GramSentState.miss      = 0;
-    GramSentState.results   = new Array(sentences.length).fill(null);
-    GramSentState.checked   = false;
-
+    const s1 = await _gramSentGenerateOne(target, level, theme, _gramSentAvoidList());
+    if (!s1 || !s1.jp) throw new Error('No sentence returned');
+    GramSentState.sentences  = [s1];
+    GramSentState.target     = target;
+    GramSentState.idx        = 0;
+    GramSentState.ok         = 0;
+    GramSentState.miss       = 0;
+    GramSentState.results    = [null];
+    GramSentState.checked    = false;
+    GramSentState.nextSentence = null;
+    GramSentState.generating = false;
     gramSentHistorySave(target);
     gramSentPopulateHistory();
     gramSentRenderCard();
@@ -576,6 +587,7 @@ function gramSentRenderCard() {
   }
 
   GramSentState.checked = false;
+  if (GramSentState.sentences.length < GRAM_SENT_TOTAL) _gramSentPrefetch();
 
   // Update persistent feedback panel
   const fb = document.getElementById('gramSentFeedback');
@@ -664,12 +676,29 @@ async function gramSentCheck() {
   if (dots[GramSentState.idx]) dots[GramSentState.idx].className = 'gd-dot ' + (correct ? 'ok' : 'miss');
 }
 
-function gramSentAdvance() {
+async function gramSentAdvance() {
   GramSentState.idx++;
   GramSentState.checked = false;
-  // Reset hint panel
   const hintArea = document.getElementById('gramSentHintArea');
   if (hintArea) hintArea.style.display = 'none';
+  // If we need a new sentence and one is ready, use it
+  if (GramSentState.idx >= GramSentState.sentences.length && GramSentState.idx < GRAM_SENT_TOTAL) {
+    if (GramSentState.nextSentence) {
+      GramSentState.sentences.push(GramSentState.nextSentence);
+      GramSentState.results.push(null);
+      GramSentState.nextSentence = null;
+    } else {
+      // Not ready yet — show loading and wait
+      const area = document.getElementById('gramSentDrillArea');
+      if (area) area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating next sentence…</div>';
+      while (GramSentState.generating) await new Promise(r => setTimeout(r, 200));
+      if (GramSentState.nextSentence) {
+        GramSentState.sentences.push(GramSentState.nextSentence);
+        GramSentState.results.push(null);
+        GramSentState.nextSentence = null;
+      }
+    }
+  }
   gramSentRenderCard();
 }
 
