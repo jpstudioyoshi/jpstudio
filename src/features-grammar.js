@@ -681,6 +681,10 @@ function gramSentFeedbackClick() {
 function gramSentRenderComplete() {
   const area = document.getElementById('gramSentDrillArea');
   if (!area) return;
+  const attempted = GramSentState.results.filter(r => r !== null).length;
+  if (attempted >= 5) {
+    (App.drillLastCompletedWrite || window.drillLastCompletedWrite)?.('gramSent', GramSentState.target);
+  }
   const pct = Math.round(GramSentState.ok / GramSentState.sentences.length * 100);
   const items = GramSentState.sentences.map((s, i) => {
     const r = GramSentState.results[i] || { correct: false, userAnswer: '' };

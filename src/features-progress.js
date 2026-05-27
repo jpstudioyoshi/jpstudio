@@ -407,14 +407,14 @@ function renderFourStrandRecency() {
     ]},
     { label: 'STUDY', items: [
       { label: 'Vocabulary',   key: '_vocab',    panel: 'words'     },
-      { label: 'Grammar',      key: 'gramnotes', panel: 'gramnotes' },
+      { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
       { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
       { label: 'Kana',         key: 'kana',      panel: 'kana'      },
       { label: 'Questions',    key: 'chat',      panel: 'dashboard' },
     ]},
     { label: 'FLUENCY', items: [
       { label: 'Speaking',     key: 'speaking',  panel: 'voice'     },
-      { label: 'Grammar',      key: 'gramnotes', panel: 'gramnotes' },
+      { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
       { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
       { label: 'Vocabulary',   key: '_vocab',    panel: 'words'     },
     ]},
