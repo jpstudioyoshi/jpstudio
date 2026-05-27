@@ -884,7 +884,7 @@ function renderCounterMastery() {
   }
 
   let html = `<div style="overflow-x:auto">
-    <table style="border-collapse:collapse;width:100%;font-family:var(--ui);font-size:0.75rem">
+    <table style="border-collapse:collapse;font-family:var(--ui);font-size:0.7rem">
       <thead><tr>
         <th style="text-align:left;padding:4px 8px 4px 0;color:var(--ink-light);font-weight:500;min-width:52px"></th>
         ${NUMS.map(n => `<th style="text-align:center;padding:2px 2px;color:var(--ink-light);font-weight:400;min-width:28px">${n}</th>`).join('')}
@@ -902,13 +902,13 @@ function renderCounterMastery() {
     const cells = NUMS.map(n => {
       const entry = cmData[`${key}-${n}`];
 
-      if (!entry) return `<td style="text-align:center;padding:2px 3px"><div style="width:24px;height:20px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.3"></div></td>`;
+      if (!entry) return `<td style="text-align:center;padding:2px 3px"><div style="width:32px;height:22px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.3"></div></td>`;
 
       const hist      = entry.history || [];
       const accResult = _accuracyFromHistory(hist, _masteryView, entry);
 
       if (accResult === null) {
-        return `<td style="text-align:center;padding:2px 3px"><div style="width:24px;height:20px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.4" title="${key}-${n}: no data"></div></td>`;
+        return `<td style="text-align:center;padding:2px 3px"><div style="width:32px;height:22px;border-radius:3px;background:var(--paper-dark);margin:0 auto;opacity:0.4" title="${key}-${n}: no data"></div></td>`;
       }
 
       const acc      = accResult.pct;
@@ -926,7 +926,7 @@ function renderCounterMastery() {
       const title = `${key}-${n}: ${acc}%${fallback ? ' (all time)' : ''} (${usedEntries.filter(h=>h.correct).length}/${usedEntries.length})`;
 
       return `<td style="text-align:center;padding:2px 3px" title="${title}">
-        <div style="width:24px;height:20px;border-radius:3px;background:${color};margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#000;font-weight:600;opacity:${fallback ? '0.6' : '1'}">${acc}%</div>
+        <div style="width:32px;height:22px;border-radius:3px;background:${color};margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#000;font-weight:600;opacity:${fallback ? '0.6' : '1'}">${acc}%</div>
       </td>`;
     });
 
