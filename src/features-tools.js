@@ -402,7 +402,8 @@ function lnNewSession() {
 
 function lnLoadSession(idx) {
   _lnCurrentIdx = idx >= 0 ? idx : null;
-  (App.Storage || window.Storage)?.set('lnLastIdx', _lnCurrentIdx !== null ? String(_lnCurrentIdx) : '');
+  const _lnSess = lnGetSessions()[_lnCurrentIdx];
+  (App.Storage || window.Storage)?.set('lnLastSessionId', _lnSess ? String(_lnSess.id) : '');
   lessonNotesRenderPanel();
 }
 

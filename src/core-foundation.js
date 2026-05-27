@@ -1658,17 +1658,22 @@ function showPanel(id) {
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
   if (id === 'yoshi') yoshiRender();
   if (id === 'lessonnotes') {
-    const _lnSaved = (App.Storage || window.Storage)?.get('lnLastIdx');
-    const _lnRestoreIdx = (_lnSaved !== null && _lnSaved !== '') ? parseInt(_lnSaved, 10) : null;
-    // Load sessions first, then restore idx and render
-    if (typeof Orchestrator !== 'undefined') {
-      Orchestrator.loadSessions().then(() => {
-        if (_lnRestoreIdx !== null && typeof lnLoadSession === 'function') lnLoadSession(_lnRestoreIdx);
-        lessonNotesRenderPanel();
-      });
-    } else {
-      if (_lnRestoreIdx !== null && typeof lnLoadSession === 'function') lnLoadSession(_lnRestoreIdx);
+    const _lnSavedId = (App.Storage || window.Storage)?.get('lnLastSessionId');
+    const _lnRestore = () => {
+      if (_lnSavedId) {
+        const _sessions = (App.lnGetSessions || window.lnGetSessions)?.();
+        if (_sessions) {
+          const _idx = _sessions.findIndex(s => String(s.id) === _lnSavedId);
+          if (_idx >= 0 && typeof lnLoadSession === 'function') { lnLoadSession(_idx); return; }
+        }
+      }
       lessonNotesRenderPanel();
+    };
+    // Load sessions first, then restore and render
+    if (typeof Orchestrator !== 'undefined') {
+      Orchestrator.loadSessions().then(_lnRestore);
+    } else {
+      _lnRestore();
     }
   }
   // Auto-activate fullscreen for Watch panel
