@@ -478,8 +478,19 @@ async function gramSentGenerate() {
   area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating ' + count + ' sentences…</div>';
 
   const themeNote = theme ? `Set sentences in the context of: ${theme}.` : '';
+  // Vocab priority context
+  const _vpc = (App.vocabPriorityContext || window.vocabPriorityContext);
+  const vocabCtx = _vpc ? _vpc() : '';
+  const vocabNote = vocabCtx ? `Where natural, prefer vocabulary from this learner profile — do not force it, but use these words when they fit:\n${vocabCtx}` : '';
+  // Variety — avoid repeating recent sentences for same target
+  const _sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
+  const _recent = _sessions.filter(s => s.target === target).slice(-3);
+  const _recentJp = _recent.flatMap(s => (s.sentences || []).map(x => x.jp)).filter(Boolean).slice(-10);
+  const varietyNote = _recentJp.length ? `Avoid repeating these sentences from recent sessions: ${_recentJp.join(' / ')}` : '';
   const prompt = `Generate ${count} Japanese sentences for a ${level} learner practising: "${target}".
 ${themeNote}
+${vocabNote}
+${varietyNote}
 Each sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).
 Reply ONLY with a JSON array, no markdown:
 [{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}]`;
@@ -716,6 +727,7 @@ async function gramSentAnalyseErrors() {
       target: GramSentState.target,
       total: GramSentState.sentences.length,
       ok: GramSentState.ok,
+      sentences: GramSentState.sentences,
       errors,
     });
     if (sessions.length > 200) sessions.splice(0, sessions.length - 200);
