@@ -344,6 +344,7 @@ function gdRenderComplete() {
 
 const GRAM_SENT_HISTORY_KEY = 'gramSentHistory';
 const GRAM_SENT_MAX_HISTORY = 20;
+const GRAM_SENT_TOTAL = 5;
 
 // ── State ──────────────────────────────────────────────
 const GramSentState = {
