@@ -678,11 +678,59 @@ function gramSentFeedbackClick() {
 
 // ── Complete screen ────────────────────────────────────
 
+// ── Sentence session error analysis ───────────────────────────────────────
+async function gramSentAnalyseErrors() {
+  const wrong = GramSentState.sentences
+    .map((s, i) => ({ s, r: GramSentState.results[i] }))
+    .filter(x => x.r && !x.r.correct && x.r.userAnswer);
+  if (!wrong.length) return;
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
+  if (!apiKey) return;
+  const examples = wrong.map(x =>
+    `EN: "${x.s.en}" | Correct: "${x.s.jp}" | Student wrote: "${x.r.userAnswer}"`
+  ).join('\n');
+  try {
+    const data = await (App.claudeAPI || window.claudeAPI)({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 800,
+      messages: [{ role: 'user', content:
+        `Grammar target: "${GramSentState.target}"\nAnalyse these Japanese learner errors and classify each.\n${examples}\n` +
+        `Reply ONLY with a JSON array, no markdown:\n` +
+        `[{"errorType":"particle|verb_form|word_order|missing_element|vocabulary|other","pattern":"short label","input":"student answer","corrected":"correct Japanese"}]`
+      }],
+      track: 'grammar',
+    });
+    const text = data.content?.[0]?.text || '[]';
+    const errors = JSON.parse(text.replace(/\`\`\`json|\`\`\`/g, '').trim());
+    // Route particle errors into existing tracker
+    const wAdd = App.writingErrorsAdd || window.writingErrorsAdd;
+    for (const e of errors) {
+      if (e.errorType === 'particle' && wAdd) {
+        wAdd(e.input, e.corrected, 'particle', e.pattern);
+      }
+    }
+    // Store full session record
+    const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
+    sessions.push({
+      date: new Date().toISOString().slice(0, 10),
+      target: GramSentState.target,
+      total: GramSentState.sentences.length,
+      ok: GramSentState.ok,
+      errors,
+    });
+    if (sessions.length > 200) sessions.splice(0, sessions.length - 200);
+    (App.Storage || window.Storage).setJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, sessions);
+  } catch(e) {
+    console.warn('[gramSent] error analysis failed:', e.message);
+  }
+}
+
 function gramSentRenderComplete() {
   const area = document.getElementById('gramSentDrillArea');
   if (!area) return;
   const attempted = GramSentState.results.filter(r => r !== null).length;
   if (attempted >= 5) {
+    gramSentAnalyseErrors();
     (App.drillLastCompletedWrite || window.drillLastCompletedWrite)?.('gramSent', GramSentState.target);
   }
   const pct = Math.round(GramSentState.ok / GramSentState.sentences.length * 100);
