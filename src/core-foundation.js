@@ -1658,15 +1658,16 @@ function showPanel(id) {
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
   if (id === 'yoshi') yoshiRender();
   if (id === 'lessonnotes') {
-    // Restore last selected session
     const _lnSaved = (App.Storage || window.Storage)?.get('lnLastIdx');
-    if (_lnSaved !== null && _lnSaved !== '' && typeof lnLoadSession === 'function') {
-      lnLoadSession(parseInt(_lnSaved, 10));
-    }
-    // Load sessions first, then render — ensures recordings list is populated
+    const _lnRestoreIdx = (_lnSaved !== null && _lnSaved !== '') ? parseInt(_lnSaved, 10) : null;
+    // Load sessions first, then restore idx and render
     if (typeof Orchestrator !== 'undefined') {
-      Orchestrator.loadSessions().then(() => lessonNotesRenderPanel());
+      Orchestrator.loadSessions().then(() => {
+        if (_lnRestoreIdx !== null && typeof lnLoadSession === 'function') lnLoadSession(_lnRestoreIdx);
+        lessonNotesRenderPanel();
+      });
     } else {
+      if (_lnRestoreIdx !== null && typeof lnLoadSession === 'function') lnLoadSession(_lnRestoreIdx);
       lessonNotesRenderPanel();
     }
   }
