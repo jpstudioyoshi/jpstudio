@@ -27,7 +27,6 @@ function yoshiParseWhatsapp(raw) {
 // ── ヨシ Panel — Unified lesson session system ────────────────────────────────
 
 const IMPORTED_DOC_SESSIONS_PANEL_KEY = 'importedDocSessions';
-let _lnCurrentIdx = null;
 let _lnExtracting = false;
 
 function lnGetSessions() {
@@ -41,10 +40,8 @@ function lnSaveSessions(arr) {
 }
 function lnCurrentSession() {
   const sessions = lnGetSessions();
-  if (_lnCurrentIdx !== null && sessions[_lnCurrentIdx]) return sessions[_lnCurrentIdx];
-  const LNS = window.LessonNotesState || (App && App.LessonNotesState);
-  if (LNS && LNS.currentIdx !== null && sessions[LNS.currentIdx]) return sessions[LNS.currentIdx];
-  return null;
+  const idx = LessonNotesState.currentIdx;
+  return (idx !== null && sessions[idx]) ? sessions[idx] : null;
 }
 
 
@@ -396,24 +393,21 @@ async function lnDeleteRecording(id) {
 
 
 function lnNewSession() {
-  _lnCurrentIdx = null;
-  lessonNotesRenderPanel();
+  lessonNotesLoadSession(-1);
 }
 
 function lnLoadSession(idx) {
-  _lnCurrentIdx = idx >= 0 ? idx : null;
-  const _lnSess = lnGetSessions()[_lnCurrentIdx];
-  try { localStorage.setItem('lnLastSessionId', _lnSess ? String(_lnSess.id) : ''); } catch(e) {}
-  lessonNotesRenderPanel();
+  lessonNotesLoadSession(idx >= 0 ? idx : -1);
 }
 
 function lnDeleteSession() {
   if (!confirm('Delete this lesson session?')) return;
-  var sessions = lnGetSessions();
-  sessions.splice(_lnCurrentIdx, 1);
+  const sessions = lnGetSessions();
+  const idx = LessonNotesState.currentIdx;
+  if (idx === null) return;
+  sessions.splice(idx, 1);
   lnSaveSessions(sessions);
-  _lnCurrentIdx = sessions.length ? 0 : null;
-  lessonNotesRenderPanel();
+  lessonNotesLoadSession(sessions.length ? 0 : -1);
 }
 
 async function lnCreateFromPaste() {
@@ -496,7 +490,7 @@ async function lnCreateFromPaste() {
     whatsapp: isWhatsApp ? messages : [],
   });
   lnSaveSessions(sessions);
-  _lnCurrentIdx = 0;
+  LessonNotesState.currentIdx = 0;
   _lnExtracting = false;
   lessonNotesRenderPanel();
 }
