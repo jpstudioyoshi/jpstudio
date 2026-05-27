@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-27 (session 9 — grammar sentences, progress panel, session restore)
+Last updated: 2026-05-27 (session 10 — lesson notes refactor, session restore, storage migration)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -96,7 +96,8 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 - vocabBookmarks → Storage
 - qrSession → Storage
 - breakdownCache → Storage
-- GRAM_SENT_SESSIONS → Storage (new, this session)
+- GRAM_SENT_SESSIONS → Storage
+- YOSHI_KEY (jpStudioYoshiSessions) → Storage as YOSHI_SESSIONS ✅ (this session)
 
 ### Still on localStorage (migrate next)
 - voice profile (features-voice.js) — VOICE_PROFILE_KEY
@@ -104,96 +105,60 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 - video watch time (features-video.js) — VT_WATCH_KEY
 - resources (features-video.js) — RESOURCES_KEY
 - learned words (features-ln-p2.js) — LEARNED_WORDS_KEY
-- features-yoshi.js — YOSHI_KEY
 
 ### Intentionally localStorage (do not migrate)
 - API keys, TTS voice, furigana setting, default level, print settings
 - lnLastSessionId (device preference — intentionally localStorage)
 
-## Progress Page — This Session's Changes
-- Four Strands: Grammar tile → Sentence Building (key: gramSent, panel: grammar2) in STUDY + FLUENCY
-- Sentence Building tile triggers on ≥5 sentences completed
-- Counter Mastery + Sentence Building heatmap: now side by side (half width each)
-- Four Strands: capped at 40% width
-- Sidebar: progress range filters (today/week/last week/all time) appear vertically when progress panel open, hidden otherwise
-- One unified filter set drives both strandRange and masteryView via progRangeSet()
-- Sentence Building heatmap: rows=targets, cols=weeks, colour=error rate, hover=error breakdown
-- Today filter: fixed to show grey cells when no data (not stale fallback data)
-
-## Grammar Sentences — This Session's Changes
-- Rolling generation: generates 1 sentence at a time, prefetches next in background
-- Always 5 sentences per session (GRAM_SENT_TOTAL = 5)
-- Vocab priority context injected into prompt (vocabPriorityContext())
-- Variety nudge: avoids repeating sentences from last 3 sessions on same target
-- Error analysis on completion: wrong answers sent to Claude for categorisation
-- Particle errors routed to writingErrorsAdd()
-- Full session record saved to GRAM_SENT_SESSIONS (target, score, sentences, errors)
-- History dropdown populates after push from lesson notes (timing fix)
-- Inline card feedback: minimal (✓ or → correct answer only); full detail in right column
-
 ## Lesson Notes / Yoshi — This Session's Changes
-- Session restore attempted (lnLastSessionId in localStorage) — NOT FULLY WORKING (see refactor below)
-- Save happens in lessonNotesLoadSession (features-ln-p2.js line ~747)
-- Restore attempted in showPanel('lessonnotes') in core-foundation.js
 
-## PRIORITY NEXT SESSION: Lesson Notes Session Refactor
+### Completed Refactors
+1. **Dual session system eliminated** — `_lnCurrentIdx` removed from features-tools.js. Single state via `LessonNotesState.currentIdx`.
+   - `lnNewSession` → delegates to `lessonNotesLoadSession(-1)`
+   - `lnLoadSession` → delegates to `lessonNotesLoadSession(idx)`
+   - `lnDeleteSession` → uses `LessonNotesState.currentIdx`, delegates to `lessonNotesLoadSession`
+   - `lnCurrentSession` → reads only from `LessonNotesState.currentIdx`
 
-### The Problem
-There are two parallel session systems that conflict:
+2. **Session restore working** — last open session reloads on panel open.
+   - Save: `lnLastSessionId` in localStorage (intentional — device preference)
+   - Restore: finds session by id in `lessonNotesGetSessions()`, calls `lessonNotesLoadSession(idx)`
+   - Sessions now always have real `id` (Date.now()) assigned at creation
+   - One-time backfill assigns ids to existing sessions that lacked them
+   - Save in `lessonNotesLoadSession` no longer has `|| idx` fallback (id always exists)
 
-**System A — features-lesson-notes.js + features-ln-p2.js (CORRECT one):**
-- State: `LessonNotesState.currentIdx`
-- Load: `lessonNotesLoadSession(idx)` in features-ln-p2.js line 726
-- Get sessions: `lessonNotesGetSessions()` in features-lesson-notes.js (NOT exported to App or window)
-- Dropdown: `onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()"`
-- This is what the UI actually uses
+3. **`lnCreateFromPaste` moved** — from features-tools.js to features-lesson-notes.js where it belongs.
+   - `_lnExtracting` state var removed (was set but never read — dead state)
+   - Now uses `lessonNotesGetSessions`/`lessonNotesSaveSessions` directly
+   - Registered in features-lesson-notes.js App registry
 
-**System B — features-tools.js (LEGACY, should be deleted):**
-- State: `_lnCurrentIdx`
-- Load: `lnLoadSession(idx)`
-- Get sessions: `lnGetSessions()`
-- Used only by tools tab rendering (lnRenderTab, lnCurrentSession)
+4. **`_fy_*` wrappers removed** from features-yoshi.js — inline `(App.x || window.x)` pattern used directly.
 
-### The Cleanup Plan
-1. **Export from System A to App:**
-   - `lessonNotesGetSessions` → App registry
-   - `lessonNotesLoadSession` → App registry (already on window via features-ln-p2.js?)
-   - `LessonNotesState` → window (check if already there)
+5. **YOSHI_KEY → Storage** — `yoshiGetSessions`/`yoshiSaveSessions` now use `Storage.getJSON`/`setJSON`. One-time migration from localStorage on first panel open.
 
-2. **Remove from System B (features-tools.js):**
-   - Delete `_lnCurrentIdx`
-   - Delete `lnLoadSession`, `lnNewSession`, `lnDeleteSession`
-   - Replace all `_lnCurrentIdx` refs with `LessonNotesState.currentIdx`
-   - Replace `lnGetSessions()` calls with `lessonNotesGetSessions()`
-   - Replace `lnCurrentSession()` with direct `LessonNotesState` access
-
-3. **Session restore (trivial after cleanup):**
-   - Save: `localStorage.setItem('lnLastSessionId', String(sessions[idx].id))` in `lessonNotesLoadSession`
-   - Restore: after `Orchestrator.loadSessions()`, find session by id, call `lessonNotesLoadSession(idx)`
-
-4. **Verify:** all session CRUD (new, load, delete, save) goes through one path
-
-### Files to touch
-- features-ln-p2.js — add export, add localStorage save
-- features-lesson-notes.js — export lessonNotesGetSessions to App
-- features-tools.js — remove System B functions, update lnCurrentSession/lnRenderTab
-- core-foundation.js — simplify restore block
-
-### Do NOT touch
-- Session data format (kvAPI blob)
-- lessonNotesRenderPanel logic
-- Orchestrator integration
+### Lesson Notes Architecture (confirmed)
+- "Yoshi" = internal code name for Lesson Notes panel. Same panel, same data.
+- Panel is a session dashboard + data entry hub. Tabs: Words, Stories, Phrases, Grammar, Recording.
+- Stories → links to Read panel ✅
+- Grammar → links to Sentence Builder ✅
+- Words drill → future: move to Vocab panel as lesson session filter
+- Phrases drill → future: move to Vocab panel
+- Recording/transcript → stays in Lesson Notes (session-specific)
 
 ## Known Issues
-- yoshiInitUI is not defined on startup — pre-existing, not blocking
+- yoshiInitUI is not defined on startup — pre-existing, not blocking (nothing calls it — stale error)
 - PDF print line breaks — BrowserWindow PDF ignores display:block on spans
 - _lastPanel not defined in features-video.js — pre-existing, not blocking
-- Kanji conversion: verbose fallback fixed (discard non-Japanese responses)
-- Writing chat history: now pushes clean JSON not raw response
+
+## Pending Refactors (next session priority order)
+1. **features-tools.js cleanup** — still contains `yoshiParseWhatsapp`, `lnSwitchTab`, `lnSetDrillMode`, `lnDrillReveal/Next/Prev/Jump`, `lnRefreshTab`, `lnOpenStory` etc. These belong in features-lesson-notes.js. File is self-described as "residual".
+2. **`_fvid_*` wrappers** in features-video.js — same pattern as `_fy_*`, now fixed.
+3. **Storage migration** — voice profile, pause data, watch time, resources, learned words.
+4. **75 redundant `window[]` exports** — functions exported to both window and App registry; window[] ones can be removed.
+5. **features-yoshi.js → merge into features-lesson-notes.js** — same panel, 651 lines, no reason to be separate.
 
 ## Pending Work (non-style)
 
-### Pitch Accent — after lesson notes refactor
+### Pitch Accent — unblocked
 Data layer complete. Next steps:
 1. renderPitchCurve(word, pitchStr) SVG function in core-foundation.js
 2. Wire into vocab card render
@@ -236,3 +201,4 @@ Access: window.pitchAPI.lookup(kanji, reading)
 - [API] — Claude API calls
 - [STT] — Whisper transcription
 - [AppEvents] — recording pipeline
+- [yoshi] — yoshi session storage migration

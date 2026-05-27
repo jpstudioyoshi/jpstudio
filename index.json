@@ -6574,408 +6574,177 @@
   },
   {
     "type": "function",
-    "name": "lessonNotesUpdateDropdown",
+    "name": "yoshiSaveWhatsappInline",
     "file": "src/features-tools.js",
     "line": 10,
     "desc": "── Render/utility functions (pure DOM or string parsing — not pipeline logic) ─"
   },
   {
     "type": "function",
-    "name": "yoshiParseWhatsapp",
-    "file": "src/features-tools.js",
-    "line": 14,
-    "desc": "const lines = raw.split('\\n');"
-  },
-  {
-    "type": "function",
-    "name": "lnGetSessions",
-    "file": "src/features-tools.js",
-    "line": 31,
-    "desc": "const fn = App.lessonNotesGetSessions || window.lessonNotesGetSessions;"
-  },
-  {
-    "type": "function",
-    "name": "lnSaveSessions",
-    "file": "src/features-tools.js",
-    "line": 36,
-    "desc": "const fn = App.lessonNotesSaveSessions || window.lessonNotesSaveSessions;"
-  },
-  {
-    "type": "function",
-    "name": "lnCurrentSession",
-    "file": "src/features-tools.js",
-    "line": 40,
-    "desc": "const sessions = lnGetSessions();"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderTab",
-    "file": "src/features-tools.js",
-    "line": 47,
-    "desc": "if (!cur) return '';"
-  },
-  {
-    "type": "function",
-    "name": "lnSwitchTab",
-    "file": "src/features-tools.js",
-    "line": 59,
-    "desc": "document.querySelectorAll('[id^=\"lnTab-\"]').forEach(function(b) { b.classList.remove('btn-active'); "
-  },
-  {
-    "type": "function",
-    "name": "lnRenderVocab",
-    "file": "src/features-tools.js",
-    "line": 67,
-    "desc": "var vocab = cur.vocab || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnSetDrillMode",
-    "file": "src/features-tools.js",
-    "line": 123,
-    "desc": "window._lnDrillMode = mode; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
-  },
-  {
-    "type": "function",
-    "name": "lnDrillReveal",
-    "file": "src/features-tools.js",
-    "line": 124,
-    "desc": "window._lnDrillRevealed = true; lnRefreshTab('vocab'); }"
-  },
-  {
-    "type": "function",
-    "name": "lnDrillNext",
-    "file": "src/features-tools.js",
-    "line": 125,
-    "desc": "window._lnDrillIdx = (window._lnDrillIdx||0) + 1; window._lnDrillRevealed = false; lnRefreshTab('voc"
-  },
-  {
-    "type": "function",
-    "name": "lnDrillPrev",
-    "file": "src/features-tools.js",
-    "line": 126,
-    "desc": "window._lnDrillIdx = Math.max(0, (window._lnDrillIdx||0) - 1); window._lnDrillRevealed = false; lnRe"
-  },
-  {
-    "type": "function",
-    "name": "lnDrillJump",
-    "file": "src/features-tools.js",
-    "line": 127,
-    "desc": "window._lnDrillIdx = i; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
-  },
-  {
-    "type": "function",
-    "name": "lnRefreshTab",
-    "file": "src/features-tools.js",
-    "line": 128,
-    "desc": "var btn = document.getElementById('lnTab-' + tab);"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderStories",
-    "file": "src/features-tools.js",
-    "line": 136,
-    "desc": "var stories = cur.stories || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnOpenStory",
-    "file": "src/features-tools.js",
-    "line": 150,
-    "desc": "var cur = lnCurrentSession();"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderKeyPhrases",
-    "file": "src/features-tools.js",
-    "line": 163,
-    "desc": "var kp = cur.keyPhrases || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnStartPhraseDrill",
-    "file": "src/features-tools.js",
-    "line": 195,
-    "desc": "lnRefreshTab('keyphrases');"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderCorrections",
-    "file": "src/features-tools.js",
-    "line": 222,
-    "desc": "var corrections = cur.corrections || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderGrammar",
-    "file": "src/features-tools.js",
-    "line": 236,
-    "desc": "var grammar = cur.grammar || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnToggleGrammarHide",
-    "file": "src/features-tools.js",
-    "line": 269,
-    "desc": "if (!window._lnGrammarHidden) window._lnGrammarHidden = new Set();"
-  },
-  {
-    "type": "function",
-    "name": "lnToggleShowHidden",
-    "file": "src/features-tools.js",
-    "line": 275,
-    "desc": "window._lnShowHidden = !window._lnShowHidden;"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderTopics",
-    "file": "src/features-tools.js",
-    "line": 280,
-    "desc": "var topics = cur.topics || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderFullDoc",
-    "file": "src/features-tools.js",
-    "line": 294,
-    "desc": "var raw = cur.rawText || '';"
-  },
-  {
-    "type": "function",
-    "name": "lnRenderRecording",
-    "file": "src/features-tools.js",
-    "line": 300,
-    "desc": "var recordings = window._lessonRecordingSessions || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnFilterTranscript",
-    "file": "src/features-tools.js",
-    "line": 360,
-    "desc": "document.querySelectorAll('.lesson-transcript-row').forEach(function(r) {"
-  },
-  {
-    "type": "function",
-    "name": "lnToggleRecPlayer",
-    "file": "src/features-tools.js",
-    "line": 368,
-    "desc": "── Recording list handlers ──────────────────────────────────────────────────"
-  },
-  {
-    "type": "function",
-    "name": "lnDeleteRecording",
-    "file": "src/features-tools.js",
-    "line": 374,
-    "desc": "const recs = window._lessonRecordingSessions || [];"
-  },
-  {
-    "type": "function",
-    "name": "lnNewSession",
-    "file": "src/features-tools.js",
-    "line": 394,
-    "desc": "lessonNotesLoadSession(-1);"
-  },
-  {
-    "type": "function",
-    "name": "lnLoadSession",
-    "file": "src/features-tools.js",
-    "line": 398,
-    "desc": "lessonNotesLoadSession(idx >= 0 ? idx : -1);"
-  },
-  {
-    "type": "function",
-    "name": "lnDeleteSession",
-    "file": "src/features-tools.js",
-    "line": 402,
-    "desc": "if (!confirm('Delete this lesson session?')) return;"
-  },
-  {
-    "type": "function",
-    "name": "lnHandleFile",
-    "file": "src/features-tools.js",
-    "line": 414,
-    "desc": "lnCreateFromPaste moved to features-lesson-notes.js"
-  },
-  {
-    "type": "function",
-    "name": "lnHandleDrop",
-    "file": "src/features-tools.js",
-    "line": 427,
-    "desc": "event.preventDefault();"
-  },
-  {
-    "type": "function",
-    "name": "yoshiSaveWhatsappInline",
-    "file": "src/features-tools.js",
-    "line": 433,
-    "desc": "const el = document.getElementById('waInput_' + sessionId);"
-  },
-  {
-    "type": "function",
     "name": "yoshiRetranscribe",
     "file": "src/features-tools.js",
-    "line": 447,
+    "line": 24,
     "desc": ""
   },
   {
     "type": "function",
     "name": "yoshiOpenOverlay",
     "file": "src/features-tools.js",
-    "line": 459,
+    "line": 36,
     "desc": "── Manual lesson notes (unrecorded sessions — WhatsApp threads) ──────────────"
   },
   {
     "type": "function",
     "name": "yoshiOpenTeams",
     "file": "src/features-tools.js",
-    "line": 487,
+    "line": 64,
     "desc": "const url = 'https://teams.live.com/meet/9387084365462?p=cBmSFutAH5IRELtQxD';"
   },
   {
     "type": "function",
     "name": "yoshiTestChannels",
     "file": "src/features-tools.js",
-    "line": 496,
+    "line": 73,
     "desc": "Result is persisted to failure_events for post-session forensics."
   },
   {
     "type": "function",
     "name": "yoshiRunPreflight",
     "file": "src/features-tools.js",
-    "line": 524,
+    "line": 101,
     "desc": "── Full preflight (optional yoshiRunPreflight() call) ────────────────────────"
   },
   {
     "type": "function",
     "name": "_renderPreflightBadge",
     "file": "src/features-tools.js",
-    "line": 549,
+    "line": 126,
     "desc": "── Preflight rendering helpers ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "_preflightReportHtml",
     "file": "src/features-tools.js",
-    "line": 563,
+    "line": 140,
     "desc": "const pfRow = (label, ok, detail, isWarn) => {"
   },
   {
     "type": "function",
     "name": "_pfShortLabel",
     "file": "src/features-tools.js",
-    "line": 609,
+    "line": 186,
     "desc": "if (!label) return '—';"
   },
   {
     "type": "function",
     "name": "mgSelectCat",
     "file": "src/features-tools.js",
-    "line": 819,
+    "line": 396,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "mgSetPairs",
     "file": "src/features-tools.js",
-    "line": 824,
+    "line": 401,
     "desc": "MatchingPairsState.pairs = n;"
   },
   {
     "type": "function",
     "name": "mgSetTimer",
     "file": "src/features-tools.js",
-    "line": 829,
+    "line": 406,
     "desc": "MatchingPairsState.timer = n;"
   },
   {
     "type": "function",
     "name": "mgSetReading",
     "file": "src/features-tools.js",
-    "line": 834,
+    "line": 411,
     "desc": "MatchingPairsState.reading = v;"
   },
   {
     "type": "function",
     "name": "mgShowSetup",
     "file": "src/features-tools.js",
-    "line": 840,
+    "line": 417,
     "desc": "document.getElementById('mg-setup').style.display = '';"
   },
   {
     "type": "function",
     "name": "mgStart",
     "file": "src/features-tools.js",
-    "line": 847,
+    "line": 424,
     "desc": "const cat = VG_CATEGORIES[MatchingPairsState.cat];"
   },
   {
     "type": "function",
     "name": "mgUpdateTimer",
     "file": "src/features-tools.js",
-    "line": 906,
+    "line": 483,
     "desc": "const el = document.getElementById('mg-timer');"
   },
   {
     "type": "function",
     "name": "mgClickKanji",
     "file": "src/features-tools.js",
-    "line": 915,
+    "line": 492,
     "desc": "if (document.querySelector('.mg-kanji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgClickEmoji",
     "file": "src/features-tools.js",
-    "line": 924,
+    "line": 501,
     "desc": "if (document.querySelector('.mg-emoji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgCheckMatch",
     "file": "src/features-tools.js",
-    "line": 932,
+    "line": 509,
     "desc": "if (MatchingPairsState.kanjiSel === null || MatchingPairsState.emojiSel === null) return;"
   },
   {
     "type": "function",
     "name": "mgFinish",
     "file": "src/features-tools.js",
-    "line": 956,
+    "line": 533,
     "desc": "clearInterval(MatchingPairsState.timerInt);"
   },
   {
     "type": "function",
     "name": "mgEnd",
     "file": "src/features-tools.js",
-    "line": 970,
+    "line": 547,
     "desc": "mgFinish(false); }"
   },
   {
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 1068,
+    "line": 645,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 1078,
+    "line": 655,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrClear",
     "file": "src/features-tools.js",
-    "line": 1103,
+    "line": 680,
     "desc": "const inp = document.getElementById('qrInput');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 1115,
+    "line": 692,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {
