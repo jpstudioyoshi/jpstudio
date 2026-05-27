@@ -1660,12 +1660,14 @@ function showPanel(id) {
   if (id === 'lessonnotes') {
     const _lnSavedId = localStorage.getItem('lnLastSessionId');
     const _lnRestore = () => {
-      console.log('[LN restore] savedId:', _lnSavedId);
-      if (_lnSavedId) {
-        const _sessions = (App.lnGetSessions || window.lnGetSessions)?.();
-        if (_sessions) {
-          const _idx = _sessions.findIndex(s => String(s.id) === _lnSavedId);
-          if (_idx >= 0 && typeof lnLoadSession === 'function') { lnLoadSession(_idx); return; }
+      const _savedId = localStorage.getItem('lnLastSessionId');
+      if (_savedId) {
+        const _getSessions = App.lessonNotesGetSessions || window.lessonNotesGetSessions;
+        const _load = window.lessonNotesLoadSession;
+        if (_getSessions && _load) {
+          const _sessions = _getSessions();
+          const _idx = _sessions.findIndex(s => String(s.id) === _savedId || String(s.id) === _savedId);
+          if (_idx >= 0) { _load(_idx); lessonNotesRenderPanel(); return; }
         }
       }
       lessonNotesRenderPanel();

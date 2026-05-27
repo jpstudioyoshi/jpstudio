@@ -745,6 +745,7 @@ function lessonNotesLoadSession(idx) {
     const sessions = lessonNotesGetSessions();
     if (sessions[idx]) {
       LessonNotesState.currentIdx = idx;
+      try { localStorage.setItem('lnLastSessionId', String(sessions[idx].id || idx)); } catch(e) {}
       // Filter out permanently learned words
       const allVocab = sessions[idx].vocab || [];
       LessonNotesState.vocab = allVocab.filter(v => !LessonNotesState.permanentlyLearned.has(v.word));
