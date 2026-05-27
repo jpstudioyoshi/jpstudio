@@ -1276,5 +1276,5 @@ function qrPrintPage() {
 
 // ── App registry — features-tools.js exports ───────────────────────────
 Object.assign(App, {
-  lessonNotesUpdateDropdown, yoshiParseWhatsapp, lnSwitchTab, lnSetDrillMode, lnDrillReveal, lnDrillNext, lnDrillPrev, lnDrillJump, lnRefreshTab, lnOpenStory, lnToggleGrammarHide, lnToggleShowHidden, lnFilterTranscript, lnToggleRecPlayer, lnDeleteRecording, lnNewSession, lnLoadSession, lnDeleteSession, lnCreateFromPaste, lnHandleFile, lnHandleDrop, yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiOpenOverlay, yoshiOpenTeams, yoshiTestChannels, yoshiRunPreflight, mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading, mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
+  lessonNotesUpdateDropdown, lnGetSessions, yoshiParseWhatsapp, lnSwitchTab, lnSetDrillMode, lnDrillReveal, lnDrillNext, lnDrillPrev, lnDrillJump, lnRefreshTab, lnOpenStory, lnToggleGrammarHide, lnToggleShowHidden, lnFilterTranscript, lnToggleRecPlayer, lnDeleteRecording, lnNewSession, lnLoadSession, lnDeleteSession, lnCreateFromPaste, lnHandleFile, lnHandleDrop, yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiOpenOverlay, yoshiOpenTeams, yoshiTestChannels, yoshiRunPreflight, mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading, mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
 });
