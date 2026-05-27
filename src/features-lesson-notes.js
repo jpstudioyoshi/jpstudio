@@ -96,6 +96,10 @@ async function lessonNotesLoadSessionsFromStorage() {
     } else {
       LessonNotesState.sessions = [];
     }
+    // Backfill ids on sessions that were created without one
+    let _needsSave = false;
+    LessonNotesState.sessions.forEach(s => { if (!s.id) { s.id = Date.now() + Math.random(); _needsSave = true; } });
+    if (_needsSave) window.kvAPI.set('lessonNoteSessions', JSON.stringify(LessonNotesState.sessions));
   } catch(e) {
     console.error('[lessonNotes] Failed to load sessions:', e);
     LessonNotesState.sessions = [];
@@ -277,7 +281,7 @@ async function lessonNotesPanelHandlePaste(event) {
   const sessions = lessonNotesGetSessions();
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
   const title = firstLine + (firstLine.length >= 30 ? '...' : '');
-  const newSession = { title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -320,7 +324,7 @@ async function lessonNotesPanelHandleFile(files) {
   // Create new session
   const sessions = lessonNotesGetSessions();
   const title = file.name.replace(/\.(docx|txt|md)$/i, '');
-  const newSession = { title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -399,7 +403,7 @@ function lessonNotesNewFromPanel() {
   if (!title) return;
   
   const sessions = lessonNotesGetSessions();
-  sessions.unshift({ title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' });
+  sessions.unshift({ id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' });
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
   LessonNotesState.vocab = [];

@@ -1116,49 +1116,49 @@
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1694,
+    "line": 1695,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1716,
+    "line": 1717,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1752,
+    "line": 1753,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1760,
+    "line": 1761,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1771,
+    "line": 1772,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1850,
+    "line": 1851,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1872,
+    "line": 1873,
     "desc": "const btns = document.querySelectorAll(`[data-btn-group=\"${group}\"]`);"
   },
   {

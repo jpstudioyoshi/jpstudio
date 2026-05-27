@@ -1665,7 +1665,8 @@ function showPanel(id) {
         const _sessions = _fn ? _fn() : (window.LessonNotesState.sessions || []);
         const _idx = _sessions.findIndex(s => String(s.id) === _savedId);
         if (_idx >= 0) {
-          window.LessonNotesState.currentIdx = _idx;
+          (App.lessonNotesLoadSession || window.lessonNotesLoadSession)?.(_idx);
+          return;
         }
       }
       lessonNotesRenderPanel();
