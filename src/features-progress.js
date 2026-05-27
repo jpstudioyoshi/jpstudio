@@ -546,8 +546,8 @@ function _accuracyFromHistory(history, view, entry) {
     }
   }
 
-  // No history at all — fall back to running totals if entry provided
-  if (entry) {
+  // No history at all — fall back to running totals if entry provided (not for today view)
+  if (entry && view !== 'last') {
     const wrong = (entry.wrongCounter || 0) + (entry.wrongPhonetic || 0);
     const streak = entry.streak || 0;
     // Estimate: streak correct answers + wrong answers = total attempts
