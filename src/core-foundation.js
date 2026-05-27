@@ -1658,16 +1658,14 @@ function showPanel(id) {
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
   if (id === 'yoshi') yoshiRender();
   if (id === 'lessonnotes') {
-    const _lnSavedId = localStorage.getItem('lnLastSessionId');
     const _lnRestore = () => {
       const _savedId = localStorage.getItem('lnLastSessionId');
-      if (_savedId) {
-        const _getSessions = App.lessonNotesGetSessions || window.lessonNotesGetSessions;
-        const _load = window.lessonNotesLoadSession;
-        if (_getSessions && _load) {
-          const _sessions = _getSessions();
-          const _idx = _sessions.findIndex(s => String(s.id) === _savedId || String(s.id) === _savedId);
-          if (_idx >= 0) { _load(_idx); lessonNotesRenderPanel(); return; }
+      if (_savedId && window.LessonNotesState) {
+        const _fn = App.lessonNotesGetSessions || window.lessonNotesGetSessions;
+        const _sessions = _fn ? _fn() : (window.LessonNotesState.sessions || []);
+        const _idx = _sessions.findIndex(s => String(s.id) === _savedId);
+        if (_idx >= 0) {
+          window.LessonNotesState.currentIdx = _idx;
         }
       }
       lessonNotesRenderPanel();
