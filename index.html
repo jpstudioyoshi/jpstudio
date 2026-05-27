@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260526">
+<link rel="stylesheet" href="style.css?v=20260527">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -2559,7 +2559,7 @@
       <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
 
         <!-- Four Strands grid -->
-        <div style="flex:1;min-width:200px">
+        <div style="flex:0 0 30%;min-width:200px;max-width:30%">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
             <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.12em;color:var(--ink-light)">FOUR STRANDS</div>
             <div style="display:flex;gap:8px;margin-left:auto">
@@ -2651,10 +2651,16 @@
 
     </div>
 
-    <!-- Counter Mastery — full width -->
-    <div style="margin-bottom:28px">
-      <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.12em;color:var(--ink-light);margin-bottom:12px">COUNTER MASTERY</div>
-      <div id="counterMasteryPanel"></div>
+    <!-- Counter Mastery + Sentence Building Heatmap -->
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px">
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.12em;color:var(--ink-light);margin-bottom:12px">COUNTER MASTERY</div>
+        <div id="counterMasteryPanel"></div>
+      </div>
+      <div style="flex:1;min-width:200px" id="gramSentHeatmapWrap">
+        <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.12em;color:var(--ink-light);margin-bottom:12px">SENTENCE BUILDING</div>
+        <div id="gramSentHeatmap"></div>
+      </div>
     </div>
 
     <!-- Grammar Coverage -->
@@ -3091,6 +3097,6 @@
 <script src="src/ui/TextEntry.js?v=20260524dbad"></script>
 <script src="src/ui/YoshiUI.js?v=20260524dbad"></script>
 
-<script src="src/design-overlay.js?v=20260526"></script>
+<script src="src/design-overlay.js?v=20260527"></script>
 </body>
 </html>

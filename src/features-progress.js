@@ -1584,9 +1584,82 @@ async function weightsReset() {
   if (status) { status.textContent = 'Reset to defaults ✓'; setTimeout(function(){ status.textContent = ''; }, 2000); }
 }
 
+// ── Sentence Building heatmap ─────────────────────────────────────────────
+function renderGramSentHeatmap() {
+  const wrap = document.getElementById('gramSentHeatmapWrap');
+  const el   = document.getElementById('gramSentHeatmap');
+  if (!el) return;
+  const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
+  if (!sessions.length) { if (wrap) wrap.style.display = 'none'; return; }
+  if (wrap) wrap.style.display = '';
+
+  // Build week buckets — last 8 weeks
+  const now = new Date();
+  const weeks = [];
+  for (let w = 7; w >= 0; w--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - w * 7);
+    weeks.push(d.toISOString().slice(0, 10));
+  }
+  function weekIdx(dateStr) {
+    for (let i = weeks.length - 1; i >= 0; i--) {
+      if (dateStr >= weeks[i]) return i;
+    }
+    return -1;
+  }
+
+  // Group sessions by target + week
+  const targets = [...new Set(sessions.map(s => s.target))];
+  const grid = {}; // grid[target][weekIdx] = {ok, total, errors:[]}
+  for (const s of sessions) {
+    const wi = weekIdx(s.date);
+    if (wi < 0) continue;
+    if (!grid[s.target]) grid[s.target] = {};
+    if (!grid[s.target][wi]) grid[s.target][wi] = { ok: 0, total: 0, errors: [] };
+    grid[s.target][wi].ok    += s.ok || 0;
+    grid[s.target][wi].total += s.total || 0;
+    if (s.errors) grid[s.target][wi].errors.push(...s.errors);
+  }
+
+  // Week labels
+  const weekLabels = weeks.map((w, i) => {
+    const d = new Date(w);
+    return i === weeks.length - 1 ? 'this wk' : 'W-' + (weeks.length - 1 - i);
+  });
+
+  // Render
+  let html = '<div style="overflow-x:auto"><table style="border-collapse:collapse;font-family:var(--ui);font-size:0.65rem;width:100%">';
+  html += '<tr><th style="text-align:left;padding:2px 6px;color:var(--ink-light);font-weight:400">Pattern</th>';
+  for (const lbl of weekLabels) {
+    html += '<th style="padding:2px 4px;color:var(--ink-light);font-weight:400;text-align:center">' + lbl + '</th>';
+  }
+  html += '</tr>';
+
+  for (const target of targets) {
+    html += '<tr><td style="padding:3px 6px;color:var(--ink);white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="' + target + '">' + target + '</td>';
+    for (let wi = 0; wi < weeks.length; wi++) {
+      const cell = grid[target]?.[wi];
+      if (!cell || !cell.total) {
+        html += '<td style="padding:3px 4px;text-align:center"><div style="width:28px;height:18px;border-radius:3px;background:var(--paper-mid,#1a1a1a);margin:auto"></div></td>';
+      } else {
+        const pct = cell.ok / cell.total;
+        const r = Math.round(224 * (1 - pct));
+        const g = Math.round(180 * pct);
+        const bg = 'rgb(' + r + ',' + g + ',80)';
+        const errTypes = cell.errors.reduce((a, e) => { a[e.errorType] = (a[e.errorType]||0)+1; return a; }, {});
+        const tooltip = 'Score: ' + cell.ok + '/' + cell.total + (Object.keys(errTypes).length ? ' | ' + Object.entries(errTypes).map(([k,v]) => k+':'+v).join(', ') : '');
+        html += '<td style="padding:3px 4px;text-align:center"><div style="width:28px;height:18px;border-radius:3px;background:' + bg + ';margin:auto;cursor:default" title="' + tooltip + '"></div></td>';
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</table></div>';
+  el.innerHTML = html;
+}
+
 // ── App registry — features-progress.js exports ───────────────────────────
 Object.assign(App, {
-  renderFourStrandRecency, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
+  renderFourStrandRecency, renderGramSentHeatmap, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
   weightsRender, weightsSave, weightsReset,
   renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage,
   grammarNodeClick, drillLastCompletedWrite,

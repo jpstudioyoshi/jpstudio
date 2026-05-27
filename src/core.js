@@ -31,6 +31,7 @@ function updateProgressPanel() {
   try { (App.renderConjMastery    || window.renderConjMastery)?.();    } catch(e) {}
   try { (App.renderAdjMastery     || window.renderAdjMastery)?.();     } catch(e) {}
   try { (App.renderCounterMastery || window.renderCounterMastery)?.(); } catch(e) {}
+  try { (App.renderGramSentHeatmap || window.renderGramSentHeatmap)?.(); } catch(e) {}
 }
 
 function progressRenderCost() {
