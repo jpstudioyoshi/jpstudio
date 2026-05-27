@@ -1594,6 +1594,8 @@ function showPanel(id) {
   const btn = document.querySelector('nav button[data-panel="' + id + '"], .sidebar button[data-panel="' + id + '"]');
   if (btn) btn.classList.add('active');
   if (id === 'kana') initKanaDrill();
+  const _psc = document.getElementById('progressSidebarControls');
+  if (_psc) _psc.style.display = id === 'progress' ? '' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'vocab') { showPanel('words'); return; }

@@ -46,6 +46,21 @@
   <button data-panel="gramnotes" data-reading="ノート">ノート</button>
   <button data-panel="vocab-corpus" data-reading="ごいろく">語彙録</button>
   <button data-panel="resources" data-reading="しりょう">資料</button>
+  <div id="progressSidebarControls" style="display:none;padding:8px 6px;border-top:1px solid var(--border);margin-top:8px">
+    <div style="font-family:var(--ui);font-size:0.58rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;text-align:center">STRANDS</div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="week" onchange="renderFourStrandRecency()"> week</label>
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="month" onchange="renderFourStrandRecency()"> month</label>
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="all" checked onchange="renderFourStrandRecency()"> all</label>
+    </div>
+    <div style="font-family:var(--ui);font-size:0.58rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;text-align:center">MASTERY</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="all" checked onchange="masteryViewSet('all')"> All time</label>
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="last" onchange="masteryViewSet('last')"> Today</label>
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="week" onchange="masteryViewSet('week')"> This week</label>
+      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="prev" onchange="masteryViewSet('prev')"> Last week</label>
+    </div>
+  </div>
 </aside>
 
 <div class="main-area">
@@ -2559,14 +2574,10 @@
       <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
 
         <!-- Four Strands grid -->
-        <div style="flex:0 0 30%;min-width:200px;max-width:30%">
+        <div style="flex:0 0 40%;min-width:200px;max-width:40%">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
             <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.12em;color:var(--ink-light)">FOUR STRANDS</div>
-            <div style="display:flex;gap:8px;margin-left:auto">
-              <label style="display:flex;align-items:center;gap:4px;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);cursor:pointer"><input type="radio" name="strandRange" value="week" onchange="renderFourStrandRecency()"> week</label>
-              <label style="display:flex;align-items:center;gap:4px;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);cursor:pointer"><input type="radio" name="strandRange" value="month" onchange="renderFourStrandRecency()"> month</label>
-              <label style="display:flex;align-items:center;gap:4px;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);cursor:pointer"><input type="radio" name="strandRange" value="all" checked onchange="renderFourStrandRecency()"> all</label>
-            </div>
+  
           </div>
           <div id="drillRecencyGraphic"></div>
         </div>
@@ -2604,22 +2615,7 @@
 
 
 
-    <!-- Mastery view selector -->
-    <div style="display:flex;gap:6px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
-      <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-right:4px">Show:</span>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);cursor:pointer">
-        <input type="radio" name="masteryView" value="all" checked onchange="masteryViewSet('all')"> All time
-      </label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);cursor:pointer">
-        <input type="radio" name="masteryView" value="last" onchange="masteryViewSet('last')"> Today
-      </label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);cursor:pointer">
-        <input type="radio" name="masteryView" value="week" onchange="masteryViewSet('week')"> This week
-      </label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);cursor:pointer">
-        <input type="radio" name="masteryView" value="prev" onchange="masteryViewSet('prev')"> Last week
-      </label>
-    </div>
+
 
     <!-- Conjugation Mastery + Adjective Mastery — side by side -->
     <div style="display:flex;gap:20px;margin-bottom:28px;align-items:flex-start">
