@@ -294,7 +294,7 @@ async function submitWritingSentence() {
   (async () => {
     const parsed = await wbCallTutor(text, null, '');
     if (!parsed) return;
-    writingChatHistory.push({role:'assistant', content:parsed._raw||'{}'});
+    writingChatHistory.push({role:'assistant', content: parsed && parsed.corrected ? JSON.stringify({corrected:parsed.corrected,isCorrect:parsed.isCorrect,note:parsed.note||'',detail:parsed.detail||''}) : '{}'});
     const idx = writingSentences.length - 1;
     writingSentences[idx].note = parsed.note || '';
     writingSentences[idx].detail = parsed.detail || '';
