@@ -2551,3 +2551,88 @@ function lnPlaySentence(idx) {
     audio.play();
   }
 }
+
+async function lnCreateFromPaste() {
+  var raw = (document.getElementById('lnPasteArea') || {}).value || '';
+  raw = raw.trim();
+  var titleEl = document.getElementById('lnNewTitle');
+  var title = (titleEl ? titleEl.value.trim() : '') || new Date().toISOString().slice(0,10);
+  if (!raw) return;
+
+  lessonNotesRenderPanel();
+
+  var messages = (App.yoshiParseWhatsapp || window.yoshiParseWhatsapp)(raw);
+  var isWhatsApp = messages.length > 2;
+  var vocab = [], corrections = [], grammar = [], topics = [], summary = '', parsed = null;
+
+  try {
+    var apiKey = (App.getApiKey || window.getApiKey)?.();
+    if (apiKey) {
+      var resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 2000,
+          system: 'Analyse Japanese lesson content. Respond ONLY with valid JSON, no markdown.',
+          messages: [{ role: 'user', content:
+            'Extract from this ' + (isWhatsApp ? 'WhatsApp lesson chat' : 'lesson document') + ':\n'
+            + '1. vocab: [{jp, reading, en}] — vocabulary items with readings\n'
+            + '2. stories: [{title, text}] — any continuous Japanese text passages (sentences, paragraphs)\n'
+            + '3. keyPhrases: [{phrase, meaning, example}] — useful expressions and sentence patterns\n'
+            + '4. grammar: [{pattern, explanation, example}] — grammar points covered\n'
+            + '5. corrections: [{original, corrected, note}] — errors that were corrected\n'
+            + '6. topics: [string] — topics covered\n'
+            + '7. summary: string (one sentence)\n\n'
+            + 'Content:\n' + raw.slice(0, 4000)
+            + '\n\nJSON only: {"vocab":[],"stories":[],"keyPhrases":[],"grammar":[],"corrections":[],"topics":[],"summary":""}'
+          }]
+        })
+      });
+      var data = await resp.json();
+      console.warn('[API] Claude call · feature="lesson-paste" · in=' + (data.usage?.input_tokens ?? '?') + ' out=' + (data.usage?.output_tokens ?? '?') + ' tokens');
+      (App.apiUsageTrack || window.apiUsageTrack)?.('lesson-paste', data.usage?.input_tokens ?? 0, data.usage?.output_tokens ?? 0);
+      var text = (data.content && data.content[0] && data.content[0].text) || '';
+      parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+      vocab = parsed.vocab || [];
+      corrections = parsed.corrections || [];
+      grammar = parsed.grammar || [];
+      topics = parsed.topics || [];
+      summary = parsed.summary || '';
+    }
+  } catch(e) { console.warn('[lnCreateFromPaste]', e.message); }
+
+  var sessions = lessonNotesGetSessions();
+  var stories = parsed && parsed.stories ? parsed.stories : [];
+  var keyPhrases = parsed && parsed.keyPhrases ? parsed.keyPhrases : [];
+  sessions.unshift({
+    id: Date.now(),
+    date: (function() {
+      var d = title.replace(/^\[/, '').trim();
+      if (/^\d{4}-\d{2}-\d{2}/.test(d)) return d.slice(0,10);
+      var m = d.match(/(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/);
+      if (m) { var yy = m[3].length===2?'20'+m[3]:m[3]; return yy+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'); }
+      return new Date().toISOString().slice(0,10);
+    })(),
+    title: title,
+    rawText: raw,
+    vocab: vocab,
+    stories: stories,
+    keyPhrases: keyPhrases,
+    grammar: grammar,
+    corrections: corrections,
+    topics: topics,
+    summary: summary,
+    whatsapp: isWhatsApp ? messages : [],
+  });
+  lessonNotesSaveSessions(sessions);
+  LessonNotesState.currentIdx = 0;
+  lessonNotesRenderPanel();
+}
+
+Object.assign(App, { lnCreateFromPaste });
