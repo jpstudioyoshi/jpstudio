@@ -4,10 +4,6 @@
 // Requires: core.js, features-core.js, AppEvents.
 // ═══════════════════════════════════════════════════════
 
-// ── Phase 3: App-first resolvers ─────────────────────────────────
-function _fy_claudeAPI(...a)  { return (App.claudeAPI  || window.claudeAPI)(...a); }
-function _fy_claudeText(...a) { return (App.claudeText || window.claudeText)(...a); }
-function _fy_getApiKey()      { return (App.getApiKey  || window.getApiKey)?.(); }
 
 // ═══════════════════════════════════════════════════════
 // YOSHI SESSIONS
@@ -99,17 +95,17 @@ async function yoshiGenKana() {
   const status = document.getElementById('yoshiImportStatus');
   const text = completeEl ? completeEl.value.trim() : '';
   if (!text) { if (status) status.textContent = 'Add complete text first.'; return; }
-  const apiKey = _fy_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) { if (status) status.textContent = 'No API key.'; return; }
   if (status) status.textContent = 'Generating reading…';
   try {
-    const data = await _fy_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 600,
       messages: [{ role: 'user', content: 'Convert this Japanese text to full hiragana reading (yomigana). Keep the same paragraph structure and line breaks. Return ONLY the hiragana reading, nothing else.\n\n' + text }]
     ,
       track: 'yoshi'
     });
-    const kana = _fy_claudeText(data).trim();
+    const kana = (App.claudeText || window.claudeText)(data).trim();
     // Show in a small panel below the complete textarea
     let kanaPanel = document.getElementById('yoshiKanaPanel');
     if (!kanaPanel) {
@@ -131,17 +127,17 @@ async function yoshiAIComplete() {
   const status = document.getElementById('yoshiImportStatus');
   const cloze = clozeEl ? clozeEl.value.trim() : '';
   if (!cloze) { if (status) status.textContent = 'Parse the docx file first to get the cloze text.'; return; }
-  const apiKey = _fy_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) { if (status) status.textContent = 'No API key — open ⚙ and save your key first.'; return; }
   if (status) status.textContent = '✨ Generating complete text…';
   try {
-    const data = await _fy_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 1500,
       messages: [{ role: 'user', content: 'This is a Japanese cloze text where ＿＿ marks missing kanji. The surrounding kana fragments are reading hints for the missing kanji. Please reconstruct the complete text by filling in ALL the ＿＿ blanks with the correct kanji that fit the context and kana hints.\n\nFor example: ＿＿りました with hint かえ before it → 帰りました\n\nReturn ONLY the complete Japanese text with all blanks filled, keeping the same paragraph structure. No explanations.\n\nCloze text:\n' + cloze }]
     ,
       track: 'yoshi'
     });
-    const text = _fy_claudeText(data).trim();
+    const text = (App.claudeText || window.claudeText)(data).trim();
     if (completeEl) completeEl.value = text;
     if (status) status.textContent = '✓ Complete text generated — check it and save.';
   } catch(e) {
@@ -156,7 +152,7 @@ async function yoshiAIVocab() {
   const clozeEl2 = document.getElementById('yoshiCloze');
   const sourceText = complete || (clozeEl2 ? clozeEl2.value.trim() : '');
   if (!sourceText) { if (status) status.textContent = 'Add some text first.'; return; }
-  const apiKey = _fy_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) { if (status) status.textContent = 'No API key.'; return; }
   if (status) status.textContent = '✨ Extracting vocabulary…';
 
@@ -164,13 +160,13 @@ async function yoshiAIVocab() {
   yoshiShowVocabPopup([]);
 
   try {
-    const data = await _fy_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 800,
       messages: [{ role: 'user', content: 'Extract the key N5-N4 vocabulary from this Japanese text. For each word give: kanji　reading　English meaning. One per line. No blank lines between entries. Focus on verbs, nouns, and adjectives. About 10-15 words.\n\nText:\n' + sourceText }]
     ,
       track: 'yoshi'
     });
-    const text = _fy_claudeText(data).trim();
+    const text = (App.claudeText || window.claudeText)(data).trim();
     // Parse into rows, strip blank lines
     const rows = text.split('\n').filter(l => l.trim()).map(l => {
       const parts = l.split(/[\t　]/).map(p => p.trim()).filter(Boolean);
@@ -649,3 +645,5 @@ function yoshiConfirmCloze() {
 }
 
 // ── Vocab ─────────────────────────────────────────────────────────────────
+
+Object.assign(App, { yoshiMigrateFromLocalStorage, yoshiGetSessions, yoshiSaveSessions, yoshiRender });

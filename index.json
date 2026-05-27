@@ -4138,184 +4138,163 @@
   },
   {
     "type": "function",
-    "name": "_fy_claudeAPI",
-    "file": "src/features-yoshi.js",
-    "line": 8,
-    "desc": "═══════════════════════════════════════════════════════"
-  },
-  {
-    "type": "function",
-    "name": "_fy_claudeText",
-    "file": "src/features-yoshi.js",
-    "line": 9,
-    "desc": "── Phase 3: App-first resolvers ─────────────────────────────────"
-  },
-  {
-    "type": "function",
-    "name": "_fy_getApiKey",
-    "file": "src/features-yoshi.js",
-    "line": 10,
-    "desc": "return (App.getApiKey  || window.getApiKey)?.(); }"
-  },
-  {
-    "type": "function",
     "name": "yoshiGetSessions",
     "file": "src/features-yoshi.js",
-    "line": 18,
+    "line": 14,
     "desc": "return JSON.parse(localStorage.getItem(YOSHI_KEY) || '[]');"
   },
   {
     "type": "function",
     "name": "yoshiSaveSessions",
     "file": "src/features-yoshi.js",
-    "line": 21,
+    "line": 17,
     "desc": "localStorage.setItem(YOSHI_KEY, JSON.stringify(arr));"
   },
   {
     "type": "function",
     "name": "yoshiRender",
     "file": "src/features-yoshi.js",
-    "line": 25,
+    "line": 21,
     "desc": "const sessions = yoshiGetSessions();"
   },
   {
     "type": "function",
     "name": "yoshiDeleteSession",
     "file": "src/features-yoshi.js",
-    "line": 41,
+    "line": 37,
     "desc": "if (!confirm('Delete this session?')) return;"
   },
   {
     "type": "function",
     "name": "yoshiOpenSession",
     "file": "src/features-yoshi.js",
-    "line": 51,
+    "line": 47,
     "desc": "yoshiCurrentIdx = i;"
   },
   {
     "type": "function",
     "name": "yoshiLiveTitle",
     "file": "src/features-yoshi.js",
-    "line": 64,
+    "line": 60,
     "desc": "if (yoshiCurrentIdx === null) return;"
   },
   {
     "type": "function",
     "name": "yoshiKanaDebounce",
     "file": "src/features-yoshi.js",
-    "line": 92,
+    "line": 88,
     "desc": "clearTimeout(YoshiReadState.kanaTimer);"
   },
   {
     "type": "function",
     "name": "yoshiGenKana",
     "file": "src/features-yoshi.js",
-    "line": 97,
+    "line": 93,
     "desc": "const completeEl = document.getElementById('yoshiComplete');"
   },
   {
     "type": "function",
     "name": "yoshiAIComplete",
     "file": "src/features-yoshi.js",
-    "line": 128,
+    "line": 124,
     "desc": "const clozeEl = document.getElementById('yoshiCloze');"
   },
   {
     "type": "function",
     "name": "yoshiAIVocab",
     "file": "src/features-yoshi.js",
-    "line": 152,
+    "line": 148,
     "desc": "const completeEl = document.getElementById('yoshiComplete');"
   },
   {
     "type": "function",
     "name": "yoshiShowVocabPopup",
     "file": "src/features-yoshi.js",
-    "line": 190,
+    "line": 186,
     "desc": "const existing = document.getElementById('yoshiVocabPopup');"
   },
   {
     "type": "function",
     "name": "yoshiVocabPopupAddRow",
     "file": "src/features-yoshi.js",
-    "line": 224,
+    "line": 220,
     "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
   },
   {
     "type": "function",
     "name": "yoshiVocabPopupSave",
     "file": "src/features-yoshi.js",
-    "line": 236,
+    "line": 232,
     "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
   },
   {
     "type": "function",
     "name": "yoshiImport",
     "file": "src/features-yoshi.js",
-    "line": 263,
+    "line": 259,
     "desc": "const title = document.getElementById('yoshiTitle').value.trim();"
   },
   {
     "type": "function",
     "name": "yoshiComputeBlanks",
     "file": "src/features-yoshi.js",
-    "line": 309,
+    "line": 305,
     "desc": "if (cloze.includes('＿') || cloze.includes('_')) {"
   },
   {
     "type": "function",
     "name": "yoshiShowSession",
     "file": "src/features-yoshi.js",
-    "line": 365,
+    "line": 361,
     "desc": "const main = document.getElementById('yoshiMain');"
   },
   {
     "type": "function",
     "name": "yoshiSwitchTab",
     "file": "src/features-yoshi.js",
-    "line": 445,
+    "line": 441,
     "desc": "document.querySelectorAll('.yoshi-subtab').forEach(b => b.classList.remove('active'));"
   },
   {
     "type": "function",
     "name": "yoshiShowImportInline",
     "file": "src/features-yoshi.js",
-    "line": 462,
+    "line": 458,
     "desc": "const s = yoshiGetSessions()[yoshiCurrentIdx] || {};"
   },
   {
     "type": "function",
     "name": "yoshiRenderCloze",
     "file": "src/features-yoshi.js",
-    "line": 499,
+    "line": 495,
     "desc": "── Lesson notes state ───────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "yoshiCheckCloze",
     "file": "src/features-yoshi.js",
-    "line": 561,
+    "line": 557,
     "desc": "const inputs = document.querySelectorAll('#yoshiClozeBody .yoshi-blank input');"
   },
   {
     "type": "function",
     "name": "yoshiRevealAll",
     "file": "src/features-yoshi.js",
-    "line": 578,
+    "line": 574,
     "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
   },
   {
     "type": "function",
     "name": "yoshiResetCloze",
     "file": "src/features-yoshi.js",
-    "line": 586,
+    "line": 582,
     "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
   },
   {
     "type": "function",
     "name": "yoshiConfirmCloze",
     "file": "src/features-yoshi.js",
-    "line": 596,
+    "line": 592,
     "desc": "if (yoshiCurrentIdx === null) return;"
   },
   {

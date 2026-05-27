@@ -1656,7 +1656,7 @@ function showPanel(id) {
   if (id === 'resources') { try { resourcesRender(); } catch(e) {} }
   if (id === 'counters') { showPanel('words'); wordsSwitchSub('counters'); return; }
   if (id === 'words' && document.getElementById('words-sub-vocab').style.display !== 'none') renderVocab();
-  if (id === 'yoshi') yoshiRender();
+  if (id === 'yoshi') { (App.yoshiMigrateFromLocalStorage || window.yoshiMigrateFromLocalStorage)?.().then(() => yoshiRender()); }
   if (id === 'lessonnotes') {
     const _lnRestore = () => {
       const _savedId = localStorage.getItem('lnLastSessionId');
