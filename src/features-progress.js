@@ -1584,6 +1584,20 @@ async function weightsReset() {
   if (status) { status.textContent = 'Reset to defaults ✓'; setTimeout(function(){ status.textContent = ''; }, 2000); }
 }
 
+// ── Unified progress range selector ───────────────────────────────────────
+function progRangeSet(val) {
+  // Map to strandRange
+  const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };
+  // Map to masteryView
+  const masteryMap = { today: 'last', week: 'week', prev: 'prev', all: 'all' };
+  // Update hidden strandRange radios
+  const sr = document.querySelector('input[name="strandRange"][value="' + strandMap[val] + '"]');
+  if (sr) { sr.checked = true; }
+  // Update mastery view
+  (App.masteryViewSet || window.masteryViewSet)?.(masteryMap[val]);
+  renderFourStrandRecency();
+}
+
 // ── Sentence Building heatmap ─────────────────────────────────────────────
 function renderGramSentHeatmap() {
   const wrap = document.getElementById('gramSentHeatmapWrap');
@@ -1659,7 +1673,7 @@ function renderGramSentHeatmap() {
 
 // ── App registry — features-progress.js exports ───────────────────────────
 Object.assign(App, {
-  renderFourStrandRecency, renderGramSentHeatmap, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
+  renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
   weightsRender, weightsSave, weightsReset,
   renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage,
   grammarNodeClick, drillLastCompletedWrite,

@@ -46,20 +46,11 @@
   <button data-panel="gramnotes" data-reading="ノート">ノート</button>
   <button data-panel="vocab-corpus" data-reading="ごいろく">語彙録</button>
   <button data-panel="resources" data-reading="しりょう">資料</button>
-  <div id="progressSidebarControls" style="display:none;padding:8px 6px;border-top:1px solid var(--border);margin-top:8px">
-    <div style="font-family:var(--ui);font-size:0.58rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;text-align:center">STRANDS</div>
-    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="week" onchange="renderFourStrandRecency()"> week</label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="month" onchange="renderFourStrandRecency()"> month</label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="strandRange" value="all" checked onchange="renderFourStrandRecency()"> all</label>
-    </div>
-    <div style="font-family:var(--ui);font-size:0.58rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;text-align:center">MASTERY</div>
-    <div style="display:flex;flex-direction:column;gap:5px">
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="all" checked onchange="masteryViewSet('all')"> All time</label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="last" onchange="masteryViewSet('last')"> Today</label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="week" onchange="masteryViewSet('week')"> This week</label>
-      <label style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.7rem;color:var(--ink);cursor:pointer"><input type="radio" name="masteryView" value="prev" onchange="masteryViewSet('prev')"> Last week</label>
-    </div>
+    <div id="progressSidebarControls" style="display:none;padding:8px 6px;border-top:1px solid var(--border);margin-top:8px;flex-direction:column;gap:6px">
+    <label style="display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--ui);font-size:0.65rem;color:var(--ink);cursor:pointer;text-align:center">today<input type="radio" name="progressRange" value="today" onchange="progRangeSet('today')"></label>
+    <label style="display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--ui);font-size:0.65rem;color:var(--ink);cursor:pointer;text-align:center">this week<input type="radio" name="progressRange" value="week" onchange="progRangeSet('week')"></label>
+    <label style="display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--ui);font-size:0.65rem;color:var(--ink);cursor:pointer;text-align:center">last week<input type="radio" name="progressRange" value="prev" onchange="progRangeSet('prev')"></label>
+    <label style="display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--ui);font-size:0.65rem;color:var(--ink);cursor:pointer;text-align:center">all time<input type="radio" name="progressRange" value="all" checked onchange="progRangeSet('all')"></label>
   </div>
 </aside>
 
