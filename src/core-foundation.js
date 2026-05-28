@@ -1877,8 +1877,6 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
     if (btn.classList.contains('btn-kana')) {
       // CSS class-based kana buttons — use classes, not inline styles
       btn.classList.remove('active-hira', 'active-kata');
-      btn.style.color = '';
-      btn.style.borderColor = '';
       if (isActive) {
         const activeCol = btn.dataset.activeColor || activeColor;
         if (activeCol.includes('gold')) btn.classList.add('active-kata');
@@ -1887,8 +1885,6 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
     } else {
       // Class-based active state for all non-btn-kana buttons
       btn.classList.remove('btn-active', 'btn-active-gold');
-      btn.style.color = '';
-      btn.style.borderColor = '';
       if (isActive) {
         const activeCol = btn.dataset.activeColor || activeColor;
         if (activeCol.includes('gold')) btn.classList.add('btn-active-gold');
