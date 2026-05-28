@@ -440,12 +440,8 @@
         </div>
         <div id="strokeTilesInline" style="display:flex;flex-direction:row;gap:6px;align-items:flex-end;overflow-x:auto"></div>
         <div id="strokeEditWrap" style="display:none;align-items:flex-start;gap:6px">
-          <button class="btn-ghost" id="strokeEditBtn" onclick="strokeShowInput()">
-            ✎
-          </button>
-          <button class="btn-ghost" id="strokeKanjiBtn" onclick="kanaToKanji(document.getElementById('strokeSearchInput'), this)">
-            漢字
-          </button>
+          <button class="btn-action" id="strokeEditBtn" onclick="strokeShowInput()">Edit</button>
+          <button class="btn-action" id="strokeKanjiBtn" onclick="kanaToKanji(document.getElementById('strokeSearchInput'), this)">漢字</button>
         </div>
       </div>
       </div><!-- end right-slot wrapper -->
@@ -466,7 +462,7 @@
       <div class="drill-progress" id="drillProgress"></div>
       <div style="position:relative;display:inline-block">
         <div class="drill-char" id="drillChar"></div>
-        <button class="btn-ghost" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">🔊</button>
+        <button class="btn-action" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">Listen</button>
       </div>
       <div id="kanaWordHint" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);text-align:center;min-height:1.2em;margin-bottom:4px"></div>
       <div class="feedback-msg" id="feedbackMsg"></div>
@@ -514,10 +510,10 @@
       <!-- Multiple choice options (hidden by default) -->
       <div id="wordsMultiChoice" style="display:none;margin-top:12px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto">
-          <button class="multi-choice-btn btn-ghost" onclick="checkMultiChoice(0)"></button>
-          <button class="multi-choice-btn btn-ghost" onclick="checkMultiChoice(1)"></button>
-          <button class="multi-choice-btn btn-ghost" onclick="checkMultiChoice(2)"></button>
-          <button class="multi-choice-btn btn-ghost" onclick="checkMultiChoice(3)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(0)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(1)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(2)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(3)"></button>
         </div>
       </div>
 
@@ -528,9 +524,7 @@
       <div id="kanaProgressLabel" style="font-family:var(--ui);font-size:0.8rem;letter-spacing:0.08em;color:var(--ink-light)">
         Your Progress Map — <span style="color:var(--teal)">■</span> mastered &nbsp; <span style="color:var(--red)">■</span> needs work
       </div>
-      <button class="btn-ghost" id="kanaGridToggleBtn" onclick="kanaToggleGrid()">
-        Show grid
-      </button>
+      <button class="btn-toggle" id="kanaGridToggleBtn" onclick="kanaToggleGrid()">Show grid</button>
     </div>
     <div class="kana-grid" id="kanaGrid"></div>
 
