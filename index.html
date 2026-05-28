@@ -1287,16 +1287,16 @@
           <div class="trans-btn-row">
             <span data-kana-for="transInput"></span>
             <span style="flex:1"></span>
-            <button onclick="transShowHistory()" id="transHistoryBtn" class="btn-kana" title="View history">📜</button>
-            <button class="trans-clear-btn" onclick="clearTranslate()">✕</button>
+            <button onclick="transShowHistory()" id="transHistoryBtn" class="btn-action" title="View history">History</button>
+            <button class="btn-destructive" onclick="clearTranslate()">Clear</button>
           </div>
         </div>
         <div class="trans-box">
           <div class="trans-output empty" id="transOutput" onclick="doTranslate()" style="cursor:pointer" title="Click to translate">Click here to translate…</div>
           <div class="trans-btn-row" id="transOutputBtnRow" style="display:none">
-            <button class="btn-ghost" onclick="transSpeakOutput()">🔊 Hear</button>
-            <button class="btn-ghost" id="transAddVocabBtn" onclick="transAddToVocab()">+ vocab</button>
-            <button class="btn-ghost btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">Copy</button>
+            <button class="btn-action" onclick="transSpeakOutput()">Hear</button>
+            <button class="btn-action" id="transAddVocabBtn" onclick="transAddToVocab()">+ Vocab</button>
+            <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">Copy</button>
           </div>
         </div>
       </div>
@@ -1322,8 +1322,8 @@
           <div id="transSessionList" style="max-height:400px;overflow-y:auto"></div>
           <div id="transSessionEmpty" style="color:var(--ink-light);font-size:0.85rem;padding:20px 0;text-align:center">No lookups yet this session. Translations will appear here.</div>
           <div id="transSessionActions" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px">
-            <button class="btn-ghost" onclick="transExportHistory()">⬇ Export</button>
-            <button class="btn-ghost" onclick="transClearHistory()">✕ Clear All</button>
+            <button class="btn-action" onclick="transExportHistory()">Export</button>
+            <button class="btn-destructive" onclick="transClearHistory()">Clear All</button>
           </div>
         </div>
       </div>
