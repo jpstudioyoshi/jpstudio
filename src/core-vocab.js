@@ -792,19 +792,15 @@ const VocabCorpusState = {
 
 function kanjiCorpusFilter(filter, btn) {
   KanjiCorpusState.filter = filter;
-  document.querySelectorAll('.kanji-filter-btn').forEach(b => {
-    b.style.background = ''; b.style.color = ''; b.style.border = '1px solid var(--border)';
-  });
-  if (btn) { btn.style.background = 'var(--teal)'; btn.style.color = 'var(--paper)'; btn.style.border = 'none'; }
+  document.querySelectorAll('.kanji-filter-btn').forEach(b => b.classList.remove('btn-active'));
+  if (btn) btn.classList.add('btn-active');
   kanjiCorpusRender();
 }
 
 function kanjiCorpusSort(sort, btn) {
   KanjiCorpusState.sort = sort;
-  document.querySelectorAll('.kanji-sort-btn').forEach(b => {
-    b.style.background = ''; b.style.color = 'var(--ink-light)'; b.style.border = '1px solid var(--border)';
-  });
-  if (btn) { btn.style.background = 'var(--teal)'; btn.style.color = 'var(--paper)'; btn.style.border = 'none'; }
+  document.querySelectorAll('.kanji-sort-btn').forEach(b => b.classList.remove('btn-active'));
+  if (btn) btn.classList.add('btn-active');
   kanjiCorpusRender();
 }
 
@@ -812,12 +808,8 @@ function kanjiCorpusSort(sort, btn) {
 
 function kanjiSetView(v) {
   KanjiCorpusState.view = v;
-  document.getElementById('kanjiViewList').style.background  = v === 'list' ? 'var(--teal)' : 'none';
-  document.getElementById('kanjiViewList').style.color       = v === 'list' ? 'var(--paper)' : 'var(--ink-light)';
-  document.getElementById('kanjiViewList').style.border      = v === 'list' ? 'none' : '1px solid var(--border)';
-  document.getElementById('kanjiViewGrid').style.background  = v === 'grid' ? 'var(--teal)' : 'none';
-  document.getElementById('kanjiViewGrid').style.color       = v === 'grid' ? 'var(--paper)' : 'var(--ink-light)';
-  document.getElementById('kanjiViewGrid').style.border      = v === 'grid' ? 'none' : '1px solid var(--border)';
+  document.getElementById('kanjiViewList').classList.toggle('btn-active', v === 'list');
+  document.getElementById('kanjiViewGrid').classList.toggle('btn-active', v === 'grid');
   kanjiCorpusRender();
 }
 
