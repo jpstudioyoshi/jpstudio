@@ -2247,8 +2247,8 @@
         <div id="vtVocabListOverlay" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:var(--paper-dark);z-index:50;overflow-y:auto;padding:12px;border:1px solid var(--gold);border-radius:6px">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
             <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--gold)">VOCAB</span>
-            <button onclick="vtRegenerateVocabList()" style="padding:2px 8px;background:none;border:1px solid var(--border);border-radius:4px;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);cursor:pointer" title="Regenerate list">↻</button>
-            <button onclick="vtCloseVocabList()" style="margin-left:auto;padding:2px 8px;background:none;border:1px solid var(--red);border-radius:4px;font-family:var(--ui);font-size:0.65rem;color:var(--red);cursor:pointer">✕</button>
+            <button class="btn-action" onclick="vtRegenerateVocabList()" title="Regenerate list">↻</button>
+            <button class="btn-nav" onclick="vtCloseVocabList()" style="margin-left:auto">✕</button>
           </div>
           <div id="vtVocabListContent" style="font-family:var(--jp);font-size:0.85rem;line-height:1.7">
             <span style="color:var(--ink-light)">Loading...</span>
@@ -2288,8 +2288,7 @@
       <div id="vtShadowHeader" onclick="vtToggleShadow()" style="background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color 0.15s" title="Click to toggle shadow mode">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
           <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--red)">🎙 SHADOW TARGET</span>
-          <button id="vtShTargetPlayBtn" onclick="event.stopPropagation();vtShPlayTarget()"
-            style="padding:4px 14px;background:var(--teal);color:#1c1c1e;border:none;border-radius:5px;font-family:var(--ui);font-size:0.78rem;font-weight:600;cursor:pointer">▶</button>
+          <button id="vtShTargetPlayBtn" class="btn-action" onclick="event.stopPropagation();vtShPlayTarget()">▶</button>
           <span id="vtShTargetTime" style="font-family:monospace;font-size:0.75rem;color:var(--ink-light)">0:00</span>
           <span id="vtShadowTarget" style="flex:1;font-family:var(--jp);font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</span>
         </div>
@@ -2302,8 +2301,7 @@
           <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--ink-light)">YOU</span>
           <button id="vtShRecordBtn" onclick="vtShRecord()"
             style="padding:4px 14px;background:var(--red);color:#fff;border:none;border-radius:5px;font-family:var(--ui);font-size:0.78rem;font-weight:600;cursor:pointer">⏺</button>
-          <button id="vtShPlaybackBtn" onclick="vtShPlayback()" disabled
-            style="padding:4px 14px;background:none;border:1px solid var(--border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;opacity:0.4">▶</button>
+          <button id="vtShPlaybackBtn" class="btn-action" onclick="vtShPlayback()" disabled style="opacity:0.4">▶</button>
           <select id="vtMicSelect" onclick="vtRequestMicAccess()" onchange="vtSetMic(this.value)"
             style="padding:2px 6px;font-family:var(--ui);font-size:0.7rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:4px;max-width:180px">
             <option value="">🎤 Click to select mic</option>
@@ -2321,17 +2319,14 @@
     <div id="vtControls" style="display:none">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.06em;color:var(--ink-light)">TIMELINE</span>
-        <button onclick="vtAddMarker()" title="Drop marker at current time (M)"
-          style="padding:2px 10px;background:none;border:1px solid var(--border);border-radius:10px;font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s">
+        <button class="btn-action" onclick="vtAddMarker()" title="Drop marker at current time (M)">
           ◆ Mark
         </button>
-        <button onclick="vtClearMarkers()" title="Clear all markers"
-          style="padding:2px 8px;background:none;border:1px solid var(--border);border-radius:10px;font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);cursor:pointer">
+        <button class="btn-destructive" onclick="vtClearMarkers()" title="Clear all markers">
           ✕
         </button>
         <div id="vtMarkerList" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:1"></div>
-        <button id="vtWaveToggleBtn" onclick="vtToggleWaveMode()"
-          style="padding:2px 10px;background:none;border:1px solid var(--border);border-radius:10px;font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s">
+        <button id="vtWaveToggleBtn" class="btn-toggle" onclick="vtToggleWaveMode()">
           Waveform
         </button>
       </div>
@@ -2341,8 +2336,7 @@
         <div id="vtWaveMsg" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);pointer-events:none">Decoding…</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button id="vtPlayBtn" onclick="vtTogglePlay()"
-          style="padding:5px 18px;background:var(--teal);color:#1c1c1e;border:none;border-radius:6px;font-family:var(--ui);font-size:0.82rem;cursor:pointer;min-width:70px">
+        <button id="vtPlayBtn" class="btn-toggle" onclick="vtTogglePlay()" style="min-width:70px">
           ▶ Play
         </button>
         <span id="vtTime" style="font-family:monospace;font-size:0.82rem;color:var(--ink-light);min-width:90px">0:00 / 0:00</span>
@@ -2353,8 +2347,7 @@
           <option value="1.25">1.25</option>
           <option value="1.5">1.5×</option>
         </select>
-        <button id="vtLoopBtn" onclick="vtSetLoopA()"
-          style="padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s">
+        <button id="vtLoopBtn" class="btn-toggle" onclick="vtSetLoopA()">
           A–B
         </button>
         <select id="vtLoopPause" onchange="vtSetLoopPause(parseFloat(this.value))" title="Pause between loops"
@@ -2365,22 +2358,18 @@
           <option value="3">3s</option>
           <option value="5">5s</option>
         </select>
-        <button onclick="vtClearLoop()"
-          style="padding:5px 6px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer">
+        <button class="btn-destructive" onclick="vtClearLoop()">
           ✕
         </button>
-        <button id="vtDictateBtn" onclick="vtToggleDictation()"
-          style="padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s"
+        <button id="vtDictateBtn" class="btn-toggle" onclick="vtToggleDictation()"
           title="Dictation mode - type what you hear">
           ✎
         </button>
-        <button id="vtBreakdownBtn" onclick="vtShowBreakdown()"
-          style="padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s"
+        <button id="vtBreakdownBtn" class="btn-action" onclick="vtShowBreakdown()"
           title="Break down current line">
           ?
         </button>
-        <button id="vtFuriAllBtn" onclick="vtFuriAll()" title="Add furigana to all lines"
-          style="padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s">
+        <button id="vtFuriAllBtn" class="btn-action" onclick="vtFuriAll()" title="Add furigana to all lines">
           ふ
         </button>
         <span id="vtLoopInfo" style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)"></span>
@@ -2406,10 +2395,10 @@
     <div id="vtLineTranslate" style="display:none;margin-top:10px;background:#141416;border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color 0.15s">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex:0 0 auto !important">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--teal)">訳 TRANSLATION</span>
-        <button onclick="vtTranslateLine()" style="padding:3px 10px;background:none;border:1px solid var(--teal);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--teal);cursor:pointer" title="Translate current line">Translate</button>
-        <button id="vtBreakdownBtn" onclick="vtBreakdownLine()" style="padding:3px 10px;background:none;border:1px solid var(--border);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);cursor:pointer" title="Break down the grammar and vocabulary">Break down</button>
+        <button class="btn-action" onclick="vtTranslateLine()" title="Translate current line">Translate</button>
+        <button id="vtBreakdownBtn" class="btn-action" onclick="vtBreakdownLine()" title="Break down the grammar and vocabulary">Break down</button>
         <button id="vtVocabListBtn" onclick="vtShowVocabList()" style="padding:3px 10px;background:none;border:1px solid var(--gold);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--gold);cursor:pointer" title="Content word vocabulary list">Vocab</button>
-        <button onclick="vtClearTranslation()" style="margin-left:auto;padding:3px 10px;background:none;border:1px solid var(--red);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--red);cursor:pointer" title="Clear">✕</button>
+        <button class="btn-destructive" onclick="vtClearTranslation()" style="margin-left:auto" title="Clear">✕</button>
       </div>
       <div id="vtLineJp" style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px;line-height:1.6;user-select:text"></div>
       <div id="vtLineEn" style="font-family:var(--ui);font-size:0.88rem;color:var(--teal);line-height:1.5;user-select:text"><span style="color:var(--ink-light);font-size:0.78rem">Click Translate to translate current line</span></div>
@@ -2426,10 +2415,10 @@
     <div id="vtDictatePanel" style="display:none;margin-top:10px;background:#141416;border:1px solid var(--border);border-radius:8px;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">DICTATION</span>
-        <button onclick="vtDictateReplay()" style="padding:3px 10px;background:var(--teal);color:#1c1c1e;border:none;border-radius:4px;font-family:var(--ui);font-size:0.72rem;font-weight:600;cursor:pointer" title="Replay (R)">▶ Replay</button>
-        <button onclick="vtDictateCheck()" style="padding:3px 10px;background:none;border:1px solid var(--border);border-radius:4px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer" title="Check (Enter)">Check</button>
-        <button onclick="vtDictateReveal()" style="padding:3px 10px;background:none;border:1px solid var(--border);border-radius:4px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer" title="Reveal answer">Reveal</button>
-        <button onclick="vtDictateNext()" style="padding:3px 10px;background:none;border:1px solid var(--border);border-radius:4px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer" title="Next line (→)">Next →</button>
+        <button class="btn-action" onclick="vtDictateReplay()" title="Replay (R)">▶ Replay</button>
+        <button class="btn-action" onclick="vtDictateCheck()" title="Check (Enter)">Check</button>
+        <button class="btn-action" onclick="vtDictateReveal()" title="Reveal answer">Reveal</button>
+        <button class="btn-nav" onclick="vtDictateNext()" title="Next line (→)">Next →</button>
         <span id="vtDictateStats" style="margin-left:auto;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
@@ -2446,7 +2435,7 @@
     <div style="max-width:700px;margin:40px auto;background:var(--paper-dark);border:1px solid var(--border);border-radius:12px;overflow:hidden">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3)">
         <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold)">📖 BREAKDOWN</span>
-        <button onclick="vtCloseBreakdown()" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--ink-light);font-size:0.9rem;cursor:pointer;padding:2px 10px">Close</button>
+        <button class="btn-nav" onclick="vtCloseBreakdown()">Close</button>
       </div>
       <div id="vtBreakdownLine" style="padding:16px 18px;font-family:var(--jp);font-size:1.15rem;color:var(--ink);line-height:1.8;border-bottom:1px solid var(--border);background:rgba(48,213,200,0.05);user-select:text"></div>
       <div id="vtBreakdownContent" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:200px;user-select:text">
