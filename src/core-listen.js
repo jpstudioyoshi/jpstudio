@@ -576,43 +576,26 @@ function updateLoopSetUI() {
   const bar = document.getElementById('loopStatusBar');
   if (!btn) return;
 
-  // Reset button style
-  btn.style.background = '';
-  btn.style.color = 'var(--gold)';
-  btn.style.borderColor = 'var(--gold)';
+  btn.textContent = 'Loop';
+  const active = loopSetState === 'a' || loopSetState === 'b' || listenAbLooping;
+  btn.classList.toggle('toggle-on', active);
 
   if (loopSetState === 'a') {
-    btn.textContent = 'Loop';
-    btn.style.background = 'rgba(212,160,23,0.15)';
-    btn.style.color = 'var(--gold)';
-    btn.style.borderColor = 'var(--gold)';
     btn.title = 'Click waveform to set A (start) — click Loop to cancel';
     canvas.style.cursor = 'crosshair';
     if (overlay) overlay.style.display = 'block';
     if (bar) { bar.style.display = 'block'; bar.textContent = '◫ Click waveform to set loop start (A)…'; }
   } else if (loopSetState === 'b') {
-    btn.textContent = 'Loop';
-    btn.style.background = 'rgba(212,160,23,0.15)';
-    btn.style.color = 'var(--gold)';
-    btn.style.borderColor = 'var(--gold)';
     btn.title = 'Click waveform to set B (end) — click Loop to cancel';
     canvas.style.cursor = 'crosshair';
     if (overlay) overlay.style.display = 'block';
     if (bar) { bar.style.display = 'block'; bar.textContent = '▶ Now playing from A — click waveform to set loop end (B)…'; }
   } else if (listenAbLooping) {
-    btn.textContent = 'Loop';
-    btn.style.background = 'var(--gold)';
-    btn.style.color = 'var(--paper)';
-    btn.style.borderColor = 'var(--gold)';
     btn.title = 'Click to clear A/B loop';
     canvas.style.cursor = 'pointer';
     if (overlay) overlay.style.display = 'none';
     if (bar) { bar.style.display = 'block'; bar.textContent = '◫ Looping: ' + fmtTime(listenAbA) + ' → ' + fmtTime(listenAbB); }
   } else {
-    btn.textContent = 'Loop';
-    btn.style.background = '';
-    btn.style.color = 'var(--gold)';
-    btn.style.borderColor = 'var(--gold)';
     btn.title = 'Click to set an A/B loop region';
     canvas.style.cursor = 'pointer';
     if (overlay) overlay.style.display = 'none';
@@ -992,9 +975,7 @@ function toggleDictationMode() {
   const panel = document.getElementById('dictationPanel');
 
   if (dictationActive) {
-    btn.style.background  = 'var(--teal)';
-    btn.style.color       = 'var(--paper)';
-    btn.style.borderColor = 'var(--teal)';
+    btn.classList.add('toggle-on');
     panel.style.display   = 'block';
 
     // Decide mode: standalone (no track) vs audio-file mode
@@ -1013,9 +994,7 @@ function toggleDictationMode() {
       setTimeout(() => document.getElementById('dictationTextAudio').focus(), 50);
     }
   } else {
-    btn.style.background  = '';
-    btn.style.color       = 'var(--teal)';
-    btn.style.borderColor = 'var(--teal)';
+    btn.classList.remove('toggle-on');
     panel.style.display   = 'none';
     panel.style.paddingLeft = '0';
     cancelDictResume();
@@ -1218,9 +1197,7 @@ function toggleShadowing() {
     const panel = document.getElementById('shadowPanel');
     if (!panel) { console.error('shadowPanel not found!'); return; }
     if (shadowingActive) {
-      btn.style.background = 'var(--teal)';
-      btn.style.color = 'var(--paper)';
-      btn.style.borderColor = 'var(--teal)';
+      btn.classList.add('toggle-on');
       panel.style.display = 'flex';
       const audio = document.getElementById('listenAudio');
       if (!audio) { console.error('listenAudio not found!'); }
@@ -1243,9 +1220,7 @@ function toggleShadowing() {
       // Populate mic selector
       listenPopulateMics();
     } else {
-      btn.style.background = '';
-      btn.style.color = 'var(--teal)';
-      btn.style.borderColor = 'var(--teal)';
+      btn.classList.remove('toggle-on');
       panel.style.display = 'none';
       clearTimeout(shadowPauseTimer);
       clearAbLoop();
@@ -1466,17 +1441,8 @@ function setListenRecMode(mode) {
   const segPanel = document.getElementById('listenSegmentPanel');
   
   if (singleBtn && segBtn) {
-    if (mode === 'single') {
-      singleBtn.style.borderColor = 'var(--teal)';
-      singleBtn.style.color = 'var(--teal)';
-      segBtn.style.borderColor = 'var(--border)';
-      segBtn.style.color = 'var(--ink-light)';
-    } else {
-      segBtn.style.borderColor = 'var(--teal)';
-      segBtn.style.color = 'var(--teal)';
-      singleBtn.style.borderColor = 'var(--border)';
-      singleBtn.style.color = 'var(--ink-light)';
-    }
+    singleBtn.classList.toggle('btn-active', mode === 'single');
+    segBtn.classList.toggle('btn-active', mode === 'segment');
   }
   
   if (segPanel) {
@@ -2017,7 +1983,7 @@ const SRS = {
     const isOpen = panel.style.display !== 'none';
     if (isOpen) {
       panel.style.display = 'none';
-      if (btn) { btn.style.background = ''; btn.style.color = 'var(--teal)'; }
+      if (btn) btn.classList.remove('toggle-on');
     } else {
       this._showPanel();
     }
@@ -2054,7 +2020,7 @@ const SRS = {
     }
 
     panel.style.display = 'block';
-    if (btn) { btn.style.background = 'var(--teal)'; btn.style.color = 'var(--paper)'; }
+    if (btn) btn.classList.add('toggle-on');
   },
 
   // ── Toggle the progress table ────────────────────────
@@ -2175,7 +2141,7 @@ const SRS = {
     const panel = document.getElementById('srsRatePanel');
     const btn   = document.getElementById('srsToggleBtn');
     if (panel) panel.style.display = 'none';
-    if (btn)   { btn.style.background = ''; btn.style.color = 'var(--teal)'; }
+    if (btn) btn.classList.remove('toggle-on');
     this._updateBadge();
   },
 };
