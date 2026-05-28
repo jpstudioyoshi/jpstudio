@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-28 (session 11 — Claude Code setup, button migration complete, _fv_ cleanup)
+Last updated: 2026-05-28 (session 12 — inline style → classList migration via Claude Code)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -89,6 +89,24 @@ All panels migrated. btn-ghost, btn-danger, btn-kana all removed from codebase.
 - Translate, Read, Listen, Voice, Grammar, Kana, Settings, Dashboard ✓
 - Kanji corpus filter/sort, SRS rate buttons, Dashboard agent buttons ✓
 
+### Inline style.color/borderColor cleanup (session 12)
+JS-side inline style assignments replaced with classList calls:
+- core-stt.js ✓ — btn-active-red on mic test, dangling toggleTransKana code removed
+- core-listen.js ✓ — toggle-on for dictation/shadow/SRS toggles, btn-active for rec mode group, loop button moved off gold to toggle-on
+- core-vocab.js ✓ — kanji corpus filter/sort/view buttons → btn-active
+- features-reading.js ✓ — `.active` class for qr toggles, btn-active-red for vg-mic-btn
+- features-voice.js ✓ — confirmed already clean (zero matches)
+- index.html video panel (lines 2187-2465) ✓ — 21 of 24 buttons → btn-action/btn-toggle/btn-nav/btn-destructive
+
+Other JS files in src/ not yet audited for inline button styles.
+
+### Design system gaps (surfaced session 12)
+Three video panel buttons left inline because no class matches:
+- vtShRecordBtn — red-filled record button (no "red action" class exists)
+- vtVocabListBtn — gold-outline (intentional accent, no gold-outline class)
+- vtBreakdownArea close — borderless icon X (no borderless close class)
+Consider when extending the button system.
+
 ## Storage Migration
 
 ### Philosophy
@@ -118,6 +136,8 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 - yoshiInitUI is not defined on startup — pre-existing, not blocking (nothing calls it — stale error)
 - PDF print line breaks — BrowserWindow PDF ignores display:block on spans
 - _lastPanel not defined in features-video.js — pre-existing, not blocking
+- Duplicate id `vtBreakdownBtn` in index.html (lines 2377 and 2410) — pre-existing, surfaced session 12
+- `sttTranscribe()` in core-stt.js — undefined `data` variable on success path, transcript always null — pre-existing bug, surfaced session 12
 
 ## Pending Refactors (low priority — codebase is clean enough to build on)
 1. **75 redundant window[] exports** — functions exported to both window and App registry; window[] ones can be removed.
@@ -125,7 +145,7 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 3. **features-tools.js cleanup** — still contains some lesson notes functions. Self-described as residual.
 
 ## Video Panel — Design Note
-The video panel (panel-video) feels visually disconnected from the rest of the app — buttons and controls are mostly inline-styled rather than using the design system. Flagged for proper UI integration when doing UI design work.
+Button-level migration done in session 12 (21 of 24 buttons on btn-* classes). Wider layout/structure still flagged for redesign per design-rules.md ("Do not redesign the video panel until a separate decision is made"). The 3 inline holdouts are noted under "Design system gaps" in the Button System section.
 
 ## Pending Work (non-style)
 
