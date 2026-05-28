@@ -193,3 +193,9 @@ Access: window.pitchAPI.lookup(kanji, reading)
 - [STT] — Whisper transcription
 - [AppEvents] — recording pipeline
 - [yoshi] — yoshi session storage migration
+
+## Design System Gaps (extend when needed)
+Three patterns consistently left inline during migration — address when building new UI:
+1. Transient flash feedback (copy success "✓ Copied") — needs .btn-flash class with auto-reset
+2. 3-state toggles with gold variant — design system handles 2-state only; gold third state left inline
+3. Recording state red — btn-active-red exists but not formally documented as the recording pattern
