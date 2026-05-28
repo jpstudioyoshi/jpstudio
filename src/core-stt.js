@@ -235,7 +235,7 @@ async function testMicrophone() {
     SttState.testAnalyser.fftSize = 256;
     source.connect(SttState.testAnalyser);
     
-    if (btn) { btn.textContent = '🔴 Stop'; btn.style.borderColor = 'var(--red)'; btn.style.color = 'var(--red)'; }
+    if (btn) { btn.textContent = '🔴 Stop'; btn.classList.add('btn-active-red'); }
     if (levelWrap) levelWrap.style.display = 'block';
     if (status) status.textContent = 'Speak to test your microphone...';
     
@@ -277,7 +277,7 @@ function stopMicTest() {
   const levelWrap = document.getElementById('micLevel');
   const status = document.getElementById('micStatus');
   
-  if (btn) { btn.textContent = '🎙 Test'; btn.style.borderColor = ''; btn.style.color = ''; }
+  if (btn) { btn.textContent = '🎙 Test'; btn.classList.remove('btn-active-red'); }
   if (levelWrap) levelWrap.style.display = 'none';
   if (status) status.textContent = 'Test complete';
 }
@@ -341,14 +341,8 @@ function toggleTransKana() {
 
 function toggleTransKana() {
   const inp = document.getElementById('transInput');
-  const romajiBtn = document.getElementById('transModeBtnRomaji');
-  const kanaBtn = document.getElementById('transModeBtnKana');
   if (!inp) return;
 
-  // Deactivate romaji button
-  romajiBtn.style.color = '';
-  romajiBtn.style.borderColor = '';
-  
   // Toggle between hiragana and katakana
   const nextMode = (!inp._kanaOn || inp._KanaDrillState.mode === 'katakana') ? 'hiragana' : 'katakana';
   kanaSetMode('transInput', nextMode, 'transInputKana', {romaji:'transInputRomajiBtn', hira:'transInputHiraBtn', kata:'transInputKataBtn'});
@@ -560,8 +554,7 @@ function renderTransHistory() {
   
   // Highlight tab if there are items
   if (tabEl && count > 0) {
-    tabEl.style.borderColor = 'var(--gold)';
-    tabEl.style.color = 'var(--gold)';
+    tabEl.classList.add('btn-active-gold');
   }
   
   el.innerHTML = transHistory.map((h, i) => `

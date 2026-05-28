@@ -2131,126 +2131,126 @@
     "type": "function",
     "name": "_transKanjiKeyHandler",
     "file": "src/core-stt.js",
-    "line": 359,
+    "line": 353,
     "desc": "if (e.key === '+') {"
   },
   {
     "type": "function",
     "name": "doTranslate",
     "file": "src/core-stt.js",
-    "line": 366,
+    "line": 360,
     "desc": "const text = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "escBdHtml",
     "file": "src/core-stt.js",
-    "line": 521,
+    "line": 515,
     "desc": "return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\n/g,'<br>"
   },
   {
     "type": "function",
     "name": "showBdTab",
     "file": "src/core-stt.js",
-    "line": 525,
+    "line": 519,
     "desc": "document.querySelectorAll('.trans-breakdown-tab').forEach(b => b.classList.remove('active'));"
   },
   {
     "type": "function",
     "name": "transShowHistory",
     "file": "src/core-stt.js",
-    "line": 533,
+    "line": 527,
     "desc": "const sessionTab = document.getElementById('transSessionTab');"
   },
   {
     "type": "function",
     "name": "renderTransHistory",
     "file": "src/core-stt.js",
-    "line": 547,
+    "line": 541,
     "desc": "const el = document.getElementById('transSessionList');"
   },
   {
     "type": "function",
     "name": "loadTransHistory",
     "file": "src/core-stt.js",
-    "line": 590,
+    "line": 583,
     "desc": "const h = transHistory[i];"
   },
   {
     "type": "function",
     "name": "transToggleStar",
     "file": "src/core-stt.js",
-    "line": 640,
+    "line": 633,
     "desc": "if (transHistory[i]) {"
   },
   {
     "type": "function",
     "name": "transSpeakHistoryItem",
     "file": "src/core-stt.js",
-    "line": 647,
+    "line": 640,
     "desc": "const h = transHistory[i];"
   },
   {
     "type": "function",
     "name": "transDeleteHistoryItem",
     "file": "src/core-stt.js",
-    "line": 655,
+    "line": 648,
     "desc": "if (i >= 0 && i < transHistory.length) {"
   },
   {
     "type": "function",
     "name": "transEditHistoryItem",
     "file": "src/core-stt.js",
-    "line": 662,
+    "line": 655,
     "desc": "const h = transHistory[i];"
   },
   {
     "type": "function",
     "name": "transClearHistory",
     "file": "src/core-stt.js",
-    "line": 675,
+    "line": 668,
     "desc": "if (transHistory.length === 0) return;"
   },
   {
     "type": "function",
     "name": "transExportHistory",
     "file": "src/core-stt.js",
-    "line": 682,
+    "line": 675,
     "desc": "if (transHistory.length === 0) {"
   },
   {
     "type": "function",
     "name": "startTransSpeech",
     "file": "src/core-stt.js",
-    "line": 735,
+    "line": 728,
     "desc": "const currentText = document.getElementById('transInput')?.value || '';"
   },
   {
     "type": "function",
     "name": "_conjRecordGrammarEvidence",
     "file": "src/core-stt.js",
-    "line": 769,
+    "line": 762,
     "desc": ""
   },
   {
     "type": "function",
     "name": "toHiragana",
     "file": "src/core-stt.js",
-    "line": 787,
+    "line": 780,
     "desc": "return str.replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));"
   },
   {
     "type": "function",
     "name": "checkConj",
     "file": "src/core-stt.js",
-    "line": 791,
+    "line": 784,
     "desc": "const input = document.getElementById('conjInput');"
   },
   {
     "type": "function",
     "name": "advanceConj",
     "file": "src/core-stt.js",
-    "line": 820,
+    "line": 813,
     "desc": "if (DrillFlow._advancing) return;"
   },
   {
