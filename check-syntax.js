@@ -52,6 +52,8 @@ const TARGETS = [
   'src/features-pictures.js',
   'src/features-progress.js',
   'src/features-stroke.js',
+  'src/features-lesson-notes.js',
+  'src/features-ln-p2.js',
   'src/features-tools.js',
   'src/features-voice.js',
   'src/features-voice-drill.js',
