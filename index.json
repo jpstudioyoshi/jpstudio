@@ -4707,364 +4707,364 @@
     "type": "function",
     "name": "qrToggleFuri",
     "file": "src/features-reading.js",
-    "line": 201,
+    "line": 199,
     "desc": "QuickReadState.furiOn = !QuickReadState.furiOn;"
   },
   {
     "type": "function",
     "name": "qrSegment",
     "file": "src/features-reading.js",
-    "line": 211,
+    "line": 207,
     "desc": "const rawText = document.getElementById('qrInput').value.trim();"
   },
   {
     "type": "function",
     "name": "qrRender",
     "file": "src/features-reading.js",
-    "line": 305,
+    "line": 299,
     "desc": "const container = document.getElementById('qrReader');"
   },
   {
     "type": "function",
     "name": "qrWordClick",
     "file": "src/features-reading.js",
-    "line": 353,
+    "line": 343,
     "desc": "if (el.classList.contains('qr-active')) { qrClosePopup(); return; }"
   },
   {
     "type": "function",
     "name": "qrPopupHtml",
     "file": "src/features-reading.js",
-    "line": 403,
+    "line": 393,
     "desc": "return `"
   },
   {
     "type": "function",
     "name": "qrClosePopup",
     "file": "src/features-reading.js",
-    "line": 413,
+    "line": 403,
     "desc": "if (QuickReadState.popupEl) { QuickReadState.popupEl.remove(); QuickReadState.popupEl = null; }"
   },
   {
     "type": "function",
     "name": "vgSetTts",
     "file": "src/features-reading.js",
-    "line": 433,
+    "line": 423,
     "desc": "── GAME SPEECH + TTS ────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vgSpeak",
     "file": "src/features-reading.js",
-    "line": 439,
+    "line": 429,
     "desc": "const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];"
   },
   {
     "type": "function",
     "name": "vgAutoSpeak",
     "file": "src/features-reading.js",
-    "line": 445,
+    "line": 435,
     "desc": "if (VehicleGameState.ttsOn) {"
   },
   {
     "type": "function",
     "name": "vgToggleMic",
     "file": "src/features-reading.js",
-    "line": 454,
+    "line": 444,
     "desc": "Vocab game uses custom stt handling"
   },
   {
     "type": "function",
     "name": "vgStopMic",
     "file": "src/features-reading.js",
-    "line": 514,
+    "line": 504,
     "desc": "VehicleGameState.micOn = false;"
   },
   {
     "type": "function",
     "name": "qrLoadHistoryList",
     "file": "src/features-reading.js",
-    "line": 532,
+    "line": 522,
     "desc": "if (_qrHistoryCache !== null) return _qrHistoryCache;"
   },
   {
     "type": "function",
     "name": "qrSaveHistoryList",
     "file": "src/features-reading.js",
-    "line": 537,
+    "line": 527,
     "desc": "_qrHistoryCache = list;"
   },
   {
     "type": "function",
     "name": "qrLoadHistoryFromStorage",
     "file": "src/features-reading.js",
-    "line": 544,
+    "line": 534,
     "desc": ""
   },
   {
     "type": "function",
     "name": "qrUpdateHistoryDropdown",
     "file": "src/features-reading.js",
-    "line": 568,
+    "line": 558,
     "desc": "const select = document.getElementById('qrHistorySelect');"
   },
   {
     "type": "function",
     "name": "qrSaveToHistory",
     "file": "src/features-reading.js",
-    "line": 585,
+    "line": 575,
     "desc": "if (!text || text.trim().length < 10) return; // Don't save very short texts"
   },
   {
     "type": "function",
     "name": "qrLoadHistory",
     "file": "src/features-reading.js",
-    "line": 615,
+    "line": 605,
     "desc": "if (!indexStr && indexStr !== 0) return;"
   },
   {
     "type": "function",
     "name": "qrDeleteHistory",
     "file": "src/features-reading.js",
-    "line": 669,
+    "line": 659,
     "desc": "const select = document.getElementById('qrHistorySelect');"
   },
   {
     "type": "function",
     "name": "qrGetRecordingsForStorage",
     "file": "src/features-reading.js",
-    "line": 693,
+    "line": 683,
     "desc": "return Promise.all(QuickReadState.segmentRecordings.map(async (rec) => {"
   },
   {
     "type": "function",
     "name": "qrToggleSeparateSentences",
     "file": "src/features-reading.js",
-    "line": 723,
+    "line": 713,
     "desc": "QuickReadState.separateSentences = !QuickReadState.separateSentences;"
   },
   {
     "type": "function",
     "name": "qrToggleListenMode",
     "file": "src/features-reading.js",
-    "line": 740,
+    "line": 730,
     "desc": "QuickReadState.sentences* — see declaration above"
   },
   {
     "type": "function",
     "name": "qrUpdateSentenceDisplay",
     "file": "src/features-reading.js",
-    "line": 780,
+    "line": 768,
     "desc": "const counter = document.getElementById('qrSentenceCounter');"
   },
   {
     "type": "function",
     "name": "qrListenPlay",
     "file": "src/features-reading.js",
-    "line": 794,
+    "line": 782,
     "desc": "const btn = document.getElementById('qrListenPlayBtn');"
   },
   {
     "type": "function",
     "name": "qrHighlightSentence",
     "file": "src/features-reading.js",
-    "line": 818,
+    "line": 806,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {
     "type": "function",
     "name": "qrClearSentenceHighlight",
     "file": "src/features-reading.js",
-    "line": 868,
+    "line": 856,
     "desc": "document.querySelectorAll('.qr-sentence-active').forEach(el => {"
   },
   {
     "type": "function",
     "name": "qrListenPrev",
     "file": "src/features-reading.js",
-    "line": 874,
+    "line": 862,
     "desc": "if (QuickReadState.sentenceIdx > 0) {"
   },
   {
     "type": "function",
     "name": "qrListenNext",
     "file": "src/features-reading.js",
-    "line": 883,
+    "line": 871,
     "desc": "if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {"
   },
   {
     "type": "function",
     "name": "qrSetSpeed",
     "file": "src/features-reading.js",
-    "line": 892,
+    "line": 880,
     "desc": "QuickReadState.listenSpeed = speed;"
   },
   {
     "type": "function",
     "name": "qrUpdateSegmentUI",
     "file": "src/features-reading.js",
-    "line": 914,
+    "line": 893,
     "desc": "QuickReadState.recording* — see declaration above"
   },
   {
     "type": "function",
     "name": "qrSegDragStart",
     "file": "src/features-reading.js",
-    "line": 949,
+    "line": 928,
     "desc": "QuickReadState.dragIdx — see declaration above"
   },
   {
     "type": "function",
     "name": "qrSegDragOver",
     "file": "src/features-reading.js",
-    "line": 955,
+    "line": 934,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "qrSegDrop",
     "file": "src/features-reading.js",
-    "line": 960,
+    "line": 939,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "qrSegDragEnd",
     "file": "src/features-reading.js",
-    "line": 978,
+    "line": 957,
     "desc": "e.target.style.opacity = '1';"
   },
   {
     "type": "function",
     "name": "qrStartReplace",
     "file": "src/features-reading.js",
-    "line": 983,
+    "line": 962,
     "desc": "if (QuickReadState.replaceIdx === idx) {"
   },
   {
     "type": "function",
     "name": "qrRecordToggle",
     "file": "src/features-reading.js",
-    "line": 995,
+    "line": 974,
     "desc": "const btn = document.getElementById('qrRecordBtn');"
   },
   {
     "type": "function",
     "name": "qrPlaySegment",
     "file": "src/features-reading.js",
-    "line": 1056,
+    "line": 1035,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "qrDeleteSegment",
     "file": "src/features-reading.js",
-    "line": 1062,
+    "line": 1041,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "qrClearSegments",
     "file": "src/features-reading.js",
-    "line": 1070,
+    "line": 1049,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrPlayAllSegments",
     "file": "src/features-reading.js",
-    "line": 1080,
+    "line": 1059,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrCombineSegments",
     "file": "src/features-reading.js",
-    "line": 1100,
+    "line": 1079,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "qrDrawWaveform",
     "file": "src/features-reading.js",
-    "line": 1155,
+    "line": 1134,
     "desc": "const canvas = document.getElementById('qrWaveform');"
   },
   {
     "type": "function",
     "name": "qrDownloadCombined",
     "file": "src/features-reading.js",
-    "line": 1192,
+    "line": 1171,
     "desc": "if (!QuickReadState.combinedBlob) return;"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-reading.js",
-    "line": 1205,
+    "line": 1184,
     "desc": "if (!QuickReadState.segments.length) return;"
   },
   {
     "type": "function",
     "name": "addMsg",
     "file": "src/features-reading.js",
-    "line": 1265,
+    "line": 1244,
     "desc": "try { addMessage(role, text); } catch(e) { console.log(text); }"
   },
   {
     "type": "function",
     "name": "vtFullscreen",
     "file": "src/features-reading.js",
-    "line": 1272,
+    "line": 1251,
     "desc": "── Watch: layout modes ──────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vtExitFullscreen",
     "file": "src/features-reading.js",
-    "line": 1284,
+    "line": 1263,
     "desc": "const panel = document.getElementById('panel-video');"
   },
   {
     "type": "function",
     "name": "vtAddMarker",
     "file": "src/features-reading.js",
-    "line": 1339,
+    "line": 1314,
     "desc": "── Watch: markers ───────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vtClearMarkers",
     "file": "src/features-reading.js",
-    "line": 1349,
+    "line": 1324,
     "desc": "VideoState.markers = [];"
   },
   {
     "type": "function",
     "name": "vtRenderMarkers",
     "file": "src/features-reading.js",
-    "line": 1355,
+    "line": 1330,
     "desc": "const list = document.getElementById('vtMarkerList');"
   },
   {
     "type": "function",
     "name": "vtJumpMarker",
     "file": "src/features-reading.js",
-    "line": 1365,
+    "line": 1340,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1373,
+    "line": 1348,
     "desc": "if (!QuickReadState.segments.length) return;"
   },
   {
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1385,
+    "line": 1360,
     "desc": ""
   },
   {

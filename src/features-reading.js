@@ -186,8 +186,6 @@ function qrTogglePlain() {
   QuickReadState.plainOn = !QuickReadState.plainOn;
   const btn = document.getElementById('qrPlainBtn');
   btn.classList.toggle('active', QuickReadState.plainOn);
-  btn.style.color = QuickReadState.plainOn ? 'var(--teal)' : '';
-  btn.style.borderColor = QuickReadState.plainOn ? 'var(--teal)' : '';
   if (QuickReadState.plainOn) {
     // Show original unsegmented text in a selectable textarea-like div
     const orig = document.getElementById('qrInput').value;
@@ -202,8 +200,6 @@ function qrToggleFuri() {
   QuickReadState.furiOn = !QuickReadState.furiOn;
   const btn = document.getElementById('qrFuriBtn');
   btn.classList.toggle('active', QuickReadState.furiOn);
-  btn.style.color = QuickReadState.furiOn ? 'var(--teal)' : '';
-  btn.style.borderColor = QuickReadState.furiOn ? 'var(--teal)' : '';
   document.getElementById('qrStatus').textContent = '';
   qrRender(QuickReadState.segments);
 }
@@ -278,11 +274,9 @@ Text: ${textForAI}` }],
     QuickReadState.furiOn = true;
     QuickReadState.plainOn = false;
     const plainBtn = document.getElementById('qrPlainBtn');
-    if (plainBtn) { plainBtn.classList.remove('active'); plainBtn.style.color=''; plainBtn.style.borderColor=''; }
+    if (plainBtn) plainBtn.classList.remove('active');
     const furiBtn = document.getElementById('qrFuriBtn');
     furiBtn.classList.add('active');
-    furiBtn.style.color = 'var(--teal)';
-    furiBtn.style.borderColor = 'var(--teal)';
     qrRender(QuickReadState.segments);
 
     const rw = document.getElementById('qrReaderWrap');
@@ -313,11 +307,7 @@ function qrRender(segments) {
 
   // Sync button state to match current separateSentences flag
   const sepBtn = document.getElementById('qrSeparateBtn');
-  if (sepBtn) {
-    sepBtn.classList.toggle('active', sep);
-    sepBtn.style.color = sep ? 'var(--teal)' : '';
-    sepBtn.style.borderColor = sep ? 'var(--teal)' : '';
-  }
+  if (sepBtn) sepBtn.classList.toggle('active', sep);
 
   let html = '<div id="qrTextBody" style="font-family:\'Noto Sans JP\',sans-serif;font-size:1.25rem;line-height:2.4;color:var(--ink)">';
   segments.forEach((seg, i) => {
@@ -503,7 +493,7 @@ async function vgToggleMic() {
     VehicleGameState.sttRecorder.start(100);
     VehicleGameState.sttRecording = true;
     VehicleGameState.micOn = true;
-    if (btn) { btn.textContent = '🔴'; btn.style.borderColor = 'var(--red)'; btn.style.color = 'var(--red)'; }
+    if (btn) { btn.textContent = '🔴'; btn.classList.add('btn-active-red'); }
     
   } catch (e) {
     console.error('Mic error:', e);
@@ -516,7 +506,7 @@ function vgStopMic() {
   VehicleGameState.sttRecording = false;
   VehicleGameState.sttRecorder = null;
   const btn = document.getElementById('vg-mic-btn');
-  if (btn) { btn.textContent = '🎙'; btn.style.borderColor = ''; btn.style.color = ''; }
+  if (btn) { btn.textContent = '🎙'; btn.classList.remove('btn-active-red'); }
 }
 
 
@@ -745,8 +735,7 @@ function qrToggleListenMode() {
   if (QuickReadState.listenModeOpen) {
     panel.style.display = 'none';
     if (recordSection) recordSection.style.display = 'none';
-    btn.style.borderColor = '';
-    btn.style.color = '';
+    btn.classList.remove('active');
     QuickReadState.listenModeOpen = false;
     speechSynthesis.cancel();
     qrClearSentenceHighlight();
@@ -769,8 +758,7 @@ function qrToggleListenMode() {
     QuickReadState.sentenceIdx = 0;
     panel.style.display = 'block';
     if (recordSection) recordSection.style.display = 'block';
-    btn.style.borderColor = 'var(--teal)';
-    btn.style.color = 'var(--teal)';
+    btn.classList.add('active');
     QuickReadState.listenModeOpen = true;
     
     qrUpdateSentenceDisplay();
@@ -891,17 +879,8 @@ function qrListenNext() {
 
 function qrSetSpeed(speed) {
   QuickReadState.listenSpeed = speed;
-  
-  // Update button styles
   document.querySelectorAll('.qr-speed-btn').forEach(btn => {
-    const btnSpeed = parseFloat(btn.dataset.speed);
-    if (btnSpeed === speed) {
-      btn.style.borderColor = 'var(--teal)';
-      btn.style.color = 'var(--teal)';
-    } else {
-      btn.style.borderColor = 'var(--border)';
-      btn.style.color = 'var(--ink-light)';
-    }
+    btn.classList.toggle('active', parseFloat(btn.dataset.speed) === speed);
   });
 }
 
@@ -1327,11 +1306,7 @@ document.addEventListener('fullscreenchange', () => {
   }
   // Update button state
   const fsBtn = document.querySelector('#panel-video button[onclick="vtFullscreen()"]');
-  if (fsBtn) {
-    const isFs = panel.classList.contains('vt-fullscreen');
-    fsBtn.style.color = isFs ? 'var(--teal)' : 'var(--ink-light)';
-    fsBtn.style.borderColor = isFs ? 'var(--teal)' : 'var(--border)';
-  }
+  if (fsBtn) fsBtn.classList.toggle('active', panel.classList.contains('vt-fullscreen'));
 });
 
 // ── Watch: markers ───────────────────────────────────────────────────────
@@ -1406,7 +1381,6 @@ function qrRestoreSession() {
     if (furiBtn) {
       furiBtn.style.display = '';
       furiBtn.classList.toggle('active', QuickReadState.furiOn);
-      furiBtn.style.color = QuickReadState.furiOn ? 'var(--teal)' : '';
     }
 
     qrRender(QuickReadState.segments);
