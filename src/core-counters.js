@@ -291,7 +291,7 @@ function countRenderRefGrid2() {
       <input type="checkbox" id="countOpt2-${c.key}" ${c.on ? 'checked' : ''}
         onchange="countUpdateOptions2()"
         style="width:13px;height:13px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;margin:0">
-      <button onclick="countShowRefPopup2('${c.key}')" style="display:flex;justify-content:space-between;align-items:center;flex:1;padding:5px 8px;background:var(--paper);border:1px solid var(--border);border-radius:5px;cursor:pointer;text-align:left">
+      <button onclick="countShowRefPopup2('${c.key}')" title="${Object.values(COUNTER_DATA[c.key]?.readings || {}).slice(0,3).join('、')}…" style="display:flex;justify-content:space-between;align-items:center;flex:1;padding:5px 8px;background:var(--paper);border:1px solid var(--border);border-radius:5px;cursor:pointer;text-align:left">
         <span style="font-family:var(--jp);font-size:1rem;color:var(--teal)">${c.name}</span>
         <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${c.desc}</span>
       </button>
