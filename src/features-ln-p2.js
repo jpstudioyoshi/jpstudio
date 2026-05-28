@@ -325,17 +325,7 @@ function lessonNotesToggleFuri() {
   LessonNotesState.lnFuriOn = !LessonNotesState.lnFuriOn;
   // Update button state
   const btn = document.querySelector('#lessonNotesViewMain .qr-btn-sec');
-  if (btn) {
-    if (LessonNotesState.lnFuriOn) {
-      btn.style.color = 'var(--teal)';
-      btn.style.borderColor = 'var(--teal)';
-      btn.classList.add('active');
-    } else {
-      btn.style.color = '';
-      btn.style.borderColor = '';
-      btn.classList.remove('active');
-    }
-  }
+  if (btn) btn.classList.toggle('active', LessonNotesState.lnFuriOn);
   lessonNotesRenderStoryText();
 }
 
@@ -350,8 +340,7 @@ function lessonNotesToggleSpeak() {
     LessonNotesState.lnIsSpeaking = false;
     if (btn) {
       btn.innerHTML = '🔊 Read';
-      btn.style.color = '';
-      btn.style.borderColor = '';
+      btn.classList.remove('btn-active-red');
     }
   } else {
     // Start speaking
@@ -359,14 +348,13 @@ function lessonNotesToggleSpeak() {
       LessonNotesState.lnIsSpeaking = true;
       if (btn) {
         btn.innerHTML = '⏹ Stop';
-        btn.style.color = 'var(--red)';
-        btn.style.borderColor = 'var(--red)';
+        btn.classList.add('btn-active-red');
       }
-      
+
       const text = LessonNotesState.currentStory.text;
       const _lnDone = () => {
         LessonNotesState.lnIsSpeaking = false;
-        if (btn) { btn.innerHTML = '🔊 Read'; btn.style.color = ''; btn.style.borderColor = ''; }
+        if (btn) { btn.innerHTML = '🔊 Read'; btn.classList.remove('btn-active-red'); }
       };
       TTS.speak(text, 0.85, { onend: _lnDone, onerror: _lnDone });
     }

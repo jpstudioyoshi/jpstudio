@@ -7416,343 +7416,343 @@
     "type": "function",
     "name": "lessonNotesToggleSpeak",
     "file": "src/features-ln-p2.js",
-    "line": 344,
+    "line": 334,
     "desc": "LessonNotesState.lnIsSpeaking — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderDrillCard",
     "file": "src/features-ln-p2.js",
-    "line": 377,
+    "line": 365,
     "desc": "if (LessonNotesState.vocab.length === 0) return '<div style=\"text-align:center;color:var(--ink-light"
   },
   {
     "type": "function",
     "name": "lessonNotesGetLearnedWords",
     "file": "src/features-ln-p2.js",
-    "line": 472,
+    "line": 460,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesSaveLearnedWords",
     "file": "src/features-ln-p2.js",
-    "line": 478,
+    "line": 466,
     "desc": "localStorage.setItem(LEARNED_WORDS_KEY, JSON.stringify([...LessonNotesState.permanentlyLearned]));"
   },
   {
     "type": "function",
     "name": "lessonNotesSaveHiddenPermanently",
     "file": "src/features-ln-p2.js",
-    "line": 484,
+    "line": 472,
     "desc": "LessonNotesState.permanentlyLearned — loaded in init"
   },
   {
     "type": "function",
     "name": "lessonNotesShowMastered",
     "file": "src/features-ln-p2.js",
-    "line": 492,
+    "line": 480,
     "desc": "const area = document.getElementById('lessonNotesBreakdownArea');"
   },
   {
     "type": "function",
     "name": "lessonNotesClearMastered",
     "file": "src/features-ln-p2.js",
-    "line": 509,
+    "line": 497,
     "desc": "if (!confirm('Clear all mastered words? They will appear in drills again.')) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesBreakdownCurrent",
     "file": "src/features-ln-p2.js",
-    "line": 516,
+    "line": 504,
     "desc": "if (LessonNotesState.vocab.length === 0) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesExamplesCurrent",
     "file": "src/features-ln-p2.js",
-    "line": 522,
+    "line": 510,
     "desc": "if (LessonNotesState.vocab.length === 0) return;"
   },
   {
     "type": "function",
     "name": "breakdownCacheSave",
     "file": "src/features-ln-p2.js",
-    "line": 533,
+    "line": 521,
     "desc": "const keys = Object.keys(LessonNotesState.breakdownCache);"
   },
   {
     "type": "function",
     "name": "lessonNotesBreakdown",
     "file": "src/features-ln-p2.js",
-    "line": 542,
+    "line": 530,
     "desc": "const area = document.getElementById('lessonNotesBreakdownArea');"
   },
   {
     "type": "function",
     "name": "lessonNotesExamples",
     "file": "src/features-ln-p2.js",
-    "line": 604,
+    "line": 592,
     "desc": "const area = document.getElementById('lessonNotesBreakdownArea');"
   },
   {
     "type": "function",
     "name": "lessonNotesHideCard",
     "file": "src/features-ln-p2.js",
-    "line": 647,
+    "line": 635,
     "desc": "if (LessonNotesState.vocab.length === 0) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesRestoreHidden",
     "file": "src/features-ln-p2.js",
-    "line": 672,
+    "line": 660,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleTable",
     "file": "src/features-ln-p2.js",
-    "line": 688,
+    "line": 676,
     "desc": "LessonNotesState.tableHidden = !LessonNotesState.tableHidden;"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleShowReading",
     "file": "src/features-ln-p2.js",
-    "line": 693,
+    "line": 681,
     "desc": "LessonNotesState.showReading = !LessonNotesState.showReading;"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleShowMeaning",
     "file": "src/features-ln-p2.js",
-    "line": 698,
+    "line": 686,
     "desc": "LessonNotesState.showMeaning = !LessonNotesState.showMeaning;"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleShuffle",
     "file": "src/features-ln-p2.js",
-    "line": 703,
+    "line": 691,
     "desc": "if (LessonNotesState.shuffled) {"
   },
   {
     "type": "function",
     "name": "lessonNotesLoadSession",
     "file": "src/features-ln-p2.js",
-    "line": 726,
+    "line": 714,
     "desc": "LessonNotesState.loadingSession — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesNew",
     "file": "src/features-ln-p2.js",
-    "line": 801,
+    "line": 789,
     "desc": "LessonNotesState.currentIdx = null;"
   },
   {
     "type": "function",
     "name": "lessonNotesDelete",
     "file": "src/features-ln-p2.js",
-    "line": 817,
+    "line": 805,
     "desc": "if (LessonNotesState.currentIdx === null) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesShowEdit",
     "file": "src/features-ln-p2.js",
-    "line": 846,
+    "line": 834,
     "desc": "LessonNotesState.editMode — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderEditView",
     "file": "src/features-ln-p2.js",
-    "line": 851,
+    "line": 839,
     "desc": "const el1 = document.getElementById('lessonNotesView');"
   },
   {
     "type": "function",
     "name": "lessonNotesSetMode",
     "file": "src/features-ln-p2.js",
-    "line": 888,
+    "line": 876,
     "desc": "LessonNotesState.drillMode = mode;"
   },
   {
     "type": "function",
     "name": "lessonNotesDrillReveal",
     "file": "src/features-ln-p2.js",
-    "line": 894,
+    "line": 882,
     "desc": "LessonNotesState.drillRevealed = (LessonNotesState.drillRevealed + 1) % 3;"
   },
   {
     "type": "function",
     "name": "lessonNotesDrillNext",
     "file": "src/features-ln-p2.js",
-    "line": 901,
+    "line": 889,
     "desc": "LessonNotesState.drillIdx = (LessonNotesState.drillIdx + 1) % LessonNotesState.vocab.length;"
   },
   {
     "type": "function",
     "name": "lessonNotesDrillPrev",
     "file": "src/features-ln-p2.js",
-    "line": 907,
+    "line": 895,
     "desc": "LessonNotesState.drillIdx = (LessonNotesState.drillIdx - 1 + LessonNotesState.vocab.length) % Lesson"
   },
   {
     "type": "function",
     "name": "lessonNotesDrillAll",
     "file": "src/features-ln-p2.js",
-    "line": 913,
+    "line": 901,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lessonNotesExtract",
     "file": "src/features-ln-p2.js",
-    "line": 940,
+    "line": 928,
     "desc": "const titleEl = document.getElementById('lessonNotesTitle');"
   },
   {
     "type": "function",
     "name": "lessonNotesExtractStories",
     "file": "src/features-ln-p2.js",
-    "line": 1034,
+    "line": 1022,
     "desc": "const apiKey = _fy_getApiKey();"
   },
   {
     "type": "function",
     "name": "lessonNotesRemoveBracketedReadings",
     "file": "src/features-ln-p2.js",
-    "line": 1093,
+    "line": 1081,
     "desc": "Remove bracketed hiragana/katakana readings that follow kanji"
   },
   {
     "type": "function",
     "name": "lessonNotesExtractErrors",
     "file": "src/features-ln-p2.js",
-    "line": 1103,
+    "line": 1091,
     "desc": "LessonNotesState.errors — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesHandleDrop",
     "file": "src/features-ln-p2.js",
-    "line": 1153,
+    "line": 1141,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "lessonNotesHandleFile",
     "file": "src/features-ln-p2.js",
-    "line": 1167,
+    "line": 1155,
     "desc": "if (!file) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesFullDocDoSearch",
     "file": "src/features-ln-p2.js",
-    "line": 1252,
+    "line": 1240,
     "desc": "LessonNotesState.docContent/fullDocSearch — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesFullDocClearSearch",
     "file": "src/features-ln-p2.js",
-    "line": 1258,
+    "line": 1246,
     "desc": "LessonNotesState.fullDocSearch = '';"
   },
   {
     "type": "function",
     "name": "lessonNotesParseDocxXmlWithImages",
     "file": "src/features-ln-p2.js",
-    "line": 1263,
+    "line": 1251,
     "desc": "const parser = new DOMParser();"
   },
   {
     "type": "function",
     "name": "yoshiParseDocx",
     "file": "src/features-ln-p2.js",
-    "line": 1329,
+    "line": 1317,
     "desc": "Export all lessonNotes functions to window for onclick handlers"
   },
   {
     "type": "function",
     "name": "yoshiAddVocab",
     "file": "src/features-ln-p2.js",
-    "line": 1440,
+    "line": 1428,
     "desc": "const s = yoshiGetSessions()[yoshiCurrentIdx];"
   },
   {
     "type": "function",
     "name": "yoshiTranscribeNow",
     "file": "src/features-ln-p2.js",
-    "line": 1474,
+    "line": 1462,
     "desc": "const btn = document.getElementById('yoshiTranscribeNowBtn');"
   },
   {
     "type": "function",
     "name": "lnAlignTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1545,
+    "line": 1533,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "lnLoadTwoColumnTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1651,
+    "line": 1639,
     "desc": "to wall-clock positioning."
   },
   {
     "type": "function",
     "name": "lnTtsAndPause",
     "file": "src/features-ln-p2.js",
-    "line": 1788,
+    "line": 1776,
     "desc": "const student = document.getElementById('lnAudioStudent');"
   },
   {
     "type": "function",
     "name": "renderRecordingsBrowser",
     "file": "src/features-ln-p2.js",
-    "line": 1804,
+    "line": 1792,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "recBrowserTranscribe",
     "file": "src/features-ln-p2.js",
-    "line": 1871,
+    "line": 1859,
     "desc": "const btn = event.target;"
   },
   {
     "type": "function",
     "name": "recBrowserDelete",
     "file": "src/features-ln-p2.js",
-    "line": 1884,
+    "line": 1872,
     "desc": "if (!confirm('Delete this recording and audio files from disk?')) return;"
   },
   {
     "type": "storage",
     "name": "lnLastSessionId",
     "file": "src/features-ln-p2.js",
-    "line": 748,
+    "line": 736,
     "desc": "localStorage"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-ln-p2.js",
-    "line": 1591,
+    "line": 1579,
     "desc": "You are aligning Yoshi\\'s WhatsApp messages to a Japanese lesson audio transcrip"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-ln-p2.js",
-    "line": 417,
+    "line": 405,
     "desc": "🔊 <button class=\"btn-action\" onclick=\"jpSpeak('${…}')\">Play</button>"
   },
   {
