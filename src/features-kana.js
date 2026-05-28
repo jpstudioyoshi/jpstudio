@@ -453,11 +453,10 @@ function kanaAddToggle(el, startOn) {
   romajiBtn.dataset.mode = 'romaji';
   romajiBtn.title = 'Romaji mode (no conversion)';
   romajiBtn.innerHTML = 'A';
-  romajiBtn.style.cssText = startOn ? '' : 'border-color:var(--teal);color:var(--teal)';
+  if (!startOn) romajiBtn.classList.add('on');
   romajiBtn.onclick = () => {
     kanaOff(el);
-    romajiBtn.style.borderColor = 'var(--teal)';
-    romajiBtn.style.color = 'var(--teal)';
+    romajiBtn.classList.add('on');
     kanaBtn.style.borderColor = '';
     kanaBtn.style.color = '';
     kanaBtn.innerHTML = 'あ';
@@ -476,9 +475,8 @@ function kanaAddToggle(el, startOn) {
   kanaBtn.style.cssText = startOn ? 'border-color:var(--teal);color:var(--teal)' : '';
   kanaBtn.onclick = () => {
     // Deactivate romaji button
-    romajiBtn.style.borderColor = '';
-    romajiBtn.style.color = '';
-    
+    romajiBtn.classList.remove('on');
+
     // Toggle between hiragana and katakana
     if (!el._kanaOn || el._kanaMode === 'katakana') {
       kanaOn(el);
