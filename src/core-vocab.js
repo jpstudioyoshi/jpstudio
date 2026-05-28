@@ -309,7 +309,8 @@ function renderVocab() {
   const enJp = vcDirection === 'en-jp';
   if (hintEl)    hintEl.textContent = enJp ? (card.kana || card.reading || '') : (card.kana || card.reading || '');
   if (vcJp)    { vcJp.textContent   = enJp ? card.en : card.jp;
-                 vcJp.style.color   = enJp ? 'var(--ink)' : ''; }
+                 vcJp.style.color   = enJp ? 'var(--ink)' : '';
+                 vcJp.style.fontSize = enJp ? '1.4rem' : ''; }
   if (readingEl) {
     readingEl.textContent  = enJp ? '' : (card.kana || card.reading || '');
     readingEl.style.display = (!enJp && vcReadingVisible) ? 'block' : 'none';

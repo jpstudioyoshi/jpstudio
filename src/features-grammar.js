@@ -1642,20 +1642,20 @@ function renderConjDrillG() {
   if (newDrillBtn) newDrillBtn.style.display = '';
 
   area.innerHTML =
-    '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</div><div style="margin-left:auto">✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div><label style="display:flex;align-items:center;gap:5px;font-size:0.75rem;cursor:pointer;margin-left:12px;opacity:0.7" title="Pause SRS and grammar tracking — use when looking things up"><input type="checkbox" id="conjPauseTrackingChk" onchange="_conjTrackingPaused=this.checked" ' + (_conjTrackingPaused ? 'checked' : '') + '> pause tracking</label></div>' +
+    '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</div><div style="margin-left:auto">✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
     '<div class="conj-dot-row">' + dotHtml + '</div>' +
     '<div class="conj-card">' +
       (listenMode ? '' : '<div class="conj-word" style="color:' + typeColor + '">' + item.word.dict + '</div>') +
       (showRead && !listenMode ? '<div class="conj-reading">' + item.word.read + '</div>' : '') +
       (showEn && !listenMode ? '<div class="conj-en">' + item.word.en + '</div>' : '') +
       '<div class="conj-task ' + badgeCls + '">' + item.badge + '</div>' +
-      '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px">' +
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:12px">' +
         '<input class="conj-input" id="conjInputG" placeholder="type in kana…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" onkeydown="handleConjKeyG(event)" oninput="liveCheckConjG()">' +
         '<div style="display:flex;gap:8px;align-items:center;justify-content:center">' +
           '<button class="conj-check-btn" id="conjCheckBtnG" onclick="checkConjG()">Check</button>' +
           '<button class="conj-skip-btn" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none;padding:7px 14px">←</button>' +
           '<button class="conj-skip-btn" id="conjNextBtnG" onclick="advanceConjG()" style="display:none;padding:7px 14px">→</button>' +
-          '<button class="conj-skip-btn" id="conjLookupBtnG" onclick="showConjLookupG()" style="font-size:0.75rem;padding:6px 12px">Reference</button>' +
+          '<button class="btn-toggle' + (_conjTrackingPaused ? ' toggle-on' : '') + '" id="conjPauseBtnG" onclick="_conjTrackingPaused=!_conjTrackingPaused;this.classList.toggle(\'toggle-on\',_conjTrackingPaused)">Pause</button>' +
         '</div>' +
       '</div>' +
     '</div>' +

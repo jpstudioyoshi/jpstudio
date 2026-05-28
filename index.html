@@ -881,8 +881,18 @@
   <!-- GRAMMAR NOTES -->
   <div id="panel-gramnotes" class="panel">
     <div class="section-title">
-      <span class="jp">ノート</span>
-      <span class="en-block"><span class="reading">ノート</span><span class="en">(Study Notes)</span></span>
+      <span class="jp">文法</span>
+      <select id="gramNotesSubSelect" onchange="gramNotesFromSelect(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+        <option value="verbs">Verbs</option>
+        <option value="adjectives">Adjectives</option>
+        <option value="particles">Particles</option>
+        <option value="syntax">Syntax</option>
+        <option value="expressions">Expressions</option>
+        <option value="counters">Counters</option>
+        <option value="misc">Misc</option>
+        <option value="lookups">Lookups</option>
+        <option value="kanji">漢字</option>
+      </select>
     </div>
 
     <!-- Search -->
@@ -893,18 +903,7 @@
     </div>
     <div id="gramNoteSearchResults" style="display:none;margin-bottom:12px"></div>
 
-    <!-- Tab bar -->
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px">
-      <button class="gramnote-tab active" onclick="gramNotesShowTab('verbs',this)">Verbs</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('adjectives',this)">Adjectives</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('particles',this)">Particles</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('syntax',this)">Syntax</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('expressions',this)">Expressions</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('counters',this)">Counters</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('misc',this)">Misc</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('lookups',this)">📋 Lookups</button>
-      <button class="gramnote-tab" onclick="gramNotesShowTab('kanji',this)">漢字</button>
-    </div>
+
 
     <!-- Tab content areas -->
     <div id="gramnotes-tabs">
@@ -2622,73 +2621,18 @@
 
   </div>
   <div id="panel-grammar2" class="panel">
-    <div class="section-title"><span class="jp">文法</span><span class="en-block"><span class="reading">ぶんぽう</span><span class="en">(Grammar)</span></span></div>
-    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-      <button class="yoshi-subtab active" id="gram2-btn-conj" onclick="gram2Switch('conj')">活 Conjugation</button>
-      <button class="yoshi-subtab" id="gram2-btn-sent" onclick="gram2Switch('sent')">文 Sentences</button>
-      <button class="yoshi-subtab" id="gram2-btn-particles" onclick="gram2Switch('particles')">助 Particles</button>
+    <div class="section-title">
+      <span class="jp">文法</span>
+      <select id="gram2SubSelect" onchange="gram2Switch(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+        <option value="conj">活 Conjugation</option>
+        <option value="sent">文 Sentences</option>
+        <option value="particles">助 Particles</option>
+      </select>
     </div>
     <div id="gram2-sub-conj">
-    <div class="conj-layout">
+    <div>
 
       <!-- Options sidebar -->
-      <div class="conj-options-panel">
-        <div class="conj-opt-section">
-          <div class="conj-opt-title">Colour type</div>
-          <div class="conj-opt-grid">
-            <div class="conj-opt-row"><input type="checkbox" id="optUG" checked onchange="conjUpdateOptions()"><label for="optUG" style="color:#00b894">う-verbs (godan)</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optRuG" checked onchange="conjUpdateOptions()"><label for="optRuG" style="color:#4a9eff">る-verbs (ichidan)</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optIrrG" onchange="conjUpdateOptions()"><label for="optIrrG" style="color:#e6a817">Irregular (する/くる)</label></div>
-            <div class="conj-opt-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
-              <input type="checkbox" id="optRuEndingG" onchange="conjUpdateOptions()">
-              <label for="optRuEndingG" style="color:var(--gold)">る-ending only <span style="font-size:0.68rem;color:var(--ink-light)">(godan + ichidan)</span></label>
-            </div>
-            <div class="conj-opt-row" style="margin-top:4px">
-              <input type="checkbox" id="optNaIEndingG" onchange="conjUpdateOptions()">
-              <label for="optNaIEndingG" style="color:var(--gold)">な-adj ending in い <span style="font-size:0.68rem;color:var(--ink-light)">(not い-adj)</span></label>
-            </div>
-          </div>
-        </div>
-        <div class="conj-opt-section">
-          <div class="conj-opt-title">Form</div>
-          <div class="conj-opt-grid">
-            <div class="conj-opt-row"><input type="checkbox" id="optPresentG" checked onchange="conjUpdateOptions()"><label for="optPresentG">Present / Non-past</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optPastG" checked onchange="conjUpdateOptions()"><label for="optPastG">Past</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optTeG" checked onchange="conjUpdateOptions()"><label for="optTeG">て-form</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optVolG" onchange="conjUpdateOptions()"><label for="optVolG">Volitional (~よう)</label></div>
-            <a class="conj-advanced-toggle" onclick="document.getElementById('conjAdvG').classList.toggle('open');this.textContent=this.textContent.includes('▸')?'▾ Hide advanced':'▸ Show advanced'">▸ Show advanced</a>
-            <div class="conj-advanced" id="conjAdvG">
-              <div class="conj-opt-grid" style="margin-top:6px">
-                <div class="conj-opt-row"><input type="checkbox" id="optPassiveG" onchange="conjUpdateOptions()"><label for="optPassiveG">Passive (~られる)</label></div>
-                <div class="conj-opt-row"><input type="checkbox" id="optPotentialG" onchange="conjUpdateOptions()"><label for="optPotentialG">Potential (~られる/れる)</label></div>
-                <div class="conj-opt-row"><input type="checkbox" id="optCausativeG" onchange="conjUpdateOptions()"><label for="optCausativeG">Causative (~させる)</label></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="conj-opt-section">
-          <div class="conj-opt-title">Polarity</div>
-          <div class="conj-opt-grid">
-            <div class="conj-opt-row"><input type="checkbox" id="optAffG" checked onchange="conjUpdateOptions()"><label for="optAffG">Affirmative</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optNegG" checked onchange="conjUpdateOptions()"><label for="optNegG">Negative</label></div>
-          </div>
-        </div>
-        <div class="conj-opt-section">
-          <div class="conj-opt-title">Register</div>
-          <div class="conj-opt-grid">
-            <div class="conj-opt-row"><input type="checkbox" id="optPoliteG" checked onchange="conjUpdateOptions()"><label for="optPoliteG">Polite (ます/です)</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optPlainG" checked onchange="conjUpdateOptions()"><label for="optPlainG">Plain (dictionary)</label></div>
-          </div>
-        </div>
-        <div class="conj-opt-section">
-          <div class="conj-opt-title">Include adjectives</div>
-          <div class="conj-opt-grid">
-            <div class="conj-opt-row"><input type="checkbox" id="optIAdjG" onchange="conjUpdateOptions()"><label for="optIAdjG" style="color:#00b894">い-adjectives</label></div>
-            <div class="conj-opt-row"><input type="checkbox" id="optNaAdjG" onchange="conjUpdateOptions()"><label for="optNaAdjG" style="color:var(--gold)">な-adjectives</label></div>
-          </div>
-        </div>
-
-      </div><!-- end conj-options-panel -->
 
       <!-- Drill area (second grid column) -->
       <div style="display:flex;flex-direction:column;gap:12px">
@@ -2697,22 +2641,63 @@
             <span class="conj-idle-char">動</span>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-          <button class="conj-start-btn btn-icon" id="conjStartBtnG" onclick="startConjDrillG()">Start →</button>
-          <button id="conjNewDrillBtn" onclick="conjForceNewSession()" class="btn-subtle" style="display:none">↺ New drill</button>
-          <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowEnG" checked onchange="renderConjDrillG()"> Show English</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowReadingG" checked onchange="renderConjDrillG()"> Show reading</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--ink-light);font-family:var(--ui);cursor:pointer"><input type="checkbox" id="conjShowTypeG" onchange="renderConjDrillG()"> Colour verb type</label>
-          <label class="listen-mode-toggle" id="conjListenToggleG" onclick="toggleConjListenMode()" style="margin-left:4px">👂 Listen mode<span class="listen-mode-badge" id="conjListenBadgeG" style="display:none">ON</span></label>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button class="btn-action" style="font-size:0.75rem" onclick="conjAddFreqVerbs()">+ 10 frequent verbs</button>
-          <button class="btn-action" style="font-size:0.75rem" onclick="conjResetFreqVerbs()">Reset list</button>
-          <span id="conjFreqVerbCount" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
-        </div>
+
       </div><!-- end drill column -->
 
     </div><!-- end conj-layout -->
+    <div class="conj-footer-upper">
+      <button class="btn-action" id="conjStartBtnG" onclick="startConjDrillG()">Start →</button>
+      <button id="conjNewDrillBtn" onclick="conjForceNewSession()" class="btn-action" style="display:none">New</button>
+      <label class="conj-show-toggle" for="conjShowEnG"><input type="checkbox" id="conjShowEnG" checked onchange="renderConjDrillG()">English</label>
+      <label class="conj-show-toggle" for="conjShowReadingG"><input type="checkbox" id="conjShowReadingG" checked onchange="renderConjDrillG()">Reading</label>
+      <label class="conj-show-toggle" for="conjShowTypeG"><input type="checkbox" id="conjShowTypeG" onchange="renderConjDrillG()">Colour</label>
+      <label class="conj-show-toggle" id="conjListenToggleG" onclick="toggleConjListenMode()">Listen</label>
+      <button class="btn-subtle" id="conjRefBtnG" onclick="showConjLookupG()">Reference</button>
+      <button class="btn-action" style="font-size:0.75rem" onclick="conjAddFreqVerbs()">+ 10 verbs</button>
+      <button class="btn-action" style="font-size:0.75rem" onclick="conjResetFreqVerbs()">Reset list</button>
+      <span id="conjFreqVerbCount" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
+    </div>
+    <div class="conj-footer">
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Type</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optUG" checked onchange="conjUpdateOptions()"><label for="optUG" style="color:#00b894">う-verbs (godan)</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optRuG" checked onchange="conjUpdateOptions()"><label for="optRuG" style="color:#4a9eff">る-verbs (ichidan)</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optIrrG" onchange="conjUpdateOptions()"><label for="optIrrG" style="color:#e6a817">Irregular</label></div>
+      </div>
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Endings</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optRuEndingG" onchange="conjUpdateOptions()"><label for="optRuEndingG" style="color:var(--gold)">る-ending only</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optNaIEndingG" onchange="conjUpdateOptions()"><label for="optNaIEndingG" style="color:var(--gold)">な-adj ending い</label></div>
+      </div>
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Form</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPresentG" checked onchange="conjUpdateOptions()"><label for="optPresentG">Present</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPastG" checked onchange="conjUpdateOptions()"><label for="optPastG">Past</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optTeG" checked onchange="conjUpdateOptions()"><label for="optTeG">て-form</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optVolG" onchange="conjUpdateOptions()"><label for="optVolG">Volitional</label></div>
+      </div>
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Advanced</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPassiveG" onchange="conjUpdateOptions()"><label for="optPassiveG">Passive</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPotentialG" onchange="conjUpdateOptions()"><label for="optPotentialG">Potential</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optCausativeG" onchange="conjUpdateOptions()"><label for="optCausativeG">Causative</label></div>
+      </div>
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Polarity</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optAffG" checked onchange="conjUpdateOptions()"><label for="optAffG">Affirmative</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optNegG" checked onchange="conjUpdateOptions()"><label for="optNegG">Negative</label></div>
+      </div>
+      <div class="conj-footer-group">
+        <div class="conj-footer-title">Register</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPoliteG" checked onchange="conjUpdateOptions()"><label for="optPoliteG">Polite</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optPlainG" checked onchange="conjUpdateOptions()"><label for="optPlainG">Plain</label></div>
+      </div>
+      <div class="conj-footer-group" style="border-right:none">
+        <div class="conj-footer-title">Adjectives</div>
+        <div class="conj-opt-row"><input type="checkbox" id="optIAdjG" onchange="conjUpdateOptions()"><label for="optIAdjG" style="color:#00b894">い-adj</label></div>
+        <div class="conj-opt-row"><input type="checkbox" id="optNaAdjG" onchange="conjUpdateOptions()"><label for="optNaAdjG" style="color:var(--gold)">な-adj</label></div>
+      </div>
+    </div>
     </div><!-- end gram2-sub-conj -->
 
     <!-- te-form sub-tab -->

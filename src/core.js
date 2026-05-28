@@ -154,6 +154,11 @@ function gramNotesShowTab(tab, btn) {
   renderGramEntries(tab);
 } // kept for compat
 
+function gramNotesFromSelect(val) {
+  localStorage.setItem('gramNotesSub', val);
+  gramNotesShowTab(val, null);
+}
+
 function renderGramEntries(tab) {
   const container = document.getElementById('gnote-entries-' + tab);
   if (!container) return;

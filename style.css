@@ -541,15 +541,14 @@
     padding: 24px;
   }
   .vocab-back { transform: rotateY(180deg); background: var(--paper-mid); }
+  .vocab-en { font-size: 1.4rem; font-weight: 300; color: var(--ink); font-family: 'Noto Sans JP', sans-serif; }
   .vocab-jp { font-family: 'Noto Sans JP', sans-serif; font-size: 2.5rem; font-weight: 300; color: var(--ink); }
   .vocab-reading { font-size: 0.9rem; color: var(--ink-light); margin-top: 4px; font-family: 'Noto Sans JP', sans-serif; }
-  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: var(--paper-dark); height: 10vh; border-top: 1px solid var(--border); position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; }
-  .footer-lower { background: rgba(160,100,220,0.3); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
   .vocab-tap-hint { font-size: 0.68rem; color: var(--ink-light); position: absolute; bottom: 12px; letter-spacing: 0.01em;  }
 
   .vocab-controls { display: flex; gap: 12px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
-  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: rgba(91,155,213,0.3); height: 10vh; border-top: 1px solid var(--border); }
-  .footer-lower { border-top: 1px solid var(--border); background: var(--paper-dark); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
+  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: none; height: 10vh; position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; }
+  .footer-lower { background: var(--paper-dark); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
   .footer-lower-row { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 4px 12px; border-top: 0.5px solid rgba(255,255,255,0.04); }
   .footer-lower-row:first-child { border-top: none; }
   .filter-footer { border-top: 1px solid var(--border); background: var(--paper-dark); margin-top: 16px; padding: 4px 0; }
@@ -1537,6 +1536,15 @@
     color: var(--ink-light); cursor: pointer; transition: color 0.15s;
   }
   .conj-opt-row input:checked + label { color: var(--ink); }
+  .conj-footer { position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); display: flex; flex-direction: row; align-items: flex-start; justify-content: center; padding: 10px 20px; gap: 0; }
+  .conj-footer-group { display: flex; flex-direction: column; gap: 4px; padding: 0 16px; border-right: 1px solid var(--border); min-width: 110px; }
+  .conj-footer-group:first-child { padding-left: 0; }
+  .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  #gram2-sub-conj { padding-bottom: 210px; }
+  .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .conj-show-toggle { display: inline-flex; align-items: center; font-family: var(--ui); font-size: 0.82rem; padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--ink-light); }
+  .conj-show-toggle input[type=checkbox] { display: none; }
+  .conj-show-toggle:has(input:checked), .conj-show-toggle.toggle-on { border-color: var(--teal); color: var(--teal); }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;
@@ -1555,7 +1563,6 @@
   .conj-drill-area { display: flex; flex-direction: column; gap: 16px; }
 
   .conj-card {
-    background: var(--paper-dark); border: 1px solid var(--border);
     padding: 28px 32px; text-align: center; position: relative;
   }
   .conj-word {
