@@ -2751,8 +2751,8 @@
           <label class="listen-mode-toggle" id="conjListenToggleG" onclick="toggleConjListenMode()" style="margin-left:4px">👂 Listen mode<span class="listen-mode-badge" id="conjListenBadgeG" style="display:none">ON</span></label>
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button class="btn-ghost" style="font-size:0.75rem" onclick="conjAddFreqVerbs()">+ 10 frequent verbs</button>
-          <button class="btn-ghost" style="font-size:0.75rem" onclick="conjResetFreqVerbs()">↺ Reset list</button>
+          <button class="btn-action" style="font-size:0.75rem" onclick="conjAddFreqVerbs()">+ 10 frequent verbs</button>
+          <button class="btn-action" style="font-size:0.75rem" onclick="conjResetFreqVerbs()">Reset list</button>
           <span id="conjFreqVerbCount" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
         </div>
       </div><!-- end drill column -->
@@ -2829,7 +2829,7 @@
                   </label>
                 </div>
               </div>
-              <button class="btn-ghost" id="gramSentModeToggle" onclick="gramSentToggleMode()" title="Practice from your error patterns">🎯 Auto</button>
+              <button class="btn-toggle" id="gramSentModeToggle" onclick="gramSentToggleMode()" title="Practice from your error patterns">Auto</button>
             </div>
             
             <!-- Theme input row -->
