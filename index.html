@@ -1944,8 +1944,8 @@
             style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:'Noto Sans JP',var(--ui);font-size:0.8rem;max-width:140px">
             <option value="">— New —</option>
           </select>
-          <button class="btn-ghost" onclick="voiceSaveConversation()">💾</button>
-          <button class="btn-ghost" onclick="voiceDeleteConversation()">🗑️</button>
+          <button class="btn-action" onclick="voiceSaveConversation()">Save</button>
+          <button class="btn-destructive" onclick="voiceDeleteConversation()">Delete</button>
           
           <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
             <select id="voiceLevel" style="padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.75rem">
@@ -1973,9 +1973,9 @@
                 <option value="comprehension">🎧 Comprehension</option>
               </optgroup>
             </select>
-            <button class="btn-ghost" onclick="voiceReviewErrors()" title="Review errors in this conversation">📝 Errors</button>
-            <button class="btn-ghost" onclick="voiceOpenProfile()" title="Profile">👤</button>
-            <button class="btn-ghost" onclick="voiceNewChat()">+ New</button>
+            <button class="btn-action" onclick="voiceReviewErrors()" title="Review errors in this conversation">Errors</button>
+            <button class="btn-action" onclick="voiceOpenProfile()" title="Profile">Profile</button>
+            <button class="btn-action" onclick="voiceNewChat()">+ New</button>
           </div>
         </div>
         <!-- Structured mode row (Round Trip / Comprehension) -->
@@ -2005,9 +2005,9 @@
             <div id="rtStatus" style="display:none;font-family:var(--ui);font-size:0.72rem;color:var(--teal)"></div>
             <div style="flex:1"></div>
             <button class="btn-action" id="rtRound2Btn" onclick="rtStartRound2()">▶ Round 2</button>
-            <button class="btn-ghost" id="rtCompareBtn" onclick="rtCompare()">⚡ Compare</button>
-            <button class="btn-ghost" id="rtReopenBtn" onclick="rtReopenDebrief()" title="Reopen last debrief">📋 Debrief</button>
-            <button class="btn-ghost" onclick="rtShowHistory()" title="Past session reports">🗂 History</button>
+            <button class="btn-action" id="rtCompareBtn" onclick="rtCompare()">Compare</button>
+            <button class="btn-action" id="rtReopenBtn" onclick="rtReopenDebrief()" title="Reopen last debrief">Debrief</button>
+            <button class="btn-action" onclick="rtShowHistory()" title="Past session reports">History</button>
           </div>
         </div>
       </div>
@@ -2092,7 +2092,7 @@
       <div id="drillCard" style="background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:14px">
         <div id="drillPrompt" style="font-size:1.05rem;color:var(--ink-light);margin-bottom:12px;font-family:var(--ui)"></div>
         <div id="drillJp" style="font-size:1.5rem;color:var(--ink);font-family:'Noto Sans JP',var(--ui);line-height:1.6;display:none"></div>
-        <button id="drillHearBtn" onclick="drillSpeak()" style="display:none;margin-top:10px" class="btn-ghost">🔊 Hear it</button>
+        <button id="drillHearBtn" onclick="drillSpeak()" style="display:none;margin-top:10px" class="btn-action">Hear it</button>
         <div id="drillResult" style="margin-top:14px;font-size:0.9rem;display:none"></div>
       </div>
 
@@ -2139,10 +2139,10 @@
           <div style="padding:6px 10px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);background:var(--paper-dark);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">English</div>
           <div id="cd-table-body" style="display:contents"></div>
         </div>
-        <button class="btn-ghost" style="width:100%;font-size:0.78rem;margin-bottom:12px" onclick="cdAddRow()">+ Add sentence</button>
+        <button class="btn-action" style="width:100%;font-size:0.78rem;margin-bottom:12px" onclick="cdAddRow()">+ Add sentence</button>
         <div style="display:flex;gap:8px">
-          <button class="btn-ghost" onclick="cdBackToList()" style="font-size:0.78rem">Back</button>
-          <button class="btn-ghost" style="font-size:0.78rem;border-color:var(--red);color:var(--red)" onclick="cdDeleteDoc()">Delete</button>
+          <button class="btn-nav" onclick="cdBackToList()" style="font-size:0.78rem">Back</button>
+          <button class="btn-destructive" style="font-size:0.78rem" onclick="cdDeleteDoc()">Delete</button>
           <button class="btn-action" style="flex:1;font-size:0.78rem" onclick="cdSaveDoc()">Save</button>
           <button class="btn-action" style="font-size:0.78rem;background:var(--gold);border-color:var(--gold);color:#000" onclick="cdStartDrill()">Drill</button>
         </div>
@@ -2152,7 +2152,7 @@
       <!-- View: drill -->
       <div id="cd-view-drill" style="display:none">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <button class="btn-ghost" style="font-size:0.78rem" onclick="cdEndDrill()">Back</button>
+          <button class="btn-nav" style="font-size:0.78rem" onclick="cdEndDrill()">Back</button>
           <span id="cd-drill-name" style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)"></span>
           <span id="cd-drill-counter" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)"></span>
         </div>
@@ -2166,8 +2166,8 @@
             <div id="cd-drill-jp" style="font-family:'Noto Sans JP',var(--ui);font-size:1.4rem;color:var(--ink);line-height:1.6;text-align:center;margin-bottom:10px"></div>
             <div id="cd-drill-en" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);text-align:center;margin-bottom:12px"></div>
             <div style="display:flex;gap:10px;justify-content:center;align-items:center">
-              <button class="btn-ghost" style="font-size:0.78rem" onclick="cdPlayTTS()" id="cd-btn-tts">&#128266; Model</button>
-              <button class="btn-ghost" style="font-size:0.78rem" onclick="cdPlayMyRecording()" id="cd-btn-playback" disabled>&#9658; Mine</button>
+              <button class="btn-action" style="font-size:0.78rem" onclick="cdPlayTTS()" id="cd-btn-tts">Model</button>
+              <button class="btn-action" style="font-size:0.78rem" onclick="cdPlayMyRecording()" id="cd-btn-playback" disabled>Mine</button>
             </div>
             <div id="cd-drill-score" style="font-family:var(--ui);font-size:0.78rem;text-align:center;margin-top:10px;min-height:16px;color:var(--ink-light)"></div>
           </div>
