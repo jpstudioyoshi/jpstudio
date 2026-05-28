@@ -49,13 +49,15 @@ function startNewSession() {
   // Don't run before data is loaded — renderVocab will call us again once ready
   if (!_dataLoaded || !state.vocab.length) return;
   if (!state.vocabKnownSessions) state.vocabKnownSessions = {};
-  const sizeEl = document.getElementById('sessionSizeSelect');
-  const sizeVal = sizeEl ? sizeEl.value : '20';
+  const sizeRadio = document.querySelector('input[name="vocabSize"]:checked');
+  const sizeVal = sizeRadio ? sizeRadio.value : '20';
   const size    = sizeVal === 'all' ? 9999 : parseInt(sizeVal);
 
   // Level filter (existing UI checkboxes)
   const levelEls    = document.querySelectorAll('.vocab-level-filter:checked');
-  const activeLevels = levelEls.length ? new Set([...levelEls].map(el => el.value)) : null;
+  const _rawLevels  = levelEls.length ? [...levelEls].map(el => el.value) : null;
+  const _expandLevel = v => v === 'N5+N4' ? ['N5','N4'] : v === 'all' ? ['N5','N4','N3'] : [v];
+  const activeLevels = _rawLevels ? new Set(_rawLevels.flatMap(_expandLevel)) : null;
 
   // POS filter (new checkboxes — null means all)
   const posEls    = document.querySelectorAll('.vocab-pos-filter:checked');

@@ -537,49 +537,18 @@
 
   <!-- VOCAB -->
   <div id="panel-words" class="panel">
-    <div class="section-title"><span class="jp">語彙</span><span class="en-block"><span class="reading">ごい</span><span class="en">(Word List)</span></span></div>
-    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-      <button class="yoshi-subtab active" id="words-sub-btn-vocab" onclick="wordsSwitchSub('vocab')">📚 Words</button>
-      <button class="yoshi-subtab" id="words-sub-btn-counters" onclick="wordsSwitchSub('counters')">数 Counters</button>
-      <button class="yoshi-subtab" id="words-sub-btn-days" onclick="wordsSwitchSub('days')">日 Days</button>
-      <button class="yoshi-subtab" id="words-sub-btn-anki" onclick="wordsSwitchSub('anki')">🔗 Anki</button>
-      <button class="yoshi-subtab" id="words-sub-btn-game" onclick="wordsSwitchSub('game')">🖼 Pictures</button>
+    <div class="section-title">
+      <span class="jp">語彙</span>
+      <select id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+        <option value="vocab">Words</option>
+        <option value="counters">Counters</option>
+        <option value="days">Days</option>
+        <option value="anki">Anki</option>
+        <option value="game">Pictures</option>
+      </select>
     </div>
     <div id="words-sub-vocab">
-<!-- Level filter -->
-    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">
-      <span style="letter-spacing:0.08em;min-width:32px">Level</span>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-level-filter" value="N5" checked onchange="startNewSession()" style="accent-color:var(--teal)"> N5</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-level-filter" value="N4" checked onchange="startNewSession()" style="accent-color:var(--teal)"> N4</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-level-filter" value="N3" onchange="startNewSession()" style="accent-color:var(--teal)"> N3</label>
-    </div>
-<!-- POS filter — nothing checked = all types (opt-in filtering) -->
-    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">
-      <span style="letter-spacing:0.08em;min-width:32px">Type</span>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="verb" onchange="startNewSession()" style="accent-color:var(--teal)"> Verbs</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="noun" onchange="startNewSession()" style="accent-color:var(--teal)"> Nouns</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="i-adj" onchange="startNewSession()" style="accent-color:var(--teal)"> い-adj</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="na-adj" onchange="startNewSession()" style="accent-color:var(--teal)"> な-adj</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="adverb" onchange="startNewSession()" style="accent-color:var(--teal)"> Adverbs</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="vocab-pos-filter" value="expression" onchange="startNewSession()" style="accent-color:var(--teal)"> Expressions</label>
-    </div>
-<!-- Session controls -->
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-      <span style="font-family:var(--ui);font-size:0.75rem;letter-spacing:0.08em;color:var(--ink-light)">Session size</span>
-      <select id="sessionSizeSelect" onchange="startNewSession()"
-        style="padding:4px 8px;font-family:var(--ui);font-size:0.8rem;
-               background:var(--paper-dark);border:1px solid var(--border);color:var(--ink)">
-        <option value="10">10 words</option>
-        <option value="20" selected>20 words</option>
-        <option value="30">30 words</option>
-        <option value="50">50 words</option>
-        <option value="all">All</option>
-      </select>
-      <button class="btn-action" onclick="startNewSession()">New session</button>
-      <span id="sessionStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--teal)"></span>
-    </div>
-
-    <div class="vocab-counter" id="vocabCounter">No cards yet — add some below!</div>
+    <div class="vocab-counter" id="vocabCounter">No cards yet!</div>
     <div class="vocab-card-area">
       <div class="vocab-card" id="vocabCard" onclick="flipVocab()">
         <div class="vocab-card-inner">
@@ -598,7 +567,6 @@
         </div>
       </div>
     </div>
-
     <div class="vocab-controls">
       <button class="btn-nav" onclick="prevVocab()">Prev</button>
       <button class="btn-rating btn-rating-red" onclick="markVocab('again')">Again</button>
@@ -609,31 +577,35 @@
     <div style="text-align:center;margin-top:8px">
       <span id="vocabDeckStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)"></span>
     </div>
-    <hr style="border:none;border-top:1px solid var(--border);margin:24px 0 16px">
-    <!-- Scrollable vocab list — hidden by default -->
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-      <button class="btn-ghost" id="vocabListToggleBtn" onclick="toggleVocabList()">&#9654; Show word list</button>
-      <button class="btn-ghost" id="vocabListPrintBtn" onclick="printVocabList()" style="display:none">Print</button>
+    <div id="vocabList" style="display:none;max-height:320px;overflow-y:auto;border:1px solid var(--border);margin-bottom:20px"></div>
+    <!-- Upper footer: session controls -->
+    <div class="footer-lower">
+      <div class="footer-lower-row">
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="verb" onchange="startNewSession()"> Verbs</label>
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="noun" onchange="startNewSession()"> Nouns</label>
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="i-adj" onchange="startNewSession()"> い-adj</label>
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="na-adj" onchange="startNewSession()"> な-adj</label>
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="adverb" onchange="startNewSession()"> Adverbs</label>
+        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="expression" onchange="startNewSession()"> Expressions</label>
+      </div>
+      <div class="footer-lower-row">
+        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5" checked onchange="startNewSession()"> N5</label>
+        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5+N4" onchange="startNewSession()"> N4</label>
+        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="all" onchange="startNewSession()"> N3</label>
+        <label class="filter-chip-blue"><input type="radio" name="vocabSize" value="20" checked onchange="startNewSession()"> 20</label>
+        <label class="filter-chip-blue"><input type="radio" name="vocabSize" value="all" onchange="startNewSession()"> All</label>
+      </div>
+    </div>
+
+    <!-- Upper footer: session controls -->
+    <div class="footer-upper">
       <button class="btn-toggle" id="vcReadingToggle" onclick="toggleVcReading(event)">Reading</button>
       <button class="btn-toggle" id="vcPitchToggle" onclick="vcTogglePitch()">Pitch</button>
       <button class="btn-group" id="vcDirectionBtn" onclick="toggleVcDirection()">JP &#8594; EN</button>
       <button class="btn-action" id="vocabResetBtn" onclick="resetVocabDeck()">Reset deck</button>
+      <button class="btn-toggle" id="vocabListToggleBtn" onclick="toggleVocabList()">Word list</button>
+      <button class="btn-action" id="vocabListPrintBtn" onclick="printVocabList()" style="display:none">Print</button>
     </div>
-    <div id="vocabList" style="display:none;max-height:320px;overflow-y:auto;border:1px solid var(--border);margin-bottom:20px"></div>
-
-    <hr style="border:none;border-top:1px solid var(--border);margin:8px 0 20px">
-    <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:12px">ADD WORDS BY CATEGORY</div>
-    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-      <input id="vcFetchCategory" type="text" placeholder="e.g. food, transport, emotions, weather…"
-        style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);
-               color:var(--ink);font-family:var(--ui);font-size:0.9rem;outline:none;border-radius:6px"
-        onkeydown="if(event.key==='Enter')vcFetch()">
-      <button class="btn-action" onclick="vcFetch()" id="vcFetchBtn">
-        Fetch →
-      </button>
-    </div>
-    <div id="vcFetchPreview" style="display:none;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:8px"></div>
-    <div id="vcFetchStatus" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);min-height:1.2em"></div>
     </div>
     <!-- Anki sub-panel -->
     <div id="words-sub-anki" style="display:none">

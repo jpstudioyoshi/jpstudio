@@ -1557,6 +1557,30 @@ function initApiKeyBar() {
 // ═══════════════════════════════════════════════════════
 // NAV
 // ═══════════════════════════════════════════════════════
+function wordsSubFromSelect(val) {
+  localStorage.setItem('wordsLastSub', val);
+  wordsSwitchSub(val);
+}
+
+function wordsSwitchSubRestore() {
+  const last = localStorage.getItem('wordsLastSub') || 'vocab';
+  const sel = document.getElementById('wordsSubSelect');
+  if (sel) sel.value = last;
+  wordsSwitchSub(last);
+}
+
+function wordsSubFromSelect(val) {
+  localStorage.setItem('wordsLastSub', val);
+  wordsSwitchSub(val);
+}
+
+function wordsSwitchSubRestore() {
+  const last = localStorage.getItem('wordsLastSub') || 'vocab';
+  const sel = document.getElementById('wordsSubSelect');
+  if (sel) sel.value = last;
+  wordsSwitchSub(last);
+}
+
 function wordsSwitchSub(name) {
   ['vocab','anki','game','counters','days'].forEach(s => {
     const el = document.getElementById('words-sub-' + s);
@@ -1598,6 +1622,7 @@ function showPanel(id) {
   if (_psc) _psc.style.display = id === 'progress' ? 'flex' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
+  if (id === 'words') { wordsSwitchSubRestore(); }
   if (id === 'vocab') { showPanel('words'); return; }
   if (id === 'words') renderVocab();
   if (id === 'grammar2') { gram2Switch((typeof Grammar2State !== 'undefined' ? Grammar2State.lastSubtab : null) || 'conj'); }
