@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════
 // FEATURES-VOICE
 // Agent Briefing · Voice Conversation
-// Requires: core.js, briefing-prompt.js, _fv_GrammarModel().js,
+// Requires: core.js, briefing-prompt.js, (App.GrammarModel || window.GrammarModel).js,
 //           features-core.js, features-kana.js
 // ═══════════════════════════════════════════════════════
 
@@ -9,14 +9,6 @@
 // All cross-file dependencies resolved via App registry with window
 // fallback. Called as functions so they always pick up the latest
 // registered value (safe even if load order shifts).
-function _fv_claudeAPI(...a)     { return (App.claudeAPI     || window.claudeAPI)(...a); }
-function _fv_claudeText(...a)    { return (App.claudeText     || window.claudeText)(...a); }
-function _fv_getApiKey()         { return (App.getApiKey      || window.getApiKey)?.(); }
-function _fv_showPanel(id)       { return (App.showPanel      || window.showPanel)?.(id); }
-function _fv_Storage()           { return App.Storage         || window.Storage; }
-function _fv_StudentModel()      { return App.StudentModel    || window.StudentModel; }
-function _fv_GrammarModel()      { return App.GrammarModel    || window.GrammarModel; }
-function _fv_escHtml(s)          { return (App.escHtml        || window.escHtml)?.(s) ?? s; }
 
 // ══════════════════════════════════════════════════════════════════
 // AGENT BRIEFING
@@ -60,7 +52,7 @@ function agentCollectSignals() {
 
   // 3. Spoken error patterns
   try {
-    const spokenRaw = _fv_Storage().get(STORAGE_KEYS.SPOKEN_ERRORS);
+    const spokenRaw = (App.Storage || window.Storage).get(STORAGE_KEYS.SPOKEN_ERRORS);
     const spokenErrors = spokenRaw ? JSON.parse(spokenRaw) : [];
     const topSpoken = spokenErrors.sort((a,b) => b.count - a.count)[0];
     if (topSpoken && topSpoken.count >= 2) {
@@ -75,7 +67,7 @@ function agentCollectSignals() {
 
   // 4. SST — days since last session
   try {
-    const sessions = _fv_Storage().getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
+    const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
     if (sessions.length > 0) {
       const lastSst = new Date(sessions[0].date).getTime();
       const daysSince = Math.floor((now - lastSst) / DAY);
@@ -93,7 +85,7 @@ function agentCollectSignals() {
 
   // 5. Writing — days since last session
   try {
-    const texts = _fv_Storage().getJSON(STORAGE_KEYS.STUDIO_TEXTS, []);
+    const texts = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.STUDIO_TEXTS, []);
     if (texts.length > 0) {
       const lastWrite = new Date(texts[0].date || texts[0].savedAt || 0).getTime();
       const daysSince = Math.floor((now - lastWrite) / DAY);
@@ -107,7 +99,7 @@ function agentCollectSignals() {
 
   // 6. Anki Easy×5 words — consolidated but never written
   try {
-    const easyCounts = _fv_Storage().getJSON(STORAGE_KEYS.ANKI_EASY_COUNTS, {});
+    const easyCounts = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.ANKI_EASY_COUNTS, {});
     const consolidated = Object.entries(easyCounts)
       .filter(([,c]) => c >= 5).length;
     if (consolidated > 0) {
@@ -228,7 +220,7 @@ function agentGetLaunchPanel() {
   const top = signals[0];
   if (top.priority >= 3) return 'progress'; // urgent — show briefing
   // Check if we opened progress recently — don't always force it
-  const lastProgress = parseInt(_fv_Storage().get('agentLastProgressView') || '0');
+  const lastProgress = parseInt((App.Storage || window.Storage).get('agentLastProgressView') || '0');
   const hoursSince = (Date.now() - lastProgress) / 3600000;
   if (hoursSince > 12) return 'progress';
   return 'dashboard';
@@ -242,7 +234,7 @@ async function agentRefresh(force) {
 
   // Render cached cards only if fresh — stale cache shows loading state to avoid visible swap
   try {
-    const cached = _fv_Storage().getJSON(AGENT_CACHE_KEY, null);
+    const cached = (App.Storage || window.Storage).getJSON(AGENT_CACHE_KEY, null);
     if (cached && cached.cards) {
       const fresh = !force && (Date.now() - cached.ts) < AGENT_CACHE_MINS * 60000;
       if (fresh) { agentRenderCards(cached.cards); return; }
@@ -258,7 +250,7 @@ async function agentRefresh(force) {
   if (!signals.length) {
     const emptyCards = [{ icon: '✓', text: 'Everything looks good — enjoy your practice today.', action: null }];
     agentRenderCards(emptyCards);
-    _fv_Storage().setJSON(AGENT_CACHE_KEY, { ts: Date.now(), cards: emptyCards });
+    (App.Storage || window.Storage).setJSON(AGENT_CACHE_KEY, { ts: Date.now(), cards: emptyCards });
     if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
     return;
   }
@@ -272,7 +264,7 @@ async function agentRefresh(force) {
     actionLabel: s.actionLabel || null
   }));
   agentRenderCards(agentCards);
-  _fv_Storage().setJSON(AGENT_CACHE_KEY, { ts: Date.now(), cards: agentCards });
+  (App.Storage || window.Storage).setJSON(AGENT_CACHE_KEY, { ts: Date.now(), cards: agentCards });
 
   if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
   agentUpdatePresence();
@@ -305,7 +297,7 @@ let _agentConversation  = [];  // [{role, content}] — in-memory thread
 // Profile is stored as a JSON object with named fields
 function agentContextLoad() {
   try {
-    const raw = _fv_Storage().get(AGENT_CONTEXT_KEY);
+    const raw = (App.Storage || window.Storage).get(AGENT_CONTEXT_KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     if (typeof parsed === 'string') return { other: parsed };
@@ -314,7 +306,7 @@ function agentContextLoad() {
 }
 
 function agentContextSave(profile) {
-  try { _fv_Storage().set(AGENT_CONTEXT_KEY, JSON.stringify(profile)); } catch(e) {}
+  try { (App.Storage || window.Storage).set(AGENT_CONTEXT_KEY, JSON.stringify(profile)); } catch(e) {}
 }
 
 // Build a prose summary of the profile for Claude
@@ -361,14 +353,14 @@ function briefingTodayKey() {
 
 function briefingLoadCache() {
   try {
-    const c = _fv_Storage().getJSON(BRIEFING_CACHE_KEY, null);
+    const c = (App.Storage || window.Storage).getJSON(BRIEFING_CACHE_KEY, null);
     if (c && c.date === briefingTodayKey()) return c.text;
   } catch(e) {}
   return null;
 }
 
 function briefingSaveCache(text) {
-  try { _fv_Storage().setJSON(BRIEFING_CACHE_KEY, { date: briefingTodayKey(), text }); } catch(e) {}
+  try { (App.Storage || window.Storage).setJSON(BRIEFING_CACHE_KEY, { date: briefingTodayKey(), text }); } catch(e) {}
 }
 
 async function agentClaudeBriefing(force) {
@@ -377,7 +369,7 @@ async function agentClaudeBriefing(force) {
   const thread  = document.getElementById('agentClaudeThread');
   if (!respDiv || !thread) return;
 
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     respDiv.style.display = 'block';
     thread.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">No API key set — add one in Settings.</div>';
@@ -406,7 +398,7 @@ async function agentClaudeBriefing(force) {
   respDiv.style.display = 'block';
 
   try {
-    const summary   = await _fv_StudentModel().claudeSummary();
+    const summary   = await (App.StudentModel || window.StudentModel).claudeSummary();
     const profile   = agentContextLoad();
     const ctxNote   = agentContextToPrompt(profile);
 
@@ -444,7 +436,7 @@ async function agentClaudeFollowUp() {
   if (!input || !btn || !thread) return;
   const question = input.value.trim();
   if (!question) return;
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return;
 
   input.value = '';
@@ -472,7 +464,7 @@ async function agentClaudeFollowUp() {
 }
 
 async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   // Streaming call — bypasses claudeAPI, log manually
   console.warn('[API] Claude stream · feature="agent-stream" · tokens: n/a (streaming)');
   const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -575,7 +567,7 @@ function agentContextSaveFromFields() {
 document.addEventListener('storageReady', () => {
   agentContextUpdateBtn();
   // Load grammar model
-  if (typeof _fv_GrammarModel() !== 'undefined') _fv_GrammarModel().load().catch(e => console.warn('[GrammarModel]', e));
+  if (typeof (App.GrammarModel || window.GrammarModel) !== 'undefined') (App.GrammarModel || window.GrammarModel).load().catch(e => console.warn('[GrammarModel]', e));
   // Populate ヨシ panel if it's the active panel on load
   if (typeof lessonNotesRenderPanel === 'function') lessonNotesRenderPanel();
   // Auto-trigger daily briefing (uses cache if already run today)
@@ -589,14 +581,14 @@ function agentUpdatePresence() {
     const topPriority = signals.length ? signals[0].priority : 0;
     const topCard = (() => {
       try {
-        const cached = _fv_Storage().getJSON(AGENT_CACHE_KEY, null);
+        const cached = (App.Storage || window.Storage).getJSON(AGENT_CACHE_KEY, null);
         if (cached && cached.cards && cached.cards.length) return cached.cards[0];
       } catch(e) {}
       return null;
     })();
 
     // ── Badge: show if user hasn't visited 進捗 today ───────────
-    const lastVisit = parseInt(_fv_Storage().get('agentLastProgressView') || '0');
+    const lastVisit = parseInt((App.Storage || window.Storage).get('agentLastProgressView') || '0');
     const visitedToday = lastVisit
       && new Date(lastVisit).toDateString() === new Date().toDateString();
     const hasSomethingToSee = signals.length > 0;
@@ -662,7 +654,7 @@ function agentUpdatePresence() {
 
 // ── Open ノート at a specific tab, optionally pre-filling the textarea ──
 function openGramNote(tab, prefill) {
-  _fv_showPanel('gramnotes');
+  (App.showPanel || window.showPanel)?.('gramnotes');
   setTimeout(() => {
     // Find and click the right tab button
     const tabBtns = document.querySelectorAll('.gramnote-tab');
@@ -742,12 +734,12 @@ function pauseAnalyse(segments) {
 
 function spokenErrorsGet() {
   try {
-    return _fv_Storage().getJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, []);
+    return (App.Storage || window.Storage).getJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, []);
   } catch { return []; }
 }
 
 function spokenErrorsSave(errors) {
-  _fv_Storage().setJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, errors);
+  (App.Storage || window.Storage).setJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, errors);
 }
 function spokenErrorsAdd(correction, userText) {
   if (!correction) return;
@@ -811,7 +803,7 @@ const SPOKEN_ERROR_TO_NODE = {
 
 function _spokenErrorRecordGrammarEvidence(category, correction) {
   try {
-    if (typeof _fv_GrammarModel() === 'undefined' || !_fv_GrammarModel().loaded) return;
+    if (typeof (App.GrammarModel || window.GrammarModel) === 'undefined' || !(App.GrammarModel || window.GrammarModel).loaded) return;
     const typeMap = SPOKEN_ERROR_TO_NODE[category];
     if (!typeMap) return;
 
@@ -821,11 +813,11 @@ function _spokenErrorRecordGrammarEvidence(category, correction) {
       if (correction.includes(key)) { nodeId = id; break; }
     }
     if (!nodeId) return;
-    if (_fv_GrammarModel().isOverridden(nodeId)) return;
+    if ((App.GrammarModel || window.GrammarModel).isOverridden(nodeId)) return;
 
-    const current = _fv_GrammarModel().getScore(nodeId);
+    const current = (App.GrammarModel || window.GrammarModel).getScore(nodeId);
     const newScore = Math.max(0, current - 0.06);
-    _fv_GrammarModel().recordEvidence(nodeId, 'speaking', newScore,
+    (App.GrammarModel || window.GrammarModel).recordEvidence(nodeId, 'speaking', newScore,
       'spoken error: ' + correction.slice(0, 60)
     ).catch(() => {});
   } catch(e) {}
@@ -836,7 +828,7 @@ function spokenErrorsClear() {
   // Clear from unified SQL table (primary store)
   window.db?.run('DELETE FROM error_history WHERE source=\'spoken\'').catch(e => console.error('[spokenErrorsClear]', e));
   // Clear legacy localStorage copy
-  _fv_Storage().remove(STORAGE_KEYS.SPOKEN_ERRORS_DATA);
+  (App.Storage || window.Storage).remove(STORAGE_KEYS.SPOKEN_ERRORS_DATA);
   renderSpokenErrorsProgress();
 }
 
@@ -1121,7 +1113,7 @@ function voiceStartProfileInterview() {
 }
 
 async function voiceInterviewAsk() {
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     voiceUpdateStatus('Please set your Claude API key first');
     VoiceState.interviewMode = false;
@@ -1186,7 +1178,7 @@ Be warm, encouraging, and conversational. React to their answers before asking t
   voiceUpdateStatus('Thinking...');
   
   try {
-    const data = await _fv_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{ role: 'user', content: systemPrompt }]
@@ -1222,7 +1214,7 @@ Be warm, encouraging, and conversational. React to their answers before asking t
 }
 
 async function voiceInterviewProcessAnswer(userText) {
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return;
   
   // Note: user message is already pushed by voiceProcessAudio/voiceSendText before calling voiceSendToClaude
@@ -1251,7 +1243,7 @@ Extract what you learned and return JSON with any of these fields that apply:
 Only include fields where you learned something. If they gave unclear or off-topic answers, return empty object {}.`;
 
   try {
-    const data = await _fv_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 200,
         messages: [{ role: 'user', content: systemPrompt }]
@@ -1282,7 +1274,7 @@ Only include fields where you learned something. If they gave unclear or off-top
 
 function voiceCheckKeys() {
   const hasOpenAI = !!getOpenAIKey();
-  const hasClaude = !!_fv_getApiKey();
+  const hasClaude = !!(App.getApiKey || window.getApiKey)?.();
   const notice = document.getElementById('voiceKeyNotice');
   if (notice) {
     notice.style.display = hasOpenAI ? 'none' : 'block';
@@ -1297,12 +1289,12 @@ function voiceUpdateStatus(msg) {
 
 function voiceGetSavedConversations() {
   try {
-    return JSON.parse(_fv_Storage().get(STORAGE_KEYS.VOICE_CONVOS_ALT) || '{}');
+    return JSON.parse((App.Storage || window.Storage).get(STORAGE_KEYS.VOICE_CONVOS_ALT) || '{}');
   } catch { return {}; }
 }
 
 function voiceSaveConversations(convos) {
-  _fv_Storage().set(STORAGE_KEYS.VOICE_CONVOS_ALT, JSON.stringify(convos));
+  (App.Storage || window.Storage).set(STORAGE_KEYS.VOICE_CONVOS_ALT, JSON.stringify(convos));
 }
 
 function voiceUpdateConvoDropdown() {
@@ -1554,14 +1546,14 @@ async function rtStartConversation() {
   ].join('\n');
 
   try {
-    const data = await _fv_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 150,
       system: openingPrompt,
       messages: [{ role: 'user', content: 'はじめてください。' }]
     ,
       track: 'speaking'
     });
-    const opening = _fv_claudeText(data).trim();
+    const opening = (App.claudeText || window.claudeText)(data).trim();
 
     // Add the opening as an assistant message
     VoiceState.messages.push({ role: 'assistant', content: opening });
@@ -1621,7 +1613,7 @@ async function rtStartRound2() {
     const t1    = fmt(VoiceState.rtMessages1);
     const level = document.getElementById('voiceLevel')?.value || 'N5';
     const topic = VoiceState.rtTopic || 'Free conversation';
-    const data  = await _fv_claudeAPI({
+    const data  = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 300,
       messages: [{ role: 'user', content: [
         'You are reviewing Round 1 of a Japanese conversation practice to give a student a brief nudge before Round 2.',
@@ -1641,7 +1633,7 @@ async function rtStartRound2() {
     ,
       track: 'speaking'
     });
-    nudge = _fv_claudeText(data).trim();
+    nudge = (App.claudeText || window.claudeText)(data).trim();
   } catch (e) {
     nudge = 'Round 1 complete. Start Round 2 fresh — same topic, same role.';
   }
@@ -1727,16 +1719,16 @@ async function rtCompare() {
     })()
   ].join('\\n');
   try {
-    const data   = await _fv_claudeAPI({ max_tokens: 1200, messages: [{ role: 'user', content: prompt }] ,
+    const data   = await (App.claudeAPI || window.claudeAPI)({ max_tokens: 1200, messages: [{ role: 'user', content: prompt }] ,
       track: 'speaking'
     });
-    const debrief = _fv_claudeText(data);
-    let sessions = _fv_Storage().getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
+    const debrief = (App.claudeText || window.claudeText)(data);
+    let sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
     const _sstVoiceCount = (VoiceState.messages || []).filter(m => m.fromVoice).length;
     const _sstQualifies = _sstVoiceCount >= goalsLoad().sstMinUtterances;
     // Always save session history; only mark speaking complete if enough utterances
     sessions.unshift({ date: new Date().toISOString(), topic, level, round1: t1, round2: t2, debrief, utterances: _sstVoiceCount, qualified: _sstQualifies });
-    _fv_Storage().setJSON(STORAGE_KEYS.ROUND_TRIPS, sessions.slice(0, 50));
+    (App.Storage || window.Storage).setJSON(STORAGE_KEYS.ROUND_TRIPS, sessions.slice(0, 50));
     if (_sstQualifies) {
       drillLastCompletedWrite('speaking', topic);
     }
@@ -1887,7 +1879,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
 
       try {
         const level = document.getElementById('voiceLevel')?.value || 'N5';
-        const data = await _fv_claudeAPI({
+        const data = await (App.claudeAPI || window.claudeAPI)({
           max_tokens: 400,
           messages: [{ role: 'user', content: [
             'Context: Japanese learner at ' + level + ' just completed a round-trip conversation practice on topic: ' + topic,
@@ -1902,7 +1894,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
         ,
           track: 'speaking'
         });
-        const answer = _fv_claudeText(data).trim();
+        const answer = (App.claudeText || window.claudeText)(data).trim();
         const aEl = document.createElement('div');
         aEl.style.cssText = 'margin-bottom:10px;color:var(--ink);padding-left:10px;border-left:2px solid var(--teal)';
         aEl.textContent = answer;
@@ -2007,7 +1999,7 @@ function rtNewSession() {
 function rtShowHistory() {
   document.getElementById('rtHistoryPanel')?.remove();
 
-  const sessions = _fv_Storage().getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
+  const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.ROUND_TRIPS, []);
 
   const panel = document.createElement('div');
   panel.id = 'rtHistoryPanel';
@@ -2113,13 +2105,13 @@ Respond with JSON in this exact format:
 Keep issues to 2-3 max. Keep actions to 2-3 max. Be concise.`;
 
   try {
-    const key = _fv_getApiKey();
+    const key = (App.getApiKey || window.getApiKey)?.();
     if (!key) {
       voiceUpdateStatus('API key required');
       return;
     }
     
-    const response = await _fv_claudeAPI({
+    const response = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 800,
         messages: [{ role: 'user', content: prompt }]
@@ -2507,7 +2499,7 @@ async function voiceSendToClaude(userText) {
     return;
   }
   
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     voiceUpdateStatus('No Claude API key');
     return;
@@ -2644,7 +2636,7 @@ Or if no errors:
     .map(m => ({ role: m.role, content: m.content }));
   
   try {
-    const data = await _fv_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 400,
         system: systemPrompt,
@@ -2703,7 +2695,7 @@ async function voiceSendText() {
   const text = input?.value?.trim();
   if (!text) return;
   
-  const apiKey = _fv_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     voiceUpdateStatus('Please set your Claude API key');
     return;

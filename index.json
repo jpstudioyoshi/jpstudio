@@ -7932,590 +7932,534 @@
   },
   {
     "type": "function",
-    "name": "_fv_claudeAPI",
-    "file": "src/features-voice.js",
-    "line": 12,
-    "desc": "fallback. Called as functions so they always pick up the latest"
-  },
-  {
-    "type": "function",
-    "name": "_fv_claudeText",
-    "file": "src/features-voice.js",
-    "line": 13,
-    "desc": "registered value (safe even if load order shifts)."
-  },
-  {
-    "type": "function",
-    "name": "_fv_getApiKey",
-    "file": "src/features-voice.js",
-    "line": 14,
-    "desc": "return (App.getApiKey      || window.getApiKey)?.(); }"
-  },
-  {
-    "type": "function",
-    "name": "_fv_showPanel",
-    "file": "src/features-voice.js",
-    "line": 15,
-    "desc": "return (App.showPanel      || window.showPanel)?.(id); }"
-  },
-  {
-    "type": "function",
-    "name": "_fv_Storage",
-    "file": "src/features-voice.js",
-    "line": 16,
-    "desc": "return App.Storage         || window.Storage; }"
-  },
-  {
-    "type": "function",
-    "name": "_fv_StudentModel",
-    "file": "src/features-voice.js",
-    "line": 17,
-    "desc": "return App.StudentModel    || window.StudentModel; }"
-  },
-  {
-    "type": "function",
-    "name": "_fv_GrammarModel",
-    "file": "src/features-voice.js",
-    "line": 18,
-    "desc": "return App.GrammarModel    || window.GrammarModel; }"
-  },
-  {
-    "type": "function",
-    "name": "_fv_escHtml",
-    "file": "src/features-voice.js",
-    "line": 19,
-    "desc": "return (App.escHtml        || window.escHtml)?.(s) ?? s; }"
-  },
-  {
-    "type": "function",
     "name": "agentCollectSignals",
     "file": "src/features-voice.js",
-    "line": 29,
+    "line": 21,
     "desc": "const signals = [];"
   },
   {
     "type": "function",
     "name": "agentGetLaunchPanel",
     "file": "src/features-voice.js",
-    "line": 225,
+    "line": 217,
     "desc": "const signals = agentCollectSignals();"
   },
   {
     "type": "function",
     "name": "agentRefresh",
     "file": "src/features-voice.js",
-    "line": 238,
+    "line": 230,
     "desc": "const btn = document.getElementById('agentRefreshBtn');"
   },
   {
     "type": "function",
     "name": "agentRenderCards",
     "file": "src/features-voice.js",
-    "line": 282,
+    "line": 274,
     "desc": "const container = document.getElementById('agentCards');"
   },
   {
     "type": "function",
     "name": "agentContextLoad",
     "file": "src/features-voice.js",
-    "line": 306,
+    "line": 298,
     "desc": ""
   },
   {
     "type": "function",
     "name": "agentContextSave",
     "file": "src/features-voice.js",
-    "line": 316,
-    "desc": "try { _fv_Storage().set(AGENT_CONTEXT_KEY, JSON.stringify(profile)); } catch(e) {}"
+    "line": 308,
+    "desc": "try { (App.Storage || window.Storage).set(AGENT_CONTEXT_KEY, JSON.stringify(profile)); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "agentContextToPrompt",
     "file": "src/features-voice.js",
-    "line": 321,
+    "line": 313,
     "desc": "if (!profile || typeof profile !== 'object') return '';"
   },
   {
     "type": "function",
     "name": "agentRenderThread",
     "file": "src/features-voice.js",
-    "line": 339,
+    "line": 331,
     "desc": "const thread = document.getElementById('agentClaudeThread');"
   },
   {
     "type": "function",
     "name": "briefingTodayKey",
     "file": "src/features-voice.js",
-    "line": 358,
+    "line": 350,
     "desc": "return new Date().toISOString().slice(0, 10); // YYYY-MM-DD"
   },
   {
     "type": "function",
     "name": "briefingLoadCache",
     "file": "src/features-voice.js",
-    "line": 362,
+    "line": 354,
     "desc": ""
   },
   {
     "type": "function",
     "name": "briefingSaveCache",
     "file": "src/features-voice.js",
-    "line": 370,
-    "desc": "try { _fv_Storage().setJSON(BRIEFING_CACHE_KEY, { date: briefingTodayKey(), text }); } catch(e) {}"
+    "line": 362,
+    "desc": "try { (App.Storage || window.Storage).setJSON(BRIEFING_CACHE_KEY, { date: briefingTodayKey(), text }"
   },
   {
     "type": "function",
     "name": "agentClaudeBriefing",
     "file": "src/features-voice.js",
-    "line": 374,
+    "line": 366,
     "desc": "const btn     = document.getElementById('agentClaudeBtn');"
   },
   {
     "type": "function",
     "name": "agentClaudeFollowUp",
     "file": "src/features-voice.js",
-    "line": 440,
+    "line": 432,
     "desc": "const input  = document.getElementById('agentFollowUpInput');"
   },
   {
     "type": "function",
     "name": "_agentStream",
     "file": "src/features-voice.js",
-    "line": 474,
-    "desc": "const apiKey = _fv_getApiKey();"
+    "line": 466,
+    "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "agentContextUpdateBtn",
     "file": "src/features-voice.js",
-    "line": 538,
+    "line": 530,
     "desc": "const btn = document.getElementById('agentContextBtn');"
   },
   {
     "type": "function",
     "name": "agentToggleContext",
     "file": "src/features-voice.js",
-    "line": 547,
+    "line": 539,
     "desc": "const panel = document.getElementById('agentContextPanel');"
   },
   {
     "type": "function",
     "name": "agentContextPopulateFields",
     "file": "src/features-voice.js",
-    "line": 555,
+    "line": 547,
     "desc": "const p = agentContextLoad();"
   },
   {
     "type": "function",
     "name": "agentContextSaveFromFields",
     "file": "src/features-voice.js",
-    "line": 564,
+    "line": 556,
     "desc": "const fields = ['nativeLang','otherLangs','currentLevel','targetLevel','aims','dailyTime','lessons',"
   },
   {
     "type": "function",
     "name": "agentUpdatePresence",
     "file": "src/features-voice.js",
-    "line": 586,
+    "line": 578,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openGramNote",
     "file": "src/features-voice.js",
-    "line": 664,
-    "desc": "_fv_showPanel('gramnotes');"
+    "line": 656,
+    "desc": "(App.showPanel || window.showPanel)?.('gramnotes');"
   },
   {
     "type": "function",
     "name": "pauseDataGet",
     "file": "src/features-voice.js",
-    "line": 696,
+    "line": 688,
     "desc": "try { return JSON.parse(localStorage.getItem(PAUSE_DATA_KEY) || '[]'); } catch { return []; }"
   },
   {
     "type": "function",
     "name": "pauseDataAdd",
     "file": "src/features-voice.js",
-    "line": 700,
+    "line": 692,
     "desc": "if (!pauses || !pauses.length) return;"
   },
   {
     "type": "function",
     "name": "pauseDataClear",
     "file": "src/features-voice.js",
-    "line": 711,
+    "line": 703,
     "desc": "localStorage.removeItem(PAUSE_DATA_KEY);"
   },
   {
     "type": "function",
     "name": "pauseAnalyse",
     "file": "src/features-voice.js",
-    "line": 717,
+    "line": 709,
     "desc": "Extract intra-sentence pauses from Whisper verbose_json segments"
   },
   {
     "type": "function",
     "name": "spokenErrorsGet",
     "file": "src/features-voice.js",
-    "line": 743,
+    "line": 735,
     "desc": ""
   },
   {
     "type": "function",
     "name": "spokenErrorsSave",
     "file": "src/features-voice.js",
-    "line": 749,
-    "desc": "_fv_Storage().setJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, errors);"
+    "line": 741,
+    "desc": "(App.Storage || window.Storage).setJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, errors);"
   },
   {
     "type": "function",
     "name": "spokenErrorsAdd",
     "file": "src/features-voice.js",
-    "line": 752,
+    "line": 744,
     "desc": "if (!correction) return;"
   },
   {
     "type": "function",
     "name": "_spokenErrorRecordGrammarEvidence",
     "file": "src/features-voice.js",
-    "line": 812,
+    "line": 804,
     "desc": ""
   },
   {
     "type": "function",
     "name": "spokenErrorsClear",
     "file": "src/features-voice.js",
-    "line": 834,
+    "line": 826,
     "desc": "if (!confirm('Clear all spoken error data? This cannot be undone.')) return;"
   },
   {
     "type": "function",
     "name": "spokenErrorShowPopup",
     "file": "src/features-voice.js",
-    "line": 843,
+    "line": 835,
     "desc": "window._errorExamples = window._spokenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "renderSpokenErrorsProgress",
     "file": "src/features-voice.js",
-    "line": 854,
+    "line": 846,
     "desc": "const chartEl = document.getElementById('progress-spoken-chart');"
   },
   {
     "type": "function",
     "name": "voiceGetProfile",
     "file": "src/features-voice.js",
-    "line": 974,
+    "line": 966,
     "desc": ""
   },
   {
     "type": "function",
     "name": "voiceSaveProfile",
     "file": "src/features-voice.js",
-    "line": 980,
+    "line": 972,
     "desc": "localStorage.setItem(VOICE_PROFILE_KEY, JSON.stringify(profile));"
   },
   {
     "type": "function",
     "name": "voiceOpenProfile",
     "file": "src/features-voice.js",
-    "line": 984,
+    "line": 976,
     "desc": "const profile = voiceGetProfile();"
   },
   {
     "type": "function",
     "name": "voiceSaveProfileFromModal",
     "file": "src/features-voice.js",
-    "line": 1061,
+    "line": 1053,
     "desc": "const profile = {"
   },
   {
     "type": "function",
     "name": "voiceGetProfilePrompt",
     "file": "src/features-voice.js",
-    "line": 1079,
+    "line": 1071,
     "desc": "const p = voiceGetProfile();"
   },
   {
     "type": "function",
     "name": "voiceStartProfileInterview",
     "file": "src/features-voice.js",
-    "line": 1107,
+    "line": 1099,
     "desc": "VoiceState.interview* — see declaration above"
   },
   {
     "type": "function",
     "name": "voiceInterviewAsk",
     "file": "src/features-voice.js",
-    "line": 1123,
-    "desc": "const apiKey = _fv_getApiKey();"
+    "line": 1115,
+    "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "voiceInterviewProcessAnswer",
     "file": "src/features-voice.js",
-    "line": 1224,
-    "desc": "const apiKey = _fv_getApiKey();"
+    "line": 1216,
+    "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "voiceCheckKeys",
     "file": "src/features-voice.js",
-    "line": 1283,
+    "line": 1275,
     "desc": "const hasOpenAI = !!getOpenAIKey();"
   },
   {
     "type": "function",
     "name": "voiceUpdateStatus",
     "file": "src/features-voice.js",
-    "line": 1293,
+    "line": 1285,
     "desc": "const el = document.getElementById('voiceStatus');"
   },
   {
     "type": "function",
     "name": "voiceGetSavedConversations",
     "file": "src/features-voice.js",
-    "line": 1298,
+    "line": 1290,
     "desc": ""
   },
   {
     "type": "function",
     "name": "voiceSaveConversations",
     "file": "src/features-voice.js",
-    "line": 1304,
-    "desc": "_fv_Storage().set(STORAGE_KEYS.VOICE_CONVOS_ALT, JSON.stringify(convos));"
+    "line": 1296,
+    "desc": "(App.Storage || window.Storage).set(STORAGE_KEYS.VOICE_CONVOS_ALT, JSON.stringify(convos));"
   },
   {
     "type": "function",
     "name": "voiceUpdateConvoDropdown",
     "file": "src/features-voice.js",
-    "line": 1308,
+    "line": 1300,
     "desc": "const select = document.getElementById('voiceConvoSelect');"
   },
   {
     "type": "function",
     "name": "voiceSaveConversation",
     "file": "src/features-voice.js",
-    "line": 1319,
+    "line": 1311,
     "desc": "if (VoiceState.messages.length === 0) {"
   },
   {
     "type": "function",
     "name": "voiceDoSave",
     "file": "src/features-voice.js",
-    "line": 1370,
+    "line": 1362,
     "desc": "const input = document.getElementById('voiceSaveNameInput');"
   },
   {
     "type": "function",
     "name": "voiceLoadConversation",
     "file": "src/features-voice.js",
-    "line": 1396,
+    "line": 1388,
     "desc": "if (!name) {"
   },
   {
     "type": "function",
     "name": "voiceDeleteConversation",
     "file": "src/features-voice.js",
-    "line": 1424,
+    "line": 1416,
     "desc": "if (!VoiceState.currentConvoName) {"
   },
   {
     "type": "function",
     "name": "voiceNewChat",
     "file": "src/features-voice.js",
-    "line": 1441,
+    "line": 1433,
     "desc": "VoiceState.messages = [];"
   },
   {
     "type": "function",
     "name": "voiceTopicChanged",
     "file": "src/features-voice.js",
-    "line": 1459,
+    "line": 1451,
     "desc": "const structured   = val === 'round-trip' || val === 'comprehension';"
   },
   {
     "type": "function",
     "name": "rtSetStatus",
     "file": "src/features-voice.js",
-    "line": 1503,
+    "line": 1495,
     "desc": "const el = document.getElementById('rtStatus');"
   },
   {
     "type": "function",
     "name": "rtStartConversation",
     "file": "src/features-voice.js",
-    "line": 1510,
+    "line": 1502,
     "desc": "const topicInput = document.getElementById('rtTopicInput');"
   },
   {
     "type": "function",
     "name": "rtCheckProgress",
     "file": "src/features-voice.js",
-    "line": 1579,
+    "line": 1571,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtStartRound2",
     "file": "src/features-voice.js",
-    "line": 1595,
+    "line": 1587,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtCompare",
     "file": "src/features-voice.js",
-    "line": 1669,
+    "line": 1661,
     "desc": "VoiceState.rtMessages2 = [...VoiceState.messages];"
   },
   {
     "type": "function",
     "name": "rtShowDebrief",
     "file": "src/features-voice.js",
-    "line": 1751,
+    "line": 1743,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtNewSession",
     "file": "src/features-voice.js",
-    "line": 1996,
+    "line": 1988,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtShowHistory",
     "file": "src/features-voice.js",
-    "line": 2007,
+    "line": 1999,
     "desc": "document.getElementById('rtHistoryPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtReopenDebrief",
     "file": "src/features-voice.js",
-    "line": 2065,
+    "line": 2057,
     "desc": "if (!VoiceState.rtLastDebrief) return;"
   },
   {
     "type": "function",
     "name": "voiceReviewErrors",
     "file": "src/features-voice.js",
-    "line": 2077,
+    "line": 2069,
     "desc": "const userMessages = VoiceState.messages.filter(m => m.role === 'user').map(m => m.content);"
   },
   {
     "type": "function",
     "name": "voiceClearChat",
     "file": "src/features-voice.js",
-    "line": 2208,
+    "line": 2200,
     "desc": "voiceNewChat();"
   },
   {
     "type": "function",
     "name": "voiceRenderMessages",
     "file": "src/features-voice.js",
-    "line": 2212,
+    "line": 2204,
     "desc": "const history = document.getElementById('voiceChatHistory');"
   },
   {
     "type": "function",
     "name": "voicePlayLastRecording",
     "file": "src/features-voice.js",
-    "line": 2276,
+    "line": 2268,
     "desc": "if (!VoiceState.lastRecordingUrl) {"
   },
   {
     "type": "function",
     "name": "voicePlaySentenceBySentence",
     "file": "src/features-voice.js",
-    "line": 2287,
+    "line": 2279,
     "desc": "VoiceState.sentence* — see declaration above"
   },
   {
     "type": "function",
     "name": "voicePlayCurrentSentence",
     "file": "src/features-voice.js",
-    "line": 2307,
+    "line": 2299,
     "desc": "if (!VoiceState.sentencePlaying || VoiceState.sentenceIdx >= VoiceState.sentenceQueue.length) {"
   },
   {
     "type": "function",
     "name": "voiceSentenceTap",
     "file": "src/features-voice.js",
-    "line": 2344,
+    "line": 2336,
     "desc": "if (!VoiceState.sentencePlaying) return;"
   },
   {
     "type": "function",
     "name": "voiceStopSentences",
     "file": "src/features-voice.js",
-    "line": 2365,
+    "line": 2357,
     "desc": "if (VoiceState.sentencePlaying && (VoiceState.sentenceWaiting || speechSynthesis.speaking)) {"
   },
   {
     "type": "function",
     "name": "voiceToggleRecord",
     "file": "src/features-voice.js",
-    "line": 2382,
+    "line": 2374,
     "desc": "const btn = document.getElementById('voiceRecordBtn');"
   },
   {
     "type": "function",
     "name": "voiceProcessAudio",
     "file": "src/features-voice.js",
-    "line": 2437,
+    "line": 2429,
     "desc": "const openaiKey = getOpenAIKey();"
   },
   {
     "type": "function",
     "name": "voiceSendToClaude",
     "file": "src/features-voice.js",
-    "line": 2503,
+    "line": 2495,
     "desc": "if (VoiceState.interviewMode) {"
   },
   {
     "type": "function",
     "name": "voiceSendText",
     "file": "src/features-voice.js",
-    "line": 2701,
+    "line": 2693,
     "desc": "const input = document.getElementById('voiceTextInput');"
   },
   {
     "type": "function",
     "name": "voiceUploadAudio",
     "file": "src/features-voice.js",
-    "line": 2734,
+    "line": 2726,
     "desc": "Export functions"
   },
   {
     "type": "prompt",
     "name": "systemPrompt",
     "file": "src/features-voice.js",
-    "line": 457,
+    "line": 449,
     "desc": "You are a Japanese language tutor. Answer follow-up questions about the student'"
   },
   {
     "type": "prompt",
     "name": "systemPrompt",
     "file": "src/features-voice.js",
-    "line": 1169,
+    "line": 1161,
     "desc": "You are conducting a friendly get-to-know-you interview in Japanese with a langu"
   },
   {
     "type": "prompt",
     "name": "systemPrompt",
     "file": "src/features-voice.js",
-    "line": 1233,
+    "line": 1225,
     "desc": "The user answered an interview question in Japanese. Extract any personal inform"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-voice.js",
-    "line": 2088,
+    "line": 2080,
     "desc": "Review my Japanese from this conversation. Here are my messages: ${…}. ${…}`).jo"
   },
   {
