@@ -46,7 +46,6 @@ const TARGETS = [
   'src/briefing-prompt.js',
   'src/GrammarModel.js',
   'src/AppEvents.js',
-  'src/features-yoshi.js',
   'src/features-grammar.js',
   'src/features-reading.js',
   'src/features-video.js',

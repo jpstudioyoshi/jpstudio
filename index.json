@@ -4138,167 +4138,6 @@
   },
   {
     "type": "function",
-    "name": "yoshiGetSessions",
-    "file": "src/features-yoshi.js",
-    "line": 14,
-    "desc": "return JSON.parse(localStorage.getItem(YOSHI_KEY) || '[]');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiSaveSessions",
-    "file": "src/features-yoshi.js",
-    "line": 17,
-    "desc": "localStorage.setItem(YOSHI_KEY, JSON.stringify(arr));"
-  },
-  {
-    "type": "function",
-    "name": "yoshiRender",
-    "file": "src/features-yoshi.js",
-    "line": 21,
-    "desc": "const sessions = yoshiGetSessions();"
-  },
-  {
-    "type": "function",
-    "name": "yoshiDeleteSession",
-    "file": "src/features-yoshi.js",
-    "line": 37,
-    "desc": "if (!confirm('Delete this session?')) return;"
-  },
-  {
-    "type": "function",
-    "name": "yoshiOpenSession",
-    "file": "src/features-yoshi.js",
-    "line": 47,
-    "desc": "yoshiCurrentIdx = i;"
-  },
-  {
-    "type": "function",
-    "name": "yoshiLiveTitle",
-    "file": "src/features-yoshi.js",
-    "line": 60,
-    "desc": "if (yoshiCurrentIdx === null) return;"
-  },
-  {
-    "type": "function",
-    "name": "yoshiKanaDebounce",
-    "file": "src/features-yoshi.js",
-    "line": 88,
-    "desc": "clearTimeout(YoshiReadState.kanaTimer);"
-  },
-  {
-    "type": "function",
-    "name": "yoshiGenKana",
-    "file": "src/features-yoshi.js",
-    "line": 93,
-    "desc": "const completeEl = document.getElementById('yoshiComplete');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiAIComplete",
-    "file": "src/features-yoshi.js",
-    "line": 124,
-    "desc": "const clozeEl = document.getElementById('yoshiCloze');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiAIVocab",
-    "file": "src/features-yoshi.js",
-    "line": 148,
-    "desc": "const completeEl = document.getElementById('yoshiComplete');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiShowVocabPopup",
-    "file": "src/features-yoshi.js",
-    "line": 186,
-    "desc": "const existing = document.getElementById('yoshiVocabPopup');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiVocabPopupAddRow",
-    "file": "src/features-yoshi.js",
-    "line": 220,
-    "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiVocabPopupSave",
-    "file": "src/features-yoshi.js",
-    "line": 232,
-    "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiImport",
-    "file": "src/features-yoshi.js",
-    "line": 259,
-    "desc": "const title = document.getElementById('yoshiTitle').value.trim();"
-  },
-  {
-    "type": "function",
-    "name": "yoshiComputeBlanks",
-    "file": "src/features-yoshi.js",
-    "line": 305,
-    "desc": "if (cloze.includes('＿') || cloze.includes('_')) {"
-  },
-  {
-    "type": "function",
-    "name": "yoshiShowSession",
-    "file": "src/features-yoshi.js",
-    "line": 361,
-    "desc": "const main = document.getElementById('yoshiMain');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiSwitchTab",
-    "file": "src/features-yoshi.js",
-    "line": 441,
-    "desc": "document.querySelectorAll('.yoshi-subtab').forEach(b => b.classList.remove('active'));"
-  },
-  {
-    "type": "function",
-    "name": "yoshiShowImportInline",
-    "file": "src/features-yoshi.js",
-    "line": 458,
-    "desc": "const s = yoshiGetSessions()[yoshiCurrentIdx] || {};"
-  },
-  {
-    "type": "function",
-    "name": "yoshiRenderCloze",
-    "file": "src/features-yoshi.js",
-    "line": 495,
-    "desc": "── Lesson notes state ───────────────────────────────────────────────────────"
-  },
-  {
-    "type": "function",
-    "name": "yoshiCheckCloze",
-    "file": "src/features-yoshi.js",
-    "line": 557,
-    "desc": "const inputs = document.querySelectorAll('#yoshiClozeBody .yoshi-blank input');"
-  },
-  {
-    "type": "function",
-    "name": "yoshiRevealAll",
-    "file": "src/features-yoshi.js",
-    "line": 574,
-    "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
-  },
-  {
-    "type": "function",
-    "name": "yoshiResetCloze",
-    "file": "src/features-yoshi.js",
-    "line": 582,
-    "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
-  },
-  {
-    "type": "function",
-    "name": "yoshiConfirmCloze",
-    "file": "src/features-yoshi.js",
-    "line": 592,
-    "desc": "if (yoshiCurrentIdx === null) return;"
-  },
-  {
-    "type": "function",
     "name": "gdGenerate",
     "file": "src/features-grammar.js",
     "line": 34,
@@ -5230,898 +5069,870 @@
   },
   {
     "type": "function",
-    "name": "_fvid_claudeAPI",
-    "file": "src/features-video.js",
-    "line": 9,
-    "desc": "═══════════════════════════════════════════════════════"
-  },
-  {
-    "type": "function",
-    "name": "_fvid_getApiKey",
-    "file": "src/features-video.js",
-    "line": 10,
-    "desc": "── Phase 3: App-first resolvers ─────────────────────────────────"
-  },
-  {
-    "type": "function",
-    "name": "_fvid_showPanel",
-    "file": "src/features-video.js",
-    "line": 11,
-    "desc": "return (App.showPanel  || window.showPanel)?.(id); }"
-  },
-  {
-    "type": "function",
-    "name": "_fvid_Storage",
-    "file": "src/features-video.js",
-    "line": 12,
-    "desc": "return App.Storage     || window.Storage; }"
-  },
-  {
-    "type": "function",
     "name": "vtToggleWaveMode",
     "file": "src/features-video.js",
-    "line": 66,
+    "line": 59,
     "desc": "VideoState.waveMode = !VideoState.waveMode;"
   },
   {
     "type": "function",
     "name": "vtCollapseLoadBar",
     "file": "src/features-video.js",
-    "line": 75,
+    "line": 68,
     "desc": "document.getElementById('vtDropZone').style.display = 'none';"
   },
   {
     "type": "function",
     "name": "vtDropZoneClick",
     "file": "src/features-video.js",
-    "line": 83,
+    "line": 76,
     "desc": "document.getElementById('vtVideoInput').click();"
   },
   {
     "type": "function",
     "name": "vtHandleDrop",
     "file": "src/features-video.js",
-    "line": 88,
+    "line": 81,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "vtLoadVideo",
     "file": "src/features-video.js",
-    "line": 106,
+    "line": 99,
     "desc": "const file = input.files[0];"
   },
   {
     "type": "function",
     "name": "vtLoadFile",
     "file": "src/features-video.js",
-    "line": 113,
+    "line": 106,
     "desc": "const video = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtLoadTranscript",
     "file": "src/features-video.js",
-    "line": 127,
+    "line": 120,
     "desc": "const file = input.files[0];"
   },
   {
     "type": "function",
     "name": "vtLoadTransFile",
     "file": "src/features-video.js",
-    "line": 134,
+    "line": 127,
     "desc": "const reader = new FileReader();"
   },
   {
     "type": "function",
     "name": "vtParseSrt",
     "file": "src/features-video.js",
-    "line": 164,
+    "line": 157,
     "desc": "const cues = [];"
   },
   {
     "type": "function",
     "name": "vtRenderTranscript",
     "file": "src/features-video.js",
-    "line": 188,
+    "line": 181,
     "desc": "const container = document.getElementById('vtTranscript');"
   },
   {
     "type": "function",
     "name": "vtSendToShadow",
     "file": "src/features-video.js",
-    "line": 212,
+    "line": 205,
     "desc": "const cue = VideoState.cues[idx];"
   },
   {
     "type": "function",
     "name": "vtCueClick",
     "file": "src/features-video.js",
-    "line": 231,
+    "line": 224,
     "desc": "const cue = VideoState.cues[i];"
   },
   {
     "type": "function",
     "name": "vtOnTimeUpdate",
     "file": "src/features-video.js",
-    "line": 240,
+    "line": 233,
     "desc": "const video = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtWatchLoad",
     "file": "src/features-video.js",
-    "line": 296,
+    "line": 289,
     "desc": "VideoState.watchStartTime → VideoState.watchStartTime"
   },
   {
     "type": "function",
     "name": "vtWatchSave",
     "file": "src/features-video.js",
-    "line": 310,
+    "line": 303,
     "desc": "const today = new Date().toDateString();"
   },
   {
     "type": "function",
     "name": "vtWatchUpdate",
     "file": "src/features-video.js",
-    "line": 315,
+    "line": 308,
     "desc": "const el = document.getElementById('vtWatchMinutes');"
   },
   {
     "type": "function",
     "name": "vtWatchStart",
     "file": "src/features-video.js",
-    "line": 320,
+    "line": 313,
     "desc": "VideoState.watchStartTime = Date.now();"
   },
   {
     "type": "function",
     "name": "vtWatchStop",
     "file": "src/features-video.js",
-    "line": 324,
+    "line": 317,
     "desc": "if (VideoState.watchStartTime) {"
   },
   {
     "type": "function",
     "name": "vtOnPlay",
     "file": "src/features-video.js",
-    "line": 337,
+    "line": 330,
     "desc": "document.getElementById('vtPlayBtn').textContent = '⏸ Pause';"
   },
   {
     "type": "function",
     "name": "vtOnPause",
     "file": "src/features-video.js",
-    "line": 343,
+    "line": 336,
     "desc": "document.getElementById('vtPlayBtn').textContent = '▶ Play';"
   },
   {
     "type": "function",
     "name": "vtOnLoaded",
     "file": "src/features-video.js",
-    "line": 350,
+    "line": 343,
     "desc": "VideoState.watchedThreshold = false;"
   },
   {
     "type": "function",
     "name": "vtAnimLoop",
     "file": "src/features-video.js",
-    "line": 372,
+    "line": 365,
     "desc": "vtDrawWaveform();"
   },
   {
     "type": "function",
     "name": "vtTogglePlay",
     "file": "src/features-video.js",
-    "line": 377,
+    "line": 370,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtSetSpeed",
     "file": "src/features-video.js",
-    "line": 394,
+    "line": 387,
     "desc": "document.getElementById('vtVideo').playbackRate = parseFloat(document.getElementById('vtSpeed').valu"
   },
   {
     "type": "function",
     "name": "vtUpdateDisplay",
     "file": "src/features-video.js",
-    "line": 398,
+    "line": 391,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtFmtTime",
     "file": "src/features-video.js",
-    "line": 405,
+    "line": 398,
     "desc": "if (!isFinite(s)) return '0:00';"
   },
   {
     "type": "function",
     "name": "vtSetLoopA",
     "file": "src/features-video.js",
-    "line": 412,
+    "line": 405,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtClearLoop",
     "file": "src/features-video.js",
-    "line": 439,
+    "line": 432,
     "desc": "VideoState.loopA = null; VideoState.loopB = null; VideoState.loopState = 'idle';"
   },
   {
     "type": "function",
     "name": "vtSetLoopPause",
     "file": "src/features-video.js",
-    "line": 451,
+    "line": 444,
     "desc": "VideoState.loopPauseSecs = secs;"
   },
   {
     "type": "function",
     "name": "vtDecodeWaveform",
     "file": "src/features-video.js",
-    "line": 456,
+    "line": 449,
     "desc": "const waveMsg = document.getElementById('vtWaveMsg');"
   },
   {
     "type": "function",
     "name": "vtWaveClick",
     "file": "src/features-video.js",
-    "line": 511,
+    "line": 504,
     "desc": "const canvas = document.getElementById('vtWaveform');"
   },
   {
     "type": "function",
     "name": "vtDrawWaveform",
     "file": "src/features-video.js",
-    "line": 519,
+    "line": 512,
     "desc": "const canvas = document.getElementById('vtWaveform');"
   },
   {
     "type": "function",
     "name": "vtFuriLine",
     "file": "src/features-video.js",
-    "line": 615,
-    "desc": "if (!_fvid_getApiKey()) return;"
+    "line": 608,
+    "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;"
   },
   {
     "type": "function",
     "name": "vtFuriAll",
     "file": "src/features-video.js",
-    "line": 657,
-    "desc": "if (!_fvid_getApiKey()) return;"
+    "line": 650,
+    "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;"
   },
   {
     "type": "function",
     "name": "toggleComprehension",
     "file": "src/features-video.js",
-    "line": 685,
+    "line": 678,
     "desc": "const panel = document.getElementById('compPanel');"
   },
   {
     "type": "function",
     "name": "compPopulateVoices",
     "file": "src/features-video.js",
-    "line": 694,
+    "line": 687,
     "desc": "const all = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "compGetVoices",
     "file": "src/features-video.js",
-    "line": 713,
+    "line": 706,
     "desc": "const all = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "compGenerate",
     "file": "src/features-video.js",
-    "line": 723,
+    "line": 716,
     "desc": "const topic = document.getElementById('compTopic').value.trim() || 'daily life';"
   },
   {
     "type": "function",
     "name": "compRender",
     "file": "src/features-video.js",
-    "line": 777,
+    "line": 770,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compToggleScript",
     "file": "src/features-video.js",
-    "line": 810,
+    "line": 803,
     "desc": "const show = document.getElementById('compShowScript').checked;"
   },
   {
     "type": "function",
     "name": "compPlay",
     "file": "src/features-video.js",
-    "line": 815,
+    "line": 808,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compPlayLine",
     "file": "src/features-video.js",
-    "line": 844,
+    "line": 837,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compSpeakLine",
     "file": "src/features-video.js",
-    "line": 861,
+    "line": 854,
     "desc": "return new Promise(resolve => {"
   },
   {
     "type": "function",
     "name": "compStop",
     "file": "src/features-video.js",
-    "line": 875,
+    "line": 868,
     "desc": "ComprehensionState.playing = false;"
   },
   {
     "type": "function",
     "name": "compReplay",
     "file": "src/features-video.js",
-    "line": 883,
+    "line": 876,
     "desc": "compStop();"
   },
   {
     "type": "function",
     "name": "compAnswer",
     "file": "src/features-video.js",
-    "line": 892,
+    "line": 885,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "vtToggleDictation",
     "file": "src/features-video.js",
-    "line": 925,
+    "line": 918,
     "desc": "VideoState.dictationRevealed → VideoState.dictationRevealed"
   },
   {
     "type": "function",
     "name": "vtDictateUpdateStats",
     "file": "src/features-video.js",
-    "line": 967,
+    "line": 960,
     "desc": "Toggle hiragana/katakana for dictation input"
   },
   {
     "type": "function",
     "name": "vtDictateReplay",
     "file": "src/features-video.js",
-    "line": 977,
+    "line": 970,
     "desc": "if (VideoState.activeIdx < 0 || !VideoState.cues[VideoState.activeIdx]) return;"
   },
   {
     "type": "function",
     "name": "vtDictateCheck",
     "file": "src/features-video.js",
-    "line": 994,
+    "line": 987,
     "desc": "if (VideoState.dictationRevealed) return; // Already checked/revealed"
   },
   {
     "type": "function",
     "name": "vtDictateDiff",
     "file": "src/features-video.js",
-    "line": 1031,
+    "line": 1024,
     "desc": "let html = '<span style=\"color:var(--red)\">✗</span> ';"
   },
   {
     "type": "function",
     "name": "vtDictateReveal",
     "file": "src/features-video.js",
-    "line": 1059,
+    "line": 1052,
     "desc": "const feedback = document.getElementById('vtDictateFeedback');"
   },
   {
     "type": "function",
     "name": "vtDictateNext",
     "file": "src/features-video.js",
-    "line": 1079,
+    "line": 1072,
     "desc": "if (VideoState.activeIdx < VideoState.cues.length - 1) {"
   },
   {
     "type": "function",
     "name": "vtDictateKeydown",
     "file": "src/features-video.js",
-    "line": 1106,
+    "line": 1099,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "vtShowBreakdown",
     "file": "src/features-video.js",
-    "line": 1141,
+    "line": 1134,
     "desc": "BREAKDOWN POPUP"
   },
   {
     "type": "function",
     "name": "vtCloseBreakdown",
     "file": "src/features-video.js",
-    "line": 1214,
+    "line": 1207,
     "desc": "const popup = document.getElementById('vtBreakdownPopup');"
   },
   {
     "type": "function",
     "name": "kanaToggleGrid",
     "file": "src/features-video.js",
-    "line": 1252,
+    "line": 1245,
     "desc": "const kg = document.getElementById('kanaGrid');"
   },
   {
     "type": "function",
     "name": "vtPopulateMics",
     "file": "src/features-video.js",
-    "line": 1299,
+    "line": 1292,
     "desc": "VideoState.selectedMicId → VideoState.selectedMicId"
   },
   {
     "type": "function",
     "name": "vtSetMic",
     "file": "src/features-video.js",
-    "line": 1329,
+    "line": 1322,
     "desc": "VideoState.selectedMicId = deviceId || null;"
   },
   {
     "type": "function",
     "name": "vtRequestMicAccess",
     "file": "src/features-video.js",
-    "line": 1338,
+    "line": 1331,
     "desc": "const select = document.getElementById('vtMicSelect');"
   },
   {
     "type": "function",
     "name": "vtToggleShadow",
     "file": "src/features-video.js",
-    "line": 1345,
+    "line": 1338,
     "desc": "VideoState.shadowActive = !VideoState.shadowActive;"
   },
   {
     "type": "function",
     "name": "vtShSetTarget",
     "file": "src/features-video.js",
-    "line": 1384,
+    "line": 1377,
     "desc": "VideoState.shTargetCue = cue;"
   },
   {
     "type": "function",
     "name": "vtShExtractTargetAudio",
     "file": "src/features-video.js",
-    "line": 1395,
+    "line": 1388,
     "desc": "const video = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtShPlayTarget",
     "file": "src/features-video.js",
-    "line": 1423,
+    "line": 1416,
     "desc": "if (!VideoState.shTargetBuffer) return;"
   },
   {
     "type": "function",
     "name": "vtShStopTarget",
     "file": "src/features-video.js",
-    "line": 1452,
+    "line": 1445,
     "desc": "if (VideoState.shTargetSource) { try { VideoState.shTargetSource.stop(); } catch(e) {} VideoState.sh"
   },
   {
     "type": "function",
     "name": "vtShSeekTarget",
     "file": "src/features-video.js",
-    "line": 1459,
+    "line": 1452,
     "desc": "if (!VideoState.shTargetBuffer) return;"
   },
   {
     "type": "function",
     "name": "vtShRecord",
     "file": "src/features-video.js",
-    "line": 1487,
+    "line": 1480,
     "desc": "if (VideoState.shRecording) { vtShStopRecord(); return; }"
   },
   {
     "type": "function",
     "name": "vtShStopRecord",
     "file": "src/features-video.js",
-    "line": 1524,
+    "line": 1517,
     "desc": "if (VideoState.shRecorder && VideoState.shRecording) VideoState.shRecorder.stop();"
   },
   {
     "type": "function",
     "name": "vtShPlayback",
     "file": "src/features-video.js",
-    "line": 1528,
+    "line": 1521,
     "desc": "if (!VideoState.shBlob) return;"
   },
   {
     "type": "function",
     "name": "vtShStopAll",
     "file": "src/features-video.js",
-    "line": 1541,
+    "line": 1534,
     "desc": "vtShStopTarget();"
   },
   {
     "type": "function",
     "name": "vtShDrawStaticWave",
     "file": "src/features-video.js",
-    "line": 1549,
+    "line": 1542,
     "desc": "const canvas = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "vtShClearWave",
     "file": "src/features-video.js",
-    "line": 1569,
+    "line": 1562,
     "desc": "const canvas = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "vtShDrawLiveWave",
     "file": "src/features-video.js",
-    "line": 1577,
+    "line": 1570,
     "desc": "const canvas = document.getElementById('vtShShadowWave');"
   },
   {
     "type": "function",
     "name": "vtShDrawBlobWave",
     "file": "src/features-video.js",
-    "line": 1600,
+    "line": 1593,
     "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesGet",
     "file": "src/features-video.js",
-    "line": 1632,
+    "line": 1625,
     "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesSave",
     "file": "src/features-video.js",
-    "line": 1640,
+    "line": 1633,
     "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesRender",
     "file": "src/features-video.js",
-    "line": 1646,
+    "line": 1639,
     "desc": "const grid = document.getElementById('resourcesGrid');"
   },
   {
     "type": "function",
     "name": "resourcesAdd",
     "file": "src/features-video.js",
-    "line": 1716,
+    "line": 1709,
     "desc": "const urlEl = document.getElementById('resNewUrl');"
   },
   {
     "type": "function",
     "name": "resourcesPickIcon",
     "file": "src/features-video.js",
-    "line": 1811,
+    "line": 1804,
     "desc": "if (url.includes('youtube')) return '▶️';"
   },
   {
     "type": "function",
     "name": "resourcesEdit",
     "file": "src/features-video.js",
-    "line": 1822,
+    "line": 1815,
     "desc": "const resources = resourcesGet();"
   },
   {
     "type": "function",
     "name": "resourcesSaveEdit",
     "file": "src/features-video.js",
-    "line": 1847,
+    "line": 1840,
     "desc": "const resources = resourcesGet();"
   },
   {
     "type": "function",
     "name": "resourcesDelete",
     "file": "src/features-video.js",
-    "line": 1866,
+    "line": 1859,
     "desc": "if (!confirm('Delete this resource?')) return;"
   },
   {
     "type": "function",
     "name": "resourcesReset",
     "file": "src/features-video.js",
-    "line": 1875,
+    "line": 1868,
     "desc": "if (!confirm('Reset to default resources? This will remove all your custom links.')) return;"
   },
   {
     "type": "function",
     "name": "vtAddSavedLink",
     "file": "src/features-video.js",
-    "line": 1892,
+    "line": 1885,
     "desc": "VideoState.savedFiles → VideoState.savedFiles"
   },
   {
     "type": "function",
     "name": "vtSaveHistory",
     "file": "src/features-video.js",
-    "line": 1909,
+    "line": 1902,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vtLoadHistory",
     "file": "src/features-video.js",
-    "line": 1922,
+    "line": 1915,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vtUpdateHistoryDropdown",
     "file": "src/features-video.js",
-    "line": 1932,
+    "line": 1925,
     "desc": "const select = document.getElementById('vtHistorySelect');"
   },
   {
     "type": "function",
     "name": "vtLoadFromHistory",
     "file": "src/features-video.js",
-    "line": 1963,
+    "line": 1956,
     "desc": "if (!indexStr) return;"
   },
   {
     "type": "function",
     "name": "vtTryLoadMatchingTranscript",
     "file": "src/features-video.js",
-    "line": 1998,
+    "line": 1991,
     "desc": "const baseName = videoName.replace(/\\.[^.]+$/, '');"
   },
   {
     "type": "function",
     "name": "vtRenderSavedLinks",
     "file": "src/features-video.js",
-    "line": 2017,
+    "line": 2010,
     "desc": "vtUpdateHistoryDropdown();"
   },
   {
     "type": "function",
     "name": "vtWordSelect",
     "file": "src/features-video.js",
-    "line": 2028,
+    "line": 2021,
     "desc": "VideoState.pendingHistoryName → VideoState.pendingHistoryName"
   },
   {
     "type": "function",
     "name": "vtTranslateWord",
     "file": "src/features-video.js",
-    "line": 2041,
-    "desc": "if (!_fvid_getApiKey()) return;"
+    "line": 2034,
+    "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;"
   },
   {
     "type": "function",
     "name": "strokeMagnify",
     "file": "src/features-video.js",
-    "line": 2141,
+    "line": 2134,
     "desc": "In browser we can't access filesystem — hint is shown instead"
   },
   {
     "type": "function",
     "name": "strokeGetReading",
     "file": "src/features-video.js",
-    "line": 2183,
+    "line": 2176,
     "desc": "const cp = ch.codePointAt(0);"
   },
   {
     "type": "function",
     "name": "strokeFetchReadings",
     "file": "src/features-video.js",
-    "line": 2192,
+    "line": 2185,
     "desc": "const kanji = chars.filter(ch => {"
   },
   {
     "type": "function",
     "name": "readSwitchTab",
     "file": "src/features-video.js",
-    "line": 2559,
+    "line": 2552,
     "desc": "═══════════════════════════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "epubHandleDrop",
     "file": "src/features-video.js",
-    "line": 2601,
+    "line": 2594,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "epubLoadFile",
     "file": "src/features-video.js",
-    "line": 2608,
+    "line": 2601,
     "desc": "const dz = document.getElementById('epubDropZone');"
   },
   {
     "type": "function",
     "name": "epubParseOPF",
     "file": "src/features-video.js",
-    "line": 2637,
+    "line": 2630,
     "desc": "const containerXml = await EpubState.zip.file('META-INF/container.xml').async('string');"
   },
   {
     "type": "function",
     "name": "epubLoadChapter",
     "file": "src/features-video.js",
-    "line": 2701,
+    "line": 2694,
     "desc": "idx = parseInt(idx);"
   },
   {
     "type": "function",
     "name": "epubSetFontSize",
     "file": "src/features-video.js",
-    "line": 2780,
+    "line": 2773,
     "desc": "EpubState.fontSize = parseFloat(val);"
   },
   {
     "type": "function",
     "name": "epubToggleFuri",
     "file": "src/features-video.js",
-    "line": 2787,
+    "line": 2780,
     "desc": "EpubState.furi = !EpubState.furi;"
   },
   {
     "type": "function",
     "name": "epubApplyFuri",
     "file": "src/features-video.js",
-    "line": 2794,
+    "line": 2787,
     "desc": "const content = document.getElementById('epubContent');"
   },
   {
     "type": "function",
     "name": "epubRemoveFuri",
     "file": "src/features-video.js",
-    "line": 2818,
+    "line": 2811,
     "desc": "const sel = document.getElementById('epubChapterSel');"
   },
   {
     "type": "function",
     "name": "epubGetFurigana",
     "file": "src/features-video.js",
-    "line": 2825,
-    "desc": "const apiKey = _fvid_getApiKey();"
+    "line": 2818,
+    "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "epubWireWordTap",
     "file": "src/features-video.js",
-    "line": 2841,
+    "line": 2834,
     "desc": "const content = document.getElementById('epubContent');"
   },
   {
     "type": "function",
     "name": "epubOnWordSelect",
     "file": "src/features-video.js",
-    "line": 2847,
+    "line": 2840,
     "desc": "const sel = window.getSelection();"
   },
   {
     "type": "function",
     "name": "epubHidePopup",
     "file": "src/features-video.js",
-    "line": 2886,
+    "line": 2879,
     "desc": "const p = document.getElementById('epubWordPopup');"
   },
   {
     "type": "function",
     "name": "epubSpeak",
     "file": "src/features-video.js",
-    "line": 2892,
+    "line": 2885,
     "desc": "const btn = document.getElementById('epubTtsBtn');"
   },
   {
     "type": "function",
     "name": "epubClose",
     "file": "src/features-video.js",
-    "line": 2914,
+    "line": 2907,
     "desc": "EpubState.zip = null; EpubState.spine = []; EpubState.chapterIdx = 0;"
   },
   {
     "type": "function",
     "name": "listenModeChanged",
     "file": "src/features-video.js",
-    "line": 2926,
+    "line": 2919,
     "desc": "const comp = document.getElementById('compPanel');"
   },
   {
     "type": "function",
     "name": "vtClearTranslation",
     "file": "src/features-video.js",
-    "line": 2955,
+    "line": 2948,
     "desc": "const jpEl = document.getElementById('vtLineJp');"
   },
   {
     "type": "function",
     "name": "vtTranslateLine",
     "file": "src/features-video.js",
-    "line": 2965,
+    "line": 2958,
     "desc": "const panel = document.getElementById('vtLineTranslate');"
   },
   {
     "type": "function",
     "name": "vtBreakdownLine",
     "file": "src/features-video.js",
-    "line": 3030,
+    "line": 3023,
     "desc": "const jpEl = document.getElementById('vtLineJp');"
   },
   {
     "type": "function",
     "name": "vtGetVocabCacheKey",
     "file": "src/features-video.js",
-    "line": 3080,
+    "line": 3073,
     "desc": "VideoState.vocabListCache → VideoState.vocabListCache"
   },
   {
     "type": "function",
     "name": "vtShowVocabList",
     "file": "src/features-video.js",
-    "line": 3091,
+    "line": 3084,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');"
   },
   {
     "type": "function",
     "name": "vtCloseVocabList",
     "file": "src/features-video.js",
-    "line": 3114,
+    "line": 3107,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');"
   },
   {
     "type": "function",
     "name": "vtRegenerateVocabList",
     "file": "src/features-video.js",
-    "line": 3119,
+    "line": 3112,
     "desc": "const cacheKey = vtGetVocabCacheKey();"
   },
   {
     "type": "function",
     "name": "vtGenerateVocabList",
     "file": "src/features-video.js",
-    "line": 3130,
+    "line": 3123,
     "desc": "VideoState.currentVocab → VideoState.currentVocab"
   },
   {
     "type": "function",
     "name": "vtRenderVocabList",
     "file": "src/features-video.js",
-    "line": 3193,
+    "line": 3186,
     "desc": "const content = document.getElementById('vtVocabListContent');"
   },
   {
     "type": "function",
     "name": "vtDeleteVocabWord",
     "file": "src/features-video.js",
-    "line": 3230,
+    "line": 3223,
     "desc": "if (!VideoState.currentVocab || idx < 0 || idx >= VideoState.currentVocab.length) return;"
   },
   {
     "type": "function",
     "name": "vtJumpToTime",
     "file": "src/features-video.js",
-    "line": 3239,
+    "line": 3232,
     "desc": "const video = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtCloseLineTranslate",
     "file": "src/features-video.js",
-    "line": 3254,
+    "line": 3247,
     "desc": "const panel = document.getElementById('vtLineTranslate');"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-video.js",
-    "line": 735,
+    "line": 728,
     "desc": "Create a short Japanese listening comprehension exercise for ${…} learners on th"
   },
   {
@@ -6576,175 +6387,175 @@
     "type": "function",
     "name": "yoshiSaveWhatsappInline",
     "file": "src/features-tools.js",
-    "line": 10,
+    "line": 9,
     "desc": "── Render/utility functions (pure DOM or string parsing — not pipeline logic) ─"
   },
   {
     "type": "function",
     "name": "yoshiRetranscribe",
     "file": "src/features-tools.js",
-    "line": 24,
+    "line": 23,
     "desc": ""
   },
   {
     "type": "function",
     "name": "yoshiOpenOverlay",
     "file": "src/features-tools.js",
-    "line": 36,
+    "line": 35,
     "desc": "── Manual lesson notes (unrecorded sessions — WhatsApp threads) ──────────────"
   },
   {
     "type": "function",
     "name": "yoshiOpenTeams",
     "file": "src/features-tools.js",
-    "line": 64,
+    "line": 63,
     "desc": "const url = 'https://teams.live.com/meet/9387084365462?p=cBmSFutAH5IRELtQxD';"
   },
   {
     "type": "function",
     "name": "yoshiTestChannels",
     "file": "src/features-tools.js",
-    "line": 73,
+    "line": 72,
     "desc": "Result is persisted to failure_events for post-session forensics."
   },
   {
     "type": "function",
     "name": "yoshiRunPreflight",
     "file": "src/features-tools.js",
-    "line": 101,
+    "line": 100,
     "desc": "── Full preflight (optional yoshiRunPreflight() call) ────────────────────────"
   },
   {
     "type": "function",
     "name": "_renderPreflightBadge",
     "file": "src/features-tools.js",
-    "line": 126,
+    "line": 125,
     "desc": "── Preflight rendering helpers ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "_preflightReportHtml",
     "file": "src/features-tools.js",
-    "line": 140,
+    "line": 139,
     "desc": "const pfRow = (label, ok, detail, isWarn) => {"
   },
   {
     "type": "function",
     "name": "_pfShortLabel",
     "file": "src/features-tools.js",
-    "line": 186,
+    "line": 185,
     "desc": "if (!label) return '—';"
   },
   {
     "type": "function",
     "name": "mgSelectCat",
     "file": "src/features-tools.js",
-    "line": 396,
+    "line": 395,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "mgSetPairs",
     "file": "src/features-tools.js",
-    "line": 401,
+    "line": 400,
     "desc": "MatchingPairsState.pairs = n;"
   },
   {
     "type": "function",
     "name": "mgSetTimer",
     "file": "src/features-tools.js",
-    "line": 406,
+    "line": 405,
     "desc": "MatchingPairsState.timer = n;"
   },
   {
     "type": "function",
     "name": "mgSetReading",
     "file": "src/features-tools.js",
-    "line": 411,
+    "line": 410,
     "desc": "MatchingPairsState.reading = v;"
   },
   {
     "type": "function",
     "name": "mgShowSetup",
     "file": "src/features-tools.js",
-    "line": 417,
+    "line": 416,
     "desc": "document.getElementById('mg-setup').style.display = '';"
   },
   {
     "type": "function",
     "name": "mgStart",
     "file": "src/features-tools.js",
-    "line": 424,
+    "line": 423,
     "desc": "const cat = VG_CATEGORIES[MatchingPairsState.cat];"
   },
   {
     "type": "function",
     "name": "mgUpdateTimer",
     "file": "src/features-tools.js",
-    "line": 483,
+    "line": 482,
     "desc": "const el = document.getElementById('mg-timer');"
   },
   {
     "type": "function",
     "name": "mgClickKanji",
     "file": "src/features-tools.js",
-    "line": 492,
+    "line": 491,
     "desc": "if (document.querySelector('.mg-kanji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgClickEmoji",
     "file": "src/features-tools.js",
-    "line": 501,
+    "line": 500,
     "desc": "if (document.querySelector('.mg-emoji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
   },
   {
     "type": "function",
     "name": "mgCheckMatch",
     "file": "src/features-tools.js",
-    "line": 509,
+    "line": 508,
     "desc": "if (MatchingPairsState.kanjiSel === null || MatchingPairsState.emojiSel === null) return;"
   },
   {
     "type": "function",
     "name": "mgFinish",
     "file": "src/features-tools.js",
-    "line": 533,
+    "line": 532,
     "desc": "clearInterval(MatchingPairsState.timerInt);"
   },
   {
     "type": "function",
     "name": "mgEnd",
     "file": "src/features-tools.js",
-    "line": 547,
+    "line": 546,
     "desc": "mgFinish(false); }"
   },
   {
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 645,
+    "line": 644,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 655,
+    "line": 654,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrClear",
     "file": "src/features-tools.js",
-    "line": 680,
+    "line": 679,
     "desc": "const inp = document.getElementById('qrInput');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 692,
+    "line": 691,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {

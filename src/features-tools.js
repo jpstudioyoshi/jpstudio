@@ -6,7 +6,6 @@
 
 // ── Render/utility functions (pure DOM or string parsing — not pipeline logic) ─
 
-// lessonNotesUpdateDropdown — was referenced but never defined; stub to prevent errors
 async function yoshiSaveWhatsappInline(sessionId) {
   const el = document.getElementById('waInput_' + sessionId);
   if (!el || !el.value.trim()) return;
@@ -763,5 +762,8 @@ function qrPrintPage() {
 
 // ── App registry — features-tools.js exports ───────────────────────────
 Object.assign(App, {
-  lessonNotesUpdateDropdown, lnGetSessions, yoshiParseWhatsapp, lnSwitchTab, lnSetDrillMode, lnDrillReveal, lnDrillNext, lnDrillPrev, lnDrillJump, lnRefreshTab, lnOpenStory, lnToggleGrammarHide, lnToggleShowHidden, lnFilterTranscript, lnToggleRecPlayer, lnDeleteRecording, lnNewSession, lnLoadSession, lnDeleteSession, lnHandleFile, lnHandleDrop, yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiOpenOverlay, yoshiOpenTeams, yoshiTestChannels, yoshiRunPreflight, mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading, mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
+  yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiOpenOverlay, yoshiOpenTeams,
+  yoshiTestChannels, yoshiRunPreflight,
+  mgSelectCat, mgSetPairs, mgSetTimer, mgSetReading,
+  mgStart, mgEnd, mgShowSetup, mgClickKanji, mgClickEmoji,
 });

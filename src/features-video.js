@@ -5,13 +5,6 @@
 // Requires: core.js, features-core.js, features-kana.js
 // ═══════════════════════════════════════════════════════
 
-// ── Phase 3: App-first resolvers ─────────────────────────────────
-function _fvid_claudeAPI(...a) { return (App.claudeAPI  || window.claudeAPI)(...a); }
-function _fvid_getApiKey()     { return (App.getApiKey  || window.getApiKey)?.(); }
-function _fvid_showPanel(id)   { return (App.showPanel  || window.showPanel)?.(id); }
-function _fvid_Storage()       { return App.Storage     || window.Storage; }
-
-
 // ═══════════════════════════════════════════════════════
 // VIDEO + TRANSCRIPT PLAYER
 // ═══════════════════════════════════════════════════════
@@ -613,7 +606,7 @@ function vtDrawWaveform() {
 
 // ── WATCH PANEL FURIGANA ─────────────────────────────────────────────────
 async function vtFuriLine(idx) {
-  if (!_fvid_getApiKey()) return;
+  if (!(App.getApiKey || window.getApiKey)?.()) return;
   const cue = VideoState.cues[idx];
   if (!cue || cue._furi) return; // already done
   const btn = document.getElementById('vt-furi-btn-' + idx);
@@ -621,7 +614,7 @@ async function vtFuriLine(idx) {
   if (btn) btn.classList.add('loading');
 
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 400,
         messages: [{
@@ -655,7 +648,7 @@ Text: ${cue.text}`
 }
 
 async function vtFuriAll() {
-  if (!_fvid_getApiKey()) return;
+  if (!(App.getApiKey || window.getApiKey)?.()) return;
   const btn = document.getElementById('vtFuriAllBtn');
   const pending = VideoState.cues.map((c,i) => ({c,i}))
     .filter(({c}) => !c._furi && /[\u3040-\u9FFF\u4E00-\u9FFF]/.test(c.text));
@@ -725,7 +718,7 @@ async function compGenerate() {
   const level = document.getElementById('compLevel').value;
   const btn = document.getElementById('compGenerateBtn');
   const status = document.getElementById('compGenStatus');
-  if (!_fvid_getApiKey()) { status.textContent = 'No API key'; return; }
+  if (!(App.getApiKey || window.getApiKey)?.()) { status.textContent = 'No API key'; return; }
   btn.disabled = true;
   status.textContent = 'Generating…';
   document.getElementById('compPlayer').style.display = 'none';
@@ -756,7 +749,7 @@ Rules:
 - keep lines short and natural`;
 
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 900,
         messages: [{ role: 'user', content: prompt }]
@@ -1144,7 +1137,7 @@ async function vtShowBreakdown() {
     return;
   }
   
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return;
   
   const cue = VideoState.cues[VideoState.activeIdx];
@@ -1172,7 +1165,7 @@ async function vtShowBreakdown() {
   }
   
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 1200,
         messages: [{
@@ -1243,7 +1236,7 @@ document.addEventListener('keydown', e => {
       const temp = _currentPanel;
       _currentPanel = _lastPanel;
       _lastPanel = temp;
-      _fvid_showPanel(_currentPanel);
+      (App.showPanel || window.showPanel)?.(_currentPanel);
     }
   }
 }, true);
@@ -1313,7 +1306,7 @@ async function vtPopulateMics() {
       select.innerHTML += `<option value="${mic.deviceId}"${isDefault && !VideoState.selectedMicId ? ' selected' : ''}>${label}</option>`;
     });
     
-    const saved = _fvid_Storage().get(STORAGE_KEYS.VT_MIC);
+    const saved = (App.Storage || window.Storage).get(STORAGE_KEYS.VT_MIC);
     if (saved && mics.some(m => m.deviceId === saved)) {
       select.value = saved;
       VideoState.selectedMicId = saved;
@@ -1329,9 +1322,9 @@ async function vtPopulateMics() {
 function vtSetMic(deviceId) {
   VideoState.selectedMicId = deviceId || null;
   if (deviceId) {
-    _fvid_Storage().set(STORAGE_KEYS.VT_MIC, deviceId);
+    (App.Storage || window.Storage).set(STORAGE_KEYS.VT_MIC, deviceId);
   } else {
-    _fvid_Storage().remove(STORAGE_KEYS.VT_MIC);
+    (App.Storage || window.Storage).remove(STORAGE_KEYS.VT_MIC);
   }
 }
 
@@ -1731,7 +1724,7 @@ async function resourcesAdd() {
   }
   
   // Check for API key
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     // Fallback: add with basic info extracted from URL
     const resources = resourcesGet();
@@ -1756,7 +1749,7 @@ async function resourcesAdd() {
   }
   
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 300,
         messages: [{ role: 'user', content: `Generate metadata for this Japanese learning resource URL: ${url}
@@ -1915,13 +1908,13 @@ function vtSaveHistory() {
       transcript: f.transcript || null,
       transcriptName: f.transcriptName || null
     }));
-    _fvid_Storage().set(STORAGE_KEYS.VT_VIDEO_HISTORY, JSON.stringify(toSave));
+    (App.Storage || window.Storage).set(STORAGE_KEYS.VT_VIDEO_HISTORY, JSON.stringify(toSave));
   } catch(e) { console.warn('Could not save video history', e); }
 }
 
 function vtLoadHistory() {
   try {
-    const saved = JSON.parse(_fvid_Storage().get(STORAGE_KEYS.VT_VIDEO_HISTORY) || '[]');
+    const saved = JSON.parse((App.Storage || window.Storage).get(STORAGE_KEYS.VT_VIDEO_HISTORY) || '[]');
     VideoState.savedFiles = saved.map(f => ({ ...f, url: null })); // URLs don't persist
   } catch(e) { VideoState.savedFiles = []; }
 }
@@ -2039,7 +2032,7 @@ function vtWordSelect(cueIdx, event) {
 }
 
 function vtTranslateWord(word, event) {
-  if (!_fvid_getApiKey()) return;
+  if (!(App.getApiKey || window.getApiKey)?.()) return;
   // Reuse qrOverlay popup pattern
   const existing = document.getElementById('vtWordPopup');
   if (existing) existing.remove();
@@ -2057,7 +2050,7 @@ function vtTranslateWord(word, event) {
   document.addEventListener('click', function dismiss(e) {
     if (!popup.contains(e.target)) { popup.remove(); document.removeEventListener('click', dismiss); }
   });
-  _fvid_claudeAPI({ model:'claude-sonnet-4-6', max_tokens:120,
+  (App.claudeAPI || window.claudeAPI)({ model:'claude-sonnet-4-6', max_tokens:120,
       messages:[{role:'user',content:`Translate the Japanese word/phrase "${word}" to English. Reply with: reading in hiragana, then a dash, then the English meaning. One line only.`}],
         track: 'video'
       }).then(d=>{
@@ -2195,10 +2188,10 @@ async function strokeFetchReadings(chars, word) {
     return cp >= 0x4E00 && cp <= 0x9FFF || cp >= 0x3400 && cp <= 0x4DBF;
   });
   if (!kanji.length) return;
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return;
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `For the Japanese word "${word}", give the reading of each character as it is read IN CONTEXT of that word. Reply ONLY with a JSON object mapping each character to its reading, e.g. {"東":"とう","京":"きょう"}. Characters: ${JSON.stringify(kanji)}` }]
@@ -2248,13 +2241,13 @@ function vtSaveHistory() {
       transcript: f.transcript || null,
       transcriptName: f.transcriptName || null
     }));
-    _fvid_Storage().set(STORAGE_KEYS.VT_VIDEO_HISTORY, JSON.stringify(toSave));
+    (App.Storage || window.Storage).set(STORAGE_KEYS.VT_VIDEO_HISTORY, JSON.stringify(toSave));
   } catch(e) { console.warn('Could not save video history', e); }
 }
 
 function vtLoadHistory() {
   try {
-    const saved = JSON.parse(_fvid_Storage().get(STORAGE_KEYS.VT_VIDEO_HISTORY) || '[]');
+    const saved = JSON.parse((App.Storage || window.Storage).get(STORAGE_KEYS.VT_VIDEO_HISTORY) || '[]');
     VideoState.savedFiles = saved.map(f => ({ ...f, url: null })); // URLs don't persist
   } catch(e) { VideoState.savedFiles = []; }
 }
@@ -2372,7 +2365,7 @@ function vtWordSelect(cueIdx, event) {
 }
 
 function vtTranslateWord(word, event) {
-  if (!_fvid_getApiKey()) return;
+  if (!(App.getApiKey || window.getApiKey)?.()) return;
   // Reuse qrOverlay popup pattern
   const existing = document.getElementById('vtWordPopup');
   if (existing) existing.remove();
@@ -2390,7 +2383,7 @@ function vtTranslateWord(word, event) {
   document.addEventListener('click', function dismiss(e) {
     if (!popup.contains(e.target)) { popup.remove(); document.removeEventListener('click', dismiss); }
   });
-  _fvid_claudeAPI({ model:'claude-sonnet-4-6', max_tokens:120,
+  (App.claudeAPI || window.claudeAPI)({ model:'claude-sonnet-4-6', max_tokens:120,
       messages:[{role:'user',content:`Translate the Japanese word/phrase "${word}" to English. Reply with: reading in hiragana, then a dash, then the English meaning. One line only.`}],
         track: 'video'
       }).then(d=>{
@@ -2528,10 +2521,10 @@ async function strokeFetchReadings(chars, word) {
     return cp >= 0x4E00 && cp <= 0x9FFF || cp >= 0x3400 && cp <= 0x4DBF;
   });
   if (!kanji.length) return;
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return;
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `For the Japanese word "${word}", give the reading of each character as it is read IN CONTEXT of that word. Reply ONLY with a JSON object mapping each character to its reading, e.g. {"東":"とう","京":"きょう"}. Characters: ${JSON.stringify(kanji)}` }]
@@ -2823,9 +2816,9 @@ function epubRemoveFuri() {
 }
 
 async function epubGetFurigana(text) {
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) return text;
-  const data = await _fvid_claudeAPI({
+  const data = await (App.claudeAPI || window.claudeAPI)({
       model: 'claude-sonnet-4-6', max_tokens: 800,
       messages: [{ role:'user', content:
         `Add furigana to ALL kanji using HTML ruby tags. EVERY kanji must have a reading - do not skip any. Use context-appropriate readings (例えば→たとえば, 今日→きょう, 片付ける→かたづける). For verbs with multiple kanji, tag each separately. Return ONLY the HTML.
@@ -2861,9 +2854,9 @@ async function epubOnWordSelect(e) {
   popup.style.top  = (e.clientY + 14) + 'px';
 
   try {
-    const apiKey = _fvid_getApiKey();
+    const apiKey = (App.getApiKey || window.getApiKey)?.();
     if (!apiKey) { document.getElementById('epubPopupMeaning').textContent = 'No API key'; return; }
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model:'claude-sonnet-4-6', max_tokens:150,
         messages:[{role:'user',content:
           `For the Japanese word "${word}", reply ONLY with a JSON object: {"reading":"hiragana reading","meaning":"short English meaning","pos":"part of speech"}. No explanation.`}]
@@ -3001,9 +2994,9 @@ async function vtTranslateLine() {
   if (btn) { btn.style.borderColor = 'var(--teal)'; btn.style.color = 'var(--teal)'; }
 
   try {
-    const apiKey = _fvid_getApiKey();
+    const apiKey = (App.getApiKey || window.getApiKey)?.();
     if (!apiKey) { enEl.textContent = 'No API key set'; return; }
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6', max_tokens: 200,
         messages: [{ role: 'user', content:
           `Translate this Japanese line into natural English. Reply with ONLY the translation, nothing else.
@@ -3045,13 +3038,13 @@ async function vtBreakdownLine() {
   breakdownContent.textContent = 'Analyzing...';
   
   try {
-    const apiKey = _fvid_getApiKey();
+    const apiKey = (App.getApiKey || window.getApiKey)?.();
     if (!apiKey) {
       breakdownContent.textContent = 'No API key set';
       return;
     }
     
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 800,
         messages: [{ role: 'user', content: `Break down this Japanese sentence for a learner:
@@ -3135,7 +3128,7 @@ async function vtGenerateVocabList() {
     return;
   }
   
-  const apiKey = _fvid_getApiKey();
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     content.innerHTML = '<span style="color:var(--red)">No API key set</span>';
     return;
@@ -3149,7 +3142,7 @@ async function vtGenerateVocabList() {
   }).join('\n');
   
   try {
-    const data = await _fvid_claudeAPI({
+    const data = await (App.claudeAPI || window.claudeAPI)({
         model: 'claude-sonnet-4-6',
         max_tokens: 2500,
         messages: [{ role: 'user', content: `Extract CONTENT words from this Japanese transcript. Content words are nouns, verbs, adjectives, and adverbs that carry meaning (not particles, copulas, or grammatical words).
