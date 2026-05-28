@@ -38,15 +38,14 @@ jp && node check-syntax.js && git add -A && git commit -m "refactor: core-stt.js
 ## Session 2 — core-listen.js
 Same flow as Session 1, replace core-stt.js with core-listen.js.
 
-## Session 3 — core-vocab.js
-Same flow. Add this to your second message:
-"It is a large file. Focus only on style.color and style.borderColor manipulations."
-
-## Session 4 — features-reading.js
-Same flow as Session 1.
-
-## Session 5 — features-voice.js
-Same flow as Session 1.
+## Sessions 3-5 — core-vocab.js, features-reading.js, features-voice.js
+Second message (covers all three in one session):
+Read context-static.md and design-rules.md only. Then work through these files one at a time,
+finishing and confirming each before moving to the next: src/core-vocab.js, src/features-reading.js,
+src/features-voice.js. For each file: find all style.color and style.borderColor manipulations on
+button elements only, propose the CSS class replacements, wait for my approval, then apply. Commit
+after each file with a descriptive message. Do not read any other files unless needed to resolve a
+specific question.
 
 ## Session 6 — Video panel (index.html lines 2187-2465)
 Second message:
