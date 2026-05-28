@@ -936,7 +936,7 @@ function renderCounterMastery() {
     html += `<tr>
       <td style="padding:3px 8px 3px 0;white-space:nowrap">
         <span style="font-size:0.9rem;margin-right:3px">${emoji}</span>
-        <span style="color:var(--ink)">〜${label}</span>
+        <span style="color:var(--ink)" title="${Object.values(counter?.readings || {}).slice(0,3).join(' · ')}...">〜${label}</span>
       </td>
       ${cells.join('')}
       <td style="text-align:right;padding:3px 0 3px 8px;color:${rowColor};font-weight:600">${rowPct > 0 ? rowPct + '%' : '—'}</td>
