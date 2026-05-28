@@ -522,7 +522,7 @@
   /* ── VOCAB ── */
   .vocab-card-area { display: flex; justify-content: center; margin: 20px 0; }
   .vocab-card {
-    width: 380px; height: clamp(220px, calc(100vh - 440px), 400px);
+    width: 380px; height: clamp(200px, calc(100vh - 440px), 280px);
     background: var(--paper-dark); border: 1px solid var(--border);
     cursor: pointer;
     perspective: 1000px;
