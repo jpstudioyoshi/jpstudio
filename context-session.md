@@ -1,11 +1,12 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-27 (session 10 — lesson notes refactor, session restore, storage migration)
+Last updated: 2026-05-28 (session 11 — Claude Code setup, button migration complete, _fv_ cleanup)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
 - Management window deprioritised — terminal approach preferred for all edits.
 - Use jp alias (cd ~/Documents/jpStudio) not full path in commands.
 - pbcopy for all grep/sed output.
+- Always prefix multi-line python3 edits with jp && to avoid directory drift.
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -17,8 +18,16 @@ Last updated: 2026-05-27 (session 10 — lesson notes refactor, session restore,
 - Standard push: jp && git add -A && git commit -m "message" && git push
 - Pre-commit hook runs check-syntax.js automatically — always check output
 
+## Claude Code
+- Installed: @anthropic-ai/claude-code (sudo npm install -g)
+- Auth: ANTHROPIC_API_KEY set permanently in ~/.zshrc
+- Launch: jp && claude
+- Start each session: "Read context-static.md and context-session.md only. Do not read any other files yet."
+- Cost: uses Anthropic API credits. Best for multi-file tasks. Single-file edits cheaper in chat.
+- Token tip: give tight focused briefs, one panel/file at a time.
+
 ## Current Mode
-REFACTOR — cleaning up problem areas. New features welcome alongside cleanup work.
+STABILIZATION — cleanup complete. Ready for UI design and new features.
 
 ## Terminal Workflow
 All edits are done via terminal — no file upload/download.
@@ -29,6 +38,7 @@ All edits are done via terminal — no file upload/download.
 
 **Standard patterns:**
 - python3 << 'PYEOF' for multi-line edits (most reliable)
+- Always prefix with jp && to avoid directory drift
 - sed -n X,Yp file | pbcopy — read a block
 - grep -n "pattern" file | pbcopy — locate lines
 - Never paste grep output back into terminal
@@ -40,6 +50,7 @@ All edits are done via terminal — no file upload/download.
 - Never use comment lines (#) in multi-command terminal pastes — zsh parse error
 - git revert requires cd to project dir first
 - Don't paste grep output into terminal — it causes parse errors
+- sed replacing function names as well as call sites — always check for broken function definitions after sed runs
 
 ## Button System
 
@@ -70,20 +81,13 @@ Buttons classified by FUNCTION not appearance. 7 functional classes:
 - Strip decorative arrows, checkmarks, symbols from button labels
 - Sizing: normalise later once all panels are migrated
 
-### Migration status
-- btn-primary → btn-action: global replace done
-- Grammar sentences panel: Create, Ask, Check/Next, Skip → all btn-action ✓
-- Check/Skip/🔊 moved to same row as kana strip ✓
+### Migration status — COMPLETE ✓
+All panels migrated. btn-ghost, btn-danger, btn-kana all removed from codebase.
 
 ### Panels completed
-- Writing panel: Submit, Save → btn-action; Clear → btn-destructive; Copy → btn-copy
-- Vocab drill: all buttons migrated
-- Word drill (grammar): Prev/Next → btn-nav; Again/OK/Known → btn-rating
-- Lesson notes drill: Prev/Next → btn-nav; Reveal → btn-rating; Learned → btn-rating-teal
-- Grammar sentences: all 4 buttons → btn-action; layout fix ✓
-
-### Remaining panels (do in order)
-Translate, Read, Listen, Video, Voice, Grammar, Kana, Settings, Dashboard
+- Writing, Vocab drill, Word drill, Lesson notes drill, Grammar sentences ✓
+- Translate, Read, Listen, Voice, Grammar, Kana, Settings, Dashboard ✓
+- Kanji corpus filter/sort, SRS rate buttons, Dashboard agent buttons ✓
 
 ## Storage Migration
 
@@ -97,9 +101,9 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 - qrSession → Storage
 - breakdownCache → Storage
 - GRAM_SENT_SESSIONS → Storage
-- YOSHI_KEY (jpStudioYoshiSessions) → Storage as YOSHI_SESSIONS ✅ (this session)
+- YOSHI_KEY (jpStudioYoshiSessions) → Storage as YOSHI_SESSIONS ✅
 
-### Still on localStorage (migrate next)
+### Still on localStorage (migrate when touching those files)
 - voice profile (features-voice.js) — VOICE_PROFILE_KEY
 - voice pause data (features-voice.js) — PAUSE_DATA_KEY
 - video watch time (features-video.js) — VT_WATCH_KEY
@@ -110,55 +114,22 @@ Goal: all app data in Storage. localStorage only for device-specific settings (A
 - API keys, TTS voice, furigana setting, default level, print settings
 - lnLastSessionId (device preference — intentionally localStorage)
 
-## Lesson Notes / Yoshi — This Session's Changes
-
-### Completed Refactors
-1. **Dual session system eliminated** — `_lnCurrentIdx` removed from features-tools.js. Single state via `LessonNotesState.currentIdx`.
-   - `lnNewSession` → delegates to `lessonNotesLoadSession(-1)`
-   - `lnLoadSession` → delegates to `lessonNotesLoadSession(idx)`
-   - `lnDeleteSession` → uses `LessonNotesState.currentIdx`, delegates to `lessonNotesLoadSession`
-   - `lnCurrentSession` → reads only from `LessonNotesState.currentIdx`
-
-2. **Session restore working** — last open session reloads on panel open.
-   - Save: `lnLastSessionId` in localStorage (intentional — device preference)
-   - Restore: finds session by id in `lessonNotesGetSessions()`, calls `lessonNotesLoadSession(idx)`
-   - Sessions now always have real `id` (Date.now()) assigned at creation
-   - One-time backfill assigns ids to existing sessions that lacked them
-   - Save in `lessonNotesLoadSession` no longer has `|| idx` fallback (id always exists)
-
-3. **`lnCreateFromPaste` moved** — from features-tools.js to features-lesson-notes.js where it belongs.
-   - `_lnExtracting` state var removed (was set but never read — dead state)
-   - Now uses `lessonNotesGetSessions`/`lessonNotesSaveSessions` directly
-   - Registered in features-lesson-notes.js App registry
-
-4. **`_fy_*` wrappers removed** from features-yoshi.js — inline `(App.x || window.x)` pattern used directly.
-
-5. **YOSHI_KEY → Storage** — `yoshiGetSessions`/`yoshiSaveSessions` now use `Storage.getJSON`/`setJSON`. One-time migration from localStorage on first panel open.
-
-### Lesson Notes Architecture (confirmed)
-- "Yoshi" = internal code name for Lesson Notes panel. Same panel, same data.
-- Panel is a session dashboard + data entry hub. Tabs: Words, Stories, Phrases, Grammar, Recording.
-- Stories → links to Read panel ✅
-- Grammar → links to Sentence Builder ✅
-- Words drill → future: move to Vocab panel as lesson session filter
-- Phrases drill → future: move to Vocab panel
-- Recording/transcript → stays in Lesson Notes (session-specific)
-
 ## Known Issues
 - yoshiInitUI is not defined on startup — pre-existing, not blocking (nothing calls it — stale error)
 - PDF print line breaks — BrowserWindow PDF ignores display:block on spans
 - _lastPanel not defined in features-video.js — pre-existing, not blocking
 
-## Pending Refactors (next session priority order)
-1. **features-tools.js cleanup** — still contains `yoshiParseWhatsapp`, `lnSwitchTab`, `lnSetDrillMode`, `lnDrillReveal/Next/Prev/Jump`, `lnRefreshTab`, `lnOpenStory` etc. These belong in features-lesson-notes.js. File is self-described as "residual".
-2. **`_fvid_*` wrappers** in features-video.js — same pattern as `_fy_*`, now fixed.
-3. **Storage migration** — voice profile, pause data, watch time, resources, learned words.
-4. **75 redundant `window[]` exports** — functions exported to both window and App registry; window[] ones can be removed.
-5. **features-yoshi.js → merge into features-lesson-notes.js** — same panel, 651 lines, no reason to be separate.
+## Pending Refactors (low priority — codebase is clean enough to build on)
+1. **75 redundant window[] exports** — functions exported to both window and App registry; window[] ones can be removed.
+2. **Storage migration** — voice profile, pause data, watch time, resources, learned words.
+3. **features-tools.js cleanup** — still contains some lesson notes functions. Self-described as residual.
+
+## Video Panel — Design Note
+The video panel (panel-video) feels visually disconnected from the rest of the app — buttons and controls are mostly inline-styled rather than using the design system. Flagged for proper UI integration when doing UI design work.
 
 ## Pending Work (non-style)
 
-### Pitch Accent — unblocked
+### Pitch Accent — unblocked, highest value next feature
 Data layer complete. Next steps:
 1. renderPitchCurve(word, pitchStr) SVG function in core-foundation.js
 2. Wire into vocab card render
