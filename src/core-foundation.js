@@ -1620,6 +1620,7 @@ function showPanel(id) {
   if (id === 'kana') initKanaDrill();
   const _psc = document.getElementById('progressSidebarControls');
   if (_psc) _psc.style.display = id === 'progress' ? 'flex' : 'none';
+  const _gph = document.getElementById('grammarPanelHeader'); if (_gph) _gph.style.display = id === 'grammar2' ? 'flex' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }

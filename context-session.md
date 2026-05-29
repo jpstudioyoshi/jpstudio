@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-28 (session 12/13 — Claude Code setup, full migration, vocab panel redesign WIP)
+Last updated: 2026-05-29 (session 13 — bug fixes, button system unified, html-map created)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -29,7 +29,10 @@ Last updated: 2026-05-28 (session 12/13 — Claude Code setup, full migration, v
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-UI DESIGN — cleanup complete, implementing new layout on vocab panel.
+UI DESIGN — button system complete, vocab panel redesign outstanding.
+
+## HTML Element Map
+`html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
 
 ## Terminal Workflow
 All edits are done via terminal — no file upload/download.
@@ -83,12 +86,28 @@ All edits are done via terminal — no file upload/download.
 - Design rules: design-rules.md in project root
 
 ## Button System — COMPLETE
-All panels migrated. btn-ghost, btn-danger, btn-kana all removed.
-Classes: btn-action, btn-nav, btn-toggle, btn-group, btn-destructive, btn-rating, btn-copy
-Design system gaps (leave inline): transient flash, 3-state gold toggles, recording red
+All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-primary in live code.
+
+**Base classes:**
+- `btn-action` — primary action (teal hover)
+- `btn-nav` — navigation / secondary (ink hover)
+- `btn-toggle` — toggle state (teal when on)
+- `btn-group` — mutually exclusive group
+- `btn-destructive` — destructive actions (red hover)
+- `btn-rating` — SRS ratings
+- `btn-copy` — copy to clipboard
+- `btn-icon` — small icon-only buttons (🔊 ✕ ✎), low opacity at rest
+
+**Modifiers:**
+- `btn-sm` — 0.75rem, 3px 8px padding
+- `btn-xs` — 0.65rem, 1px 6px padding
+- `btn-icon-teal` — teal on hover (edit buttons)
+- `btn-icon-del` — red on hover (delete buttons)
+
+**Design system gaps (leave inline):** transient flash, 3-state gold toggles, recording red
 
 ## Inline Style Migration — COMPLETE
-All JS files migrated. Remaining inline: transient flashes, 3-state gold, recording gradients.
+All JS files migrated. Remaining inline: transient flashes, 3-state gold, recording gradients, layout/margin one-offs.
 Video panel deferred until redesign decision.
 
 ## Vocab Panel Redesign — IN PROGRESS
@@ -111,7 +130,7 @@ Video panel deferred until redesign decision.
 
 ## Storage Migration
 ### Migrated
-- gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY ✓
+- gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS ✓
 
 ### Still on localStorage
 - voice profile, voice pause data, video watch time, resources, learned words
@@ -119,7 +138,6 @@ Video panel deferred until redesign decision.
 ## Known Issues
 - yoshiInitUI not defined on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
-- vocab-card content sits too high — being fixed in current session
 
 ## Token Optimisation — Future Work
 1. Voice conversation history — summarise after 10 exchanges

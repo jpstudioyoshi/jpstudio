@@ -61,14 +61,7 @@
   .streak-badge span { color: var(--gold); font-weight: 600; }
 
   /* ── NAV ── */
-  nav {
-    display: flex; gap: 0;
-    background: var(--paper-dark);
-    border-bottom: 1px solid var(--border);
-    padding: 0 44px;
-    overflow-x: auto;
-    overflow-y: visible;
-  }
+  
   nav button {
     position: relative;
     border-radius: 4px 4px 0 0;
@@ -294,10 +287,16 @@
   
   /* Quick translate bar sticky below nav */
   #globalQuickTranslate {
-    position: sticky;
-    top: 42px;
+    position: fixed;
+    top: 50px;
+    left: 52px;
+    right: 0;
     z-index: 99;
     background: var(--paper-dark);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
   }
   
   /* Fix dropdown arrow positioning in global quick translate */
@@ -838,9 +837,9 @@
   .yoshi-vocab-row .vi-en { flex:1; }
   .yoshi-vocab-row .vi-del { background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.9rem;padding:0 2px;flex-shrink:0; }
   .yoshi-vocab-row .vi-del:hover { color:var(--red); }
-  .kana-toggle { display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;border:1px solid var(--border);background:none;font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s;margin-bottom:6px; }
+  .kana-toggle { display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;border:1px solid var(--border);background:none;font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s;margin-bottom:0; }
   .kana-toggle.on { border-color:var(--teal);color:var(--teal);background:rgba(48,213,200,0.08); }
-  .kanji-btn { display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;border:1px solid var(--border);background:none;font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s;margin-bottom:6px;margin-left:4px; }
+  .kanji-btn { display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;border:1px solid var(--border);background:none;font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);cursor:pointer;transition:all 0.15s;margin-bottom:0;margin-left:4px; }
   .kanji-btn:hover { border-color:var(--gold);color:var(--gold); }
   .kanji-btn.loading { opacity:0.5;pointer-events:none; }
   .kanji-picker { position:absolute;z-index:200;background:var(--paper);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.4);display:flex;flex-direction:column;overflow:hidden;min-width:180px; }
@@ -1528,20 +1527,32 @@
     color: var(--ink-light); cursor: pointer; transition: color 0.15s;
   }
   .conj-opt-row input:checked + label { color: var(--ink); }
+
+  /* ── Standard panel layout ─────────────────────────────────────────────
+     .panel-header-lower sits below nav (42px) + quick-translate (~44px)
+     Use for panel-specific fixed bars: answer reveals, tab rows, etc.
+  ───────────────────────────────────────────────────────────────────── */
+  #panelHeaderLowerLeft { flex: 1; display: flex; align-items: center; gap: 12px; }
+  .panel-header-lower {
+    position: fixed;
+    top: 98px;
+    left: 52px;
+    right: 0;
+    z-index: 48;
+    background: var(--paper-dark);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+
   .conj-footer { position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); display: flex; flex-direction: row; align-items: flex-start; justify-content: center; padding: 10px 20px; gap: 0; }
   .conj-footer-group { display: flex; flex-direction: column; gap: 4px; padding: 0 16px; border-right: 1px solid var(--border); min-width: 110px; }
   .conj-footer-group:first-child { padding-left: 0; }
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-  #gram2-sub-conj { padding-bottom: 210px; }
+  #gram2-sub-conj { padding-top: 160px; padding-bottom: 210px; }
   .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .conj-header { position: fixed; top: 50px; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); height: 48px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); }
-  .conj-header-left { display: flex; align-items: center; gap: 8px; }
-  .conj-header-centre { flex: 1; display: flex; align-items: center; justify-content: center; gap: 24px; font-family: var(--ui); font-size: 0.78rem; color: var(--ink-light); }
-  .conj-header-right { min-width: 180px; text-align: right; font-family: var(--jp); font-size: 1rem; }
-  .conj-header { position: fixed; top: 50px; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); height: 48px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); }
-  .conj-header-left { display: flex; align-items: center; gap: 8px; }
-  .conj-header-centre { flex: 1; display: flex; align-items: center; justify-content: center; gap: 24px; font-family: var(--ui); font-size: 0.78rem; color: var(--ink-light); }
-  .conj-header-right { min-width: 180px; text-align: right; font-family: var(--jp); font-size: 1rem; }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;
@@ -1611,7 +1622,7 @@
   }
   .conj-skip-btn:hover { border-color: var(--ink); color: var(--ink); }
 
-  .conj-feedback { font-family: var(--jp); font-size: 1.1rem; text-align: center; height: 2rem; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .conj-feedback { font-family: var(--jp); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; min-width: 260px; height: 36px; border: 1px solid var(--border); border-radius: 6px; padding: 0 16px; background: var(--paper); }
   .conj-feedback.show:not(.slip-fb):not(.wrong-fb) { color: var(--teal); }
   .conj-feedback.slip-fb { color: var(--gold); }
   .conj-feedback.wrong-fb { color: var(--red); }

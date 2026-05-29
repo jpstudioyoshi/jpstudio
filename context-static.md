@@ -22,6 +22,9 @@
 - **Inline styles for JS-controlled elements:** if JavaScript controls visibility/layout, use inline styles — immune to stylesheet scope issues
 - **Lesson notes storage:** Single path — kvAPI via `lessonNotesGetSessions` / `lessonNotesSaveSessions`. `lnGetSessions` in features-tools.js delegates through App registry. One-time localStorage migration built in. ✅ Resolved.
 
+## HTML Element Map
+`html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
+
 ## Load Order
 ```
 jszip.min.js, hanzi-writer, chart.js 4.4.0 (CDN)
@@ -90,8 +93,9 @@ src/core-foundation.js → core-anki → core-kana-drill → core-kana → core-
 - `src/features.js` — 19,035 lines, NOT in load order. Delete if still present.
 - `src/features-pictures.js` — vg* dead code, harmless, leave in place.
 
-## SQLite Schema (v5)
-Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words
+## SQLite Schema (v9)
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
+pitch_data: 124,137 entries
 
 ### lesson_sessions
 ```sql

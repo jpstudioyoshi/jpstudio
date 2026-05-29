@@ -1435,7 +1435,7 @@ function conjResumeSession(saved) {
   // Show resume notice briefly in feedback
   const area = document.getElementById('conjDrillAreaG');
   if (area) {
-    const fb = area.querySelector('#conjFeedbackG');
+    const fb = document.getElementById('conjFeedbackG');
     if (fb) fb.innerHTML = '<span style="color:var(--gold);font-family:var(--ui);font-size:0.78rem">↩ Resuming today\'s session (' + conjIdx + '/' + conjQueue.length + ' done)</span>';
   }
 
@@ -1653,9 +1653,9 @@ function renderConjDrillG() {
         '<input class="conj-input" id="conjInputG" placeholder="type in kana…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" onkeydown="handleConjKeyG(event)" oninput="liveCheckConjG()">' +
         '<div style="display:flex;gap:8px;align-items:center;justify-content:center">' +
           '<button class="btn-action" id="conjCheckBtnG" onclick="checkConjG()">Check</button>' +
-          '<button class="btn-action" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none;padding:7px 14px">←</button>' +
-          '<button class="btn-action" id="conjNextBtnG" onclick="advanceConjG()" style="display:none;padding:7px 14px">→</button>' +
-          '<button class="btn-toggle' + (_conjTrackingPaused ? ' toggle-on' : '') + '" id="conjPauseBtnG" onclick="_conjTrackingPaused=!_conjTrackingPaused;this.classList.toggle(\'toggle-on\',_conjTrackingPaused)">Pause</button>' +
+          '<button class="btn-action btn-sm" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none">←</button>' +
+          '<button class="btn-action btn-sm" id="conjNextBtnG" onclick="advanceConjG()" style="display:none">→</button>' +
+
         '</div>' +
       '</div>' +
     '</div>';
