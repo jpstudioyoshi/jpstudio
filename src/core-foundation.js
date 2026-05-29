@@ -1621,6 +1621,9 @@ function showPanel(id) {
   const _psc = document.getElementById('progressSidebarControls');
   if (_psc) _psc.style.display = id === 'progress' ? 'flex' : 'none';
   const _gph = document.getElementById('grammarPanelHeader'); if (_gph) _gph.style.display = id === 'grammar2' ? 'flex' : 'none';
+  const _wph = document.getElementById('wordsPanelHeader'); if (_wph) _wph.style.display = id === 'words' ? 'flex' : 'none';
+  const _rph = document.getElementById('readPanelHeader'); if (_rph) _rph.style.display = id === 'read' ? 'flex' : 'none';
+  const _wrph = document.getElementById('writingPanelHeader'); if (_wrph) _wrph.style.display = id === 'writing' ? 'flex' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }

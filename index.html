@@ -84,6 +84,32 @@
   <button class="btn-icon" onclick="globalQTClear()" title="Clear">✕</button>
 </div>
 
+<div id="writingPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">作文</span>
+  </div>
+</div>
+<div id="readPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">読む</span>
+    <select class="btn-nav btn-sm" onchange="readSwitchTab(this.value)">
+      <option value="quick">Quick Read</option>
+      <option value="epub">EPUB</option>
+    </select>
+  </div>
+</div>
+<div id="wordsPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">語彙</span>
+    <select class="select-std" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
+      <option value="vocab">Words</option>
+      <option value="counters">Counters</option>
+      <option value="days">Days</option>
+      <option value="anki">Anki</option>
+      <option value="game">Pictures</option>
+    </select>
+  </div>
+</div>
 <div id="grammarPanelHeader" class="panel-header-lower" style="display:none">
   <div id="panelHeaderLowerLeft" class="panel-section-title">
     <span class="panel-section-title-jp">文法</span>
@@ -532,16 +558,6 @@
 
   <!-- VOCAB -->
   <div id="panel-words" class="panel">
-    <div class="section-title">
-      <span class="jp">語彙</span>
-      <select class="select-std" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
-        <option value="vocab">Words</option>
-        <option value="counters">Counters</option>
-        <option value="days">Days</option>
-        <option value="anki">Anki</option>
-        <option value="game">Pictures</option>
-      </select>
-    </div>
     <div id="words-sub-vocab">
     <div class="vocab-counter" id="vocabCounter">No cards yet!</div>
     <div class="vocab-card-area">
@@ -1165,7 +1181,6 @@
 
   <!-- WRITING STUDIO -->
   <div id="panel-writing" class="panel">
-    <div class="section-title"><span class="jp">作文</span><span class="en-block"><span class="reading">さくぶん</span><span class="en">(Write)</span></span></div>
 
     <!-- Two columns: left = input + board, right = sticky feedback -->
     <div class="writing-layout" style="align-items:start">
@@ -1292,17 +1307,7 @@
     </div>
   </div>
   <div id="panel-read" class="panel">
-    <div class="section-title"><span class="jp">読む</span><span class="en-block"><span class="reading">よむ</span><span class="en">(Read)</span></span></div>
 
-    <!-- Read mode tabs -->
-    <div style="display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid var(--border);align-items:center">
-      <button class="btn-nav" id="readTabQuick" onclick="readSwitchTab('quick')">
-        Quick Read
-      </button>
-      <button class="btn-nav" id="readTabEpub" onclick="readSwitchTab('epub')">
-        EPUB
-      </button>
-    </div>
 
     <!-- Quick Read -->
     <div id="readQuickPane" style="width:100%">
