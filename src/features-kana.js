@@ -1003,7 +1003,7 @@ function kanaAddToggle(el, startOn) {
 // ── Initialise all static toolbars on load ───────────────────────────────────
 function _initKanaToolbars() {
   console.log('[kana] _initKanaToolbars running, readyState=', document.readyState);
-  const ids = ['globalQTInput','chatInput','transInput','lookupsFilter','listenTranscribeText','vtDictateInput','gramSentQuestion'];
+  const ids = ['globalQTInput','chatInput','transInput','lookupsFilter','listenTranscribeText','vtDictateInput','gramSentQuestion','writingInput'];
   ids.forEach(id => {
     const el = document.getElementById(id);
     const ph = document.querySelector('[data-kana-for="'+id+'"]');
@@ -1028,7 +1028,7 @@ function setChatInputMode(mode)   { kanaSetMode('chatInput',            mode, 'c
 function listenTransSetMode(mode) { kanaSetMode('listenTranscribeText', mode, 'listenTranscribeTextKana',  { romaji:'listenTranscribeTextRomajiBtn',  hira:'listenTranscribeTextHiraBtn',  kata:'listenTranscribeTextKataBtn' }); }
 function setVtDictateMode(mode)   { kanaSetMode('vtDictateInput',       mode, 'vtDictateInputKana',       { romaji:'vtDictateInputRomajiBtn',       hira:'vtDictateInputHiraBtn',       kata:'vtDictateInputKataBtn' }); }
 function setGramSentQMode(mode)   { kanaSetMode('gramSentQuestion',     mode, 'gramSentQuestionKana',     { romaji:'gramSentQuestionRomajiBtn',     hira:'gramSentQuestionHiraBtn',     kata:'gramSentQuestionKataBtn' }); }
-function setWritingMode(mode)     { kanaSetMode('writingInput',         mode, 'writingKana',              { romaji:'writingRomajiBtn',              hira:'writingHiraBtn',              kata:'writingKataBtn' }); }
+function setWritingMode(mode)     { kanaSetMode('writingInput',         mode, 'writingInputKana',         { romaji:'writingInputRomajiBtn',         hira:'writingInputHiraBtn',         kata:'writingInputKataBtn' }); }
 function transDoKanjiConvert()    { const i=document.getElementById('transInput'); if(i) kanaToKanji(i,document.getElementById('transInputKanjiBtn')); }
 
 

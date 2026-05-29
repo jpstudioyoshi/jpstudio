@@ -1192,17 +1192,8 @@
             placeholder="Write a sentence in Japanese then Check or Submit."
             onkeydown="handleWritingKey(event)"></textarea>
           <div class="writing-btn-row">
-            <div class="writing-btn-toggle">
-              <button type="button" class="wb-icon-btn" id="writingRomajiBtn" data-btn-toggle="writingKana" title="Romaji mode (no conversion)">A</button>
-              <button type="button" class="wb-icon-btn" id="writingHiraBtn" data-btn-toggle="writingKana" title="Hiragana mode">ひ</button>
-              <button type="button" class="wb-icon-btn" id="writingKataBtn" data-btn-toggle="writingKana" data-active-color="var(--gold)" title="Katakana mode">カ</button>
-              <button type="button" class="wb-icon-btn kanji-btn" id="writingKanjiBtn" data-el-id="writingInput" title="Convert to kanji">漢字</button>
-              <button type="button" class="wb-icon-btn" id="writingSpeechBtn" title="Speech input">🎙</button>
-            </div>
-            <div class="writing-btn-toggle">
-              <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
-              <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
-            </div>
+            <span data-kana-for="writingInput"></span>
+
           </div>
         </div>
 
@@ -1212,7 +1203,6 @@
             <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">SENTENCES</span>
             <div style="display:flex;gap:8px;align-items:center">
   
-              <button class="btn-action" onclick="saveWritingText()">Save</button>
             </div>
           </div>
           <div id="writingBoard" style="display:flex;flex-direction:column;gap:8px;min-height:40px"></div>
@@ -1224,11 +1214,15 @@
 
       <!-- Right column: sticky feedback panel -->
       <div class="feedback-panel">
-        <div class="feedback-panel-header" onclick="checkWritingSentence()" title="Click to check current sentence">
-          <span class="check-prompt">Check Input</span>
+        <div class="feedback-panel-header">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="btn-action" onclick="checkWritingSentence()">Check</button>
+            <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
+            <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
+            <button class="btn-action" onclick="saveWritingText()">Save</button>
+          </div>
           <div style="display:flex;align-items:center;gap:10px">
-            <button class="btn-destructive" onclick="event.stopPropagation();clearWritingFeedback()">Clear</button>
-            <span id="feedbackCount" style="color:var(--ink)">—</span>
+            <button class="btn-destructive" onclick="clearWritingFeedback()">Clear</button>
           </div>
         </div>
         <div class="feedback-entries" id="feedbackEntries">

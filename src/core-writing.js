@@ -480,20 +480,19 @@ function renderFeedback(entry) {
       ${!isOk ? `<div class="fe-row"><span class="fe-label">Corrected</span>
         <span style="font-family:var(--jp);font-size:1.05rem;color:var(--ink);line-height:1.7">${highlightCorrectedParticles(entry.original||'', entry.corrected||'')}</span></div>` : ''}
       ${translation ? `<div class="fe-row"><span class="fe-label">Meaning</span>
-        <span style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);font-style:italic">${translation}</span></div>` : ''}
+        <span style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);font-style:italic">${translation}</span></div>` : ''}
       ${note ? `<div class="fe-row"><span class="fe-label">Note</span>
-        <span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);line-height:1.5">${note}</span></div>` : ''}
+        <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);line-height:1.6">${note}</span></div>` : ''}
       ${detail ? `<div class="fe-row" style="cursor:pointer" onclick="toggleDetail('${detailId}',this.querySelector('.fe-more-btn'))" >
         <span class="fe-label">Detail</span>
         <div style="flex:1">
           <button class="fe-more-btn">more ↓</button>
-          <div id="${detailId}" style="display:none;margin-top:6px;font-family:var(--ui);font-size:0.76rem;color:var(--ink-light);line-height:1.6">${detail}</div>
+          <div id="${detailId}" style="display:none;margin-top:6px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);line-height:1.7">${detail}</div>
         </div></div>` : ''}
     </div>
   `;
-  container.prepend(div);
-  const count = container.querySelectorAll('.feedback-entry').length;
-  document.getElementById('feedbackCount').textContent = count;
+  container.innerHTML = '';
+  container.appendChild(div);
 }
 
 function feToggle(el) {
@@ -525,6 +524,7 @@ function deleteWritingEntry(idx) {
 
 function handleWritingKey(e) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }
+  else if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) { e.preventDefault(); checkWritingSentence(); }
 }
 
 function clearWritingFeedback() {
