@@ -1296,13 +1296,6 @@
     <!-- Quick Read -->
     <div id="readQuickPane" style="width:100%">
       <div id="readPasteArea" style="width:100%">
-        <!-- History dropdown -->
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)">
-            <option value="">— Recent texts —</option>
-          </select>
-          <button class="btn-destructive" onclick="qrDeleteHistory()" title="Delete selected">Delete</button>
-        </div>
         <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="min-height:200px;margin-bottom:12px"></textarea>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
@@ -1310,6 +1303,8 @@
           <button class="btn-action" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" title="Download TTS audio (VoiceVox only)" disabled>Audio</button>
           <span class="qr-status" id="qrStatus"></span>
           <button class="btn-action" onclick="qrClear()">Clear</button>
+          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="margin-left:auto;min-width:160px"><option value="">— History —</option></select>
+          <button class="btn-destructive" onclick="qrDeleteHistory()">Delete</button>
         </div>
       </div>
       <div id="qrReaderWrap" style="display:none">
