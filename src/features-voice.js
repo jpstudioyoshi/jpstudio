@@ -2377,7 +2377,7 @@ async function voiceToggleRecord() {
   
   if (!hasOpenAI) {
     voiceUpdateStatus('Please add your OpenAI API key in the ⚙ API bar above');
-    document.getElementById('apikeyBar').classList.add('open');
+    (App.showPanel || window.showPanel)?.('settings');
     return;
   }
   
@@ -2736,7 +2736,7 @@ async function voiceUploadAudio(files) {
   
   if (!hasOpenAI) {
     voiceUpdateStatus('Please add your OpenAI API key in the ⚙ API bar above');
-    document.getElementById('apikeyBar').classList.add('open');
+    (App.showPanel || window.showPanel)?.('settings');
     return;
   }
   
