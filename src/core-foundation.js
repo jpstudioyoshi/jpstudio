@@ -1626,6 +1626,8 @@ function showPanel(id) {
   const _wrph = document.getElementById('writingPanelHeader'); if (_wrph) _wrph.style.display = id === 'writing' ? 'flex' : 'none';
   const _lph = document.getElementById('listenPanelHeader'); if (_lph) _lph.style.display = id === 'listening' ? 'flex' : 'none';
   const _vph = document.getElementById('voicePanelHeader'); if (_vph) _vph.style.display = id === 'voice' ? 'flex' : 'none';
+  const _vfu = document.getElementById('voiceFooterUpper'); if (_vfu) _vfu.style.display = id === 'voice' ? 'flex' : 'none';
+  const _vfl = document.getElementById('voiceFooterLower'); if (_vfl) _vfl.style.display = id === 'voice' ? 'flex' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }
