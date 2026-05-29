@@ -1611,15 +1611,10 @@
   }
   .conj-skip-btn:hover { border-color: var(--ink); color: var(--ink); }
 
-  .conj-feedback {
-    visibility: hidden; min-height: 1.4rem;
-    font-size: 0.88rem; line-height: 1.4;
-    padding: 4px 0; text-align: right; color: var(--ink-light);
-  }
-  .conj-feedback.show { visibility: visible; }
-  .conj-feedback.show { display: block; }
-  .conj-feedback.wrong-fb { border-left-color: var(--red); }
-  .conj-feedback.slip-fb { border-left-color: var(--gold); }
+  .conj-feedback { font-family: var(--jp); font-size: 1.1rem; text-align: center; height: 2rem; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .conj-feedback.show:not(.slip-fb):not(.wrong-fb) { color: var(--teal); }
+  .conj-feedback.slip-fb { color: var(--gold); }
+  .conj-feedback.wrong-fb { color: var(--red); }
   .conj-answer-reveal {
     font-family: 'Noto Sans JP', sans-serif; font-size: 1.3rem;
     color: var(--ink); margin-bottom: 8px;
@@ -1634,7 +1629,7 @@
   .conj-next-btn:hover { background: var(--teal); color: #1c1c1e; }
 
   .conj-stats-bar {
-    display: flex; gap: 32px; justify-content: center;
+    display: flex; gap: 24px; justify-content: center; align-items: center;
     font-size: 0.78rem; color: var(--ink-light);
     font-family: var(--ui); padding: 12px 0;
   }
