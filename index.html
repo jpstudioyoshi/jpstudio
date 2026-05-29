@@ -2298,7 +2298,7 @@
           title="Dictation mode - type what you hear">
           ✎
         </button>
-        <button id="vtBreakdownBtn" class="btn-action" onclick="vtShowBreakdown()"
+        <button id="vtBreakdownBtnBar" class="btn-action" onclick="vtShowBreakdown()"
           title="Break down current line">
           ?
         </button>
@@ -2328,7 +2328,7 @@
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex:0 0 auto !important">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--teal)">訳 TRANSLATION</span>
         <button class="btn-action" onclick="vtTranslateLine()" title="Translate current line">Translate</button>
-        <button id="vtBreakdownBtn" class="btn-action" onclick="vtBreakdownLine()" title="Break down the grammar and vocabulary">Break down</button>
+        <button id="vtBreakdownBtnLine" class="btn-action" onclick="vtBreakdownLine()" title="Break down the grammar and vocabulary">Break down</button>
         <button id="vtVocabListBtn" onclick="vtShowVocabList()" style="padding:3px 10px;background:none;border:1px solid var(--gold);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--gold);cursor:pointer" title="Content word vocabulary list">Vocab</button>
         <button class="btn-destructive" onclick="vtClearTranslation()" style="margin-left:auto" title="Clear">✕</button>
       </div>
@@ -2339,7 +2339,7 @@
           <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">BREAKDOWN</span>
           <button onclick="document.getElementById('vtBreakdownArea').style.display='none'" style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.8rem">✕</button>
         </div>
-        <div id="vtBreakdownContent" style="font-family:var(--jp);font-size:0.88rem;line-height:1.9;color:var(--ink);white-space:pre-wrap;user-select:text"></div>
+        <div id="vtBreakdownContentLine" style="font-family:var(--jp);font-size:0.88rem;line-height:1.9;color:var(--ink);white-space:pre-wrap;user-select:text"></div>
       </div>
     </div>
 
@@ -2370,7 +2370,7 @@
         <button class="btn-nav" onclick="vtCloseBreakdown()">Close</button>
       </div>
       <div id="vtBreakdownLine" style="padding:16px 18px;font-family:var(--jp);font-size:1.15rem;color:var(--ink);line-height:1.8;border-bottom:1px solid var(--border);background:rgba(48,213,200,0.05);user-select:text"></div>
-      <div id="vtBreakdownContent" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:200px;user-select:text">
+      <div id="vtBreakdownContentPopup" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:200px;user-select:text">
         <span style="color:var(--ink-light);font-size:0.85rem">Loading breakdown…</span>
       </div>
     </div>

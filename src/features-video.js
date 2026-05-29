@@ -1146,7 +1146,7 @@ async function vtShowBreakdown() {
   // Show popup
   const popup = document.getElementById('vtBreakdownPopup');
   const lineEl = document.getElementById('vtBreakdownLine');
-  const contentEl = document.getElementById('vtBreakdownContent');
+  const contentEl = document.getElementById('vtBreakdownContentPopup');
   
   popup.style.display = 'block';
   lineEl.innerHTML = text;
@@ -1157,7 +1157,7 @@ async function vtShowBreakdown() {
   if (video && !video.paused) video.pause();
   
   // Style the button as active
-  const btn = document.getElementById('vtBreakdownBtn');
+  const btn = document.getElementById('vtBreakdownBtnBar');
   if (btn) {
     btn.style.background = 'rgba(255,184,0,0.15)';
     btn.style.borderColor = 'var(--gold)';
@@ -1209,7 +1209,7 @@ function vtCloseBreakdown() {
   popup.style.display = 'none';
   
   // Reset button style
-  const btn = document.getElementById('vtBreakdownBtn');
+  const btn = document.getElementById('vtBreakdownBtnBar');
   if (btn) {
     btn.style.background = '';
     btn.style.borderColor = '';
@@ -3023,7 +3023,7 @@ ${lineText}` }]
 async function vtBreakdownLine() {
   const jpEl = document.getElementById('vtLineJp');
   const breakdownArea = document.getElementById('vtBreakdownArea');
-  const breakdownContent = document.getElementById('vtBreakdownContent');
+  const breakdownContent = document.getElementById('vtBreakdownContentLine');
   const video = document.getElementById('vtVideo');
   
   // Pause video when opening breakdown
