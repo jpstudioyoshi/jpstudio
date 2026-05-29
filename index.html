@@ -70,7 +70,6 @@
 
 <!-- Global Quick Translate Bar -->
 <div id="globalQuickTranslate">
-  <span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">訳</span>
   <div style="position:relative;flex:1;max-width:280px">
     <input type="text" id="globalQTInput" placeholder="JP or EN..." 
       style="width:100%;padding:5px 28px 5px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--jp);font-size:0.85rem;color:var(--ink);outline:none;box-sizing:border-box"
@@ -78,7 +77,7 @@
     <button class="btn-icon" id="globalQTHistoryBtn" onclick="toggleQTHistory(event)" title="Recent">▼</button>
     <div id="globalQTHistoryMenu" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--paper);border:1px solid var(--border);border-radius:5px;margin-top:2px;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.3)"></div>
   </div>
-  <span data-kana-for="globalQTInput"></span>
+  <span style="margin-left:10px"></span><span data-kana-for="globalQTInput"></span>
   <button class="btn-action" onclick="globalQuickTranslate()">→</button>
   <div id="globalQTResult" style="flex:1;font-family:var(--jp);font-size:0.85rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
   <button class="btn-icon" id="globalQTSpeakBtn" onclick="globalQTSpeak()" title="Read aloud" style="display:none;font-size:0.85rem">🔊</button>
@@ -87,7 +86,7 @@
 
 <div id="grammarPanelHeader" class="panel-header-lower" style="display:none">
   <div id="panelHeaderLowerLeft" style="display:flex;align-items:center;gap:12px">
-    <span style="font-family:var(--jp);font-size:1.1rem">文法</span>
+    <span style="font-family:var(--jp);font-size:2.2rem">文法</span>
     <select id="gram2SubSelect" class="btn-nav btn-sm" onchange="gram2Switch(this.value)">
       <option value="conj">活 Conjugation</option>
       <option value="sent">文 Sentences</option>
@@ -423,7 +422,7 @@
       <div style="position:relative;height:36px;display:flex;align-items:center" id="kanaRightSlot">
       <div id="kanaStrokeInputRow" style="display:none;align-items:flex-start;gap:10px">
         <div style="display:flex;flex-direction:column;align-self:center;gap:2px">
-          <div id="strokeReadingsDisplay" style="font-family:var(--jp);font-size:1.1rem;color:var(--teal);white-space:nowrap"></div>
+          <div id="strokeReadingsDisplay" style="font-family:var(--jp);font-size:2.2rem;color:var(--teal);white-space:nowrap"></div>
           <div id="strokeMeaningDisplay" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);white-space:nowrap"></div>
           <div id="strokeWordMeaning" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink);white-space:nowrap"></div>
         </div>
@@ -451,7 +450,7 @@
         <div>Remaining: <strong id="drillRemaining">0</strong></div>
         <div id="kanaSessionInfo" style="font-family:var(--ui);font-size:0.78rem;color:var(--teal)"></div>
         <div id="timerDisplay" style="display:none;font-family:var(--ui);align-items:center;gap:6px">
-          ⏱ <strong id="timerVal" style="font-size:1.1rem;color:var(--ink)">3</strong>s
+          ⏱ <strong id="timerVal" style="font-size:2.2rem;color:var(--ink)">3</strong>s
         </div>
       </div>
       <div id="timerBarWrap" style="display:none;width:100%;height:3px;background:var(--border);margin:6px 0 2px">
@@ -626,7 +625,7 @@
       <div id="ankiReviewCard" style="display:none">
         <div style="background:#141416;border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:16px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
           <div id="ankiCardFront" style="font-family:var(--jp);font-size:2.2rem;color:var(--ink);text-align:center"></div>
-          <div id="ankiCardBack" style="display:none;font-family:var(--jp);font-size:1.1rem;color:var(--ink-light);text-align:center;margin-top:12px;padding-top:16px;border-top:1px solid var(--border);width:100%;line-height:1.8"></div>
+          <div id="ankiCardBack" style="display:none;font-family:var(--jp);font-size:2.2rem;color:var(--ink-light);text-align:center;margin-top:12px;padding-top:16px;border-top:1px solid var(--border);width:100%;line-height:1.8"></div>
         </div>
 
         <!-- Show answer / rating buttons -->
@@ -694,7 +693,7 @@
             <!-- Prompt -->
             <div id="countPrompt2" style="text-align:center;margin-bottom:24px">
               <div id="countPromptEmoji2" style="font-size:3rem;margin-bottom:12px;font-family:var(--jp);color:var(--teal)">数</div>
-              <div id="countPromptText2" style="font-family:var(--ui);font-size:1.1rem;color:var(--ink-light)">select counters and start</div>
+              <div id="countPromptText2" style="font-family:var(--ui);font-size:2.2rem;color:var(--ink-light)">select counters and start</div>
             </div>
             
             <!-- Input -->
@@ -713,7 +712,7 @@
             
             <!-- Feedback -->
             <div id="countFeedback2" style="text-align:center;min-height:50px;padding:12px">
-              <div id="countFeedbackText2" style="font-family:var(--jp);font-size:1.1rem"></div>
+              <div id="countFeedbackText2" style="font-family:var(--jp);font-size:2.2rem"></div>
             </div>
           </div>
           
@@ -752,7 +751,7 @@
             <div style="display:flex;gap:8px;justify-content:center;align-items:center">
               <input type="text" id="daysDrillInput" placeholder="Type reading..."
                 onkeydown="if(event.key==='Enter')daysCheck()"
-                style="padding:10px 14px;font-family:var(--jp);font-size:1.1rem;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);width:160px;text-align:center;outline:none">
+                style="padding:10px 14px;font-family:var(--jp);font-size:2.2rem;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);width:160px;text-align:center;outline:none">
               <button class="btn-action" onclick="daysCheck()">Check</button>
             </div>
             <div id="daysDrillFeedback" style="text-align:center;margin-top:10px;font-family:var(--jp);font-size:1rem;min-height:1.5em"></div>
@@ -1648,7 +1647,7 @@
               placeholder="Start the player — audio will pause as soon as you begin typing here, and resume automatically when you stop…"
               oninput="onDictationInputAudio()"
               style="width:100%;min-height:160px;padding:14px 16px;
-                     font-family:var(--jp);font-size:1.1rem;line-height:1.9;
+                     font-family:var(--jp);font-size:2.2rem;line-height:1.9;
                      background:var(--field);border:1px solid var(--field-border);color:var(--ink);
                      outline:none;resize:vertical;transition:border-color 0.2s,box-shadow 0.2s;border-radius:8px;font-size:1.05rem"
               ></textarea>
@@ -2344,7 +2343,7 @@
         <button id="vtVocabListBtn" onclick="vtShowVocabList()" style="padding:3px 10px;background:none;border:1px solid var(--gold);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--gold);cursor:pointer" title="Content word vocabulary list">Vocab</button>
         <button class="btn-destructive" onclick="vtClearTranslation()" style="margin-left:auto" title="Clear">✕</button>
       </div>
-      <div id="vtLineJp" style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px;line-height:1.6;user-select:text"></div>
+      <div id="vtLineJp" style="font-family:var(--jp);font-size:2.2rem;color:var(--ink);margin-bottom:6px;line-height:1.6;user-select:text"></div>
       <div id="vtLineEn" style="font-family:var(--ui);font-size:0.88rem;color:var(--teal);line-height:1.5;user-select:text"><span style="color:var(--ink-light);font-size:0.78rem">Click Translate to translate current line</span></div>
       <div id="vtBreakdownArea" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex:0 0 auto !important">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
