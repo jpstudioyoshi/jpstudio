@@ -1642,7 +1642,6 @@ function renderConjDrillG() {
   if (newDrillBtn) newDrillBtn.style.display = '';
 
   area.innerHTML =
-    '<div class="conj-feedback" id="conjFeedbackG"></div>' +
     '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</div><div>✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
     '<div class="conj-dot-row">' + dotHtml + '</div>' +
     '<div class="conj-card">' +

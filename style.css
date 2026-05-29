@@ -1542,6 +1542,14 @@
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
   #gram2-sub-conj { padding-bottom: 210px; }
   .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .conj-header { position: fixed; top: 50px; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); height: 48px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); }
+  .conj-header-left { display: flex; align-items: center; gap: 8px; }
+  .conj-header-centre { flex: 1; display: flex; align-items: center; justify-content: center; gap: 24px; font-family: var(--ui); font-size: 0.78rem; color: var(--ink-light); }
+  .conj-header-right { min-width: 180px; text-align: right; font-family: var(--jp); font-size: 1rem; }
+  .conj-header { position: fixed; top: 50px; left: 52px; right: 0; z-index: 50; background: var(--paper-dark); height: 48px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); }
+  .conj-header-left { display: flex; align-items: center; gap: 8px; }
+  .conj-header-centre { flex: 1; display: flex; align-items: center; justify-content: center; gap: 24px; font-family: var(--ui); font-size: 0.78rem; color: var(--ink-light); }
+  .conj-header-right { min-width: 180px; text-align: right; font-family: var(--jp); font-size: 1rem; }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;
