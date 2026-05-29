@@ -2474,28 +2474,28 @@
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 499,
+    "line": 498,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');"
   },
   {
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 508,
+    "line": 507,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 517,
+    "line": 516,
     "desc": "writingSentences.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 526,
+    "line": 525,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }"
   },
   {
@@ -3966,7 +3966,7 @@
     "name": "setWritingMode",
     "file": "src/features-kana.js",
     "line": 1031,
-    "desc": "kanaSetMode('writingInput',         mode, 'writingKana',              { romaji:'writingRomajiBtn',  "
+    "desc": "kanaSetMode('writingInput',         mode, 'writingInputKana',         { romaji:'writingInputRomajiBt"
   },
   {
     "type": "function",

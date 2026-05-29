@@ -1624,6 +1624,7 @@ function showPanel(id) {
   const _wph = document.getElementById('wordsPanelHeader'); if (_wph) _wph.style.display = id === 'words' ? 'flex' : 'none';
   const _rph = document.getElementById('readPanelHeader'); if (_rph) _rph.style.display = id === 'read' ? 'flex' : 'none';
   const _wrph = document.getElementById('writingPanelHeader'); if (_wrph) _wrph.style.display = id === 'writing' ? 'flex' : 'none';
+  const _lph = document.getElementById('listenPanelHeader'); if (_lph) _lph.style.display = id === 'listening' ? 'flex' : 'none';
   if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }

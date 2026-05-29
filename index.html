@@ -84,6 +84,17 @@
   <button class="btn-icon" onclick="globalQTClear()" title="Clear">✕</button>
 </div>
 
+<div id="listenPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">聴解</span>
+    <select class="btn-nav btn-sm" id="listenModeSelect" onchange="listenModeChanged(this.value)">
+      <option value="">▶ Listen</option>
+      <option value="comprehension">🧠 Comprehension</option>
+      <option value="times">🕐 Times drill</option>
+      <option value="progress">📊 Progress</option>
+    </select>
+  </div>
+</div>
 <div id="writingPanelHeader" class="panel-header-lower" style="display:none">
   <div class="panel-section-title">
     <span class="panel-section-title-jp">作文</span>
@@ -101,7 +112,7 @@
 <div id="wordsPanelHeader" class="panel-header-lower" style="display:none">
   <div class="panel-section-title">
     <span class="panel-section-title-jp">語彙</span>
-    <select class="select-std" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
+    <select class="btn-nav btn-sm" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
       <option value="vocab">Words</option>
       <option value="counters">Counters</option>
       <option value="days">Days</option>
@@ -1452,21 +1463,10 @@
 
   <!-- LISTENING -->
   <div id="panel-listening" class="panel">
-    <div class="section-title"><span class="jp">聴解</span><span class="en-block"><span class="reading">ちょうかい</span><span class="en">(Listen)</span></span></div>
 
     <!-- Top bar: load controls -->
     <div class="listen-load-bar" style="width:100%">
-      <button class="btn-action" onclick="document.getElementById('listenFileInput').click()" title="Add audio files">
-        Add
-      </button>
-      <button class="btn-action" onclick="clearListenPlaylist()">Clear</button>
       <div style="display:flex;gap:10px;margin-left:auto;align-items:center">
-        <select class="select-std" id="listenModeSelect" onchange="listenModeChanged(this.value)">
-          <option value="">▶ Listen</option>
-          <option value="comprehension">🧠 Comprehension</option>
-          <option value="times">🕐 Times drill</option>
-          <option value="progress">📊 Progress</option>
-        </select>
         <button class="btn-toggle" id="srsToggleBtn" onclick="SRS.togglePanel()"
           title="Rate this track for spaced repetition">
           ⏱ <span id="srsDueBadge" style="display:none;background:var(--gold);color:#000;
@@ -1676,10 +1676,10 @@
       <!-- Playlist -->
       <div class="listen-playlist-col">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div class="listen-col-label" style="margin-bottom:0">Playlist <span id="listenTrackCount" style="color:var(--ink-light)">0 tracks</span></div>
-          <label style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);cursor:pointer;display:flex;align-items:center;gap:5px">
-            <input type="checkbox" id="listenSelectAll" onchange="toggleSelectAll(this.checked)"> All
-          </label>
+          <div style="display:flex;gap:6px">
+            <button class="btn-action" onclick="document.getElementById('listenFileInput').click()" title="Add audio files">Add tracks</button>
+            <button class="btn-action" onclick="clearListenPlaylist()">Clear</button>
+          </div>
         </div>
         <div class="listen-playlist" id="listenPlaylist"></div>
       </div>
