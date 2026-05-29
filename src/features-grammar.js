@@ -416,7 +416,7 @@ function gramSentPopulateWeakPoints() {
     }
     if (empty) empty.style.display = 'none';
     container.innerHTML = patterns.map(p =>
-      `<button class="btn-action" style="font-size:0.75rem;padding:4px 8px" onclick="gramSentSelectWeakPoint(this,'${p.replace(/'/g,"\'")}')">` +
+      `<button class="btn-action btn-sm" onclick="gramSentSelectWeakPoint(this,'${p.replace(/'/g,"\'")}')">` +
       `${p}</button>`
     ).join('');
   } catch { container.innerHTML = ''; }
@@ -1958,7 +1958,7 @@ async function particleDrillStart() {
     console.error('[particleDrill]', e);
     _pdLoading = false;
     const area = document.getElementById('particleDrillArea');
-    if (area) area.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:#e05050;padding:12px">Generation failed: ' + e.message + '<br><button class="btn-action" style="margin-top:8px;font-size:0.78rem" onclick="particleDrillStart()">Try again</button></div>';
+    if (area) area.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:#e05050;padding:12px">Generation failed: ' + e.message + '<br><button class="btn-action btn-sm" style="margin-top:8px" onclick="particleDrillStart()">Try again</button></div>';
     return;
   }
   _pdLoading = false;
@@ -2129,7 +2129,7 @@ function showConjLookupG() {
     `<tr style="${r.hi?'background:rgba(48,213,200,0.14)':''}">
       <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);white-space:nowrap">${r.badge}</td>
       <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:0.95rem">${r.answer}</td>
-      <td style="padding:5px 6px;border-bottom:1px solid rgba(255,255,255,0.06)"><button class="btn-action" style="font-size:0.72rem;padding:2px 5px" onclick="jpSpeak('${r.answer}')">🔊</button></td>
+      <td style="padding:5px 6px;border-bottom:1px solid rgba(255,255,255,0.06)"><button class="btn-action btn-xs" onclick="jpSpeak('${r.answer}')">🔊</button></td>
     </tr>`
   ).join('');
 

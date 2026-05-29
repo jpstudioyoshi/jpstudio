@@ -1035,7 +1035,7 @@ function daysOfMonthInit() {
       const irr = IREG.has(d);
       return `<div style="background:var(--paper);padding:5px 8px;font-family:var(--ui);font-size:0.82rem;color:${irr ? 'var(--gold)' : 'var(--ink-light)'}">${d}</div>`
         + `<div style="background:var(--paper);padding:5px 8px;font-family:var(--jp);font-size:0.88rem;color:var(--ink)">${r}</div>`
-        + `<div style="background:var(--paper);padding:4px 6px"><button class="btn-action" style="padding:1px 5px;font-size:0.68rem" onclick="jpSpeak('${r}')">🔊</button></div>`;
+        + `<div style="background:var(--paper);padding:4px 6px"><button class="btn-action btn-xs" onclick="jpSpeak('${r}')">🔊</button></div>`;
     };
     html += cell(d1, r1) + cell(d2, readings[d2]);
   }

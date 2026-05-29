@@ -1832,11 +1832,11 @@ async function renderRecordingsBrowser() {
             ${dur} &nbsp;·&nbsp; <span style="color:${transcribedColor}">${transcribed}</span>
           </div>
         </div>
-        <button class="btn-action" style="font-size:0.75rem" onclick="recBrowserTranscribe(${rec.id})"
+        <button class="btn-action btn-sm" onclick="recBrowserTranscribe(${rec.id})"
           ${rec.processed_at ? 'title="Re-transcribe"' : 'title="Transcribe"'}>
           ${rec.processed_at ? '↺ Re-transcribe' : '⚙ Transcribe'}
         </button>
-        <button class="btn-action" style="font-size:0.75rem;color:var(--red);border-color:var(--red)"
+        <button class="btn-action btn-sm" style="color:var(--red);border-color:var(--red)"
           onclick="recBrowserDelete(${rec.id}, '${esc(apath)}', '${esc(tpath)}')">🗑 Delete</button>
       </div>
       <div id="${safeId}_players">

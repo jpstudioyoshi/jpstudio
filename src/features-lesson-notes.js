@@ -202,9 +202,9 @@ function lessonNotesGetFullPanelHTML() {
   html += '<span id="yoshiRecordStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);flex:1"></span>';
   html += '<span id="yoshiLevelDots" style="font-size:0.65rem;color:var(--red);letter-spacing:-1px;margin-right:4px"></span>';
   if (!currentSession) {
-  html += '<button class="btn-action" style="font-size:0.72rem" onclick="yoshiTestChannels && yoshiTestChannels()">🎙 Test</button>';
-  html += '<button class="btn-action" style="font-size:0.72rem" onclick="yoshiOpenOverlay && yoshiOpenOverlay()">🪟 Session</button>';
-  html += '<button class="btn-action" style="font-size:0.72rem" onclick="showPanel(\'recordings\')">📼 Recordings</button>';
+  html += '<button class="btn-action btn-xs" onclick="yoshiTestChannels && yoshiTestChannels()">🎙 Test</button>';
+  html += '<button class="btn-action btn-xs" onclick="yoshiOpenOverlay && yoshiOpenOverlay()">🪟 Session</button>';
+  html += '<button class="btn-action btn-xs" onclick="showPanel(\'recordings\')">📼 Recordings</button>';
   }
   html += '</div>';
   html += '<div id="yoshiTranscribeBar" style="display:none;align-items:center;gap:8px;margin-bottom:8px"></div>';
@@ -213,7 +213,7 @@ function lessonNotesGetFullPanelHTML() {
   if (LessonNotesState.extractionWarning && LessonNotesState.extractionWarning.length) {
     html += `<div style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.4);border-radius:6px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
       <span style="font-family:var(--ui);font-size:0.78rem;color:var(--gold)">⚠ Extraction incomplete: ${LessonNotesState.extractionWarning.join(', ')} came back empty. Check your API key or retry.</span>
-      <button class="btn-action" style="font-size:0.72rem;flex-shrink:0" onclick="LessonNotesState.extractionWarning=null;lessonNotesAutoExtractAll()">🔄 Retry</button>
+      <button class="btn-action btn-xs" style="flex-shrink:0" onclick="LessonNotesState.extractionWarning=null;lessonNotesAutoExtractAll()">🔄 Retry</button>
     </div>`;
   }
 
@@ -1042,7 +1042,7 @@ function lessonNotesRenderStories() {
           style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;transition:all 0.15s"
           class="row-hover-border">
           <div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:8px;line-height:1.4">${s.title}</div>
-          <button class="btn-action" onclick="event.stopPropagation();(App.qrLoadText||window.qrLoadText)?.(LessonNotesState.stories[${i}]?.text)" style="font-size:0.72rem;padding:2px 8px;margin-bottom:6px">Read →</button>
+          <button class="btn-action" style="margin-bottom:6px" class="btn-action btn-xs" onclick="event.stopPropagation();(App.qrLoadText||window.qrLoadText)?.(LessonNotesState.stories[${i}]?.text)">Read →</button>
           <div style="font-family:var(--jp);font-size:0.8rem;color:var(--ink-light);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${s.text.substring(0, 60)}…</div>
         </div>
       `).join('')}
@@ -1133,7 +1133,7 @@ function lessonNotesRenderGrammar() {
               <button class="btn-action" onclick="event.stopPropagation();lessonNotesEditGrammar(${g._idx})" title="Edit">✏️</button>
               <button class="btn-action" onclick="event.stopPropagation();lessonNotesToggleGrammarHide(${g._idx})" title="${LessonNotesState.grammarHidden.has(g._idx) ? 'Show' : 'Hide'}">${LessonNotesState.grammarHidden.has(g._idx) ? '👁' : '🙈'}</button>
               <button class="btn-action" onclick="event.stopPropagation();lessonNotesDeleteGrammar(${g._idx})" title="Delete">✕</button>
-              <button class="btn-action" onclick="event.stopPropagation();(App.gramSentPracticePattern||window.gramSentPracticePattern)?.(LessonNotesState.grammar[${g._idx}]?.pattern)" title="Practice in Grammar Drill" style="font-size:0.72rem;padding:2px 6px">Practice →</button>
+              <button class="btn-action" class="btn-action btn-xs" onclick="event.stopPropagation();(App.gramSentPracticePattern||window.gramSentPracticePattern)?.(LessonNotesState.grammar[${g._idx}]?.pattern)" title="Practice in Grammar Drill">Practice →</button>
 
             </div>
             <div onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);line-height:1.5;cursor:pointer">${g.explanation || ''}</div>
@@ -2709,7 +2709,7 @@ function lnRenderVocab(cur) {
   h.push('<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">');
   [{m:'jp2reading',l:'JP \u2192 Reading'},{m:'jp2en',l:'JP \u2192 Meaning'},{m:'en2jp',l:'EN \u2192 JP'}].forEach(function(o) {
     var active = window._lnDrillMode === o.m ? ';border-color:var(--teal);color:var(--teal)' : '';
-    h.push('<button class="btn-action" style="font-size:0.75rem;padding:3px 10px' + active + '" onclick="lnSetDrillMode(\'' + o.m + '\')">' + o.l + '</button>');
+    h.push('<button class="btn-action btn-sm" style="padding:3px 10px' + active + '" onclick="lnSetDrillMode(\'' + o.m + '\')">' + o.l + '</button>');
   });
   h.push('<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:auto;padding-top:4px">' + progress + '</span>');
   h.push('</div>');
@@ -2729,13 +2729,13 @@ function lnRenderVocab(cur) {
   }
   h.push('</div>');
   h.push('<div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">');
-  h.push('<button class="btn-action" style="font-size:0.75rem" onclick="lnDrillPrev()">&#8592; Prev</button>');
+  h.push('<button class="btn-action btn-sm" onclick="lnDrillPrev()">&#8592; Prev</button>');
   if (!window._lnDrillRevealed) {
-    h.push('<button class="btn-action" style="font-size:0.82rem" onclick="lnDrillReveal()">Reveal</button>');
+    h.push('<button class="btn-action" onclick="lnDrillReveal()">Reveal</button>');
   } else {
     var word = (v.jp||v.word||'').replace(/'/g,'&#39;');
-    h.push('<button class="btn-action" style="font-size:0.75rem" onclick="jpSpeak(\'' + word + '\')">&#128266;</button>');
-    h.push('<button class="btn-action" style="font-size:0.82rem" onclick="lnDrillNext()">Next &#8594;</button>');
+    h.push('<button class="btn-action btn-sm" onclick="jpSpeak(\'' + word + '\')">&#128266;</button>');
+    h.push('<button class="btn-action" onclick="lnDrillNext()">Next &#8594;</button>');
   }
   h.push('</div>');
   h.push('<div style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:6px"><table style="width:100%;border-collapse:collapse;font-family:var(--ui);font-size:0.78rem">');
@@ -2785,7 +2785,7 @@ function lnOpenStory(i) {
   var content = document.getElementById('lnTabContent');
   if (!content) return;
   content.innerHTML = '<div>'
-    + '<button class="btn-action" style="font-size:0.75rem;margin-bottom:12px" onclick="lnSwitchTab(\'stories\')">&#8592; Back</button>'
+    + '<button class="btn-action btn-sm" style="margin-bottom:12px" onclick="lnSwitchTab(\'stories\')">&#8592; Back</button>'
     + '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--teal);margin-bottom:10px">' + (s.title||'') + '</div>'
     + '<div style="font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.8;white-space:pre-wrap">' + (s.text||'') + '</div>'
     + '</div>';
@@ -2811,7 +2811,7 @@ function lnRenderKeyPhrases(cur) {
       h.push('<div style="background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.25);border-radius:8px;padding:14px">');
       h.push('<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">');
       h.push('<span style="font-family:var(--jp);font-size:1.1rem;color:var(--ink)">' + (p.phrase||'') + '</span>');
-      h.push('<button class="btn-action" style="padding:1px 5px;font-size:0.7rem" onclick="jpSpeak(\'' + phrase + '\')">&#128266;</button>');
+      h.push('<button class="btn-action btn-xs" onclick="jpSpeak(\'' + phrase + '\')">&#128266;</button>');
       h.push('</div>');
       if (p.meaning) h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">' + p.meaning + '</div>');
       if (p.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">' + p.example + '</div>');
@@ -2876,7 +2876,7 @@ function lnRenderGrammar(cur) {
   if (hiddenCount > 0) {
     h.push('<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:6px 10px;background:var(--paper-dark);border-radius:6px">');
     h.push('<span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">' + hiddenCount + ' hidden</span>');
-    h.push('<button class="btn-action" style="font-size:0.72rem" onclick="lnToggleShowHidden()">' + (showHidden ? '&#128065; Hide hidden' : '&#128065; Show hidden') + '</button>');
+    h.push('<button class="btn-action btn-xs" onclick="lnToggleShowHidden()">' + (showHidden ? '&#128065; Hide hidden' : '&#128065; Show hidden') + '</button>');
     h.push('</div>');
   }
   h.push('<div style="display:flex;flex-direction:column;gap:10px">');
@@ -2887,7 +2887,7 @@ function lnRenderGrammar(cur) {
     h.push('<div style="background:rgba(48,213,200,0.05);border:1px solid rgba(48,213,200,' + (isHidden ? '0.1' : '0.25') + ');border-radius:8px;padding:12px;' + opacity + '">');
     h.push('<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">');
     h.push('<span style="font-family:var(--jp);font-size:1.05rem;color:var(--teal);flex:1">' + (g.pattern||g.point||'') + '</span>');
-    h.push('<button class="btn-action" style="padding:1px 6px;font-size:0.68rem" onclick="lnToggleGrammarHide(' + i + ')" title="' + (isHidden ? 'Show' : 'Hide') + '">' + (isHidden ? '&#128065;' : '&#128584;') + '</button>');
+    h.push('<button class="btn-action" class="btn-action btn-xs" onclick="lnToggleGrammarHide(' + i + ')" title="' + (isHidden ? 'Show' : 'Hide') + '">' + (isHidden ? '&#128065;' : '&#128584;') + '</button>');
     h.push('</div>');
     if (g.explanation) h.push('<div style="font-family:var(--ui);font-size:0.80rem;color:var(--ink-light);line-height:1.5">' + g.explanation + '</div>');
     if (g.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px;border-left:3px solid var(--teal)">' + g.example + '</div>');

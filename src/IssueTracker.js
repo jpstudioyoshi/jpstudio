@@ -258,9 +258,9 @@ function issueTrackerRender() {
           <select onchange="itUpdateField(${issue.id},'status',this.value)" style="padding:4px 8px;font-family:var(--ui);font-size:0.75rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:4px">
             ${Object.entries(IssueTracker.STATUS).map(([k,v]) => `<option value="${k}"${issue.status===k?' selected':''}>${v.label}</option>`).join('')}
           </select>
-          <button class="btn-action" style="font-size:0.75rem" onclick="itCopyPrompt(${issue.id})">Copy prompt</button>
-          <button class="btn-action" style="font-size:0.75rem" onclick="itEditResolution(${issue.id})">✏ Resolution</button>
-          <button class="btn-action" style="font-size:0.75rem;color:var(--red);border-color:var(--red)" onclick="itDelete(${issue.id})">Delete</button>
+          <button class="btn-action btn-sm" onclick="itCopyPrompt(${issue.id})">Copy prompt</button>
+          <button class="btn-action btn-sm" onclick="itEditResolution(${issue.id})">✏ Resolution</button>
+          <button class="btn-action btn-sm" style="color:var(--red);border-color:var(--red)" onclick="itDelete(${issue.id})">Delete</button>
         </div>
       </div>
     </div>`;
@@ -279,8 +279,8 @@ function _itRenderGroupBar() {
   }
   bar.style.display = 'flex';
   bar.innerHTML = `<span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">${n} issues selected</span>
-    <button class="btn-action" style="font-size:0.75rem;margin-left:auto" onclick="itCopyGroupPrompt()">Copy group prompt</button>
-    <button class="btn-action" style="font-size:0.75rem;color:var(--ink-light)" onclick="itClearSelection()">✕ Clear</button>`;
+    <button class="btn-action btn-sm" style="margin-left:auto" onclick="itCopyGroupPrompt()">Copy group prompt</button>
+    <button class="btn-action btn-sm" style="color:var(--ink-light)" onclick="itClearSelection()">✕ Clear</button>`;
 }
 
 function issueTrackerRenderFull() {
