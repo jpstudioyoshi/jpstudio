@@ -645,7 +645,7 @@ async function qrLoadHistory(indexStr) {
     qrOnInput();
     qrRender(QuickReadState.segments);
     const rw = document.getElementById('qrReaderWrap');
-    const pa = document.getElementById('qrPasteArea');
+    const pa = document.getElementById('readPasteArea');
     if (rw) rw.style.display = 'block';
     if (pa) pa.style.display = 'none';
     document.getElementById('qrStatus').textContent = '';

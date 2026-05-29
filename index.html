@@ -1303,8 +1303,6 @@
           <button class="btn-action" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" title="Download TTS audio (VoiceVox only)" disabled>Audio</button>
           <span class="qr-status" id="qrStatus"></span>
           <button class="btn-action" onclick="qrClear()">Clear</button>
-          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="margin-left:auto;min-width:160px"><option value="">— History —</option></select>
-          <button class="btn-destructive" onclick="qrDeleteHistory()">Delete</button>
         </div>
       </div>
       <div id="qrReaderWrap" style="display:none">
@@ -1316,6 +1314,8 @@
           <button class="btn-action" onclick="qrSendToWrite()" title="Copy plain text to Write panel">Write</button>
           <button class="btn-action" onclick="qrPrintPage()" title="Print with furigana (black on white)">Print</button>
           <button class="btn-action" onclick="qrClear()" title="Clear and start over">Clear</button>
+          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="margin-left:auto;min-width:160px"><option value="">— History —</option></select>
+          <button class="btn-destructive" onclick="qrDeleteHistory()">Delete</button>
         </div>
         <div class="qr-reader-box">
         
