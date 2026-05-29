@@ -716,8 +716,8 @@
           <!-- Discreet action buttons below sidebar -->
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;padding-right:2px">
             <div style="display:flex;gap:6px;align-items:center">
-              <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-subtle">🖼 Objects</button>
-              <button onclick="countForceNewSession2()" class="btn-subtle">New</button>
+              <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-nav">🖼 Objects</button>
+              <button onclick="countForceNewSession2()" class="btn-nav">New</button>
             </div>
             <button class="btn-action" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
           </div>
@@ -1010,7 +1010,7 @@
           <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)">
             <span id="lookupsCount">0</span> cached translations
           </div>
-          <button onclick="clearLookupCache()" class="btn-danger">🗑 Clear all</button>
+          <button onclick="clearLookupCache()" class="btn-destructive">🗑 Clear all</button>
         </div>
         <!-- Filter input with kana mode -->
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px">
