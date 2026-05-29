@@ -324,7 +324,7 @@ function gdRenderComplete() {
     <div class="gd-idle" style="min-height:120px;margin-bottom:20px">
       <div style="font-size:2.5rem">${pct >= 80 ? '🎉' : pct >= 50 ? '📖' : '💪'}</div>
       <strong>${gdOk} / ${gdSentences.length} correct · ${pct}%</strong>
-      <button class="gd-generate-btn btn-icon" onclick="gdGenerate()">Drill Again →</button>
+      <button class="gd-generate-btn" onclick="gdGenerate()">Drill Again →</button>
     </div>
     <div class="gd-summary">
       <div class="gd-summary-title">REVIEW</div>
@@ -789,7 +789,7 @@ function gramSentRenderComplete() {
     <div class="gd-idle" style="min-height:120px;margin-bottom:20px">
       <div style="font-size:2.5rem">${pct >= 80 ? '🎉' : pct >= 50 ? '📖' : '💪'}</div>
       <strong>${GramSentState.ok} / ${GramSentState.sentences.length} correct · ${pct}%</strong>
-      <button class="gd-generate-btn btn-icon" onclick="gramSentGenerate()">Drill Again →</button>
+      <button class="gd-generate-btn" onclick="gramSentGenerate()">Drill Again →</button>
     </div>
     <div class="gd-summary"><div class="gd-summary-title">REVIEW</div>${items}</div>`;
 }

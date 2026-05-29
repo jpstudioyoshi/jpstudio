@@ -325,8 +325,8 @@ function wbAddItem(entry, idx) {
     <span class="wb-num">${idx + 1}.</span>
     <span class="wb-text" id="wb-text-${idx}">${entry.original}</span>
     <span style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
-      <button class="wb-edit btn-icon btn-icon-teal" title="Edit">✎</button>
-      <button class="wb-del btn-icon" title="Delete">✕</button>
+      <button class="wb-edit btn-icon-teal" title="Edit">✎</button>
+      <button class="wb-del" title="Delete">✕</button>
     </span>
   `;
   div.querySelector('.wb-del').addEventListener('click', function(e) { e.stopPropagation(); wbDelete(div); });

@@ -197,7 +197,7 @@ function vtRenderTranscript() {
         ondblclick="vtCueClick(${i});vtTranslateLine()"
         onmouseup="vtWordSelect(${i},event)">${displayText}</span>
       ${furiBtn}
-      ${cue.start !== null ? `<button class="vt-furi-btn btn-icon" onclick="event.stopPropagation();vtSendToShadow(${i})" title="Send to shadow tool">🎙</button>` : ''}
+      ${cue.start !== null ? `<button class="vt-furi-btn" onclick="event.stopPropagation();vtSendToShadow(${i})" title="Send to shadow tool">🎙</button>` : ''}
     </div>`;
   }).join('');
 }

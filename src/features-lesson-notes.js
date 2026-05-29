@@ -260,11 +260,11 @@ function lessonNotesGetFullPanelHTML() {
   const hasContent = _cur.vocab.length > 0 || _cur.stories.length > 0 || _cur.grammar.length > 0 || _cur.errors.length > 0;
   if (hasContent || LessonNotesState.extracting === false) {
     html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--border)">';
-    html += '<button class="yoshi-read-btn btn-icon' + (_vm==='vocab'||_vm===''||(!_vm&&hasContent)?' active':'') + '" onclick="lessonNotesSetView(\'vocab\')">📚 Vocab (' + _cur.vocab.length + ')</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_vm==='stories'?' active':'') + '" onclick="lessonNotesSetView(\'stories\')">📖 Stories (' + _cur.stories.length + ')</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_vm==='keyphrases'?' active':'') + '" onclick="lessonNotesSetView(\'keyphrases\')">🔑 Phrases (' + _cur.keyPhrases.length + ')</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_vm==='grammar'||_vm==='grammardetail'?' active':'') + '" onclick="lessonNotesSetView(\'grammar\')">📝 Grammar (' + _cur.grammar.length + ')</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_vm==='errors'?' active':'') + '" onclick="lessonNotesSetView(\'errors\')">❌ Errors (' + _cur.errors.length + ')</button>';
+    html += '<button class="yoshi-read-btn' + (_vm==='vocab'||_vm===''||(!_vm&&hasContent)?' active':'') + '" onclick="lessonNotesSetView(\'vocab\')">📚 Vocab (' + _cur.vocab.length + ')</button>';
+    html += '<button class="yoshi-read-btn' + (_vm==='stories'?' active':'') + '" onclick="lessonNotesSetView(\'stories\')">📖 Stories (' + _cur.stories.length + ')</button>';
+    html += '<button class="yoshi-read-btn' + (_vm==='keyphrases'?' active':'') + '" onclick="lessonNotesSetView(\'keyphrases\')">🔑 Phrases (' + _cur.keyPhrases.length + ')</button>';
+    html += '<button class="yoshi-read-btn' + (_vm==='grammar'||_vm==='grammardetail'?' active':'') + '" onclick="lessonNotesSetView(\'grammar\')">📝 Grammar (' + _cur.grammar.length + ')</button>';
+    html += '<button class="yoshi-read-btn' + (_vm==='errors'?' active':'') + '" onclick="lessonNotesSetView(\'errors\')">❌ Errors (' + _cur.errors.length + ')</button>';
     html += lnRecordingTabButton(currentSession);
     html += '</div>';
   }
@@ -446,14 +446,14 @@ function lnRecordingTabButton(session) {
   if (!session) return '';
   const recId = session.linked_recording_id || null;
   if (!recId) {
-    return '<button class="yoshi-read-btn btn-icon" onclick="lnShowLinkPicker()">🔗 Link recording</button>';
+    return '<button class="yoshi-read-btn" onclick="lnShowLinkPicker()">🔗 Link recording</button>';
   }
   const recs = window._lessonRecordingSessions || [];
   const rec = recs.find(function(r) { return r.id === recId; });
   const hasTranscript = rec && rec.processed_at;
-  let btns = '<button class="yoshi-read-btn ' + (LessonNotesState.viewMode==="recording"?"active":"") + ' btn-icon" onclick="lessonNotesSetView(\'recording\')">▶ Recording</button>';
+  let btns = '<button class="yoshi-read-btn ' + (LessonNotesState.viewMode==="recording"?"active":"") + '" onclick="lessonNotesSetView(\'recording\')">▶ Recording</button>';
   if (!hasTranscript) {
-    btns += '<button class="yoshi-read-btn btn-icon" onclick="lnTranscribeLinked()">⚙ Transcribe</button>';
+    btns += '<button class="yoshi-read-btn" onclick="lnTranscribeLinked()">⚙ Transcribe</button>';
   }
   return btns;
 }
@@ -585,9 +585,9 @@ function lnRenderLinkedRecording(session) {
     const _hasAlign = session.waAlignments && Object.keys(session.waAlignments).length > 0;
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)">';
     html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">TRANSCRIPT</span>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
-    html += '<button class="yoshi-read-btn btn-icon' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
-    html += '<button id="lnAlignBtn" class="yoshi-read-btn btn-icon" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
+    html += '<button class="yoshi-read-btn' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
+    html += '<button class="yoshi-read-btn' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
+    html += '<button id="lnAlignBtn" class="yoshi-read-btn" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
     html += '</div>';
 
     // Transcript area — preserve content across re-renders
@@ -879,12 +879,12 @@ function lessonNotesGetHTML() {
     return `
     <!-- Drill controls -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2reading'?'active':''} btn-icon" onclick="lessonNotesSetMode('jp2reading')">JP → Reading</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2en'?'active':''} btn-icon" onclick="lessonNotesSetMode('jp2en')">JP → Meaning</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='en2jp'?'active':''} btn-icon" onclick="lessonNotesSetMode('en2jp')">EN → JP</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='listening'?'active':''} btn-icon" onclick="lessonNotesSetMode('listening')">🔊 Listen</button>
-      <button class="yoshi-read-btn ${LessonNotesState.shuffled?'active':''} btn-icon" onclick="lessonNotesToggleShuffle()">🔀 ${LessonNotesState.shuffled?'Ordered':'Shuffle'}</button>
-      <button class="yoshi-read-btn btn-icon" onclick="lessonNotesDrillAll()">📚 Drill All</button>
+      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2reading'?'active':''}" onclick="lessonNotesSetMode('jp2reading')">JP → Reading</button>
+      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2en'?'active':''}" onclick="lessonNotesSetMode('jp2en')">JP → Meaning</button>
+      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='en2jp'?'active':''}" onclick="lessonNotesSetMode('en2jp')">EN → JP</button>
+      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='listening'?'active':''}" onclick="lessonNotesSetMode('listening')">🔊 Listen</button>
+      <button class="yoshi-read-btn ${LessonNotesState.shuffled?'active':''}" onclick="lessonNotesToggleShuffle()">🔀 ${LessonNotesState.shuffled?'Ordered':'Shuffle'}</button>
+      <button class="yoshi-read-btn" onclick="lessonNotesDrillAll()">📚 Drill All</button>
     </div>
     
     <!-- Drill card -->
@@ -895,22 +895,22 @@ function lessonNotesGetHTML() {
     <!-- All controls in one line -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)">Show:</span>
-      <button class="yoshi-read-btn ${LessonNotesState.showReading?'active':''} btn-icon" onclick="lessonNotesToggleShowReading()">+Reading</button>
-      <button class="yoshi-read-btn ${LessonNotesState.showMeaning?'active':''} btn-icon" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
+      <button class="yoshi-read-btn ${LessonNotesState.showReading?'active':''}" onclick="lessonNotesToggleShowReading()">+Reading</button>
+      <button class="yoshi-read-btn ${LessonNotesState.showMeaning?'active':''}" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
       <span style="color:var(--border)">│</span>
-      <button class="yoshi-read-btn btn-icon" onclick="lessonNotesToggleTable()">${LessonNotesState.tableHidden ? '👁' : '🙈'} Word List</button>
-      <button class="yoshi-read-btn btn-icon" onclick="lessonNotesBreakdownCurrent()">🔍 Break down</button>
-      <button class="yoshi-read-btn btn-icon" onclick="lessonNotesExamplesCurrent()">📝 Examples</button>
+      <button class="yoshi-read-btn" onclick="lessonNotesToggleTable()">${LessonNotesState.tableHidden ? '👁' : '🙈'} Word List</button>
+      <button class="yoshi-read-btn" onclick="lessonNotesBreakdownCurrent()">🔍 Break down</button>
+      <button class="yoshi-read-btn" onclick="lessonNotesExamplesCurrent()">📝 Examples</button>
       ${LessonNotesState.hiddenWords.size > 0 ? `
         <span style="color:var(--border)">│</span>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesSaveHiddenPermanently()">💾 Save ${LessonNotesState.hiddenWords.size} learned</button>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesRestoreHidden()">↩ Restore</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesSaveHiddenPermanently()">💾 Save ${LessonNotesState.hiddenWords.size} learned</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesRestoreHidden()">↩ Restore</button>
       ` : ''}
       ${LessonNotesState.permanentlyLearned.size > 0 ? `
         <span style="color:var(--border);margin-left:auto">│</span>
         <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light)">📚 ${LessonNotesState.permanentlyLearned.size} mastered</span>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesShowMastered()">View</button>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesClearMastered()">Clear</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesShowMastered()">View</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesClearMastered()">Clear</button>
       ` : ''}
     </div>
     
@@ -961,7 +961,7 @@ function lessonNotesGetHTML() {
           📄 Browse
           <input type="file" accept=".docx,.txt" onchange="lessonNotesHandleFile(this.files[0])" style="display:none">
         </label>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesExtract()">✨ Extract & Save</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesExtract()">✨ Extract & Save</button>
       </div>
       
       <textarea id="lessonNotesInput" placeholder="Drop a .docx file here, or paste your teacher's notes…
@@ -994,9 +994,9 @@ function lessonNotesUpdateTabControls(sessions, hasContent) {
       <option value="-1">— New lesson —</option>
       ${sessions.map((s, i) => `<option value="${i}" ${i === LessonNotesState.currentIdx ? 'selected' : ''}>${s.title || 'Untitled'} (${s.vocab?.length || 0})</option>`).join('')}
     </select>
-    <button class="yoshi-read-btn btn-icon" onclick="lessonNotesNew()" title="New lesson">+</button>
-    ${hasContent ? `<button class="yoshi-read-btn btn-icon" onclick="lessonNotesShowEdit()" title="Edit notes">✏️</button>` : ''}
-    ${LessonNotesState.currentIdx !== null ? `<button class="yoshi-read-btn btn-icon" onclick="lessonNotesDelete()" title="Delete">🗑</button>` : ''}
+    <button class="yoshi-read-btn" onclick="lessonNotesNew()" title="New lesson">+</button>
+    ${hasContent ? `<button class="yoshi-read-btn" onclick="lessonNotesShowEdit()" title="Edit notes">✏️</button>` : ''}
+    ${LessonNotesState.currentIdx !== null ? `<button class="yoshi-read-btn" onclick="lessonNotesDelete()" title="Delete">🗑</button>` : ''}
   `;
 }
 
@@ -1079,7 +1079,7 @@ function lessonNotesRenderKeyPhrases() {
     ${LessonNotesState.keyPhrases.length === 0 ? `
       <div style="text-align:center;padding:40px;color:var(--ink-light);font-family:var(--ui)">
         <div style="margin-bottom:12px">No key phrases extracted yet</div>
-        <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn btn-icon">🔑 Extract Key Phrases</button>
+        <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn">🔑 Extract Key Phrases</button>
       </div>
     ` : `
       <div style="display:flex;f      <div style="display:flex;gap:6px;margin-bottom:14px">
@@ -1101,7 +1101,7 @@ function lessonNotesRenderKeyPhrases() {
         `).join('')}
       </div>
       <div style="margin-top:12px;text-align:center">
-        <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn btn-icon">🔄 Re-extract</button>
+        <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn">🔄 Re-extract</button>
       </div>
       ` : `<div id="ln-phrase-drill-container" style="margin-top:8px"></div>`}
     `}
@@ -1116,13 +1116,13 @@ function lessonNotesRenderGrammar() {
     ${LessonNotesState.grammar.length === 0 ? `
       <div style="text-align:center;padding:40px;color:var(--ink-light);font-family:var(--ui)">
         <div style="margin-bottom:12px">No grammar points extracted yet</div>
-        <button onclick="lessonNotesExtractGrammar()" class="yoshi-read-btn btn-icon">📝 Extract Grammar</button>
+        <button onclick="lessonNotesExtractGrammar()" class="yoshi-read-btn">📝 Extract Grammar</button>
       </div>
     ` : `
       ${hiddenCount > 0 ? `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 12px;background:var(--paper-dark);border-radius:6px">
           <span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">${hiddenCount} hidden</span>
-          <button onclick="lessonNotesToggleShowHidden()" class="yoshi-read-btn btn-icon">${LessonNotesState.showHiddenGrammar ? '👁 Hide' : '👁 Show'} hidden</button>
+          <button onclick="lessonNotesToggleShowHidden()" class="yoshi-read-btn">${LessonNotesState.showHiddenGrammar ? '👁 Hide' : '👁 Show'} hidden</button>
         </div>
       ` : ''}
       <div style="display:flex;flex-direction:column;gap:10px;overflow-y:visible">
@@ -1147,7 +1147,7 @@ function lessonNotesRenderGrammar() {
         `).join('')}
       </div>
       <div style="margin-top:12px;text-align:center">
-        <button onclick="lessonNotesExtractGrammar()" class="yoshi-read-btn btn-icon">🔄 Re-extract</button>
+        <button onclick="lessonNotesExtractGrammar()" class="yoshi-read-btn">🔄 Re-extract</button>
       </div>
     `}
   `;
@@ -1955,7 +1955,7 @@ function lessonNotesRenderGrammarDetail() {
       <div style="margin-top:16px;padding:16px;background:var(--paper-dark);border-radius:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${LessonNotesState.grammarDrillIdx + 1} / ${LessonNotesState.grammarDrillSentences.length}</span>
-          <button id="lnGrammarGenDrillBtn" onclick="lessonNotesGrammarGenerateDrill()" class="yoshi-read-btn btn-icon">🔄 New sentences</button>
+          <button id="lnGrammarGenDrillBtn" onclick="lessonNotesGrammarGenerateDrill()" class="yoshi-read-btn">🔄 New sentences</button>
         </div>
         <div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:12px">${current.en}</div>
         ${current.hint ? `<div style="font-family:var(--ui);font-size:0.8rem;color:var(--gold);margin-bottom:8px">💡 ${current.hint}</div>` : ''}
@@ -1980,16 +1980,16 @@ function lessonNotesRenderGrammarDetail() {
           </div>
         ` : ''}
         <div style="display:flex;gap:8px;margin-top:12px">
-          <button onclick="lessonNotesGrammarPrevDrill()" class="yoshi-read-btn btn-icon" ${LessonNotesState.grammarDrillIdx === 0 ? 'disabled' : ''}>← Prev</button>
+          <button onclick="lessonNotesGrammarPrevDrill()" class="yoshi-read-btn" ${LessonNotesState.grammarDrillIdx === 0 ? 'disabled' : ''}>← Prev</button>
           <button onclick="lessonNotesGrammarCheckDrill()" class="yoshi-read-btn btn-action">Check</button>
-          <button onclick="lessonNotesGrammarNextDrill()" class="yoshi-read-btn btn-icon" ${LessonNotesState.grammarDrillIdx >= LessonNotesState.grammarDrillSentences.length - 1 ? 'disabled' : ''}>Next →</button>
+          <button onclick="lessonNotesGrammarNextDrill()" class="yoshi-read-btn" ${LessonNotesState.grammarDrillIdx >= LessonNotesState.grammarDrillSentences.length - 1 ? 'disabled' : ''}>Next →</button>
         </div>
       </div>
     `;
   } else {
     drillHtml = `
       <div style="margin-top:16px;padding:20px;background:var(--paper-dark);border-radius:8px;text-align:center">
-        <button id="lnGrammarGenDrillBtn" onclick="lessonNotesGrammarGenerateDrill()" class="yoshi-read-btn btn-icon">📝 Generate Translation Drill</button>
+        <button id="lnGrammarGenDrillBtn" onclick="lessonNotesGrammarGenerateDrill()" class="yoshi-read-btn">📝 Generate Translation Drill</button>
       </div>
     `;
   }
@@ -2005,7 +2005,7 @@ function lessonNotesRenderGrammarDetail() {
   return `
     <!-- Back button -->
     <div style="margin-bottom:16px">
-      <button onclick="lessonNotesCloseGrammarDetail()" class="yoshi-read-btn btn-icon">← Back to Grammar List</button>
+      <button onclick="lessonNotesCloseGrammarDetail()" class="yoshi-read-btn">← Back to Grammar List</button>
     </div>
     
     <!-- Header - compact when drilling -->
@@ -2041,7 +2041,7 @@ function lessonNotesRenderGrammarDetail() {
           onEnter: 'lessonNotesGrammarAsk()',
           extraStyle: 'flex:1',
         }) || ''}
-        <button onclick="lessonNotesGrammarAsk()" class="yoshi-read-btn btn-icon" style="flex-shrink:0">Ask</button>
+        <button onclick="lessonNotesGrammarAsk()" class="yoshi-read-btn" style="flex-shrink:0">Ask</button>
       </div>
     </div>
   `;
@@ -2251,8 +2251,8 @@ function lessonNotesRenderReading() {
               ${LessonNotesState.lnIsRecording ? '⏹ Stop' : '🎤 Record'}
             </button>
             ${hasRecording ? `
-              <button class="qr-btn-sec btn-icon" onclick="lessonNotesPlayRecording()">▶️ Play</button>
-              <button class="qr-btn-sec btn-icon" onclick="lessonNotesDeleteRecording()">🗑</button>
+              <button class="qr-btn-sec" onclick="lessonNotesPlayRecording()">▶️ Play</button>
+              <button class="qr-btn-sec" onclick="lessonNotesDeleteRecording()">🗑</button>
               <span style="font-family:var(--ui);font-size:0.7rem;color:var(--teal)">✓ Saved</span>
             ` : ''}
             ${LessonNotesState.lnIsRecording ? `<span style="font-family:var(--ui);font-size:0.7rem;color:var(--red)">● Recording...</span>` : ''}
@@ -2274,16 +2274,16 @@ function lessonNotesRenderReading() {
             
             <!-- Sentence controls -->
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-              <button class="qr-btn-sec btn-icon" onclick="lnPrevSentence()" ${LessonNotesState.lnCurrentSentence === 0 ? 'disabled' : ''}>← Prev</button>
+              <button class="qr-btn-sec" onclick="lnPrevSentence()" ${LessonNotesState.lnCurrentSentence === 0 ? 'disabled' : ''}>← Prev</button>
               <button class="qr-btn-sec" onclick="lnRecordSentence()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnIsRecording?'background:var(--red);color:white;border-color:var(--red)':''}">
                 ${LessonNotesState.lnIsRecording ? '⏹ Stop' : '🎤 Record'}
               </button>
               ${sentenceRecordings[LessonNotesState.lnCurrentSentence] ? `
-                <button class="qr-btn-sec btn-icon" onclick="lnPlaySentence(${LessonNotesState.lnCurrentSentence})">▶️</button>
-                <button class="qr-btn-sec btn-icon" onclick="lnDeleteSentence(${LessonNotesState.lnCurrentSentence})">🗑</button>
+                <button class="qr-btn-sec" onclick="lnPlaySentence(${LessonNotesState.lnCurrentSentence})">▶️</button>
+                <button class="qr-btn-sec" onclick="lnDeleteSentence(${LessonNotesState.lnCurrentSentence})">🗑</button>
                 <span style="color:var(--teal);font-size:0.7rem">✓</span>
               ` : ''}
-              <button class="qr-btn-sec btn-icon" onclick="lnNextSentence()" ${LessonNotesState.lnCurrentSentence >= sentences.length - 1 ? 'disabled style="opacity:0.5"' : ''}>Next →</button>
+              <button class="qr-btn-sec" onclick="lnNextSentence()" ${LessonNotesState.lnCurrentSentence >= sentences.length - 1 ? 'disabled style="opacity:0.5"' : ''}>Next →</button>
             </div>
             
             <!-- Sentence progress bar -->
@@ -2296,9 +2296,9 @@ function lessonNotesRenderReading() {
             <!-- Combine and play all -->
             ${hasAnyRecordings ? `
               <div style="display:flex;gap:8px;align-items:center;border-top:1px solid var(--border);padding-top:12px;flex-wrap:wrap">
-                <button class="qr-btn-sec btn-icon" onclick="lnPlayAllSentences()">▶️ Play ${recordedCount}</button>
-                <button class="qr-btn-sec btn-icon" onclick="lnCombineAndSave()">💾 Combine ${recordedCount}</button>
-                <button class="qr-btn-sec btn-icon" onclick="lnCombineAndDownload()">⬇ Download ${recordedCount}</button>
+                <button class="qr-btn-sec" onclick="lnPlayAllSentences()">▶️ Play ${recordedCount}</button>
+                <button class="qr-btn-sec" onclick="lnCombineAndSave()">💾 Combine ${recordedCount}</button>
+                <button class="qr-btn-sec" onclick="lnCombineAndDownload()">⬇ Download ${recordedCount}</button>
                 ${allSentencesRecorded ? `<span style="font-family:var(--ui);font-size:0.7rem;color:var(--teal)">✓ All done</span>` : `<span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light)">${recordedCount}/${sentences.length}</span>`}
               </div>
             ` : ''}
@@ -3531,14 +3531,14 @@ function yoshiShowImportInline() {
     <div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
         <span class="yoshi-import-label" style="margin-bottom:0">Complete text</span>
-        <button class="yoshi-import-btn btn-icon" onclick="yoshiAIComplete()">✨ Generate</button>
+        <button class="yoshi-import-btn" onclick="yoshiAIComplete()">✨ Generate</button>
       </div>
       <textarea class="yoshi-import-textarea" id="yoshiComplete" style="min-height:140px" oninput="yoshiKanaDebounce()">${s.complete||''}</textarea>
     </div>
     <div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
         <span class="yoshi-import-label" style="margin-bottom:0">Vocabulary</span>
-        <button class="yoshi-import-btn btn-icon" onclick="yoshiAIVocab()">✨ Extract</button>
+        <button class="yoshi-import-btn" onclick="yoshiAIVocab()">✨ Extract</button>
       </div>
       <textarea class="yoshi-import-textarea" id="yoshiVocabNotes" style="min-height:100px">${(s.vocab||[]).map(v=>v.jp+'　'+v.kana+'　'+v.en).join('\n')}</textarea>
     </div>

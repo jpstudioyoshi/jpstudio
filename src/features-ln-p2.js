@@ -844,7 +844,7 @@ function lessonNotesRenderEditView() {
   
   const html = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <button class="yoshi-read-btn btn-icon" onclick="LessonNotesState.editMode=false;lessonNotesRender()">← Back to Drill</button>
+      <button class="yoshi-read-btn" onclick="LessonNotesState.editMode=false;lessonNotesRender()">← Back to Drill</button>
       <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)">${currentSession?.title || 'Untitled'}</span>
     </div>
     
@@ -862,7 +862,7 @@ function lessonNotesRenderEditView() {
           📄 Browse
           <input type="file" accept=".docx,.txt" onchange="lessonNotesHandleFile(this.files[0])" style="display:none">
         </label>
-        <button class="yoshi-read-btn btn-icon" onclick="lessonNotesExtract()">✨ Re-extract</button>
+        <button class="yoshi-read-btn" onclick="lessonNotesExtract()">✨ Re-extract</button>
       </div>
       
       <textarea id="lessonNotesInput" style="width:100%;min-height:200px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.9rem;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>

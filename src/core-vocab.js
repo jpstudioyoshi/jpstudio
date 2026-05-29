@@ -609,12 +609,12 @@ function renderGrammar() {
     <div class="grammar-item" onclick="toggleGrammar(${i})">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
         <div class="grammar-pattern">${g.pattern}</div>
-        <button class="tts-btn btn-icon" onclick="event.stopPropagation();jpSpeak('${g.pattern.replace(/'/g,"\\'")}')" title="Speak pattern">🔊</button>
+        <button class="tts-btn" onclick="event.stopPropagation();jpSpeak('${g.pattern.replace(/'/g,"\\'")}')" title="Speak pattern">🔊</button>
       </div>
       <div class="grammar-en">${g.en}</div>
       <div class="grammar-example" id="ge${i}" style="display:none">
         ${g.example.replace(/\n/g,'<br>')}
-        <button class="tts-btn btn-icon" onclick="event.stopPropagation();jpSpeak('${g.example.split('\n')[0].replace(/'/g,"\\'")}')" title="Speak example">🔊 Speak example</button>
+        <button class="tts-btn" onclick="event.stopPropagation();jpSpeak('${g.example.split('\n')[0].replace(/'/g,"\\'")}')" title="Speak example">🔊 Speak example</button>
       </div>
     </div>
   `).join('');

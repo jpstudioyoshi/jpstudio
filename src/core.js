@@ -227,7 +227,7 @@ function editGramEntry(tab, idx) {
   ta.rows = Math.max(3, data[tab][idx].text.split('\n').length + 1);
   entryEl.appendChild(ta);
   entryEl.querySelector('.gramnote-entry-actions').innerHTML = `
-    <button class="gramnote-action-btn btn-icon" onclick="saveGramEntryEdit('${tab}',${idx})">Save</button>
+    <button class="gramnote-action-btn" onclick="saveGramEntryEdit('${tab}',${idx})">Save</button>
     <button class="gramnote-action-btn" onclick="cancelGramEntryEdit('${tab}',${idx})">Cancel</button>
   `;
   ta.focus();

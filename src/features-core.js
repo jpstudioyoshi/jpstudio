@@ -238,7 +238,7 @@ const CtrDrillState = {
       <td>${n.n}${ct.kanji === 'つ' ? 'つ' : ct.kanji}</td>
       <td>${n.r}</td>
       <td>${n.irreg ? '⚡' : ''}</td>
-      <td><button class="tts-btn btn-icon" onclick="event.stopPropagation();jpSpeak('${n.r}')">🔊</button></td>
+      <td><button class="tts-btn" onclick="event.stopPropagation();jpSpeak('${n.r}')">🔊</button></td>
     </tr>`).join('');
 
   const overlay = document.createElement('div');
