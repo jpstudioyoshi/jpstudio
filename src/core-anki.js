@@ -307,7 +307,7 @@ function ankiRenderCard() {
   if (audioEl) {
     if (AnkiState.audioFiles.length > 0) {
       audioEl.innerHTML = AnkiState.audioFiles.map((f, i) =>
-        `<button class="btn-ghost" onclick="ankiPlayAudio(${i})">🔊 ${AnkiState.audioFiles.length > 1 ? i+1 : ''}</button>`
+        `<button class="btn-action" onclick="ankiPlayAudio(${i})">🔊 ${AnkiState.audioFiles.length > 1 ? i+1 : ''}</button>`
       ).join('');
       audioEl.style.display = 'flex';
     } else {

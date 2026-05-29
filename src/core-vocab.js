@@ -430,7 +430,7 @@ function renderVocabList() {
       <span style="font-family:var(--jp);font-size:0.95rem">${escHtml(c.jp)}</span>
       <span style="font-family:var(--jp);font-size:0.82rem;color:var(--ink-light)">${escHtml(c.kana||c.reading||'')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.en)}</span>
-      <button class="btn-ghost" onclick="event.stopPropagation();deleteVocabCard(${i})" title="Delete">✕</button>
+      <button class="btn-action" onclick="event.stopPropagation();deleteVocabCard(${i})" title="Delete">✕</button>
     </div>`;
   }).join('');
 }
@@ -506,8 +506,8 @@ Reply ONLY with a JSON array, no markdown:
       '<div style="background:var(--paper-dark);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)">' +
         '<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">' + words.length + ' words — tick to add</span>' +
         '<div style="display:flex;gap:8px">' +
-          '<button class="btn-ghost" onclick="vcFetchSelectAll(true)">All</button>' +
-          '<button class="btn-ghost" onclick="vcFetchSelectAll(false)">None</button>' +
+          '<button class="btn-action" onclick="vcFetchSelectAll(true)">All</button>' +
+          '<button class="btn-action" onclick="vcFetchSelectAll(false)">None</button>' +
           '<button class="btn-action" onclick="vcFetchAdd()">Add selected →</button>' +
         '</div>' +
       '</div>' +

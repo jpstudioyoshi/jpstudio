@@ -277,9 +277,9 @@ function agentRenderCards(cards) {
   container.innerHTML = cards.map(function(card) {
     let btn = '';
     if (card.actionFn) {
-      btn = '<button class="btn-ghost" onclick="' + card.actionFn + '" style="white-space:nowrap;flex-shrink:0">' + (card.actionLabel || '\u2192') + '</button>';
+      btn = '<button class="btn-action" onclick="' + card.actionFn + '" style="white-space:nowrap;flex-shrink:0">' + (card.actionLabel || '\u2192') + '</button>';
     } else if (card.actionPanel) {
-      btn = '<button class="btn-ghost" onclick="showPanel(\'' + card.actionPanel + '\')" style="white-space:nowrap;flex-shrink:0">' + (card.actionLabel || '\u2192') + '</button>';
+      btn = '<button class="btn-action" onclick="showPanel(\'' + card.actionPanel + '\')" style="white-space:nowrap;flex-shrink:0">' + (card.actionLabel || '\u2192') + '</button>';
     }
     return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:var(--paper-dark)">'
       + '<span style="font-size:1.1rem;flex-shrink:0">' + (card.icon || '\u25c8') + '</span>'
@@ -1033,9 +1033,9 @@ function voiceOpenProfile() {
       </div>
       
       <div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="voiceStartProfileInterview()">🎙️ Interview me in Japanese</button>
+        <button class="btn-action" onclick="voiceStartProfileInterview()">🎙️ Interview me in Japanese</button>
         <div style="display:flex;gap:10px">
-          <button class="btn-ghost" onclick="document.getElementById('voiceProfileModal').remove()">Cancel</button>
+          <button class="btn-action" onclick="document.getElementById('voiceProfileModal').remove()">Cancel</button>
           <button onclick="voiceSaveProfileFromModal()" 
             style="padding:10px 20px;background:var(--gold);border:none;border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:#1c1c1e;cursor:pointer">Save Profile</button>
         </div>
@@ -1340,7 +1340,7 @@ function voiceSaveConversation() {
       <input type="text" id="voiceSaveNameInput" placeholder="e.g., Story about weekend" 
         style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box;margin-bottom:16px">
       <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn-ghost" onclick="document.getElementById('voiceSaveModal').remove()">Cancel</button>
+        <button class="btn-action" onclick="document.getElementById('voiceSaveModal').remove()">Cancel</button>
         <button class="btn-action" onclick="voiceDoSave()">Save</button>
       </div>
     </div>

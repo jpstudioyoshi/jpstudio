@@ -1830,7 +1830,7 @@ function resourcesEdit(idx) {
       <textarea id="res-edit-desc-${idx}" placeholder="Description" style="padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:0.8rem;resize:vertical;min-height:50px">${r.desc || ''}</textarea>
       <input type="text" id="res-edit-tags-${idx}" value="${r.tags || ''}" placeholder="Tags: grammar · srs · free" style="padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:0.8rem">
       <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn-ghost" onclick="resourcesRender()">Cancel</button>
+        <button class="btn-action" onclick="resourcesRender()">Cancel</button>
         <button class="btn-action" onclick="resourcesSaveEdit(${idx})">Save</button>
       </div>
     </div>

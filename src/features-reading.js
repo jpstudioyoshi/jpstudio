@@ -916,7 +916,7 @@ function qrUpdateSegmentUI() {
         <div style="display:flex;gap:6px">
           <button class="btn-action" onclick="event.stopPropagation();qrPlaySegment(${i})" title="Play">▶</button>
           <button onclick="event.stopPropagation();qrStartReplace(${i})" title="Re-record" style="width:28px;height:28px;background:${QuickReadState.replaceIdx === i ? 'var(--gold)' : 'var(--paper-mid)'};border:1px solid ${QuickReadState.replaceIdx === i ? 'var(--gold)' : 'var(--border)'};border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:${QuickReadState.replaceIdx === i ? '#1c1c1e' : 'var(--ink-light)'}">⏺</button>
-          <button class="btn-ghost" onclick="event.stopPropagation();qrDeleteSegment(${i})" title="Delete">✕</button>
+          <button class="btn-action" onclick="event.stopPropagation();qrDeleteSegment(${i})" title="Delete">✕</button>
         </div>
       </div>
     `).join('');
@@ -1331,7 +1331,7 @@ function vtRenderMarkers() {
   const list = document.getElementById('vtMarkerList');
   if (!list) return;
   list.innerHTML = VideoState.markers.map((t, i) =>
-    `<button class="btn-ghost" onclick="vtJumpMarker(${i})" title="Jump to ${vtFmtTime(t)}">
+    `<button class="btn-action" onclick="vtJumpMarker(${i})" title="Jump to ${vtFmtTime(t)}">
       ◆ ${vtFmtTime(t)}
     </button>`
   ).join('');

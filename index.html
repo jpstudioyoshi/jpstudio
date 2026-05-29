@@ -79,7 +79,7 @@
     <div id="globalQTHistoryMenu" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--paper);border:1px solid var(--border);border-radius:5px;margin-top:2px;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.3)"></div>
   </div>
   <span data-kana-for="globalQTInput"></span>
-  <button class="btn-ghost" onclick="globalQuickTranslate()">→</button>
+  <button class="btn-action" onclick="globalQuickTranslate()">→</button>
   <div id="globalQTResult" style="flex:1;font-family:var(--jp);font-size:0.85rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
   <button class="btn-icon" id="globalQTSpeakBtn" onclick="globalQTSpeak()" title="Read aloud" style="display:none;font-size:0.85rem">🔊</button>
   <button class="btn-icon" onclick="globalQTClear()" title="Clear">✕</button>
@@ -347,7 +347,7 @@
   <div id="panel-dashboard" class="panel active">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div class="section-title" style="margin-bottom:0"><span class="jp">質問</span><span class="en-block"><span class="reading">しつもん</span><span class="en">(Questions)</span></span></div>
-      <button class="btn-ghost" id="chatHistoryToggle" onclick="toggleChatHistory()">
+      <button class="btn-action" id="chatHistoryToggle" onclick="toggleChatHistory()">
         HISTORY
       </button>
     </div>
@@ -597,7 +597,7 @@
       <div id="ankiStatus" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px 16px;background:var(--paper-dark);border-radius:8px">
         <span id="ankiStatusDot" style="width:10px;height:10px;border-radius:50%;background:var(--ink-light)"></span>
         <span id="ankiStatusText" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">Checking AnkiConnect...</span>
-        <button class="btn-ghost" onclick="ankiConnect()">Reconnect</button>
+        <button class="btn-action" onclick="ankiConnect()">Reconnect</button>
       </div>
 
       <!-- Deck selector -->
@@ -606,7 +606,7 @@
           <span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">DECK</span>
           <select class="select-std" id="ankiDeckSelect" onchange="ankiLoadDeck()"></select>
           <span id="ankiDueCount" style="font-family:var(--ui);font-size:0.82rem;color:var(--teal)"></span>
-          <button class="btn-ghost" onclick="ankiToggleDirection()" id="ankiDirBtn">JP → EN</button>
+          <button class="btn-action" onclick="ankiToggleDirection()" id="ankiDirBtn">JP → EN</button>
         </div>
       </div>
 
@@ -641,7 +641,7 @@
         <div style="font-size:2rem;margin-bottom:12px">🎉</div>
         <div style="font-family:var(--ui);font-size:1rem;color:var(--ink)">No cards due!</div>
         <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-top:8px">All caught up with this deck.</div>
-        <button class="btn-ghost" onclick="ankiLoadDeck()">Check for more</button>
+        <button class="btn-action" onclick="ankiLoadDeck()">Check for more</button>
       </div>
 
       <!-- Setup instructions (shown when not connected) -->
@@ -694,8 +694,8 @@
 
               <button class="btn-action" id="countCheckBtn2" onclick="countCheck2()">Check</button>
                 <button id="countNextBtn2" onclick="countAdvance2()" style="display:none;padding:12px 20px;background:var(--gold);border:none;border-radius:8px;color:#1c1c1e;font-family:var(--ui);font-size:0.9rem;cursor:pointer">Next</button>
-                <button class="btn-ghost" onclick="countHear2()" title="Hear the answer">🔊</button>
-                <button class="btn-ghost" id="countLookupBtn2" onclick="countShowLookup2()" title="Show counter table">📖</button>
+                <button class="btn-action" onclick="countHear2()" title="Hear the answer">🔊</button>
+                <button class="btn-action" id="countLookupBtn2" onclick="countShowLookup2()" title="Show counter table">📖</button>
               </div>
             </div>
             
@@ -719,7 +719,7 @@
               <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-subtle">🖼 Objects</button>
               <button onclick="countForceNewSession2()" class="btn-subtle">New</button>
             </div>
-            <button class="btn-ghost" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
+            <button class="btn-action" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
           </div>
         </div>
         
@@ -733,7 +733,7 @@
         <div style="flex:0 0 280px;padding:16px;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px">
           <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
             <button class="btn-action" onclick="daysOfMonthDrill()">Drill</button>
-            <button class="btn-ghost" id="daysStopBtn" onclick="daysStop()" style="display:none">Stop</button>
+            <button class="btn-action" id="daysStopBtn" onclick="daysStop()" style="display:none">Stop</button>
           </div>
           <div id="daysDrillArea" style="display:none">
             <div id="daysDrillPrompt" style="font-family:var(--jp);font-size:2.5rem;color:var(--teal);text-align:center;margin-bottom:14px"></div>
@@ -745,7 +745,7 @@
             </div>
             <div id="daysDrillFeedback" style="text-align:center;margin-top:10px;font-family:var(--jp);font-size:1rem;min-height:1.5em"></div>
             <div style="text-align:center;margin-top:8px">
-              <button class="btn-ghost" onclick="daysNext()" id="daysDrillNext" style="display:none">Next</button>
+              <button class="btn-action" onclick="daysNext()" id="daysDrillNext" style="display:none">Next</button>
             </div>
           </div>
         </div>
@@ -756,7 +756,7 @@
             <div id="daysOfMonthTable" style="display:grid;grid-template-columns:repeat(2, auto 1fr auto);gap:1px;background:var(--border)"></div>
           </div>
           <div style="margin-top:8px">
-            <button class="btn-ghost" id="daysTableToggle" onclick="daysToggleTable()" style="font-size:0.7rem;padding:2px 8px">Hide</button>
+            <button class="btn-action" id="daysTableToggle" onclick="daysToggleTable()" style="font-size:0.7rem;padding:2px 8px">Hide</button>
           </div>
         </div>
 
@@ -825,7 +825,7 @@
             <span id="mg-matched">0</span> / <span id="mg-total">0</span> matched
           </div>
           <div style="font-family:var(--ui);font-size:0.82rem;color:var(--gold)" id="mg-timer"></div>
-          <button class="btn-ghost" onclick="mgEnd()">End</button>
+          <button class="btn-action" onclick="mgEnd()">End</button>
         </div>
         <div style="display:flex;gap:12px">
           <!-- Kanji column -->
@@ -1534,10 +1534,10 @@
         <button class="btn-action" onclick="compPlay()" id="compPlayBtn">
           ▶ Play
         </button>
-        <button class="btn-ghost" onclick="compStop()">
+        <button class="btn-action" onclick="compStop()">
           ■ Stop
         </button>
-        <button class="btn-ghost" onclick="compReplay()">
+        <button class="btn-action" onclick="compReplay()">
           ↺ Replay
         </button>
         <label style="display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;margin-left:8px">
@@ -1558,7 +1558,7 @@
         <div id="compAnswer" style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);line-height:1.6"></div>
       </div>
 
-      <button class="btn-ghost" onclick="compGenerate()">
+      <button class="btn-action" onclick="compGenerate()">
         New dialogue →
       </button>
     </div>
@@ -2839,11 +2839,11 @@
         <div style="font-family:'Shippori Mincho',serif;font-size:1.25rem;margin-top:2px">時刻・日付</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn-ghost" onclick="toggleBlitzMode()" id="tdBlitzToggle"
+        <button class="btn-action" onclick="toggleBlitzMode()" id="tdBlitzToggle"
           title="Blitz mode: 1 minute, 8 choices, no hints">⚡ Blitz</button>
-        <button class="btn-ghost" onclick="openTimesSettings()"
+        <button class="btn-action" onclick="openTimesSettings()"
           title="Settings">⚙</button>
-        <button class="btn-ghost" onclick="closeTimesDrill()">✕</button>
+        <button class="btn-action" onclick="closeTimesDrill()">✕</button>
       </div>
     </div>
 

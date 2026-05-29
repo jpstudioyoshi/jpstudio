@@ -93,7 +93,7 @@ function progressRenderCost() {
         <span style="color:var(--ink);font-weight:600">${fmt(totalCost)}</span>
         &nbsp;·&nbsp;${AppState.apiUsage.calls || 0} calls
         &nbsp;·&nbsp;${fmtk(AppState.apiUsage.inputTokens || 0)} in / ${fmtk(AppState.apiUsage.outputTokens || 0)} out
-        &nbsp;<button class="btn-ghost" onclick="apiUsageReset()">Reset</button>
+        &nbsp;<button class="btn-action" onclick="apiUsageReset()">Reset</button>
       </span>
     </div>
     ${features.length ? featureRows : '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);opacity:0.5">No API usage recorded yet.</div>'}

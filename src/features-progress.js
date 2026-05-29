@@ -1439,7 +1439,7 @@ function particleBreakdownRender() {
       + '<div style="flex:1;height:12px;background:var(--paper-mid,#1a1a1a);border-radius:2px;overflow:hidden">'
       + '<div style="width:' + w + '%;height:100%;background:' + particleColor + ';opacity:0.7;border-radius:2px"></div></div>'
       + '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);width:24px;flex-shrink:0;text-align:right">' + err.count + '</div>'
-      + '<button class="btn-ghost" style="font-size:0.65rem;padding:1px 5px;flex-shrink:0" onclick="errorDenylistAdd(\'' + safePattern + '\')" title="Ignore">\u229b</button>'
+      + '<button class="btn-action" style="font-size:0.65rem;padding:1px 5px;flex-shrink:0" onclick="errorDenylistAdd(\'' + safePattern + '\')" title="Ignore">\u229b</button>'
       + '</div>';
   }
   html += '</div>';
@@ -1533,7 +1533,7 @@ async function weightsRender() {
 
   html += '<div style="display:flex;gap:10px;margin-bottom:32px">';
   html += '<button class="btn-action" onclick="(App.weightsSave||window.weightsSave)()">Save weights</button>';
-  html += '<button class="btn-ghost" onclick="(App.weightsReset||window.weightsReset)()">Reset to defaults</button>';
+  html += '<button class="btn-action" onclick="(App.weightsReset||window.weightsReset)()">Reset to defaults</button>';
   html += '<span id="wt-status" style="font-family:var(--ui);font-size:0.75rem;color:var(--teal);align-self:center"></span>';
   html += '</div>';
 
