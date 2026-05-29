@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260528">
+<link rel="stylesheet" href="style.css?v=20260529">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -134,8 +134,7 @@
         <h3 style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);margin:0 0 16px;font-weight:600">Text-to-Speech Voice</h3>
         
         <div style="display:flex;gap:12px;align-items:center">
-          <select id="ttsVoiceSelect" onchange="setTtsVoice(this.value)"
-            style="flex:1;max-width:300px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:8px 12px;font-family:var(--ui);font-size:0.85rem;outline:none;cursor:pointer">
+          <select class="select-std" id="ttsVoiceSelect" onchange="setTtsVoice(this.value)">
             <option value="">Loading voices...</option>
           </select>
           <button class="btn-action" onclick="jpSpeak('こんにちは、元気ですか')">Test</button>
@@ -153,8 +152,7 @@
             <span id="vvStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)"></span>
           </div>
           <div style="display:flex;gap:10px;align-items:center">
-            <select id="vvSpeakerSel" onchange="vvSetSpeaker(this.value)"
-              style="background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:6px 10px;font-family:var(--ui);font-size:0.82rem;cursor:pointer">
+            <select class="select-std" id="vvSpeakerSel" onchange="vvSetSpeaker(this.value)">
               <option value="2">四国めたん (female)</option>
               <option value="13">青山龍星 (male)</option>
             </select>
@@ -169,8 +167,7 @@
         <h3 style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);margin:0 0 16px;font-weight:600">Microphone</h3>
         
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-          <select id="micSelect" onchange="setMicrophone(this.value)"
-            style="flex:1;max-width:300px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:8px 12px;font-family:var(--ui);font-size:0.85rem;outline:none;cursor:pointer">
+          <select class="select-std" id="micSelect" onchange="setMicrophone(this.value)">
             <option value="">Select microphone...</option>
           </select>
           <button class="btn-action" id="micTestBtn" onclick="testMicrophone()">Test</button>
@@ -196,8 +193,7 @@
         
         <div>
           <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">Default JLPT Level</label>
-          <select id="settingDefaultLevel" onchange="Storage.set(STORAGE_KEYS.DEFAULT_LEVEL, this.value)"
-            style="background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:8px 12px;font-family:var(--ui);font-size:0.85rem;outline:none;cursor:pointer">
+          <select class="select-std" id="settingDefaultLevel" onchange="Storage.set(STORAGE_KEYS.DEFAULT_LEVEL, this.value)">
             <option value="N5">N5</option>
             <option value="N4" selected>N4</option>
             <option value="N3">N3</option>
@@ -212,8 +208,7 @@
         <div style="display:flex;gap:20px;flex-wrap:wrap">
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">Font Size (pt)</label>
-            <select id="settingPrintFontSize" onchange="Storage.set(STORAGE_KEYS.PRINT_FONT_SIZE, this.value)"
-              style="background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:8px 12px;font-family:var(--ui);font-size:0.85rem;outline:none;cursor:pointer">
+            <select class="select-std" id="settingPrintFontSize" onchange="Storage.set(STORAGE_KEYS.PRINT_FONT_SIZE, this.value)">
               <option value="14">14pt</option>
               <option value="16">16pt</option>
               <option value="18" selected>18pt</option>
@@ -224,8 +219,7 @@
           
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">Line Height</label>
-            <select id="settingPrintLineHeight" onchange="Storage.set(STORAGE_KEYS.PRINT_LINE_HEIGHT, this.value)"
-              style="background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:8px 12px;font-family:var(--ui);font-size:0.85rem;outline:none;cursor:pointer">
+            <select class="select-std" id="settingPrintLineHeight" onchange="Storage.set(STORAGE_KEYS.PRINT_LINE_HEIGHT, this.value)">
               <option value="1.8">1.8 (compact)</option>
               <option value="2.0">2.0</option>
               <option value="2.2" selected>2.2 (default)</option>
@@ -248,8 +242,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Kana drill size</label>
-            <select id="goalKanaDrillSize" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalKanaDrillSize" onchange="goalsSave()">
               <option value="10">10 cards</option>
               <option value="15">15 cards</option>
               <option value="20" selected>20 cards (default)</option>
@@ -258,8 +251,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Katakana word drill size</label>
-            <select id="goalWordsDrillSize" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalWordsDrillSize" onchange="goalsSave()">
               <option value="10">10 words</option>
               <option value="15">15 words</option>
               <option value="20" selected>20 words (default)</option>
@@ -268,8 +260,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Conjugation questions per run</label>
-            <select id="goalConjQuestionsPerRun" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalConjQuestionsPerRun" onchange="goalsSave()">
               <option value="5">5</option>
               <option value="10" selected>10 (default)</option>
               <option value="15">15</option>
@@ -279,8 +270,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Conjugation runs per session</label>
-            <select id="goalConjSessionRuns" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalConjSessionRuns" onchange="goalsSave()">
               <option value="2">2 runs</option>
               <option value="3" selected>3 runs (default)</option>
               <option value="4">4 runs</option>
@@ -290,8 +280,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Speaking gap alert (days)</label>
-            <select id="goalSstGapDays" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalSstGapDays" onchange="goalsSave()">
               <option value="1">1 day</option>
               <option value="2">2 days</option>
               <option value="3" selected>3 days (default)</option>
@@ -302,8 +291,7 @@
 
           <div>
             <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">Min utterances per speaking session</label>
-            <select id="goalSstMinUtterances" onchange="goalsSave()"
-              style="width:100%;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-family:var(--ui);font-size:0.82rem">
+            <select class="select-std" id="goalSstMinUtterances" onchange="goalsSave()">
               <option value="5">5</option>
               <option value="10" selected>10 (default)</option>
               <option value="15">15</option>
@@ -411,9 +399,7 @@
         </label>
         <div id="kanaTimerRow" style="display:flex;align-items:center;gap:10px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);margin-left:8px">
           <span>⏱</span>
-          <select id="kanaTimerSelect" onchange="setKanaTimer(parseInt(this.value))"
-            style="background:var(--field);border:1px solid var(--field-border);border-radius:4px;color:var(--ink-light);
-                   font-family:var(--ui);font-size:0.78rem;padding:3px 8px;cursor:pointer;outline:none">
+          <select class="select-std" id="kanaTimerSelect" onchange="setKanaTimer(parseInt(this.value))">
             <option value="0" selected>Off</option>
             <option value="2">2s</option>
             <option value="3">3s</option>
@@ -479,8 +465,7 @@
         <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Mode:</span>
-            <select id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)"
-              style="background:#111;border:1px solid var(--border);border-radius:4px;color:var(--ink);font-family:var(--ui);font-size:0.78rem;padding:4px 8px;cursor:pointer">
+            <select class="select-std" id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)">
               <option value="kana2rom">カタカナ → romaji</option>
               <option value="kana2en" selected>カタカナ → English</option>
               <option value="en2kana">English → カタカナ</option>
@@ -490,8 +475,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Category:</span>
-            <select id="wordsCategorySelect" onchange="setWordsCategory(this.value)"
-              style="background:#111;border:1px solid var(--border);border-radius:4px;color:var(--ink);font-family:var(--ui);font-size:0.78rem;padding:4px 8px;cursor:pointer">
+            <select class="select-std" id="wordsCategorySelect" onchange="setWordsCategory(this.value)">
               <option value="all">All categories</option>
               <option value="food">🍜 Food & Drink</option>
               <option value="tech">💻 Tech</option>
@@ -539,7 +523,7 @@
   <div id="panel-words" class="panel">
     <div class="section-title">
       <span class="jp">語彙</span>
-      <select id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+      <select class="select-std" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
         <option value="vocab">Words</option>
         <option value="counters">Counters</option>
         <option value="days">Days</option>
@@ -581,19 +565,19 @@
     <!-- Upper footer: session controls -->
     <div class="footer-lower">
       <div class="footer-lower-row">
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="verb" onchange="startNewSession()"> Verbs</label>
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="noun" onchange="startNewSession()"> Nouns</label>
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="i-adj" onchange="startNewSession()"> い-adj</label>
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="na-adj" onchange="startNewSession()"> な-adj</label>
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="adverb" onchange="startNewSession()"> Adverbs</label>
-        <label class="filter-chip-purple"><input type="checkbox" class="vocab-pos-filter" value="expression" onchange="startNewSession()"> Expressions</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="verb" onchange="startNewSession()"> Verbs</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="noun" onchange="startNewSession()"> Nouns</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="i-adj" onchange="startNewSession()"> い-adj</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="na-adj" onchange="startNewSession()"> な-adj</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="adverb" onchange="startNewSession()"> Adverbs</label>
+        <label class="btn-toggle"><input type="checkbox" class="vocab-pos-filter" value="expression" onchange="startNewSession()"> Expressions</label>
       </div>
       <div class="footer-lower-row">
-        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5" checked onchange="startNewSession()"> N5</label>
-        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5+N4" onchange="startNewSession()"> N4</label>
-        <label class="filter-chip-blue"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="all" onchange="startNewSession()"> N3</label>
-        <label class="filter-chip-blue"><input type="radio" name="vocabSize" value="20" checked onchange="startNewSession()"> 20</label>
-        <label class="filter-chip-blue"><input type="radio" name="vocabSize" value="all" onchange="startNewSession()"> All</label>
+        <label class="btn-radio"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5" checked onchange="startNewSession()"> N5</label>
+        <label class="btn-radio"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="N5+N4" onchange="startNewSession()"> N4</label>
+        <label class="btn-radio"><input type="radio" name="vocabLevel" class="vocab-level-filter" value="all" onchange="startNewSession()"> N3</label>
+        <label class="btn-toggle"><input type="radio" name="vocabSize" value="20" checked onchange="startNewSession()"> 20</label>
+        <label class="btn-toggle"><input type="radio" name="vocabSize" value="all" onchange="startNewSession()"> All</label>
       </div>
     </div>
 
@@ -601,7 +585,7 @@
     <div class="footer-upper">
       <button class="btn-toggle" id="vcReadingToggle" onclick="toggleVcReading(event)">Reading</button>
       <button class="btn-toggle" id="vcPitchToggle" onclick="vcTogglePitch()">Pitch</button>
-      <button class="btn-group" id="vcDirectionBtn" onclick="toggleVcDirection()">JP &#8594; EN</button>
+      <button class="btn-toggle" id="vcDirectionBtn" onclick="toggleVcDirection()">JP &#8594; EN</button>
       <button class="btn-action" id="vocabResetBtn" onclick="resetVocabDeck()">Reset deck</button>
       <button class="btn-toggle" id="vocabListToggleBtn" onclick="toggleVocabList()">Word list</button>
       <button class="btn-action" id="vocabListPrintBtn" onclick="printVocabList()" style="display:none">Print</button>
@@ -620,7 +604,7 @@
       <div id="ankiDeckSelector" style="display:none;margin-bottom:16px">
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">DECK</span>
-          <select id="ankiDeckSelect" onchange="ankiLoadDeck()" style="padding:8px 12px;font-family:var(--ui);font-size:0.85rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;min-width:200px"></select>
+          <select class="select-std" id="ankiDeckSelect" onchange="ankiLoadDeck()"></select>
           <span id="ankiDueCount" style="font-family:var(--ui);font-size:0.82rem;color:var(--teal)"></span>
           <button class="btn-ghost" onclick="ankiToggleDirection()" id="ankiDirBtn">JP → EN</button>
         </div>
@@ -882,7 +866,7 @@
   <div id="panel-gramnotes" class="panel">
     <div class="section-title">
       <span class="jp">文法</span>
-      <select id="gramNotesSubSelect" onchange="gramNotesFromSelect(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+      <select class="select-std" id="gramNotesSubSelect" onchange="gramNotesFromSelect(this.value)">
         <option value="verbs">Verbs</option>
         <option value="adjectives">Adjectives</option>
         <option value="particles">Particles</option>
@@ -960,12 +944,10 @@
         <!-- Compare -->
         <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:8px">COMPARE TWO COUNTERS</div>
         <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-          <select id="ctrCompareA" onchange="ctrRenderCompare()"
-            style="flex:1;padding:5px 8px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;color:var(--ink);font-family:var(--ui);font-size:0.8rem">
+          <select class="select-std" id="ctrCompareA" onchange="ctrRenderCompare()">
             <option value="">Counter A…</option>
           </select>
-          <select id="ctrCompareB" onchange="ctrRenderCompare()"
-            style="flex:1;padding:5px 8px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;color:var(--ink);font-family:var(--ui);font-size:0.8rem">
+          <select class="select-std" id="ctrCompareB" onchange="ctrRenderCompare()">
             <option value="">Counter B…</option>
           </select>
         </div>
@@ -995,26 +977,26 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
           <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);letter-spacing:0.06em">FILTER</span>
           <button class="kanji-filter-btn active btn-action" data-filter="all"        onclick="kanjiCorpusFilter('all',this)">All</button>
-          <button class="kanji-filter-btn btn-group" data-filter="N5" onclick="kanjiCorpusFilter('N5',this)">N5</button>
-          <button class="kanji-filter-btn btn-group" data-filter="N4" onclick="kanjiCorpusFilter('N4',this)">N4</button>
-          <button class="kanji-filter-btn btn-group" data-filter="lookedup" onclick="kanjiCorpusFilter('lookedup',this)">Looked up</button>
-          <button class="kanji-filter-btn btn-group" data-filter="produced" onclick="kanjiCorpusFilter('produced',this)">Produced</button>
-          <button class="kanji-filter-btn btn-group" data-filter="unproduced" onclick="kanjiCorpusFilter('unproduced',this)">Not produced</button>
-          <button class="kanji-filter-btn btn-group" data-filter="unknown" onclick="kanjiCorpusFilter('unknown',this)">? level</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="N5" onclick="kanjiCorpusFilter('N5',this)">N5</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="N4" onclick="kanjiCorpusFilter('N4',this)">N4</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="lookedup" onclick="kanjiCorpusFilter('lookedup',this)">Looked up</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="produced" onclick="kanjiCorpusFilter('produced',this)">Produced</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="unproduced" onclick="kanjiCorpusFilter('unproduced',this)">Not produced</button>
+          <button class="kanji-filter-btn btn-toggle" data-filter="unknown" onclick="kanjiCorpusFilter('unknown',this)">? level</button>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
           <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);letter-spacing:0.06em">SORT</span>
           <button class="kanji-sort-btn active btn-action" data-sort="lookups"    onclick="kanjiCorpusSort('lookups',this)">Lookups ↓</button>
-          <button class="kanji-sort-btn btn-group" data-sort="recent" onclick="kanjiCorpusSort('recent',this)">Recent</button>
-          <button class="kanji-sort-btn btn-group" data-sort="produced" onclick="kanjiCorpusSort('produced',this)">Production</button>
-          <button class="kanji-sort-btn btn-group" data-sort="level" onclick="kanjiCorpusSort('level',this)">Level</button>
-          <button class="kanji-sort-btn btn-group" data-sort="alpha" onclick="kanjiCorpusSort('alpha',this)">A-Z</button>
+          <button class="kanji-sort-btn btn-toggle" data-sort="recent" onclick="kanjiCorpusSort('recent',this)">Recent</button>
+          <button class="kanji-sort-btn btn-toggle" data-sort="produced" onclick="kanjiCorpusSort('produced',this)">Production</button>
+          <button class="kanji-sort-btn btn-toggle" data-sort="level" onclick="kanjiCorpusSort('level',this)">Level</button>
+          <button class="kanji-sort-btn btn-toggle" data-sort="alpha" onclick="kanjiCorpusSort('alpha',this)">A-Z</button>
           <span id="kanjiCorpusCount" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:auto"></span>
         </div>
         <!-- View toggle -->
         <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center">
           <button class="btn-action" id="kanjiViewList" onclick="kanjiSetView('list')">List</button>
-          <button class="btn-group" id="kanjiViewGrid" onclick="kanjiSetView('grid')">Grid</button>
+          <button class="btn-toggle" id="kanjiViewGrid" onclick="kanjiSetView('grid')">Grid</button>
         </div>
         <!-- List / Grid (toggled) -->
         <div id="kanjiCorpusGrid" style="display:flex;flex-wrap:wrap;gap:8px"></div>
@@ -1132,8 +1114,7 @@
       <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-family:var(--ui);font-size:0.82rem;color:var(--ink)">🔊 Japanese Voice:</span>
-          <select id="ttsVoiceSelect2" onchange="setTtsVoice(this.value)"
-            style="background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;padding:6px 10px;font-family:var(--ui);font-size:0.82rem;outline:none;cursor:pointer;max-width:220px">
+          <select class="select-std" id="ttsVoiceSelect2" onchange="setTtsVoice(this.value)">
             <option value="">Loading voices...</option>
           </select>
           <button onclick="testVoice()" style="padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;color:var(--ink)">Test</button>
@@ -1185,15 +1166,15 @@
             placeholder="Write a sentence in Japanese then Check or Submit."
             onkeydown="handleWritingKey(event)"></textarea>
           <div class="writing-btn-row">
-            <div class="writing-btn-group">
-              <button type="button" class="wb-icon-btn" id="writingRomajiBtn" data-btn-group="writingKana" title="Romaji mode (no conversion)">A</button>
-              <button type="button" class="wb-icon-btn" id="writingHiraBtn" data-btn-group="writingKana" title="Hiragana mode">ひ</button>
-              <button type="button" class="wb-icon-btn" id="writingKataBtn" data-btn-group="writingKana" data-active-color="var(--gold)" title="Katakana mode">カ</button>
+            <div class="writing-btn-toggle">
+              <button type="button" class="wb-icon-btn" id="writingRomajiBtn" data-btn-toggle="writingKana" title="Romaji mode (no conversion)">A</button>
+              <button type="button" class="wb-icon-btn" id="writingHiraBtn" data-btn-toggle="writingKana" title="Hiragana mode">ひ</button>
+              <button type="button" class="wb-icon-btn" id="writingKataBtn" data-btn-toggle="writingKana" data-active-color="var(--gold)" title="Katakana mode">カ</button>
               <button type="button" class="wb-icon-btn kanji-btn" id="writingKanjiBtn" data-el-id="writingInput" title="Convert to kanji">漢字</button>
               <button type="button" class="wb-icon-btn" id="writingSpeechBtn" title="Speech input">🎙</button>
             </div>
-            <div class="writing-btn-group">
-              <button class="writing-util-btn btn-copy" onclick="wbCopyInput()" title="Copy text">Copy</button>
+            <div class="writing-btn-toggle">
+              <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
               <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
             </div>
           </div>
@@ -1261,7 +1242,7 @@
           <div class="trans-btn-row" id="transOutputBtnRow" style="display:none">
             <button class="btn-action" onclick="transSpeakOutput()">Hear</button>
             <button class="btn-action" id="transAddVocabBtn" onclick="transAddToVocab()">+ Vocab</button>
-            <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">Copy</button>
+            <button class="btn-action" onclick="navigator.clipboard.writeText(document.getElementById('transOutput').textContent)">Copy</button>
           </div>
         </div>
       </div>
@@ -1317,7 +1298,7 @@
       <div id="readPasteArea" style="width:100%">
         <!-- History dropdown -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <select id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="flex:1;padding:6px 10px;font-family:var(--ui);font-size:0.8rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px">
+          <select class="select-std" id="qrHistorySelect" onchange="qrLoadHistory(this.value)">
             <option value="">— Recent texts —</option>
           </select>
           <button class="btn-destructive" onclick="qrDeleteHistory()" title="Delete selected">Delete</button>
@@ -1431,9 +1412,7 @@
           <span id="epubTitle" style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
           <button class="qr-btn-sec btn-icon" id="epubFuriBtn" onclick="epubToggleFuri()">ふり仮名</button>
           <button class="qr-btn-sec" id="epubTtsBtn" onclick="epubSpeak()" title="Read aloud">🔊 Read</button>
-          <select id="epubFontSize" onchange="epubSetFontSize(this.value)"
-            style="background:#111;border:1px solid var(--border);border-radius:4px;color:var(--ink);
-                   font-family:var(--ui);font-size:0.78rem;padding:4px 6px">
+          <select class="select-std" id="epubFontSize" onchange="epubSetFontSize(this.value)">
             <option value="1.1">Small</option>
             <option value="1.35" selected>Medium</option>
             <option value="1.6">Large</option>
@@ -1444,9 +1423,7 @@
         <!-- Chapter selector -->
         <div style="display:flex;gap:8px;align-items:center">
           <span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);white-space:nowrap">Chapter:</span>
-          <select id="epubChapterSel" onchange="epubLoadChapter(this.value)"
-            style="flex:1;background:#111;border:1px solid var(--border);border-radius:4px;color:var(--ink);
-                   font-family:var(--ui);font-size:0.82rem;padding:5px 8px"></select>
+          <select class="select-std" id="epubChapterSel" onchange="epubLoadChapter(this.value)"></select>
         </div>
 
         <!-- Content area -->
@@ -1474,14 +1451,12 @@
 
     <!-- Top bar: load controls -->
     <div class="listen-load-bar" style="width:100%">
-      <button class="listen-load-btn btn-icon" onclick="document.getElementById('listenFileInput').click()" title="Add audio files">
+      <button class="btn-action btn-icon" onclick="document.getElementById('listenFileInput').click()" title="Add audio files">
         + Add
       </button>
-      <button class="listen-sm-btn btn-icon" onclick="clearListenPlaylist()">✕ Clear</button>
+      <button class="btn-action btn-icon" onclick="clearListenPlaylist()">✕ Clear</button>
       <div style="display:flex;gap:10px;margin-left:auto;align-items:center">
-        <select id="listenModeSelect" onchange="listenModeChanged(this.value)"
-          style="background:#111;border:1px solid var(--teal);border-radius:6px;color:var(--teal);
-                 font-family:var(--ui);font-size:0.85rem;padding:6px 10px;cursor:pointer">
+        <select class="select-std" id="listenModeSelect" onchange="listenModeChanged(this.value)">
           <option value="">▶ Listen</option>
           <option value="comprehension">🧠 Comprehension</option>
           <option value="times">🕐 Times drill</option>
@@ -1510,14 +1485,14 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">LEVEL</span>
-        <select id="compLevel" style="padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none">
+        <select class="select-std" id="compLevel">
           <option value="N5" selected>N5</option>
           <option value="N4">N4</option>
         </select>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">SPEED</span>
-        <select id="compSpeed" style="padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none">
+        <select class="select-std" id="compSpeed">
           <option value="0.7">Slow</option>
           <option value="0.85" selected>Normal</option>
           <option value="1.0">Fast</option>
@@ -1525,13 +1500,13 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">VOICE A</span>
-        <select id="compVoiceA" style="padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none;max-width:160px">
+        <select class="select-std" id="compVoiceA">
           <option value="">Loading…</option>
         </select>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">VOICE B</span>
-        <select id="compVoiceB" style="padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none;max-width:160px">
+        <select class="select-std" id="compVoiceB">
           <option value="">Loading…</option>
         </select>
       </div>
@@ -1608,8 +1583,8 @@
                 <div id="dictSaStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--teal)">N5</div>
               </div>
               <div style="display:flex;gap:6px">
-                <button class="listen-sm-btn" onclick="newDictSentence()">New ↻</button>
-                <button class="listen-sm-btn" onclick="playDictSentence()">▶ Play</button>
+                <button class="btn-action" onclick="newDictSentence()">New ↻</button>
+                <button class="btn-action" onclick="playDictSentence()">▶ Play</button>
               </div>
             </div>
             <!-- dark audio card — no text visible -->
@@ -1629,7 +1604,7 @@
               ></textarea>
             <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
               <button class="btn-action" type="button" onclick="checkDictation()">Check ✓</button>
-              <button class="listen-sm-btn" onclick="clearDictation()">Clear</button>
+              <button class="btn-action" onclick="clearDictation()">Clear</button>
               <span id="dictSaHint" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Press Check when done — AI will give feedback</span>
             </div>
             <!-- AI feedback area -->
@@ -1652,16 +1627,14 @@
               </div>
               <div style="display:flex;gap:6px;align-items:center">
                 <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Resume after</span>
-                <select id="dictTimeout" onchange="dictTimeoutSecs=parseFloat(this.value);saveListenPrefs()"
-                  style="padding:3px 6px;font-family:var(--ui);font-size:0.78rem;
-                         background:var(--paper-dark);border:1px solid var(--border);color:var(--ink)">
+                <select class="select-std" id="dictTimeout" onchange="dictTimeoutSecs=parseFloat(this.value);saveListenPrefs()">
                   <option value="1.5">1.5s</option>
                   <option value="2" selected>2s</option>
                   <option value="3">3s</option>
                   <option value="4">4s</option>
                 </select>
-                <button class="listen-sm-btn" onclick="clearDictation()">Clear</button>
-                <button class="listen-sm-btn btn-copy" onclick="copyDictation()">Copy</button>
+                <button class="btn-action" onclick="clearDictation()">Clear</button>
+                <button class="btn-action btn-copy" onclick="copyDictation()">Copy</button>
               </div>
             </div>
             <textarea id="dictationTextAudio"
@@ -1742,20 +1715,18 @@
 
         <!-- Transport -->
         <div class="listen-transport" style="align-items:center">
-          <button class="listen-transport-btn listen-play-btn btn-icon" id="listenPlayBtn" onclick="toggleListenPlay()">▶</button>
-          <button class="listen-transport-btn btn-icon" id="setLoopBtn" onclick="cycleLoop()">Loop</button>
-          <select id="listenLoopPause" onchange="setListenLoopPause(parseFloat(this.value))" title="Pause between loops"
-            style="height:32px;padding:0 8px;font-family:var(--ui);font-size:0.75rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:6px">
+          <button class="btn-action listen-play-btn btn-icon" id="listenPlayBtn" onclick="toggleListenPlay()">▶</button>
+          <button class="btn-action btn-icon" id="setLoopBtn" onclick="cycleLoop()">Loop</button>
+          <select class="select-std" id="listenLoopPause" onchange="setListenLoopPause(parseFloat(this.value))" title="Pause between loops">
             <option value="0" selected>0s</option>
             <option value="1">1s</option>
             <option value="2">2s</option>
             <option value="3">3s</option>
             <option value="5">5s</option>
           </select>
-          <button class="listen-transport-btn btn-icon" id="shadowBtn" onclick="toggleShadowing()" title="Shadowing mode">Shadow</button>
-          <button class="listen-transport-btn btn-icon" id="vocabBtn" onclick="dropVocabBookmark()" title="Drop a marker at current time">Marker</button>
-          <select id="listenSpeedSel" onchange="setListenSpeed(parseFloat(this.value))"
-            style="height:32px;padding:0 8px;font-family:var(--ui);font-size:0.75rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:6px">
+          <button class="btn-action btn-icon" id="shadowBtn" onclick="toggleShadowing()" title="Shadowing mode">Shadow</button>
+          <button class="btn-action btn-icon" id="vocabBtn" onclick="dropVocabBookmark()" title="Drop a marker at current time">Marker</button>
+          <select class="select-std" id="listenSpeedSel" onchange="setListenSpeed(parseFloat(this.value))">
             <option value="0.75">0.75×</option>
             <option value="0.9">0.9×</option>
             <option value="1" selected>1×</option>
@@ -1793,14 +1764,13 @@
               
               <!-- Record mode toggle -->
               <div style="display:flex;gap:4px;margin-right:6px">
-                <button id="listenRecModeSingle" onclick="setListenRecMode('single')" class="listen-rec-mode-btn active btn-group">Single</button>
-                <button id="listenRecModeSegment" onclick="setListenRecMode('segment')" class="listen-rec-mode-btn btn-group">Per Segment</button>
+                <button id="listenRecModeSingle" onclick="setListenRecMode('single')" class="listen-rec-mode-btn active btn-toggle">Single</button>
+                <button id="listenRecModeSegment" onclick="setListenRecMode('segment')" class="listen-rec-mode-btn btn-toggle">Per Segment</button>
               </div>
               
               <button class="btn-action" id="listenShRecordBtn" onclick="listenShRecord()">Record</button>
               <button class="btn-action" id="listenShPlaybackBtn" onclick="listenShPlayback()" disabled>Play</button>
-              <select id="listenMicSelect" onclick="listenRequestMicAccess()" onchange="listenSetMic(this.value)"
-                style="padding:2px 6px;font-family:var(--ui);font-size:0.7rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:4px;max-width:180px">
+              <select class="select-std" id="listenMicSelect" onclick="listenRequestMicAccess()" onchange="listenSetMic(this.value)">
                 <option value="">🎤 Click to select mic</option>
               </select>
               <span id="listenShStatus" style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);margin-left:auto"></span>
@@ -1829,7 +1799,7 @@
         <div id="vocabBookmarkPanel" style="display:none;margin-top:16px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <div class="listen-col-label" style="margin-bottom:0;color:var(--red)">Vocab Bookmarks</div>
-            <button class="listen-sm-btn" onclick="clearVocabBookmarks()">Clear all</button>
+            <button class="btn-action" onclick="clearVocabBookmarks()">Clear all</button>
           </div>
           <div id="vocabBookmarkList"></div>
         </div>
@@ -1905,20 +1875,19 @@
       <!-- Header: Conversation selector + Settings (compact) -->
       <div style="padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <select id="voiceConvoSelect" onchange="voiceLoadConversation(this.value)" 
-            style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:'Noto Sans JP',var(--ui);font-size:0.8rem;max-width:140px">
+          <select class="select-std" id="voiceConvoSelect" onchange="voiceLoadConversation(this.value)"Noto Sans JP',var(--ui);font-size:0.8rem;max-width:140px">
             <option value="">— New —</option>
           </select>
           <button class="btn-action" onclick="voiceSaveConversation()">Save</button>
           <button class="btn-destructive" onclick="voiceDeleteConversation()">Delete</button>
           
           <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
-            <select id="voiceLevel" style="padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.75rem">
+            <select class="select-std" id="voiceLevel">
               <option value="N5" selected>N5</option>
               <option value="N4">N4</option>
               <option value="N3">N3</option>
             </select>
-            <select id="voiceTopic" onchange="voiceTopicChanged(this.value)" style="padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.75rem">
+            <select class="select-std" id="voiceTopic" onchange="voiceTopicChanged(this.value)">
               <option value="free">Free</option>
               <option value="listen">Listen</option>
               <option value="daily">Daily</option>
@@ -2031,7 +2000,7 @@
 
       <!-- Cluster filter -->
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
-        <select id="drillClusterSel" onchange="drillApplyFilter()" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.8rem">
+        <select class="select-std" id="drillClusterSel" onchange="drillApplyFilter()">
           <option value="">All clusters</option>
           <option value="greetings">Greetings</option>
           <option value="social_lubricant">Social</option>
@@ -2041,7 +2010,7 @@
           <option value="transactional">Transactional</option>
           <option value="appointment">予約・スケジュール</option>
         </select>
-        <select id="drillModeSel" onchange="drillApplyFilter()" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.8rem">
+        <select class="select-std" id="drillModeSel" onchange="drillApplyFilter()">
           <option value="en-to-jp">English → speak Japanese</option>
           <option value="jp-repeat">Japanese → repeat</option>
         </select>
@@ -2094,7 +2063,7 @@
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
           <input id="cd-doc-name" type="text" placeholder="Drill set name..." onblur="_cdAutoSave()"
             style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.85rem"/>
-          <select id="cd-doc-mode" onchange="_cdAutoSave()" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.78rem">
+          <select class="select-std" id="cd-doc-mode" onchange="_cdAutoSave()">
             <option value="en-prompt">English to speak</option>
             <option value="hear-repeat">Hear then repeat</option>
           </select>
@@ -2273,8 +2242,7 @@
           <button id="vtShRecordBtn" onclick="vtShRecord()"
             style="padding:4px 14px;background:var(--red);color:#fff;border:none;border-radius:5px;font-family:var(--ui);font-size:0.78rem;font-weight:600;cursor:pointer">⏺</button>
           <button id="vtShPlaybackBtn" class="btn-action" onclick="vtShPlayback()" disabled style="opacity:0.4">▶</button>
-          <select id="vtMicSelect" onclick="vtRequestMicAccess()" onchange="vtSetMic(this.value)"
-            style="padding:2px 6px;font-family:var(--ui);font-size:0.7rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:4px;max-width:180px">
+          <select class="select-std" id="vtMicSelect" onclick="vtRequestMicAccess()" onchange="vtSetMic(this.value)">
             <option value="">🎤 Click to select mic</option>
           </select>
           <label style="display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;margin-left:auto">
@@ -2311,7 +2279,7 @@
           ▶ Play
         </button>
         <span id="vtTime" style="font-family:monospace;font-size:0.82rem;color:var(--ink-light);min-width:90px">0:00 / 0:00</span>
-        <select id="vtSpeed" onchange="vtSetSpeed()" style="padding:2px 4px;background:var(--field);border:1px solid var(--field-border);border-radius:4px;color:var(--ink);font-family:var(--ui);font-size:0.72rem;width:46px">
+        <select class="select-std" id="vtSpeed" onchange="vtSetSpeed()">
           <option value="0.5">.5×</option>
           <option value="0.75">.75</option>
           <option value="1" selected>1×</option>
@@ -2321,8 +2289,7 @@
         <button id="vtLoopBtn" class="btn-toggle" onclick="vtSetLoopA()">
           A–B
         </button>
-        <select id="vtLoopPause" onchange="vtSetLoopPause(parseFloat(this.value))" title="Pause between loops"
-          style="padding:2px 4px;font-family:var(--ui);font-size:0.72rem;background:var(--paper);border:1px solid var(--border);color:var(--ink);border-radius:4px">
+        <select class="select-std" id="vtLoopPause" onchange="vtSetLoopPause(parseFloat(this.value))" title="Pause between loops">
           <option value="0" selected>0s</option>
           <option value="1">1s</option>
           <option value="2">2s</option>
@@ -2345,8 +2312,7 @@
         </button>
         <span id="vtLoopInfo" style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)"></span>
         <span style="flex:1"></span>
-        <select id="vtHistorySelect" onchange="vtLoadFromHistory(this.value)" 
-          style="max-width:200px;padding:4px 8px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.75rem;cursor:pointer">
+        <select class="select-std" id="vtHistorySelect" onchange="vtLoadFromHistory(this.value)">
           <option value="">— Recent —</option>
         </select>
         <label for="vtTransInput" id="vtChangeTransBtn"
@@ -2623,7 +2589,7 @@
   <div id="panel-grammar2" class="panel">
     <div class="section-title">
       <span class="jp">文法</span>
-      <select id="gram2SubSelect" onchange="gram2Switch(this.value)" style="margin-left:10px;font-family:var(--ui);font-size:0.85rem;background:none;border:none;border-bottom:1px solid var(--border);color:var(--ink);cursor:pointer;outline:none;padding:2px 4px">
+      <select class="select-std" id="gram2SubSelect" onchange="gram2Switch(this.value)">
         <option value="conj">活 Conjugation</option>
         <option value="sent">文 Sentences</option>
         <option value="particles">助 Particles</option>
@@ -2648,10 +2614,10 @@
     <div class="conj-footer-upper">
       <button class="btn-action" id="conjStartBtnG" onclick="startConjDrillG()">Start →</button>
       <button id="conjNewDrillBtn" onclick="conjForceNewSession()" class="btn-action" style="display:none">New</button>
-      <label class="conj-show-toggle" for="conjShowEnG"><input type="checkbox" id="conjShowEnG" checked onchange="renderConjDrillG()">English</label>
-      <label class="conj-show-toggle" for="conjShowReadingG"><input type="checkbox" id="conjShowReadingG" checked onchange="renderConjDrillG()">Reading</label>
-      <label class="conj-show-toggle" for="conjShowTypeG"><input type="checkbox" id="conjShowTypeG" onchange="renderConjDrillG()">Colour</label>
-      <label class="conj-show-toggle" id="conjListenToggleG" onclick="toggleConjListenMode()">Listen</label>
+      <label class="btn-toggle" for="conjShowEnG"><input type="checkbox" id="conjShowEnG" checked onchange="renderConjDrillG()">English</label>
+      <label class="btn-toggle" for="conjShowReadingG"><input type="checkbox" id="conjShowReadingG" checked onchange="renderConjDrillG()">Reading</label>
+      <label class="btn-toggle" for="conjShowTypeG"><input type="checkbox" id="conjShowTypeG" onchange="renderConjDrillG()">Colour</label>
+      <label class="btn-toggle" id="conjListenToggleG" onclick="toggleConjListenMode()">Listen</label>
       <button class="btn-subtle" id="conjRefBtnG" onclick="showConjLookupG()">Reference</button>
       <button class="btn-action" style="font-size:0.75rem" onclick="conjAddFreqVerbs()">+ 10 verbs</button>
       <button class="btn-action" style="font-size:0.75rem" onclick="conjResetFreqVerbs()">Reset list</button>
@@ -2736,7 +2702,7 @@
               <!-- Recent history dropdown - full width -->
               <div style="margin-bottom:14px">
                 <label style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);display:block;margin-bottom:4px">Recent:</label>
-                <select id="gramSentHistory" onchange="gramSentLoadHistory(this.value)" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;background:var(--field);color:var(--ink);font-family:'Noto Sans JP',var(--ui);font-size:0.85rem">
+                <select class="select-std" id="gramSentHistory" onchange="gramSentLoadHistory(this.value)"Noto Sans JP',var(--ui);font-size:0.85rem">
                   <option value="">Select recent grammar point...</option>
                 </select>
               </div>
@@ -2746,7 +2712,7 @@
             <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
               <div>
                 <label style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);display:block;margin-bottom:4px">Level</label>
-                <select id="gramSentLevel" style="padding:7px 10px;border:1px solid var(--border);border-radius:5px;background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.82rem">
+                <select class="select-std" id="gramSentLevel">
                   <option value="N5" selected>N5</option>
                   <option value="N4">N4</option>
                   <option value="N3">N3</option>
@@ -2823,7 +2789,7 @@
     <!-- PARTICLES -->
     <div id="gram2-sub-particles" style="display:none">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
-        <select id="particlePairSelect" style="padding:6px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.82rem;border-radius:6px">
+        <select class="select-std" id="particlePairSelect">
           <option value="ha-ga">は vs が</option>
           <option value="ni-de">に vs で</option>
           <option value="ha-mo">は vs も</option>
@@ -2952,14 +2918,14 @@
       <div style="font-family:var(--ui);font-size:0.73rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:10px">Settings</div>
       <label style="display:flex;align-items:center;gap:8px;font-family:var(--ui);font-size:0.83rem;margin-bottom:4px">
         <span style="min-width:80px">Voice</span>
-        <select id="tdVoiceSetting" onchange="setTdVoice(this.value)" style="padding:3px 6px;font-family:var(--ui);font-size:0.8rem;background:var(--paper-dark);border:1px solid var(--border);color:var(--ink);max-width:220px">
+        <select class="select-std" id="tdVoiceSetting" onchange="setTdVoice(this.value)">
           <option value="">Loading voices…</option>
         </select>
       </label>
       <div id="tdVoiceHint" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:88px;margin-bottom:10px"></div>
       <label style="display:flex;align-items:center;gap:8px;font-family:var(--ui);font-size:0.83rem;margin-bottom:8px">
         <span style="min-width:80px">Timer</span>
-        <select id="tdTimerSetting" style="padding:3px 6px;font-family:var(--ui);font-size:0.8rem;background:var(--paper-dark);border:1px solid var(--border);color:var(--ink)">
+        <select class="select-std" id="tdTimerSetting">
           <option value="0">Off</option>
           <option value="5">5 sec</option>
           <option value="8" selected>8 sec</option>
@@ -2972,7 +2938,7 @@
       </label>
       <label style="display:flex;align-items:center;gap:8px;font-family:var(--ui);font-size:0.78rem">
         <span style="min-width:80px">Speed</span>
-        <select id="tdSpeedSetting" style="padding:3px 6px;font-family:var(--ui);font-size:0.8rem;background:var(--paper-dark);border:1px solid var(--border);color:var(--ink)">
+        <select class="select-std" id="tdSpeedSetting">
           <option value="0.75">0.75×</option>
           <option value="1" selected>1×</option>
           <option value="1.25">1.25×</option>
@@ -3023,6 +2989,6 @@
 <script src="src/ui/TextEntry.js?v=20260524dbad"></script>
 <script src="src/ui/YoshiUI.js?v=20260524dbad"></script>
 
-<script src="src/design-overlay.js?v=20260528"></script>
+<script src="src/design-overlay.js?v=20260529"></script>
 </body>
 </html>

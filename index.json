@@ -1173,7 +1173,7 @@
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
     "line": 1898,
-    "desc": "const btns = document.querySelectorAll(`[data-btn-group=\"${group}\"]`);"
+    "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
     "type": "storage",
@@ -2671,7 +2671,7 @@
     "name": "listenUpdateNavBtns",
     "file": "src/core-listen.js",
     "line": 382,
-    "desc": "const prevBtn = document.querySelector('.listen-transport-btn[title=\"Previous\"]');"
+    "desc": "const prevBtn = document.querySelector('.btn-action[title=\"Previous\"]');"
   },
   {
     "type": "function",
@@ -4638,7 +4638,7 @@
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
     "line": 2107,
-    "desc": "if (!conjCurrentAnswer) return;"
+    "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for"
   },
   {
     "type": "storage",
