@@ -456,7 +456,7 @@
         <input type="text" class="answer-input" id="answerInput" placeholder="type romanization..."
                autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
                onkeydown="handleKanaKey(event)" oninput="handleKanaInput(this)">
-        <button class="skip-btn" id="skipKanaBtn" onclick="skipKana()">Next →</button>
+        <button class="skip-btn" id="skipKanaBtn" onclick="skipKana()">Next</button>
       </div>
 
 
@@ -641,7 +641,7 @@
         <div style="font-size:2rem;margin-bottom:12px">🎉</div>
         <div style="font-family:var(--ui);font-size:1rem;color:var(--ink)">No cards due!</div>
         <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-top:8px">All caught up with this deck.</div>
-        <button class="btn-ghost" onclick="ankiLoadDeck()">🔄 Check for more</button>
+        <button class="btn-ghost" onclick="ankiLoadDeck()">Check for more</button>
       </div>
 
       <!-- Setup instructions (shown when not connected) -->
@@ -693,7 +693,7 @@
                   style="padding:12px 16px;font-family:var(--jp);font-size:1.2rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);width:200px;text-align:center;outline:none">
 
               <button class="btn-action" id="countCheckBtn2" onclick="countCheck2()">Check</button>
-                <button id="countNextBtn2" onclick="countAdvance2()" style="display:none;padding:12px 20px;background:var(--gold);border:none;border-radius:8px;color:#1c1c1e;font-family:var(--ui);font-size:0.9rem;cursor:pointer">Next →</button>
+                <button id="countNextBtn2" onclick="countAdvance2()" style="display:none;padding:12px 20px;background:var(--gold);border:none;border-radius:8px;color:#1c1c1e;font-family:var(--ui);font-size:0.9rem;cursor:pointer">Next</button>
                 <button class="btn-ghost" onclick="countHear2()" title="Hear the answer">🔊</button>
                 <button class="btn-ghost" id="countLookupBtn2" onclick="countShowLookup2()" title="Show counter table">📖</button>
               </div>
@@ -717,7 +717,7 @@
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;padding-right:2px">
             <div style="display:flex;gap:6px;align-items:center">
               <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-subtle">🖼 Objects</button>
-              <button onclick="countForceNewSession2()" class="btn-subtle">↺ New drill</button>
+              <button onclick="countForceNewSession2()" class="btn-subtle">New</button>
             </div>
             <button class="btn-ghost" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
           </div>
@@ -745,7 +745,7 @@
             </div>
             <div id="daysDrillFeedback" style="text-align:center;margin-top:10px;font-family:var(--jp);font-size:1rem;min-height:1.5em"></div>
             <div style="text-align:center;margin-top:8px">
-              <button class="btn-ghost" onclick="daysNext()" id="daysDrillNext" style="display:none">Next →</button>
+              <button class="btn-ghost" onclick="daysNext()" id="daysDrillNext" style="display:none">Next</button>
             </div>
           </div>
         </div>
@@ -1298,31 +1298,31 @@
       <div id="readPasteArea" style="width:100%">
         <!-- History dropdown -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <select class="select-std" id="qrHistorySelect" onchange="qrLoadHistory(this.value)">
+          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)">
             <option value="">— Recent texts —</option>
           </select>
           <button class="btn-destructive" onclick="qrDeleteHistory()" title="Delete selected">Delete</button>
         </div>
         <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="min-height:200px;margin-bottom:12px"></textarea>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse →</button>
-          <button class="qr-btn-sec btn-icon" id="qrRawSpeakBtn" onclick="qrSpeakRaw()" title="Read text aloud without analysing" disabled>🔊 Listen</button>
-          <button class="qr-btn-sec btn-icon" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" title="Download TTS audio (VoiceVox only)" disabled>⬇ Audio</button>
+          <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
+          <button class="btn-action" id="qrRawSpeakBtn" onclick="qrSpeakRaw()" title="Read text aloud without analysing" disabled>Listen</button>
+          <button class="btn-action" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" title="Download TTS audio (VoiceVox only)" disabled>Audio</button>
           <span class="qr-status" id="qrStatus"></span>
-          <button class="qr-btn-sec btn-icon" onclick="qrClear()">✕ Clear</button>
+          <button class="btn-action" onclick="qrClear()">Clear</button>
         </div>
       </div>
       <div id="qrReaderWrap" style="display:none">
-        <div class="qr-reader-box">
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-          <button class="qr-btn-sec btn-icon" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
-          <button class="qr-btn-sec" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()" title="One sentence per line">¶ Lines</button>
-          <button class="qr-btn-sec" id="qrListenModeBtn" onclick="qrToggleListenMode()" title="Sentence-by-sentence listening">🎧 Listen</button>
-          <button class="qr-btn-sec" id="qrBackBtn" onclick="qrShowPaste()">← Edit</button>
-          <button class="qr-btn-sec" onclick="qrSendToWrite()" title="Copy plain text to Write panel">→ Write</button>
-          <button class="qr-btn-sec" onclick="qrPrintPage()" title="Print with furigana (black on white)">🖨 Print</button>
-          <button class="qr-btn-sec btn-icon" onclick="qrClear()" title="Clear and start over">✕ Clear</button>
+          <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
+          <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()" title="One sentence per line">Lines</button>
+          <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()" title="Sentence-by-sentence listening">Listen</button>
+          <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
+          <button class="btn-action" onclick="qrSendToWrite()" title="Copy plain text to Write panel">Write</button>
+          <button class="btn-action" onclick="qrPrintPage()" title="Print with furigana (black on white)">Print</button>
+          <button class="btn-action" onclick="qrClear()" title="Clear and start over">Clear</button>
         </div>
+        <div class="qr-reader-box">
         
         <!-- Sentence listening panel (hidden by default) -->
         <div id="qrListenPanel" style="display:none;margin-bottom:16px;padding:16px;background:var(--paper);border:1px solid var(--border);border-radius:8px">
@@ -1346,10 +1346,10 @@
           <!-- Speed control -->
           <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;align-items:center">
             <span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light)">Speed:</span>
-            <button onclick="qrSetSpeed(0.6)" class="qr-speed-btn btn-ghost" data-speed="0.6">0.6×</button>
-            <button onclick="qrSetSpeed(0.8)" class="qr-speed-btn btn-ghost" data-speed="0.8">0.8×</button>
-            <button onclick="qrSetSpeed(1.0)" class="qr-speed-btn active btn-ghost" data-speed="1">1×</button>
-            <button onclick="qrSetSpeed(1.2)" class="qr-speed-btn btn-ghost" data-speed="1.2">1.2×</button>
+            <button onclick="qrSetSpeed(0.6)" class="qr-speed-btn btn-toggle" data-speed="0.6">0.6×</button>
+            <button onclick="qrSetSpeed(0.8)" class="qr-speed-btn btn-toggle" data-speed="0.8">0.8×</button>
+            <button onclick="qrSetSpeed(1.0)" class="qr-speed-btn active btn-toggle" data-speed="1">1×</button>
+            <button onclick="qrSetSpeed(1.2)" class="qr-speed-btn btn-toggle" data-speed="1.2">1.2×</button>
           </div>
         </div>
         
@@ -1405,13 +1405,13 @@
       <div id="epubReaderWrap" style="display:none;flex-direction:column;gap:10px">
         <!-- Toolbar -->
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="qr-btn-sec" onclick="epubClose()" title="Close book">✕ Close</button>
-          <button class="qr-btn-sec" onclick="epubPrevChapter()" title="Previous chapter (←)">←</button>
-          <button class="qr-btn-sec" onclick="epubNextChapter()" title="Next chapter (→)">→</button>
+          <button class="btn-action" onclick="epubClose()" title="Close book">✕ Close</button>
+          <button class="btn-action" onclick="epubPrevChapter()" title="Previous chapter (←)">←</button>
+          <button class="btn-action" onclick="epubNextChapter()" title="Next chapter (→)">→</button>
           <span id="epubChapterInfo" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);white-space:nowrap"></span>
           <span id="epubTitle" style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-          <button class="qr-btn-sec btn-icon" id="epubFuriBtn" onclick="epubToggleFuri()">ふり仮名</button>
-          <button class="qr-btn-sec" id="epubTtsBtn" onclick="epubSpeak()" title="Read aloud">🔊 Read</button>
+          <button class="btn-action" id="epubFuriBtn" onclick="epubToggleFuri()">ふり仮名</button>
+          <button class="btn-action" id="epubTtsBtn" onclick="epubSpeak()" title="Read aloud">🔊 Read</button>
           <select class="select-std" id="epubFontSize" onchange="epubSetFontSize(this.value)">
             <option value="1.1">Small</option>
             <option value="1.35" selected>Medium</option>
@@ -1452,9 +1452,9 @@
     <!-- Top bar: load controls -->
     <div class="listen-load-bar" style="width:100%">
       <button class="btn-action btn-icon" onclick="document.getElementById('listenFileInput').click()" title="Add audio files">
-        + Add
+        Add
       </button>
-      <button class="btn-action btn-icon" onclick="clearListenPlaylist()">✕ Clear</button>
+      <button class="btn-action btn-icon" onclick="clearListenPlaylist()">Clear</button>
       <div style="display:flex;gap:10px;margin-left:auto;align-items:center">
         <select class="select-std" id="listenModeSelect" onchange="listenModeChanged(this.value)">
           <option value="">▶ Listen</option>
@@ -1462,7 +1462,7 @@
           <option value="times">🕐 Times drill</option>
           <option value="progress">📊 Progress</option>
         </select>
-        <button class="btn-ghost" id="srsToggleBtn" onclick="SRS.togglePanel()"
+        <button class="btn-toggle" id="srsToggleBtn" onclick="SRS.togglePanel()"
           title="Rate this track for spaced repetition">
           ⏱ <span id="srsDueBadge" style="display:none;background:var(--gold);color:#000;
             border-radius:10px;padding:0 5px;font-size:0.65rem"></span>
@@ -1584,7 +1584,7 @@
               </div>
               <div style="display:flex;gap:6px">
                 <button class="btn-action" onclick="newDictSentence()">New ↻</button>
-                <button class="btn-action" onclick="playDictSentence()">▶ Play</button>
+                <button class="btn-action" onclick="playDictSentence()">Play</button>
               </div>
             </div>
             <!-- dark audio card — no text visible -->
@@ -2355,7 +2355,7 @@
         <button class="btn-action" onclick="vtDictateReplay()" title="Replay (R)">▶ Replay</button>
         <button class="btn-action" onclick="vtDictateCheck()" title="Check (Enter)">Check</button>
         <button class="btn-action" onclick="vtDictateReveal()" title="Reveal answer">Reveal</button>
-        <button class="btn-nav" onclick="vtDictateNext()" title="Next line (→)">Next →</button>
+        <button class="btn-nav" onclick="vtDictateNext()" title="Next line (→)">Next</button>
         <span id="vtDictateStats" style="margin-left:auto;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
@@ -2901,8 +2901,8 @@
 
     <!-- Controls -->
     <div id="tdControls" style="display:flex;gap:8px;justify-content:center">
-      <button class="btn-action" id="tdPlayBtn" onclick="playTimesAudio()">▶ Play</button>
-      <button class="btn-icon" id="tdNextBtn" onclick="nextTimesQuestion()">Next →</button>
+      <button class="btn-action" id="tdPlayBtn" onclick="playTimesAudio()">Play</button>
+      <button class="btn-icon" id="tdNextBtn" onclick="nextTimesQuestion()">Next</button>
     </div>
 
     <!-- Blitz result overlay (shown when time up) -->

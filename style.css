@@ -2819,3 +2819,4 @@
 .btn-rating-teal:hover { background: var(--teal); border-color: var(--teal); color: var(--ink); }
 .select-std { font-family: var(--ui); font-size: 0.85rem; background: none; border: none; border-bottom: 1px solid var(--border); color: var(--ink); cursor: pointer; outline: none; padding: 2px 4px; margin-left: 10px; }
 .select-std { font-family: var(--ui); font-size: 0.85rem; background: none; border: none; border-bottom: 1px solid var(--border); color: var(--ink); cursor: pointer; outline: none; padding: 2px 4px; margin-left: 10px; }
+.select-field { flex:1; padding:6px 10px; font-family:var(--ui); font-size:0.82rem; background:var(--field); border:1px solid var(--field-border); border-radius:6px; color:var(--ink); outline:none; cursor:pointer; }
