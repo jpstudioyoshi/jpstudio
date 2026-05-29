@@ -1532,7 +1532,9 @@
      .panel-header-lower sits below nav (42px) + quick-translate (~44px)
      Use for panel-specific fixed bars: answer reveals, tab rows, etc.
   ───────────────────────────────────────────────────────────────────── */
-  #panelHeaderLowerLeft { flex: 1; display: flex; align-items: center; gap: 12px; }
+  #panelHeaderLowerLeft { flex: 1; }
+  .panel-section-title { display: flex; align-items: center; gap: 12px; }
+  .panel-section-title-jp { font-family: var(--jp); font-size: 2.2rem; color: var(--ink); }
   .panel-header-lower {
     position: fixed;
     top: 98px;
@@ -1551,7 +1553,7 @@
   .conj-footer-group { display: flex; flex-direction: column; gap: 4px; padding: 0 16px; border-right: 1px solid var(--border); min-width: 110px; }
   .conj-footer-group:first-child { padding-left: 0; }
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-  #gram2-sub-conj { padding-top: 160px; padding-bottom: 210px; }
+  #gram2-sub-conj { padding-top: 80px; padding-bottom: 210px; }
   .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .conj-advanced-toggle {
     border-radius: 6px;
