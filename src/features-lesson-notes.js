@@ -3067,14 +3067,14 @@ function lnHandleDrop(event) {
 // ═══════════════════════════════════════════════════════
 // YOSHI SESSIONS
 // ═══════════════════════════════════════════════════════
-const YOSHI_KEY = 'jpStudioYoshiSessions';
+// YOSHI_KEY removed — use STORAGE_KEYS.YOSHI_SESSIONS via Storage
 let yoshiCurrentIdx = null;
 
 function yoshiGetSessions() {
-  return JSON.parse(localStorage.getItem(YOSHI_KEY) || '[]');
+  return JSON.parse(Storage.get(STORAGE_KEYS.YOSHI_SESSIONS) || '[]');
 }
 function yoshiSaveSessions(arr) {
-  localStorage.setItem(YOSHI_KEY, JSON.stringify(arr));
+  Storage.set(STORAGE_KEYS.YOSHI_SESSIONS, JSON.stringify(arr));
 }
 
 function yoshiRender() {

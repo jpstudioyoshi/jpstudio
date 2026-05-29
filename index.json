@@ -7193,14 +7193,14 @@
     "name": "yoshiGetSessions",
     "file": "src/features-lesson-notes.js",
     "line": 3073,
-    "desc": "return JSON.parse(localStorage.getItem(YOSHI_KEY) || '[]');"
+    "desc": "return JSON.parse(Storage.get(STORAGE_KEYS.YOSHI_SESSIONS) || '[]');"
   },
   {
     "type": "function",
     "name": "yoshiSaveSessions",
     "file": "src/features-lesson-notes.js",
     "line": 3076,
-    "desc": "localStorage.setItem(YOSHI_KEY, JSON.stringify(arr));"
+    "desc": "Storage.set(STORAGE_KEYS.YOSHI_SESSIONS, JSON.stringify(arr));"
   },
   {
     "type": "function",
@@ -7369,6 +7369,13 @@
     "file": "src/features-lesson-notes.js",
     "line": 102,
     "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "YOSHI_SESSIONS",
+    "file": "src/features-lesson-notes.js",
+    "line": 3077,
+    "desc": "Storage.set"
   },
   {
     "type": "storage",

@@ -407,7 +407,7 @@ function gramSentPopulateWeakPoints() {
   const empty     = document.getElementById('gramSentAutoEmpty');
   if (!container) return;
   try {
-    const errors = JSON.parse(localStorage.getItem('jpWritingErrors') || '[]');
+    const errors = JSON.parse(Storage.get(STORAGE_KEYS.WRITING_ERRORS) || '[]');
     const patterns = [...new Set(errors.map(e => e.errorPattern).filter(Boolean))].slice(0, 12);
     if (!patterns.length) {
       container.innerHTML = '';
