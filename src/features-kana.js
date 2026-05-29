@@ -191,7 +191,7 @@ function romajiToHiragana(str) {
 // ═══════════════════════════════════════════════════════
 // BUTTON GROUP MODULE
 // ═══════════════════════════════════════════════════════
-// Usage: Add data-btn-group="groupName" and data-active-color="var(--teal)" to buttons
+// Usage: Add data-btn-toggle="groupName" and data-active-color="var(--teal)" to buttons
 // Then call: setButtonGroupActive('groupName', 'activeButtonId')
 
 
@@ -907,7 +907,7 @@ function kanaToolbar(inputId, opts = {}) {
     b.className = cls;
     b.title = title;
     b.textContent = label;
-    b.setAttribute('data-btn-group', grp);
+    b.setAttribute('data-btn-toggle', grp);
     if (activeColor) b.dataset.activeColor = activeColor;
     b.onclick = () => {
       kanaSetMode(inputId, _modeForId(id, inputId), grp, btnIds);

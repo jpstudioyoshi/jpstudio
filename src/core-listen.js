@@ -380,8 +380,8 @@ function listenQueueNext() {
 }
 
 function listenUpdateNavBtns() {
-  const prevBtn = document.querySelector('.listen-transport-btn[title="Previous"]');
-  const nextBtn = document.querySelector('.listen-transport-btn[title="Next"]');
+  const prevBtn = document.querySelector('.btn-action[title="Previous"]');
+  const nextBtn = document.querySelector('.btn-action[title="Next"]');
   const hasPrev = listenCurrentIdx > 0 || (listenQueue.length && listenQueuePos > 0);
   const hasNext = listenCurrentIdx < listenTracks.length - 1 || (listenQueue.length && listenQueuePos < listenQueue.length - 1);
   if (prevBtn) { prevBtn.style.opacity = hasPrev ? '1' : '0.3'; prevBtn.style.cursor = hasPrev ? 'pointer' : 'default'; }

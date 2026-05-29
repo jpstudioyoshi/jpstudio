@@ -1764,7 +1764,7 @@ function stRenderContext() {
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Last updated: ${ctx.version || '—'}</div>
-      <button class="btn-ghost btn-copy" style="font-size:0.72rem" onclick="stCopyContext()">Copy JSON</button>
+      <button class="btn-action" style="font-size:0.72rem" onclick="stCopyContext()">Copy JSON</button>
     </div>
     ${section('APP', `<b>${ctx.app}</b> · ${ctx.runtime}<br>Launch: <code style="font-size:0.75rem;color:var(--teal)">${ctx.launch}</code>`)}
     ${section('FILES', kv(ctx.fileStructure || {}))}
@@ -1896,7 +1896,7 @@ async function stGrammarSetOverride(nodeId, score) {
 const _kanaLastMode = {};
 
 function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
-  const btns = document.querySelectorAll(`[data-btn-group="${group}"]`);
+  const btns = document.querySelectorAll(`[data-btn-toggle="${group}"]`);
   btns.forEach(btn => {
     const isActive = btn.id === activeId;
     if (btn.classList.contains('btn-kana')) {

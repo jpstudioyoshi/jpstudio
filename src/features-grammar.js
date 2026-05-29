@@ -136,8 +136,8 @@ function gdRenderCard() {
         onkeydown="if(event.key==='Enter'){if(DrillFlow._advancing)return;if(DrillFlow._waitingEnter){DrillFlow.advance();return;}gdCheck();}">
       <div class="gd-feedback" id="gdFeedback"></div>
       <div class="gd-btn-row">
-        <button class="conj-check-btn btn-icon" id="gdCheckBtn" onclick="gdCheck()">Check</button>
-        <button class="conj-skip-btn btn-icon" id="gdNextBtn" onclick="gdNext()">Next →</button>
+        <button class="btn-action" id="gdCheckBtn" onclick="gdCheck()">Check</button>
+        <button class="btn-action" id="gdNextBtn" onclick="gdNext()">Next →</button>
         ${isJpEn ? `<button class="tts-btn" onclick="jpSpeak('${s.jp.replace(/'/g,"\'")}')">🔊</button>` : ''}
       </div>
     </div>
@@ -1600,7 +1600,7 @@ function renderConjDrillG() {
         html += '</tbody></table></div>';
       }
       html += '<span style="color:var(--ink-light);font-family:var(--ui);font-size:0.78rem">Next run focuses on problem items</span><br>';
-      html += '<button class="conj-start-btn btn-icon" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button></div>';
+      html += '<button class="btn-action" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button></div>';
       area.innerHTML = html;
     }
     return;
@@ -1643,6 +1643,7 @@ function renderConjDrillG() {
 
   area.innerHTML =
     '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</div><div style="margin-left:auto">✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
+    '<div class="conj-feedback" id="conjFeedbackG"></div>' +
     '<div class="conj-dot-row">' + dotHtml + '</div>' +
     '<div class="conj-card">' +
       (listenMode ? '' : '<div class="conj-word" style="color:' + typeColor + '">' + item.word.dict + '</div>') +
@@ -1652,14 +1653,13 @@ function renderConjDrillG() {
       '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:12px">' +
         '<input class="conj-input" id="conjInputG" placeholder="type in kana…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" onkeydown="handleConjKeyG(event)" oninput="liveCheckConjG()">' +
         '<div style="display:flex;gap:8px;align-items:center;justify-content:center">' +
-          '<button class="conj-check-btn" id="conjCheckBtnG" onclick="checkConjG()">Check</button>' +
-          '<button class="conj-skip-btn" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none;padding:7px 14px">←</button>' +
-          '<button class="conj-skip-btn" id="conjNextBtnG" onclick="advanceConjG()" style="display:none;padding:7px 14px">→</button>' +
+          '<button class="btn-action" id="conjCheckBtnG" onclick="checkConjG()">Check</button>' +
+          '<button class="btn-action" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none;padding:7px 14px">←</button>' +
+          '<button class="btn-action" id="conjNextBtnG" onclick="advanceConjG()" style="display:none;padding:7px 14px">→</button>' +
           '<button class="btn-toggle' + (_conjTrackingPaused ? ' toggle-on' : '') + '" id="conjPauseBtnG" onclick="_conjTrackingPaused=!_conjTrackingPaused;this.classList.toggle(\'toggle-on\',_conjTrackingPaused)">Pause</button>' +
         '</div>' +
       '</div>' +
-    '</div>' +
-    '<div class="conj-feedback" id="conjFeedbackG"></div>';
+    '</div>';
   const inp = document.getElementById('conjInputG');
   kanaAddToggle(inp, true);
   conjRevealed = false;
@@ -1831,7 +1831,7 @@ function checkConjG() {
   document.getElementById('conjCheckBtnG').style.display = 'none';
   document.getElementById('conjPrevBtnG').style.display = conjIdx > 0 ? '' : 'none';
   document.getElementById('conjNextBtnG').style.display = '';
-  document.getElementById('conjLookupBtnG').style.display = '';
+  const _lb = document.getElementById('conjLookupBtnG'); if (_lb) _lb.style.display = '';
   input.readOnly = true;
 }
 
@@ -2105,7 +2105,7 @@ function pdTryMatch(exIdx) {
 
 
 function showConjLookupG() {
-  if (!conjCurrentAnswer) return;
+  if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: "", read: "", en: "", type: "u" }, form: "present", pol: "aff", reg: "polite" }; }
   const word = conjCurrentAnswer.word;
   const currentForm = conjCurrentAnswer.form;
   const currentPol  = conjCurrentAnswer.pol;

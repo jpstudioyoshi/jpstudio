@@ -1297,7 +1297,7 @@ function renderConjDrill() {
     area.innerHTML = `<div class="conj-idle" style="background:var(--paper-dark);border:1px solid var(--border)">
       <span class="conj-idle-char">完</span>
       <strong>Session complete!</strong><br>${conjOk} correct · ${conjMiss} wrong · ${pct}%<br><br>
-      <button class="conj-start-btn btn-icon" onclick="startConjDrill()">Drill again →</button>
+      <button class="btn-action" onclick="startConjDrill()">Drill again →</button>
     </div>`;
     return;
   }
@@ -1326,8 +1326,8 @@ function renderConjDrill() {
         <input class="conj-input" id="conjInput" placeholder="type in kana or romaji…" data-placeholder-jp="type in kana…"
           autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
           onkeydown="handleConjKey(event)" oninput="liveCheckConj()">
-        <button class="conj-check-btn" onclick="checkConj()" tabindex="-1">Check</button>
-        <button class="conj-skip-btn" onclick="advanceConj()" tabindex="-1">Next →</button>
+        <button class="btn-action" onclick="checkConj()" tabindex="-1">Check</button>
+        <button class="btn-action" onclick="advanceConj()" tabindex="-1">Next →</button>
       </div>
     </div>
     <div class="conj-feedback" id="conjFeedback"></div>

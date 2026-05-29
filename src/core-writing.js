@@ -554,7 +554,7 @@ function renderSavedTexts() {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
         <div class="sti-date">${t.date} · ${t.count} sentences</div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button class="btn-ghost btn-copy" onclick="copySavedText(${i})" id="sti-copy-${i}" title="Copy full text">Copy</button>
+          <button class="btn-action" onclick="copySavedText(${i})" id="sti-copy-${i}" title="Copy full text">Copy</button>
           <button class="btn-icon btn-icon-del" onclick="deleteSavedText(${i})" title="Delete">✕</button>
         </div>
       </div>

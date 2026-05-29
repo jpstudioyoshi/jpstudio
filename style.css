@@ -1542,9 +1542,6 @@
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
   #gram2-sub-conj { padding-bottom: 210px; }
   .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .conj-show-toggle { display: inline-flex; align-items: center; font-family: var(--ui); font-size: 0.82rem; padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--ink-light); }
-  .conj-show-toggle input[type=checkbox] { display: none; }
-  .conj-show-toggle:has(input:checked), .conj-show-toggle.toggle-on { border-color: var(--teal); color: var(--teal); }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;
@@ -1563,7 +1560,7 @@
   .conj-drill-area { display: flex; flex-direction: column; gap: 16px; }
 
   .conj-card {
-    padding: 28px 32px; text-align: center; position: relative;
+    padding: 12px 24px; text-align: center; position: relative;
   }
   .conj-word {
     font-family: 'Noto Sans JP', sans-serif; font-size: clamp(2.5rem, 8vw, 4rem);
@@ -1615,10 +1612,11 @@
   .conj-skip-btn:hover { border-color: var(--ink); color: var(--ink); }
 
   .conj-feedback {
-    background: var(--paper-dark); border: 1px solid var(--border);
-    border-left: 3px solid var(--teal); padding: 16px 20px;
-    display: none; font-size: 0.88rem; line-height: 1.7;
+    visibility: hidden; min-height: 1.4rem;
+    font-size: 0.88rem; line-height: 1.4;
+    padding: 4px 0; text-align: right; color: var(--ink-light);
   }
+  .conj-feedback.show { visibility: visible; }
   .conj-feedback.show { display: block; }
   .conj-feedback.wrong-fb { border-left-color: var(--red); }
   .conj-feedback.slip-fb { border-left-color: var(--gold); }
@@ -2791,13 +2789,16 @@
 .btn-copy { color: var(--ink) !important; border-radius: 5px !important; border: 1px solid rgba(255,255,255,0.6) !important; }
 .btn-copy:hover { background: var(--teal) !important; color: #1c1c1e !important; border-color: var(--teal) !important; }
 
-.btn-action { color: var(--ink) !important; border-radius: 5px !important; border: 1px solid rgba(255,255,255,0.6) !important; padding: 5px 12px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; background: none; transition: all 0.15s; }
+.btn-action { display: inline-flex; align-items: center; line-height: 1; color: var(--ink) !important; border-radius: 5px !important; border: 1px solid rgba(255,255,255,0.6) !important; padding: 5px 12px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; background: none; transition: all 0.15s; }
 .btn-action:hover { background: var(--teal) !important; color: #1c1c1e !important; border-color: var(--teal) !important; }
 .btn-action:disabled { opacity: 0.4; cursor: default; }
 
-.btn-toggle { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink-light); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
-.btn-toggle:hover { border-color: var(--teal); color: var(--teal); }
-.btn-toggle.toggle-on { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.1); }
+.btn-toggle { display: inline-flex; align-items: center; line-height: 1; background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.btn-toggle:not(.toggle-on):not(:has(input:checked)):not(.active):hover { color: var(--ink); border-color: rgba(255,255,255,0.9); }
+.btn-toggle input[type=checkbox], .btn-toggle input[type=radio] { display: none; }
+.btn-radio { display: inline-flex; align-items: center; gap: 5px; line-height: 1; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; color: var(--ink); padding: 5px 8px; }
+.btn-radio input[type=radio] { accent-color: var(--teal); width: 13px; height: 13px; cursor: pointer; }
+.btn-toggle.toggle-on, .btn-toggle:has(input:checked), .btn-toggle.active { border-color: var(--teal); color: var(--teal); background: rgba(48,213,200,0.1); }
 
 .btn-group { background: none; border: 1px solid rgba(255,255,255,0.6); color: var(--ink-light); padding: 5px 12px; border-radius: 5px; font-family: var(--ui); font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
 .btn-group:hover { border-color: var(--ink); color: var(--ink); }
@@ -2816,3 +2817,5 @@
 .btn-rating-red:hover { background: var(--red); border-color: var(--red); color: var(--ink); }
 .btn-rating-teal { border-color: var(--teal); color: var(--teal); }
 .btn-rating-teal:hover { background: var(--teal); border-color: var(--teal); color: var(--ink); }
+.select-std { font-family: var(--ui); font-size: 0.85rem; background: none; border: none; border-bottom: 1px solid var(--border); color: var(--ink); cursor: pointer; outline: none; padding: 2px 4px; margin-left: 10px; }
+.select-std { font-family: var(--ui); font-size: 0.85rem; background: none; border: none; border-bottom: 1px solid var(--border); color: var(--ink); cursor: pointer; outline: none; padding: 2px 4px; margin-left: 10px; }
