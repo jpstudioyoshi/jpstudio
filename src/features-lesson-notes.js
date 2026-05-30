@@ -19,7 +19,6 @@ const LessonNotesState = {
   grammarHidden:       new Set(),
   currentStory:        null,
   storyTab:            'read',
-  clozeRevealed:       {},
   lnFuriOn:            false,
   grammarDetail:       null,
   grammarDrillSentences: [],
@@ -2201,7 +2200,6 @@ function lessonNotesOpenStory(idx) {
   LessonNotesState.currentStory = LessonNotesState.stories[idx];
   LessonNotesState.viewMode = 'reading';
   LessonNotesState.storyTab = 'read';
-  LessonNotesState.clozeRevealed = {};
   // Use Quick Read's segment array
   _qrSegments = [];
   lessonNotesRender();
@@ -2266,38 +2264,6 @@ function lessonNotesRenderStoryText() {
   const hasKanji = w => /[\u4E00-\u9FFF]/.test(w);
   const isJP = w => /[\u3040-\u9FFF\uF900-\uFAFF]/.test(w);
 
-  const tab = LessonNotesState.storyTab || 'read';
-
-  if (tab === 'cloze') {
-    const revealed = LessonNotesState.clozeRevealed || {};
-    let chtml = '<div style="font-family:\'Noto Sans JP\',sans-serif;font-size:1.25rem;line-height:2.4;color:var(--ink)">';
-    _qrSegments.forEach((seg, i) => {
-      const w = seg.word;
-      if (!w) return;
-      if (isNewline(w)) { chtml += '<br>'; return; }
-      if (isPunct(w)) { chtml += `<span style="color:var(--ink-light)">${w}</span>`; return; }
-      if (!isJP(w)) { chtml += `<span>${w}</span>`; return; }
-      if (hasKanji(w) && !revealed[i]) {
-        const blank = '\uFF3F'.repeat([...w].length);
-        chtml += `<span class="ln-cloze-blank" data-idx="${i}" style="color:var(--teal);cursor:pointer;padding:0 2px;border-bottom:1px dashed var(--teal)">${blank}</span>`;
-      } else if (hasKanji(w) && seg.reading) {
-        chtml += `<ruby>${w}<rt style="font-size:0.65em;color:var(--ink-light);pointer-events:none">${seg.reading}</rt></ruby>`;
-      } else {
-        chtml += `<span>${w}</span>`;
-      }
-    });
-    chtml += '</div>';
-    container.innerHTML = chtml;
-    container.onclick = e => {
-      const el = e.target.closest('.ln-cloze-blank');
-      if (!el) return;
-      e.stopPropagation();
-      LessonNotesState.clozeRevealed[parseInt(el.dataset.idx)] = true;
-      lessonNotesRenderStoryText();
-    };
-    return;
-  }
-
   let html = '<div style="font-family:\'Noto Sans JP\',sans-serif;font-size:1.25rem;line-height:2.4;color:var(--ink)">';
   _qrSegments.forEach((seg, i) => {
     const w = seg.word;
@@ -2326,38 +2292,14 @@ function lessonNotesRenderStoryText() {
 
 function lessonNotesSetStoryTab(tab) {
   LessonNotesState.storyTab = tab;
-  if (tab === 'cloze') LessonNotesState.clozeRevealed = {};
   lessonNotesRender();
-  if (tab === 'read' || tab === 'cloze') {
+  if (tab === 'read') {
     if (_qrSegments && _qrSegments.length) {
       setTimeout(lessonNotesRenderStoryText, 0);
     } else if (LessonNotesState.currentStory) {
       lessonNotesParseStory(LessonNotesState.currentStory.text);
     }
   }
-}
-
-function lessonNotesRenderStoryCloze() {
-  return `
-    <div class="qr-reader-box">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-        <button class="qr-btn-sec" onclick="LessonNotesState.clozeRevealed={};lessonNotesRenderStoryText()">Reset</button>
-        <button class="qr-btn-sec" onclick="lessonNotesClozeRevealAll()">Reveal all</button>
-        <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:auto">Click each blank to reveal</span>
-      </div>
-      <div id="lnStoryReader">
-        <span style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Parsing...</span>
-      </div>
-    </div>
-  `;
-}
-
-function lessonNotesClozeRevealAll() {
-  if (!_qrSegments) return;
-  const revealed = {};
-  _qrSegments.forEach((_, i) => { revealed[i] = true; });
-  LessonNotesState.clozeRevealed = revealed;
-  lessonNotesRenderStoryText();
 }
 
 function lessonNotesRenderStoryVocab(story) {

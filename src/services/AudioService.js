@@ -67,7 +67,9 @@ const AudioService = (() => {
       });
 
       // Loopback stream (BlackHole)
-      const loopbackDeviceId = await findLoopbackDevice();
+      const _recordTeacher = (App.Storage || window.Storage)?.get('recordTeacherTrack');
+      if (_recordTeacher === false || _recordTeacher === 'false') { _teacherPath = null; }
+      const loopbackDeviceId = _teacherPath ? await findLoopbackDevice() : null;
       let loopbackStream = null;
       if (loopbackDeviceId) {
         try {
