@@ -856,52 +856,32 @@ function lessonNotesGetHTML() {
     return lnRenderLinkedRecording(currentSession);
   }
   
-  // If we have vocab, show compact drill view
+  // If we have vocab, show drill view (card-centred, fixed footers)
   if (hasVocab || hasStories || LessonNotesState.errors.length > 0) {
+    let revealLabel = 'Reveal';
+    let revealActive = false;
+    if (LessonNotesState.drillRevealed === 1) {
+      revealLabel = LessonNotesState.drillMode === 'en2jp' ? 'Reading' : 'Meaning';
+    } else if (LessonNotesState.drillRevealed === 2) {
+      revealLabel = 'Hide';
+      revealActive = true;
+    }
     return `
-    <!-- Drill controls -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2reading'?'active':''}" onclick="lessonNotesSetMode('jp2reading')">JP → Reading</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='jp2en'?'active':''}" onclick="lessonNotesSetMode('jp2en')">JP → Meaning</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='en2jp'?'active':''}" onclick="lessonNotesSetMode('en2jp')">EN → JP</button>
-      <button class="yoshi-read-btn ${LessonNotesState.drillMode==='listening'?'active':''}" onclick="lessonNotesSetMode('listening')">🔊 Listen</button>
-      <button class="yoshi-read-btn ${LessonNotesState.shuffled?'active':''}" onclick="lessonNotesToggleShuffle()">🔀 ${LessonNotesState.shuffled?'Ordered':'Shuffle'}</button>
-      <button class="yoshi-read-btn" onclick="lessonNotesDrillAll()">📚 Drill All</button>
+    <!-- Drill card (fills available space, centred) -->
+    <div class="vocab-counter">${LessonNotesState.vocab.length > 0 ? (LessonNotesState.drillIdx + 1) + ' / ' + LessonNotesState.vocab.length : ''}</div>
+    <div class="ln-drill-card-area">
+      <div class="ln-drill-card" id="lessonNotesDrillArea" onclick="lessonNotesDrillReveal()" style="cursor:pointer">
+        ${lessonNotesRenderDrillCard()}
+      </div>
     </div>
-    
-    <!-- Drill card -->
-    <div id="lessonNotesDrillArea" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:12px">
-      ${lessonNotesRenderDrillCard()}
-    </div>
-    
-    <!-- All controls in one line -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)">Show:</span>
-      <button class="yoshi-read-btn ${LessonNotesState.showReading?'active':''}" onclick="lessonNotesToggleShowReading()">+Reading</button>
-      <button class="yoshi-read-btn ${LessonNotesState.showMeaning?'active':''}" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
-      <span style="color:var(--border)">│</span>
-      <button class="yoshi-read-btn" onclick="lessonNotesToggleTable()">${LessonNotesState.tableHidden ? '👁' : '🙈'} Word List</button>
-      <button class="yoshi-read-btn" onclick="lessonNotesBreakdownCurrent()">🔍 Break down</button>
-      <button class="yoshi-read-btn" onclick="lessonNotesExamplesCurrent()">📝 Examples</button>
-      ${LessonNotesState.hiddenWords.size > 0 ? `
-        <span style="color:var(--border)">│</span>
-        <button class="yoshi-read-btn" onclick="lessonNotesSaveHiddenPermanently()">💾 Save ${LessonNotesState.hiddenWords.size} learned</button>
-        <button class="yoshi-read-btn" onclick="lessonNotesRestoreHidden()">↩ Restore</button>
-      ` : ''}
-      ${LessonNotesState.permanentlyLearned.size > 0 ? `
-        <span style="color:var(--border);margin-left:auto">│</span>
-        <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light)">📚 ${LessonNotesState.permanentlyLearned.size} mastered</span>
-        <button class="yoshi-read-btn" onclick="lessonNotesShowMastered()">View</button>
-        <button class="yoshi-read-btn" onclick="lessonNotesClearMastered()">Clear</button>
-      ` : ''}
-    </div>
-    
+
+
     <!-- Breakdown/Examples area (shown when requested) -->
     <div id="lessonNotesBreakdownArea" style="display:none;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
     </div>
-    
+
     <!-- Vocab table (hideable) -->
-    <div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;${LessonNotesState.tableHidden?'display:none':''}">
+    <div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;margin-bottom:22vh;${LessonNotesState.tableHidden?'display:none':''}">
       <table style="width:100%;border-collapse:collapse;font-family:var(--jp);font-size:0.88rem">
         <thead style="position:sticky;top:0;background:var(--paper-dark)">
           <tr style="border-bottom:1px solid var(--border)">
@@ -922,6 +902,32 @@ function lessonNotesGetHTML() {
           `).join('')}
         </tbody>
       </table>
+    </div>
+
+    <!-- Upper footer: card actions -->
+    <!-- Card controls inline -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
+      <button class="btn-nav" onclick="lessonNotesDrillPrev()">Prev</button>
+      <button class="btn-rating btn-rating-red" onclick="lessonNotesDrillNext()">Again</button>
+      <button class="btn-rating btn-rating-teal" onclick="lessonNotesDrillReveal()">Got it</button>
+      <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()">Learned</button>
+      <button class="btn-nav" onclick="lessonNotesDrillNext()">Next</button>
+    </div>
+    <!-- Upper footer: mode toggles -->
+    <div class="footer-upper">
+      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='jp2reading'?'active':''}" onclick="lessonNotesSetMode('jp2reading')">JP → Reading</button>
+      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='jp2en'?'active':''}" onclick="lessonNotesSetMode('jp2en')">JP → Meaning</button>
+      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='en2jp'?'active':''}" onclick="lessonNotesSetMode('en2jp')">EN → JP</button>
+      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='listening'?'active':''}" onclick="lessonNotesSetMode('listening')">Listen</button>
+      <button class="btn-toggle btn-sm ${LessonNotesState.shuffled?'active':''}" onclick="lessonNotesToggleShuffle()">Shuffle</button>
+    </div>
+    <!-- Lower footer: show/word list controls -->
+    <div class="footer-lower">
+      <div class="footer-lower-row">
+        <button class="btn-toggle btn-sm ${LessonNotesState.showReading?'active':''}" onclick="lessonNotesToggleShowReading()">+Reading</button>
+        <button class="btn-toggle btn-sm ${LessonNotesState.showMeaning?'active':''}" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
+        <button class="btn-nav btn-sm" onclick="lessonNotesToggleTable()">${LessonNotesState.tableHidden ? 'Word List' : 'Hide List'}</button>
+      </div>
     </div>
     `;
   }

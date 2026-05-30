@@ -408,46 +408,27 @@ function lessonNotesRenderDrillCard() {
   }
   
   const hiddenCount = LessonNotesState.hiddenWords.size;
-  
-  // Determine button label
-  let btnLabel = 'Reveal';
-  let btnActive = false;
-  if (LessonNotesState.drillRevealed === 1) {
-    btnLabel = LessonNotesState.drillMode === 'en2jp' ? 'Reading' : 'Meaning';
-    btnActive = false;
-  } else if (LessonNotesState.drillRevealed === 2) {
-    btnLabel = 'Hide';
-    btnActive = true;
-  }
-  
+
   // For en2jp mode, first line is the Japanese word (in serif), second is reading
-  const line1Style = LessonNotesState.drillMode === 'en2jp' 
-    ? "font-family:'Shippori Mincho',serif;font-size:1.8rem;color:var(--teal)"
-    : "font-family:var(--jp);font-size:1.2rem;color:var(--teal)";
+  const line1Style = LessonNotesState.drillMode === 'en2jp'
+    ? "font-family:'Shippori Mincho',serif;font-size:2.8rem;color:var(--teal)"
+    : "font-family:var(--jp);font-size:1.8rem;color:var(--teal)";
   const line2Style = LessonNotesState.drillMode === 'en2jp'
-    ? "font-family:var(--jp);font-size:1rem;color:var(--ink-light);margin-top:6px"
-    : "font-family:var(--ui);font-size:0.95rem;color:var(--ink-light);margin-top:6px";
-  
+    ? "font-family:var(--jp);font-size:1.4rem;color:var(--ink-light);margin-top:10px"
+    : "font-family:var(--ui);font-size:1.2rem;color:var(--ink-light);margin-top:10px";
+
   // For en2jp, prompt is English so use UI font
   const promptStyle = LessonNotesState.drillMode === 'en2jp'
-    ? "font-family:var(--ui);font-size:1.4rem;color:var(--ink);margin-bottom:4px"
-    : "font-family:'Shippori Mincho',serif;font-size:2rem;color:var(--ink);margin-bottom:4px";
-  
+    ? "font-family:var(--ui);font-size:2rem;color:var(--ink);margin-bottom:6px"
+    : "font-family:'Shippori Mincho',serif;font-size:3.2rem;color:var(--ink);margin-bottom:6px";
+
   return `
-    <div style="text-align:center">
-      <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:12px">${progress}${hiddenCount > 0 ? ` <span style="color:var(--teal)">(${hiddenCount} learned)</span>` : ''}</div>
+    <div style="text-align:center;width:100%">
       <div style="${promptStyle}">${prompt}</div>
       ${hints}
-      <div id="lessonNotesDrillAnswer" style="min-height:60px;margin:16px 0">
+      <div id="lessonNotesDrillAnswer" style="min-height:100px;margin:24px 0">
         <div style="${line1Style};${LessonNotesState.drillRevealed >= 1 ? '' : 'visibility:hidden'}">${answerLine1}</div>
         <div style="${line2Style};${LessonNotesState.drillRevealed >= 2 ? '' : 'visibility:hidden'}">${answerLine2}</div>
-      </div>
-      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
-        <button class="btn-nav" onclick="lessonNotesDrillPrev()">Prev</button>
-        <button class="btn-rating ${btnActive?'btn-rating-teal':''}" onclick="lessonNotesDrillReveal()">${btnLabel}</button>
-        <button class="btn-nav" onclick="lessonNotesDrillNext()">Next</button>
-        <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()">Learned</button>
-        <button class="btn-action" onclick="lessonNotesDrillBackground()">Background</button>
       </div>
     </div>
   `;
@@ -898,32 +879,6 @@ function lessonNotesDrillPrev() {
   lessonNotesRender();
 }
 
-function lessonNotesDrillAll() {
-  // Combine vocab from all sessions, excluding permanently learned
-  const sessions = lessonNotesGetSessions();
-  LessonNotesState.vocab = [];
-  sessions.forEach(s => {
-    if (s.vocab && s.vocab.length) {
-      s.vocab.forEach(v => {
-        if (!LessonNotesState.permanentlyLearned.has(v.word)) {
-          LessonNotesState.vocab.push(v);
-        }
-      });
-    }
-  });
-  LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
-  // Shuffle
-  for (let i = LessonNotesState.vocab.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [LessonNotesState.vocab[i], LessonNotesState.vocab[j]] = [LessonNotesState.vocab[j], LessonNotesState.vocab[i]];
-  }
-  LessonNotesState.shuffled = true;
-  LessonNotesState.drillIdx = 0;
-  LessonNotesState.drillRevealed = 0;
-  LessonNotesState.hiddenWords.clear();
-  LessonNotesState.currentIdx = null; // Clear current selection since we're drilling all
-  lessonNotesRender();
-}
 
 async function lessonNotesExtract() {
   const titleEl = document.getElementById('lessonNotesTitle');
@@ -1517,7 +1472,6 @@ try {
     lessonNotesDrillReveal,
     lessonNotesDrillNext,
     lessonNotesDrillPrev,
-    lessonNotesDrillAll,
     renderRecordingsBrowser,
     recBrowserTranscribe,
     recBrowserDelete,
