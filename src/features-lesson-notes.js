@@ -58,6 +58,10 @@ const LessonNotesState = {
   transcriptMode:      'timeline',
   _transcriptRecId:    null,
 };
+
+const _fy_getApiKey  = () => (App.getApiKey  || window.getApiKey)?.();
+const _fy_claudeAPI  = (...a) => (App.claudeAPI || window.claudeAPI)?.(...a);
+const _fy_claudeText = (d) => (App.claudeText || window.claudeText)?.(d);
 window.LessonNotesState = LessonNotesState;
 
 function lessonNotesGetSessions() {
