@@ -847,6 +847,31 @@ function lessonNotesGetHTML() {
   }
   
   // Errors mode
+  if (LessonNotesState.viewMode === 'allwords') {
+    const _vocab = LessonNotesState.vocab;
+    const _half = Math.ceil(_vocab.length / 2);
+    function _makeTable(items) {
+      const _rows = items.map(function(v) {
+        const _w = (v.word||'').replace(/'/g,"\\'");
+        return '<tr style="border-bottom:1px solid var(--border)">'
+          + '<td style="padding:6px 10px;color:var(--ink);font-family:var(--jp)">' + (v.word||'') + '</td>'
+          + '<td style="padding:6px 10px;color:var(--ink-light);font-family:var(--jp)">' + (v.reading||'—') + '</td>'
+          + '<td style="padding:6px 10px;color:var(--ink-light);font-size:0.82rem;font-family:var(--ui)">' + (v.meaning||v.en||'—') + '</td>'
+          + '<td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak(\'' + _w + '\')">🔊</button></td>'
+          + '</tr>';
+      }).join('');
+      const _hdr = '<thead style="position:sticky;top:0;background:var(--paper-dark)"><tr style="border-bottom:1px solid var(--border)">'
+        + '<th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">WORD</th>'
+        + '<th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">READING</th>'
+        + '<th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">MEANING</th>'
+        + '<th style="width:40px"></th></tr></thead>';
+      return '<table style="width:100%;border-collapse:collapse;font-size:0.88rem">' + _hdr + '<tbody>' + _rows + '</tbody></table>';
+    }
+    return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'
+      + '<div style="overflow-y:auto;border:1px solid var(--border);border-radius:6px">' + _makeTable(_vocab.slice(0, _half)) + '</div>'
+      + '<div style="overflow-y:auto;border:1px solid var(--border);border-radius:6px">' + _makeTable(_vocab.slice(_half)) + '</div>'
+      + '</div>';
+  }
   if (LessonNotesState.viewMode === 'errors') {
     return lessonNotesRenderErrors();
   }
@@ -926,7 +951,6 @@ function lessonNotesGetHTML() {
       <div class="footer-lower-row">
         <button class="btn-toggle btn-sm ${LessonNotesState.showReading?'active':''}" onclick="lessonNotesToggleShowReading()">+Reading</button>
         <button class="btn-toggle btn-sm ${LessonNotesState.showMeaning?'active':''}" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
-        <button class="btn-nav btn-sm" onclick="lessonNotesToggleTable()">${LessonNotesState.tableHidden ? 'Word List' : 'Hide List'}</button>
       </div>
     </div>
     `;
@@ -985,7 +1009,8 @@ function lessonNotesUpdatePanelHeader() {
       <span class="panel-section-title-jp">ヨシ</span>
       ${hasContent ? `
         <select class="btn-nav btn-sm" onchange="lessonNotesSetView(this.value)">
-          <option value="vocab" ${_vm==='vocab'||_vm===''?'selected':''}>📚 Vocab (${_cur.vocab.length})</option>
+          <option value="vocab" ${_vm==='vocab'||_vm===''?'selected':''}>📚 Vocab Drill (${_cur.vocab.length})</option>
+          <option value="allwords" ${_vm==='allwords'?'selected':''}>📋 All Words (${_cur.vocab.length})</option>
           <option value="stories" ${_vm==='stories'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
           <option value="keyphrases" ${_vm==='keyphrases'?'selected':''}>🔑 Phrases (${_cur.keyPhrases.length})</option>
           <option value="grammar" ${_vm==='grammar'||_vm==='grammardetail'?'selected':''}>📝 Grammar (${_cur.grammar.length})</option>
