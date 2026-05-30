@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-29 (session 13 — bug fixes, button system unified, html-map created)
+Last updated: 2026-05-30 (session 14 — WhatsApp import fix, Yoshi panel redesign, hallucination filter)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -29,7 +29,7 @@ Last updated: 2026-05-29 (session 13 — bug fixes, button system unified, html-
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-UI DESIGN — button system complete, vocab panel redesign outstanding.
+STABILIZATION — bug fixes and UI polish. No feature expansion.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
@@ -56,6 +56,8 @@ All edits are done via terminal — no file upload/download.
 - Duplicate CSS rules accumulate — grep for class name before adding new rules
 - Electron caches CSS — always bump style.css?v= version string after changes
 - position:fixed can be overridden by earlier duplicate rules — grep for all instances first
+- When line-number deletion leaves orphan braces — always run node check-syntax.js after edits
+- Use /tmp/ temp files for complex JS replacements to avoid Python escaping issues
 
 ## Design Language
 
@@ -73,6 +75,24 @@ All edits are done via terminal — no file upload/download.
 - lower footer: `bottom: 0; left: 52px; right: 0`
 - Each 10vh tall
 - CSS classes: `.footer-upper`, `.footer-lower`, `.footer-lower-row`
+
+### Panel Headers
+All panels use `panel-header-lower` + `panel-section-title` pattern.
+Header divs declared in index.html, shown/hidden in `showPanel()` in core-foundation.js.
+Pattern:
+```html
+<div id="xyzPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">JP</span>
+    <select class="btn-nav btn-sm" onchange="...">...</select>
+  </div>
+  <!-- right side controls -->
+</div>
+```
+showPanel() wires: voice, listen, writing, read, words, grammar, yoshi (lessonnotes), progress.
+`yoshiPanelHeader` and `progressPanelHeader` added this session.
+`panel-header-lower` now uses `min-height:56px; height:auto; flex-wrap:wrap` to accommodate wider content.
+Panel padding-top: `#panel-lessonnotes { padding-top: 75px }`, `#panel-progress { padding-top: 75px }`.
 
 ### Filter chips
 - Blue chips (`filter-chip-blue`): level and size filters (word content)
@@ -103,6 +123,8 @@ All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-
 - `btn-xs` — 0.65rem, 1px 6px padding
 - `btn-icon-teal` — teal on hover (edit buttons)
 - `btn-icon-del` — red on hover (delete buttons)
+- `btn-rating-red` — red rating (Again)
+- `btn-rating-teal` — teal rating (Got it / Known)
 
 **Design system gaps (leave inline):** transient flash, 3-state gold toggles, recording red
 
@@ -110,23 +132,71 @@ All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-
 All JS files migrated. Remaining inline: transient flashes, 3-state gold, recording gradients, layout/margin one-offs.
 Video panel deferred until redesign decision.
 
-## Vocab Panel Redesign — IN PROGRESS
-**Done:**
+## Vocab Panel Redesign — COMPLETE
 - Section title → `語彙 [Words ▾]` dropdown, remembers last subtab via localStorage
-- `wordsSubFromSelect()` and `wordsSwitchSubRestore()` in core-foundation.js
-- Called on `showPanel('words')`
-- Filters moved from top to footer
-- Add Words By Category section removed
-- Footer structure: upper (controls) + lower (filters) fixed to bottom
-- Level filter changed to radio: N5 / N4 / N3 — JS expands to correct set
-- Size changed to radio: 20 / All
+- Filters in footer (upper + lower), fixed to bottom
+- Level filter: radio N5 / N4 / N3
+- Size filter: radio 20 / All
+- Card content vertically centred
+- style.css version: ?v=20260530e
 
-**Outstanding:**
-- Card content vertically centred (currently sits too high in card)
-- Card flip animation broken — do NOT add display:flex to vocab-card-inner (breaks 3D flip)
-- vocab-front/back need position:absolute + width/height:100% to fill card properly
-- Scroll issue resolved (overflow:hidden on panel)
-- style.css version currently: ?v=20260528c
+## Yoshi (Lesson Notes) Panel — REDESIGNED THIS SESSION
+**Panel header:** `yoshiPanelHeader` now renders dynamically via `lessonNotesUpdatePanelHeader()`:
+- Left: ヨシ title + view dropdown (Vocab Drill / All Words / Stories / Phrases / Grammar / Errors / Recording)
+- Right: session selector + New (+) + Delete (🗑)
+
+**View dropdown options:**
+- Vocab Drill — card drill with click-to-reveal
+- All Words — 2-column word table (no toggle button)
+- Stories — grid of story tiles
+- Phrases — 3-column grouped layout (groups: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other)
+- Grammar — 2-column grouped layout (groups: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other)
+- Errors — error list
+- Recording — linked recording player
+
+**Vocab Drill layout:**
+- Counter (x / total) above card — `.vocab-counter` class
+- Card uses `.ln-drill-card` / `.ln-drill-card-area` classes
+- Click card to reveal
+- Under card: Prev / Again (red) / Got it (teal) / Learned (teal) / Next
+- Upper footer: JP→Reading / JP→Meaning / EN→JP / Listen / Shuffle (btn-toggle btn-sm)
+- Lower footer: +Reading / +Meaning toggles
+
+**Extraction prompts updated:**
+- Phrases: now includes `group` field, 15-30 items
+- Grammar: now includes `group` field, 10-15 items max, max_tokens: 5000
+- Both silent extractors updated to match
+
+**_fy_ wrappers added** to features-lesson-notes.js (were missing, caused import hang):
+```js
+const _fy_getApiKey  = () => (App.getApiKey  || window.getApiKey)?.();
+const _fy_claudeAPI  = (...a) => (App.claudeAPI || window.claudeAPI)?.(...a);
+const _fy_claudeText = (d) => (App.claudeText || window.claudeText)?.(d);
+```
+
+**lessonNotesDrillAll() removed** — was causing "new lesson" page to open.
+
+**lessonNotesUpdatePanelHeader()** added — called from lessonNotesRender() (option A) and lessonNotesRenderPanel(). Keeps header in sync on all render paths.
+
+## Progress Panel Header
+`progressPanelHeader` added — static ヨシ title only for now. Controls remain inline.
+
+## TranscriptionService — Hallucination Filter
+`_filterHallucinations(segments)` added to `src/services/TranscriptionService.js`.
+Applied in both `transcribe()` and `transcribeFile()` return paths.
+Known hallucinations: ご視聴ありがとうございました, チャンネル登録よろしくお願いします, ありがとうございました, お疲れ様でした, Thank you for watching, Please subscribe, Like and subscribe.
+
+## Settings — Teacher Track Checkbox
+Added to Microphone section in index.html:
+- Checkbox: "Record teacher track (loopback)"
+- Saves to `Storage.set('recordTeacherTrack', this.checked)`
+- AudioService.js needs to be wired to read this setting (not yet done — noted)
+
+## CSS — ln-drill-card classes
+```css
+.ln-drill-card-area { display: flex; justify-content: center; margin: 20px 0; }
+.ln-drill-card { width: 380px; height: clamp(200px, calc(100vh - 440px), 280px); background: var(--paper-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 24px; }
+```
 
 ## Storage Migration
 ### Migrated
@@ -138,6 +208,7 @@ Video panel deferred until redesign decision.
 ## Known Issues
 - yoshiInitUI not defined on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
+- Teacher track checkbox in settings not yet wired to AudioService.js
 
 ## Token Optimisation — Future Work
 1. Voice conversation history — summarise after 10 exchanges
@@ -154,6 +225,21 @@ Video panel deferred until redesign decision.
 Flagged for proper UI integration when redesign decision is made.
 
 ## Pending Work
+### Dropbox recordings redirect — pending decision
+- Move `getLessonsDir()` target in main.js to Dropbox folder
+- Migrate `audio_path` in `lesson_sessions` table (absolute paths will break)
+- Depends on: Dropbox path, mobile app scope (iOS? read-only or record?)
+- Do not touch until Paul confirms details
+
+### Video → Audio pipeline
+- Screen record Teams call, extract audio with ffmpeg, send to Whisper
+- Already have ffmpeg + transcribeFile() — just needs file picker + ffmpeg extract step
+- One-off: ffmpeg -i input.mp4 -vn -c:a libopus output.webm
+
+### Teacher track checkbox wiring
+- `Storage.get('recordTeacherTrack')` needs to be read in AudioService.js before loopback setup
+- If false, skip BlackHole discovery entirely
+
 ### Pitch Accent — unblocked, highest value next feature
 - renderPitchCurve() SVG function in core-foundation.js
 - Wire into vocab card render (already showing in current layout)

@@ -6429,994 +6429,1050 @@
     "type": "function",
     "name": "_fy_getApiKey",
     "file": "src/features-lesson-notes.js",
-    "line": 62,
+    "line": 64,
     "desc": "return LessonNotesState.sessions;"
   },
   {
     "type": "function",
     "name": "_fy_claudeAPI",
     "file": "src/features-lesson-notes.js",
-    "line": 63,
+    "line": 65,
     "desc": "return LessonNotesState.sessions;"
   },
   {
     "type": "function",
     "name": "_fy_claudeText",
     "file": "src/features-lesson-notes.js",
-    "line": 64,
+    "line": 66,
     "desc": "return LessonNotesState.sessions;"
   },
   {
     "type": "function",
     "name": "lessonNotesGetSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 67,
+    "line": 69,
     "desc": "return LessonNotesState.sessions;"
   },
   {
     "type": "function",
     "name": "lessonNotesSaveSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 71,
+    "line": 73,
     "desc": "LessonNotesState.sessions = sessions;"
   },
   {
     "type": "function",
     "name": "lessonNotesLoadSessionsFromStorage",
     "file": "src/features-lesson-notes.js",
-    "line": 80,
+    "line": 82,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesOpen",
     "file": "src/features-lesson-notes.js",
-    "line": 121,
+    "line": 123,
     "desc": "LessonNotesState.standalone = true;"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderMain",
     "file": "src/features-lesson-notes.js",
-    "line": 139,
+    "line": 141,
     "desc": "const el = document.getElementById('lessonNotesViewMain');"
   },
   {
     "type": "function",
     "name": "lessonNotesRender",
     "file": "src/features-lesson-notes.js",
-    "line": 151,
+    "line": 153,
     "desc": "const el1 = document.getElementById('lessonNotesView');"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderPanel",
     "file": "src/features-lesson-notes.js",
-    "line": 170,
+    "line": 172,
     "desc": "LessonNotesState.view* — see declaration above"
   },
   {
     "type": "function",
     "name": "lessonNotesGetFullPanelHTML",
     "file": "src/features-lesson-notes.js",
-    "line": 191,
+    "line": 193,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lessonNotesPanelHandlePaste",
     "file": "src/features-lesson-notes.js",
-    "line": 257,
+    "line": 259,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "lessonNotesPanelHandleDrop",
     "file": "src/features-lesson-notes.js",
-    "line": 291,
+    "line": 293,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "lessonNotesPanelHandleFile",
     "file": "src/features-lesson-notes.js",
-    "line": 302,
+    "line": 304,
     "desc": "if (!files || files.length === 0) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesReadDocxForPanel",
     "file": "src/features-lesson-notes.js",
-    "line": 337,
+    "line": 339,
     "desc": "if (typeof mammoth === 'undefined') {"
   },
   {
     "type": "function",
     "name": "lessonNotesNewFromPanel",
     "file": "src/features-lesson-notes.js",
-    "line": 383,
+    "line": 385,
     "desc": "const title = prompt('Lesson title:');"
   },
   {
     "type": "function",
     "name": "lessonNotesDeleteFromPanel",
     "file": "src/features-lesson-notes.js",
-    "line": 401,
+    "line": 403,
     "desc": "if (LessonNotesState.currentIdx === null) return;"
   },
   {
     "type": "function",
     "name": "lnRecordingTabButton",
     "file": "src/features-lesson-notes.js",
-    "line": 427,
+    "line": 429,
     "desc": "── Recording link helpers ────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "lnShowLinkPicker",
     "file": "src/features-lesson-notes.js",
-    "line": 443,
+    "line": 445,
     "desc": "const recs = (window._lessonRecordingSessions || []).filter(function(r) { return !!r.audio_path; });"
   },
   {
     "type": "function",
     "name": "lnLinkRecording",
     "file": "src/features-lesson-notes.js",
-    "line": 503,
+    "line": 505,
     "desc": "const overlay = document.getElementById('lnLinkPickerOverlay');"
   },
   {
     "type": "function",
     "name": "lnTranscribeLinked",
     "file": "src/features-lesson-notes.js",
-    "line": 514,
+    "line": 516,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lnRenderLinkedRecording",
     "file": "src/features-lesson-notes.js",
-    "line": 525,
+    "line": 527,
     "desc": "if (!session) return '<div style=\"font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);pad"
   },
   {
     "type": "function",
     "name": "_lnSourceNotesHtml",
     "file": "src/features-lesson-notes.js",
-    "line": 616,
+    "line": 618,
     "desc": "const esc = App.escHtml || window.escHtml || function(s){return s;};"
   },
   {
     "type": "function",
     "name": "lnFullDocDoSearch",
     "file": "src/features-lesson-notes.js",
-    "line": 627,
+    "line": 629,
     "desc": "const el = document.getElementById('lnFullDocContent');"
   },
   {
     "type": "function",
     "name": "lnLoadTranscript",
     "file": "src/features-lesson-notes.js",
-    "line": 649,
+    "line": 651,
     "desc": "const el = document.getElementById('lnTranscriptArea');"
   },
   {
     "type": "function",
     "name": "lnShowTranscriptContainer",
     "file": "src/features-lesson-notes.js",
-    "line": 704,
+    "line": 706,
     "desc": "LessonNotesState._transcriptRecId = recId;"
   },
   {
     "type": "function",
     "name": "lnSetTranscriptMode",
     "file": "src/features-lesson-notes.js",
-    "line": 710,
+    "line": 712,
     "desc": "LessonNotesState.transcriptMode = mode;"
   },
   {
     "type": "function",
     "name": "lnLoadTimeline",
     "file": "src/features-lesson-notes.js",
-    "line": 722,
+    "line": 724,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lnSeekToTime",
     "file": "src/features-lesson-notes.js",
-    "line": 806,
+    "line": 808,
     "desc": "const student = document.getElementById('lnAudioStudent');"
   },
   {
     "type": "function",
     "name": "lessonNotesGetHTML",
     "file": "src/features-lesson-notes.js",
-    "line": 815,
+    "line": 817,
     "desc": "const sessions = lessonNotesGetSessions();"
   },
   {
     "type": "function",
     "name": "lessonNotesUpdatePanelHeader",
     "file": "src/features-lesson-notes.js",
-    "line": 998,
+    "line": 1000,
     "desc": "const hdr = document.getElementById('yoshiPanelHeader');"
   },
   {
     "type": "function",
     "name": "lessonNotesUpdateTabControls",
     "file": "src/features-lesson-notes.js",
-    "line": 1034,
+    "line": 1036,
     "desc": "const el = document.getElementById('lessonNotesTabControls');"
   },
   {
     "type": "function",
     "name": "lessonNotesSetView",
     "file": "src/features-lesson-notes.js",
-    "line": 1051,
+    "line": 1053,
     "desc": "LessonNotesState.viewMode = mode;"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderStories",
     "file": "src/features-lesson-notes.js",
-    "line": 1084,
+    "line": 1086,
     "desc": "return `"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderErrors",
     "file": "src/features-lesson-notes.js",
-    "line": 1101,
+    "line": 1103,
     "desc": "return `"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1125,
+    "line": 1127,
     "desc": "return `"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1174,
+    "line": 1176,
     "desc": "const visibleGrammar = LessonNotesState.grammar.map((g, i) => ({...g, _idx: i})).filter((g, i) => Le"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleGrammarHide",
     "file": "src/features-lesson-notes.js",
-    "line": 1234,
+    "line": 1236,
     "desc": "if (LessonNotesState.grammarHidden.has(idx)) {"
   },
   {
     "type": "function",
     "name": "lessonNotesToggleShowHidden",
     "file": "src/features-lesson-notes.js",
-    "line": 1244,
+    "line": 1246,
     "desc": "LessonNotesState.showHiddenGrammar = !LessonNotesState.showHiddenGrammar;"
   },
   {
     "type": "function",
     "name": "lessonNotesEditGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1251,
+    "line": 1253,
     "desc": "const g = LessonNotesState.grammar[idx];"
   },
   {
     "type": "function",
     "name": "lessonNotesSaveGrammarEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 1302,
+    "line": 1304,
     "desc": "const pattern = document.getElementById('grammarEditPattern').value.trim();"
   },
   {
     "type": "function",
     "name": "lessonNotesDeleteGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1326,
+    "line": 1328,
     "desc": "const g = LessonNotesState.grammar[idx];"
   },
   {
     "type": "function",
     "name": "lessonNotesExtractKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1347,
+    "line": 1349,
     "desc": "const apiKey = _fy_getApiKey();"
   },
   {
     "type": "function",
     "name": "lessonNotesExtractGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1386,
+    "line": 1388,
     "desc": "const apiKey = _fy_getApiKey();"
   },
   {
     "type": "function",
     "name": "lessonNotesPushToGramNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 1442,
+    "line": 1444,
     "desc": "if (!grammarItems || !grammarItems.length) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesClassifyGramTab",
     "file": "src/features-lesson-notes.js",
-    "line": 1477,
+    "line": 1479,
     "desc": "const text = ((item.pattern || '') + ' ' + (item.explanation || '')).toLowerCase();"
   },
   {
     "type": "function",
     "name": "lessonNotesParseWithTimestamps",
     "file": "src/features-lesson-notes.js",
-    "line": 1492,
+    "line": 1494,
     "desc": "Parses lines like: [DD/MM/YYYY, HH:MM:SS] Name: message"
   },
   {
     "type": "function",
     "name": "lessonNotesCleanText",
     "file": "src/features-lesson-notes.js",
-    "line": 1524,
+    "line": 1526,
     "desc": "return docContent"
   },
   {
     "type": "function",
     "name": "lessonNotesAutoExtractAll",
     "file": "src/features-lesson-notes.js",
-    "line": 1531,
+    "line": 1533,
     "desc": "const apiKey = _fy_getApiKey();"
   },
   {
     "type": "function",
     "name": "_lnParseJsonArray",
     "file": "src/features-lesson-notes.js",
-    "line": 1593,
+    "line": 1595,
     "desc": "const raw = text || '[]';"
   },
   {
     "type": "function",
     "name": "lessonNotesExtractVocabSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1608,
+    "line": 1610,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesExtractStoriesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1664,
+    "line": 1666,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesExtractKeyPhrasesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1707,
+    "line": 1709,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesExtractGrammarSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1739,
+    "line": 1741,
     "desc": ""
   },
   {
     "type": "function",
     "name": "lessonNotesSaveCurrentSession",
     "file": "src/features-lesson-notes.js",
-    "line": 1774,
+    "line": 1776,
     "desc": "if (LessonNotesState.currentIdx === null) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesOpenGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1789,
+    "line": 1791,
     "desc": "if (idx < 0 || idx >= LessonNotesState.grammar.length) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesCloseGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1800,
+    "line": 1802,
     "desc": "LessonNotesState.grammarDetail = null;"
   },
   {
     "type": "function",
     "name": "lessonNotesGrammarGenerateDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1806,
+    "line": 1808,
     "desc": "if (LessonNotesState.grammarDetail === null) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesGrammarCheckDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1874,
+    "line": 1876,
     "desc": "const inp = document.getElementById('lnGrammarDrillInput');"
   },
   {
     "type": "function",
     "name": "lessonNotesGrammarNextDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1943,
+    "line": 1945,
     "desc": "toggleLnGrammarKanaType replaced by kanaSetMode"
   },
   {
     "type": "function",
     "name": "lessonNotesGrammarPrevDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1962,
+    "line": 1964,
     "desc": "if (LessonNotesState.grammarDrillIdx > 0) {"
   },
   {
     "type": "function",
     "name": "lessonNotesGrammarAsk",
     "file": "src/features-lesson-notes.js",
-    "line": 1981,
+    "line": 1983,
     "desc": "if (LessonNotesState.grammarDetail === null) return;"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 2025,
+    "line": 2027,
     "desc": "if (LessonNotesState.grammarDetail === null) return '';"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderFullDoc",
     "file": "src/features-lesson-notes.js",
-    "line": 2133,
+    "line": 2135,
     "desc": "let contentHtml = '';"
   },
   {
     "type": "function",
     "name": "lessonNotesOpenStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2198,
+    "line": 2200,
     "desc": "LessonNotesState.currentStory = LessonNotesState.stories[idx];"
   },
   {
     "type": "function",
     "name": "lessonNotesParseStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2208,
+    "line": 2212,
     "desc": "const apiKey = _fy_getApiKey();"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderStoryText",
     "file": "src/features-lesson-notes.js",
-    "line": 2255,
+    "line": 2259,
     "desc": "const container = document.getElementById('lnStoryReader');"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesSetStoryTab",
+    "file": "src/features-lesson-notes.js",
+    "line": 2327,
+    "desc": "LessonNotesState.storyTab = tab;"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesRenderStoryCloze",
+    "file": "src/features-lesson-notes.js",
+    "line": 2340,
+    "desc": "return `"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesClozeRevealAll",
+    "file": "src/features-lesson-notes.js",
+    "line": 2355,
+    "desc": "if (!_qrSegments) return;"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesRenderStoryVocab",
+    "file": "src/features-lesson-notes.js",
+    "line": 2363,
+    "desc": "const all = LessonNotesState.vocab || [];"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesRenderStoryNotes",
+    "file": "src/features-lesson-notes.js",
+    "line": 2399,
+    "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesSaveStoryNotes",
+    "file": "src/features-lesson-notes.js",
+    "line": 2411,
+    "desc": "const story = LessonNotesState.currentStory;"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesRenderStoryEdit",
+    "file": "src/features-lesson-notes.js",
+    "line": 2425,
+    "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');"
+  },
+  {
+    "type": "function",
+    "name": "lessonNotesSaveStoryEdit",
+    "file": "src/features-lesson-notes.js",
+    "line": 2443,
+    "desc": "const titleEl = document.getElementById('lnStoryEditTitle');"
   },
   {
     "type": "function",
     "name": "lessonNotesRenderReading",
     "file": "src/features-lesson-notes.js",
-    "line": 2291,
+    "line": 2469,
     "desc": "const story = LessonNotesState.currentStory;"
   },
   {
     "type": "function",
     "name": "lnSetRecordMode",
     "file": "src/features-lesson-notes.js",
-    "line": 2399,
+    "line": 2593,
     "desc": "LessonNotesState.ln* — see declaration above"
   },
   {
     "type": "function",
     "name": "lnShowCurrentSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2411,
+    "line": 2605,
     "desc": "const display = document.getElementById('lnSentenceDisplay');"
   },
   {
     "type": "function",
     "name": "lessonNotesSplitSentences",
     "file": "src/features-lesson-notes.js",
-    "line": 2428,
+    "line": 2622,
     "desc": "if (!text) return [];"
   },
   {
     "type": "function",
     "name": "lnPrevSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2436,
+    "line": 2630,
     "desc": "if (LessonNotesState.lnCurrentSentence > 0) {"
   },
   {
     "type": "function",
     "name": "lnNextSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2445,
+    "line": 2639,
     "desc": "const sentences = lessonNotesSplitSentences(LessonNotesState.currentStory?.text || '');"
   },
   {
     "type": "function",
     "name": "lnGoToSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2455,
+    "line": 2649,
     "desc": "LessonNotesState.lnCurrentSentence = idx;"
   },
   {
     "type": "function",
     "name": "lnParseSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2465,
+    "line": 2659,
     "desc": "LessonNotesState.lnSentenceFuriganaCache — see declaration above"
   },
   {
     "type": "function",
     "name": "lnRenderSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2531,
+    "line": 2725,
     "desc": "const display = document.getElementById('lnSentenceDisplay');"
   },
   {
     "type": "function",
     "name": "lnRecordSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2546,
+    "line": 2740,
     "desc": "if (LessonNotesState.lnIsRecording) {"
   },
   {
     "type": "function",
     "name": "lnSaveSentenceRecording",
     "file": "src/features-lesson-notes.js",
-    "line": 2597,
+    "line": 2791,
     "desc": "if (!LessonNotesState.currentStory) return;"
   },
   {
     "type": "function",
     "name": "lnPlaySentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2626,
+    "line": 2820,
     "desc": "const recordings = LessonNotesState.currentStory?.sentenceRecordings;"
   },
   {
     "type": "function",
     "name": "lnCreateFromPaste",
     "file": "src/features-lesson-notes.js",
-    "line": 2637,
+    "line": 2831,
     "desc": "var raw = (document.getElementById('lnPasteArea') || {}).value || '';"
   },
   {
     "type": "function",
     "name": "lessonNotesUpdateDropdown",
     "file": "src/features-lesson-notes.js",
-    "line": 2723,
+    "line": 2917,
     "desc": "function yoshiParseWhatsapp(raw) {"
   },
   {
     "type": "function",
     "name": "yoshiParseWhatsapp",
     "file": "src/features-lesson-notes.js",
-    "line": 2727,
+    "line": 2921,
     "desc": "const lines = raw.split('\\n');"
   },
   {
     "type": "function",
     "name": "lnGetSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 2744,
+    "line": 2938,
     "desc": "const fn = App.lessonNotesGetSessions || window.lessonNotesGetSessions;"
   },
   {
     "type": "function",
     "name": "lnSaveSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 2749,
+    "line": 2943,
     "desc": "const fn = App.lessonNotesSaveSessions || window.lessonNotesSaveSessions;"
   },
   {
     "type": "function",
     "name": "lnCurrentSession",
     "file": "src/features-lesson-notes.js",
-    "line": 2753,
+    "line": 2947,
     "desc": "const sessions = lnGetSessions();"
   },
   {
     "type": "function",
     "name": "lnRenderTab",
     "file": "src/features-lesson-notes.js",
-    "line": 2760,
+    "line": 2954,
     "desc": "if (!cur) return '';"
   },
   {
     "type": "function",
     "name": "lnSwitchTab",
     "file": "src/features-lesson-notes.js",
-    "line": 2772,
+    "line": 2966,
     "desc": "document.querySelectorAll('[id^=\"lnTab-\"]').forEach(function(b) { b.classList.remove('btn-active'); "
   },
   {
     "type": "function",
     "name": "lnRenderVocab",
     "file": "src/features-lesson-notes.js",
-    "line": 2780,
+    "line": 2974,
     "desc": "var vocab = cur.vocab || [];"
   },
   {
     "type": "function",
     "name": "lnSetDrillMode",
     "file": "src/features-lesson-notes.js",
-    "line": 2836,
+    "line": 3030,
     "desc": "window._lnDrillMode = mode; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnDrillReveal",
     "file": "src/features-lesson-notes.js",
-    "line": 2837,
+    "line": 3031,
     "desc": "window._lnDrillRevealed = true; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnDrillNext",
     "file": "src/features-lesson-notes.js",
-    "line": 2838,
+    "line": 3032,
     "desc": "window._lnDrillIdx = (window._lnDrillIdx||0) + 1; window._lnDrillRevealed = false; lnRefreshTab('voc"
   },
   {
     "type": "function",
     "name": "lnDrillPrev",
     "file": "src/features-lesson-notes.js",
-    "line": 2839,
+    "line": 3033,
     "desc": "window._lnDrillIdx = Math.max(0, (window._lnDrillIdx||0) - 1); window._lnDrillRevealed = false; lnRe"
   },
   {
     "type": "function",
     "name": "lnDrillJump",
     "file": "src/features-lesson-notes.js",
-    "line": 2840,
+    "line": 3034,
     "desc": "window._lnDrillIdx = i; window._lnDrillRevealed = false; lnRefreshTab('vocab'); }"
   },
   {
     "type": "function",
     "name": "lnRefreshTab",
     "file": "src/features-lesson-notes.js",
-    "line": 2841,
+    "line": 3035,
     "desc": "var btn = document.getElementById('lnTab-' + tab);"
   },
   {
     "type": "function",
     "name": "lnRenderStories",
     "file": "src/features-lesson-notes.js",
-    "line": 2849,
+    "line": 3043,
     "desc": "var stories = cur.stories || [];"
   },
   {
     "type": "function",
     "name": "lnOpenStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2863,
+    "line": 3057,
     "desc": "var cur = lnCurrentSession();"
   },
   {
     "type": "function",
     "name": "lnRenderKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 2876,
+    "line": 3070,
     "desc": "var kp = cur.keyPhrases || [];"
   },
   {
     "type": "function",
     "name": "lnStartPhraseDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 2908,
+    "line": 3102,
     "desc": "lnRefreshTab('keyphrases');"
   },
   {
     "type": "function",
     "name": "lnRenderCorrections",
     "file": "src/features-lesson-notes.js",
-    "line": 2935,
+    "line": 3129,
     "desc": "var corrections = cur.corrections || [];"
   },
   {
     "type": "function",
     "name": "lnRenderGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 2949,
+    "line": 3143,
     "desc": "var grammar = cur.grammar || [];"
   },
   {
     "type": "function",
     "name": "lnToggleGrammarHide",
     "file": "src/features-lesson-notes.js",
-    "line": 2982,
+    "line": 3176,
     "desc": "if (!window._lnGrammarHidden) window._lnGrammarHidden = new Set();"
   },
   {
     "type": "function",
     "name": "lnToggleShowHidden",
     "file": "src/features-lesson-notes.js",
-    "line": 2988,
+    "line": 3182,
     "desc": "window._lnShowHidden = !window._lnShowHidden;"
   },
   {
     "type": "function",
     "name": "lnRenderTopics",
     "file": "src/features-lesson-notes.js",
-    "line": 2993,
+    "line": 3187,
     "desc": "var topics = cur.topics || [];"
   },
   {
     "type": "function",
     "name": "lnRenderFullDoc",
     "file": "src/features-lesson-notes.js",
-    "line": 3007,
+    "line": 3201,
     "desc": "var raw = cur.rawText || '';"
   },
   {
     "type": "function",
     "name": "lnRenderRecording",
     "file": "src/features-lesson-notes.js",
-    "line": 3013,
+    "line": 3207,
     "desc": "var recordings = window._lessonRecordingSessions || [];"
   },
   {
     "type": "function",
     "name": "lnFilterTranscript",
     "file": "src/features-lesson-notes.js",
-    "line": 3073,
+    "line": 3267,
     "desc": "document.querySelectorAll('.lesson-transcript-row').forEach(function(r) {"
   },
   {
     "type": "function",
     "name": "lnToggleRecPlayer",
     "file": "src/features-lesson-notes.js",
-    "line": 3081,
+    "line": 3275,
     "desc": "── Recording list handlers ──────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "lnDeleteRecording",
     "file": "src/features-lesson-notes.js",
-    "line": 3087,
+    "line": 3281,
     "desc": "const recs = window._lessonRecordingSessions || [];"
   },
   {
     "type": "function",
     "name": "lnNewSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3107,
+    "line": 3301,
     "desc": "lessonNotesLoadSession(-1);"
   },
   {
     "type": "function",
     "name": "lnLoadSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3111,
+    "line": 3305,
     "desc": "lessonNotesLoadSession(idx >= 0 ? idx : -1);"
   },
   {
     "type": "function",
     "name": "lnDeleteSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3115,
+    "line": 3309,
     "desc": "if (!confirm('Delete this lesson session?')) return;"
   },
   {
     "type": "function",
     "name": "lnHandleFile",
     "file": "src/features-lesson-notes.js",
-    "line": 3127,
+    "line": 3321,
     "desc": "lnCreateFromPaste moved to features-lesson-notes.js"
   },
   {
     "type": "function",
     "name": "lnHandleDrop",
     "file": "src/features-lesson-notes.js",
-    "line": 3140,
+    "line": 3334,
     "desc": "event.preventDefault();"
   },
   {
     "type": "function",
     "name": "yoshiGetSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 3155,
+    "line": 3349,
     "desc": "return JSON.parse(Storage.get(STORAGE_KEYS.YOSHI_SESSIONS) || '[]');"
   },
   {
     "type": "function",
     "name": "yoshiSaveSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 3158,
+    "line": 3352,
     "desc": "Storage.set(STORAGE_KEYS.YOSHI_SESSIONS, JSON.stringify(arr));"
   },
   {
     "type": "function",
     "name": "yoshiRender",
     "file": "src/features-lesson-notes.js",
-    "line": 3162,
+    "line": 3356,
     "desc": "const sessions = yoshiGetSessions();"
   },
   {
     "type": "function",
     "name": "yoshiDeleteSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3178,
+    "line": 3372,
     "desc": "if (!confirm('Delete this session?')) return;"
   },
   {
     "type": "function",
     "name": "yoshiOpenSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3188,
+    "line": 3382,
     "desc": "yoshiCurrentIdx = i;"
   },
   {
     "type": "function",
     "name": "yoshiLiveTitle",
     "file": "src/features-lesson-notes.js",
-    "line": 3201,
+    "line": 3395,
     "desc": "if (yoshiCurrentIdx === null) return;"
   },
   {
     "type": "function",
     "name": "yoshiKanaDebounce",
     "file": "src/features-lesson-notes.js",
-    "line": 3229,
+    "line": 3423,
     "desc": "clearTimeout(YoshiReadState.kanaTimer);"
   },
   {
     "type": "function",
     "name": "yoshiGenKana",
     "file": "src/features-lesson-notes.js",
-    "line": 3234,
+    "line": 3428,
     "desc": "const completeEl = document.getElementById('yoshiComplete');"
   },
   {
     "type": "function",
     "name": "yoshiAIComplete",
     "file": "src/features-lesson-notes.js",
-    "line": 3265,
+    "line": 3459,
     "desc": "const clozeEl = document.getElementById('yoshiCloze');"
   },
   {
     "type": "function",
     "name": "yoshiAIVocab",
     "file": "src/features-lesson-notes.js",
-    "line": 3289,
+    "line": 3483,
     "desc": "const completeEl = document.getElementById('yoshiComplete');"
   },
   {
     "type": "function",
     "name": "yoshiShowVocabPopup",
     "file": "src/features-lesson-notes.js",
-    "line": 3327,
+    "line": 3521,
     "desc": "const existing = document.getElementById('yoshiVocabPopup');"
   },
   {
     "type": "function",
     "name": "yoshiVocabPopupAddRow",
     "file": "src/features-lesson-notes.js",
-    "line": 3361,
+    "line": 3555,
     "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
   },
   {
     "type": "function",
     "name": "yoshiVocabPopupSave",
     "file": "src/features-lesson-notes.js",
-    "line": 3373,
+    "line": 3567,
     "desc": "const body = document.getElementById('yoshiVocabPopupBody');"
   },
   {
     "type": "function",
     "name": "yoshiImport",
     "file": "src/features-lesson-notes.js",
-    "line": 3400,
+    "line": 3594,
     "desc": "const title = document.getElementById('yoshiTitle').value.trim();"
   },
   {
     "type": "function",
     "name": "yoshiComputeBlanks",
     "file": "src/features-lesson-notes.js",
-    "line": 3446,
+    "line": 3640,
     "desc": "if (cloze.includes('＿') || cloze.includes('_')) {"
   },
   {
     "type": "function",
     "name": "yoshiShowSession",
     "file": "src/features-lesson-notes.js",
-    "line": 3502,
+    "line": 3696,
     "desc": "const main = document.getElementById('yoshiMain');"
   },
   {
     "type": "function",
     "name": "yoshiSwitchTab",
     "file": "src/features-lesson-notes.js",
-    "line": 3582,
+    "line": 3776,
     "desc": "document.querySelectorAll('.yoshi-subtab').forEach(b => b.classList.remove('active'));"
   },
   {
     "type": "function",
     "name": "yoshiShowImportInline",
     "file": "src/features-lesson-notes.js",
-    "line": 3599,
+    "line": 3793,
     "desc": "const s = yoshiGetSessions()[yoshiCurrentIdx] || {};"
   },
   {
     "type": "function",
     "name": "yoshiRenderCloze",
     "file": "src/features-lesson-notes.js",
-    "line": 3636,
+    "line": 3830,
     "desc": "── Lesson notes state ───────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "yoshiCheckCloze",
     "file": "src/features-lesson-notes.js",
-    "line": 3698,
+    "line": 3892,
     "desc": "const inputs = document.querySelectorAll('#yoshiClozeBody .yoshi-blank input');"
   },
   {
     "type": "function",
     "name": "yoshiRevealAll",
     "file": "src/features-lesson-notes.js",
-    "line": 3715,
+    "line": 3909,
     "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
   },
   {
     "type": "function",
     "name": "yoshiResetCloze",
     "file": "src/features-lesson-notes.js",
-    "line": 3723,
+    "line": 3917,
     "desc": "document.querySelectorAll('#yoshiClozeBody .yoshi-blank input').forEach(inp => {"
   },
   {
     "type": "function",
     "name": "yoshiConfirmCloze",
     "file": "src/features-lesson-notes.js",
-    "line": 3733,
+    "line": 3927,
     "desc": "if (yoshiCurrentIdx === null) return;"
   },
   {
     "type": "storage",
     "name": "lessonNoteSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 74,
+    "line": 76,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "lessonNoteSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 88,
+    "line": 90,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "lessonNoteSessions",
     "file": "src/features-lesson-notes.js",
-    "line": 106,
+    "line": 108,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "YOSHI_SESSIONS",
     "file": "src/features-lesson-notes.js",
-    "line": 3159,
+    "line": 3353,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1650,
+    "line": 1652,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1728,
+    "line": 1730,
     "desc": "db.run"
   },
   {
@@ -7766,42 +7822,42 @@
     "type": "function",
     "name": "lnAlignTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1487,
+    "line": 1491,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "lnLoadTwoColumnTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1593,
+    "line": 1597,
     "desc": "to wall-clock positioning."
   },
   {
     "type": "function",
     "name": "lnTtsAndPause",
     "file": "src/features-ln-p2.js",
-    "line": 1730,
+    "line": 1734,
     "desc": "const student = document.getElementById('lnAudioStudent');"
   },
   {
     "type": "function",
     "name": "renderRecordingsBrowser",
     "file": "src/features-ln-p2.js",
-    "line": 1746,
+    "line": 1750,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "recBrowserTranscribe",
     "file": "src/features-ln-p2.js",
-    "line": 1813,
+    "line": 1817,
     "desc": "const btn = event.target;"
   },
   {
     "type": "function",
     "name": "recBrowserDelete",
     "file": "src/features-ln-p2.js",
-    "line": 1826,
+    "line": 1830,
     "desc": "if (!confirm('Delete this recording and audio files from disk?')) return;"
   },
   {
@@ -7815,7 +7871,7 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-ln-p2.js",
-    "line": 1533,
+    "line": 1537,
     "desc": "You are aligning Yoshi\\'s WhatsApp messages to a Japanese lesson audio transcrip"
   },
   {

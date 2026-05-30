@@ -18,6 +18,8 @@ const LessonNotesState = {
   grammar:             [],
   grammarHidden:       new Set(),
   currentStory:        null,
+  storyTab:            'read',
+  clozeRevealed:       {},
   lnFuriOn:            false,
   grammarDetail:       null,
   grammarDrillSentences: [],
@@ -1011,7 +1013,7 @@ function lessonNotesUpdatePanelHeader() {
         <select class="btn-nav btn-sm" onchange="lessonNotesSetView(this.value)">
           <option value="vocab" ${_vm==='vocab'||_vm===''?'selected':''}>📚 Vocab Drill (${_cur.vocab.length})</option>
           <option value="allwords" ${_vm==='allwords'?'selected':''}>📋 All Words (${_cur.vocab.length})</option>
-          <option value="stories" ${_vm==='stories'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
+          <option value="stories" ${_vm==='stories'||_vm==='reading'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
           <option value="keyphrases" ${_vm==='keyphrases'?'selected':''}>🔑 Phrases (${_cur.keyPhrases.length})</option>
           <option value="grammar" ${_vm==='grammar'||_vm==='grammardetail'?'selected':''}>📝 Grammar (${_cur.grammar.length})</option>
           <option value="errors" ${_vm==='errors'?'selected':''}>❌ Errors (${_cur.errors.length})</option>
@@ -2198,6 +2200,8 @@ function lessonNotesRenderFullDoc() {
 function lessonNotesOpenStory(idx) {
   LessonNotesState.currentStory = LessonNotesState.stories[idx];
   LessonNotesState.viewMode = 'reading';
+  LessonNotesState.storyTab = 'read';
+  LessonNotesState.clozeRevealed = {};
   // Use Quick Read's segment array
   _qrSegments = [];
   lessonNotesRender();
@@ -2262,6 +2266,38 @@ function lessonNotesRenderStoryText() {
   const hasKanji = w => /[\u4E00-\u9FFF]/.test(w);
   const isJP = w => /[\u3040-\u9FFF\uF900-\uFAFF]/.test(w);
 
+  const tab = LessonNotesState.storyTab || 'read';
+
+  if (tab === 'cloze') {
+    const revealed = LessonNotesState.clozeRevealed || {};
+    let chtml = '<div style="font-family:\'Noto Sans JP\',sans-serif;font-size:1.25rem;line-height:2.4;color:var(--ink)">';
+    _qrSegments.forEach((seg, i) => {
+      const w = seg.word;
+      if (!w) return;
+      if (isNewline(w)) { chtml += '<br>'; return; }
+      if (isPunct(w)) { chtml += `<span style="color:var(--ink-light)">${w}</span>`; return; }
+      if (!isJP(w)) { chtml += `<span>${w}</span>`; return; }
+      if (hasKanji(w) && !revealed[i]) {
+        const blank = '\uFF3F'.repeat([...w].length);
+        chtml += `<span class="ln-cloze-blank" data-idx="${i}" style="color:var(--teal);cursor:pointer;padding:0 2px;border-bottom:1px dashed var(--teal)">${blank}</span>`;
+      } else if (hasKanji(w) && seg.reading) {
+        chtml += `<ruby>${w}<rt style="font-size:0.65em;color:var(--ink-light);pointer-events:none">${seg.reading}</rt></ruby>`;
+      } else {
+        chtml += `<span>${w}</span>`;
+      }
+    });
+    chtml += '</div>';
+    container.innerHTML = chtml;
+    container.onclick = e => {
+      const el = e.target.closest('.ln-cloze-blank');
+      if (!el) return;
+      e.stopPropagation();
+      LessonNotesState.clozeRevealed[parseInt(el.dataset.idx)] = true;
+      lessonNotesRenderStoryText();
+    };
+    return;
+  }
+
   let html = '<div style="font-family:\'Noto Sans JP\',sans-serif;font-size:1.25rem;line-height:2.4;color:var(--ink)">';
   _qrSegments.forEach((seg, i) => {
     const w = seg.word;
@@ -2288,28 +2324,186 @@ function lessonNotesRenderStoryText() {
   };
 }
 
+function lessonNotesSetStoryTab(tab) {
+  LessonNotesState.storyTab = tab;
+  if (tab === 'cloze') LessonNotesState.clozeRevealed = {};
+  lessonNotesRender();
+  if (tab === 'read' || tab === 'cloze') {
+    if (_qrSegments && _qrSegments.length) {
+      setTimeout(lessonNotesRenderStoryText, 0);
+    } else if (LessonNotesState.currentStory) {
+      lessonNotesParseStory(LessonNotesState.currentStory.text);
+    }
+  }
+}
+
+function lessonNotesRenderStoryCloze() {
+  return `
+    <div class="qr-reader-box">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <button class="qr-btn-sec" onclick="LessonNotesState.clozeRevealed={};lessonNotesRenderStoryText()">Reset</button>
+        <button class="qr-btn-sec" onclick="lessonNotesClozeRevealAll()">Reveal all</button>
+        <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:auto">Click each blank to reveal</span>
+      </div>
+      <div id="lnStoryReader">
+        <span style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Parsing...</span>
+      </div>
+    </div>
+  `;
+}
+
+function lessonNotesClozeRevealAll() {
+  if (!_qrSegments) return;
+  const revealed = {};
+  _qrSegments.forEach((_, i) => { revealed[i] = true; });
+  LessonNotesState.clozeRevealed = revealed;
+  lessonNotesRenderStoryText();
+}
+
+function lessonNotesRenderStoryVocab(story) {
+  const all = LessonNotesState.vocab || [];
+  const text = story.text || '';
+  const matched = all.filter(v => v.word && text.includes(v.word));
+  if (!matched.length) {
+    return `<div class="qr-reader-box"><div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);padding:20px 0">No session vocab found in this story.</div></div>`;
+  }
+  const rows = matched.map(v => {
+    const word = (v.word || '').replace(/'/g, "\\'");
+    return `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:6px 10px;color:var(--ink);font-family:var(--jp)">${v.word || ''}</td>
+      <td style="padding:6px 10px;color:var(--ink-light);font-family:var(--jp)">${v.reading || '\u2014'}</td>
+      <td style="padding:6px 10px;color:var(--ink-light);font-size:0.82rem;font-family:var(--ui)">${v.meaning || v.en || '\u2014'}</td>
+      <td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak('${word}')">\uD83D\uDD0A</button></td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="qr-reader-box">
+      <div style="border:1px solid var(--border);border-radius:6px;overflow-y:auto;max-height:60vh">
+        <table style="width:100%;border-collapse:collapse;font-size:0.88rem">
+          <thead style="position:sticky;top:0;background:var(--paper-dark)">
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">WORD</th>
+              <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">READING</th>
+              <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">MEANING</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-top:8px">${matched.length} of ${all.length} session words appear in this story</div>
+    </div>
+  `;
+}
+
+function lessonNotesRenderStoryNotes(story) {
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `
+    <div class="qr-reader-box">
+      <textarea id="lnStoryNotes" placeholder="Notes for this story\u2026"
+        onblur="lessonNotesSaveStoryNotes(this.value)"
+        style="width:100%;min-height:300px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;line-height:1.6;border-radius:6px;outline:none;resize:vertical">${esc(story.notes)}</textarea>
+      <div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-top:6px">Saved automatically when you click away</div>
+    </div>
+  `;
+}
+
+function lessonNotesSaveStoryNotes(val) {
+  const story = LessonNotesState.currentStory;
+  if (!story) return;
+  story.notes = val;
+  const sessions = lessonNotesGetSessions();
+  const cur = sessions[LessonNotesState.currentIdx];
+  if (!cur || !cur.stories) return;
+  const idx = cur.stories.findIndex(s => s.title === story.title && s.text === story.text);
+  if (idx >= 0) {
+    cur.stories[idx].notes = val;
+    lessonNotesSaveSessions(sessions);
+  }
+}
+
+function lessonNotesRenderStoryEdit(story) {
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `
+    <div class="qr-reader-box">
+      <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">Title</label>
+      <input id="lnStoryEditTitle" type="text" value="${esc(story.title)}"
+        style="width:100%;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;border-radius:6px;outline:none;margin-bottom:12px">
+      <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">Text</label>
+      <textarea id="lnStoryEditText"
+        style="width:100%;min-height:260px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.95rem;line-height:1.8;border-radius:6px;outline:none;resize:vertical">${esc(story.text)}</textarea>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn-action btn-sm" onclick="lessonNotesSaveStoryEdit()">Save</button>
+        <button class="btn-nav btn-sm" onclick="lessonNotesSetStoryTab('read')">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+function lessonNotesSaveStoryEdit() {
+  const titleEl = document.getElementById('lnStoryEditTitle');
+  const textEl  = document.getElementById('lnStoryEditText');
+  if (!titleEl || !textEl) return;
+  const story = LessonNotesState.currentStory;
+  if (!story) return;
+  const oldTitle = story.title;
+  const oldText  = story.text;
+  story.title = titleEl.value;
+  story.text  = textEl.value;
+  const sessions = lessonNotesGetSessions();
+  const cur = sessions[LessonNotesState.currentIdx];
+  if (cur && cur.stories) {
+    const idx = cur.stories.findIndex(s => s.title === oldTitle && s.text === oldText);
+    if (idx >= 0) {
+      cur.stories[idx].title = story.title;
+      cur.stories[idx].text  = story.text;
+      lessonNotesSaveSessions(sessions);
+    }
+  }
+  _qrSegments = [];
+  LessonNotesState.storyTab = 'read';
+  lessonNotesRender();
+  lessonNotesParseStory(story.text);
+}
+
 function lessonNotesRenderReading() {
   const story = LessonNotesState.currentStory;
   if (!story) return '';
-  
-  // Check if this story has a saved recording
+
+  const tab = LessonNotesState.storyTab || 'read';
+  const tabBar = `
+    <div class="yoshi-subtabs">
+      <button class="yoshi-subtab ${tab==='read'?'active':''}" onclick="lessonNotesSetStoryTab('read')">📖 Read</button>
+      <button class="yoshi-subtab ${tab==='cloze'?'active':''}" onclick="lessonNotesSetStoryTab('cloze')">✏️ Cloze</button>
+      <button class="yoshi-subtab ${tab==='vocab'?'active':''}" onclick="lessonNotesSetStoryTab('vocab')">📚 Vocab</button>
+      <button class="yoshi-subtab ${tab==='notes'?'active':''}" onclick="lessonNotesSetStoryTab('notes')">📝 Notes</button>
+      <button class="yoshi-subtab ${tab==='edit'?'active':''}" onclick="lessonNotesSetStoryTab('edit')">⚙ Edit</button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin:12px 0">
+      <button class="qr-btn-sec" onclick="lessonNotesSetView('stories')">← Stories</button>
+      <span style="margin-left:auto;font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--ink)">${story.title}</span>
+    </div>
+  `;
+
+  if (tab === 'cloze') return tabBar + lessonNotesRenderStoryCloze();
+  if (tab === 'vocab') return tabBar + lessonNotesRenderStoryVocab(story);
+  if (tab === 'notes') return tabBar + lessonNotesRenderStoryNotes(story);
+  if (tab === 'edit')  return tabBar + lessonNotesRenderStoryEdit(story);
+
+  // 'read' (default) — existing reading view
   const hasRecording = story.recording ? true : false;
-  
-  // Split story into sentences for sentence mode
   const sentences = lessonNotesSplitSentences(story.text);
   const sentenceRecordings = story.sentenceRecordings || [];
   const allSentencesRecorded = sentences.length > 0 && sentenceRecordings.length === sentences.length && sentenceRecordings.every(r => r);
   const hasAnyRecordings = sentenceRecordings.some(r => r);
   const recordedCount = sentenceRecordings.filter(r => r).length;
-  
-  return `
+
+  return tabBar + `
     <div class="qr-reader-box">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
         <button class="qr-btn-sec ${LessonNotesState.lnFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
         <button id="lnSpeakBtn" class="qr-btn-sec" onclick="lessonNotesToggleSpeak()" title="Read aloud / Stop">🔊 Read</button>
         <button class="qr-btn-sec btn-copy" onclick="lessonNotesCopyStory()" title="Copy text without furigana">Copy</button>
-        <button class="qr-btn-sec" onclick="lessonNotesSetView('stories')">← Stories</button>
-        <span style="margin-left:auto;font-family:'Shippori Mincho',serif;font-size:1rem;color:var(--ink)">${story.title}</span>
       </div>
       ${LessonNotesState.lnRecordMode === 'sentence' ? '' : `
       <div id="lnStoryReader">
