@@ -235,6 +235,15 @@
           <div id="micLevelBar" style="height:100%;width:0%;background:var(--teal);transition:width 0.05s"></div>
         </div>
         <div id="micStatus" style="font-size:0.7rem;color:var(--ink-light);margin-top:8px"></div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="settingRecordTeacher" checked
+              style="width:18px;height:18px;accent-color:var(--teal)"
+              onchange="Storage.set('recordTeacherTrack', this.checked)">
+            <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)">Record teacher track (loopback)</span>
+          </label>
+          <div style="font-size:0.7rem;color:var(--ink-light);margin-top:4px">Requires BlackHole. Disable to record student audio only.</div>
+        </div>
       </div>
       
       <!-- Display Section -->
@@ -2943,6 +2952,6 @@
 <script src="src/ui/TextEntry.js?v=20260529d"></script>
 <script src="src/ui/YoshiUI.js?v=20260529d"></script>
 
-<script src="src/design-overlay.js?v=20260529"></script>
+<script src="src/design-overlay.js?v=20260530"></script>
 </body>
 </html>

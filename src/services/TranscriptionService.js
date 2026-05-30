@@ -57,13 +57,14 @@ const TranscriptionService = (() => {
       return [];
     }
 
-    return data.segments.map(seg => ({
+    const raw = data.segments.map(seg => ({
       text:      seg.text.trim(),
       timestamp: seg.start,          // canonical key used for merging
       start:     seg.start,
       end:       seg.end,
       speaker,                        // assigned by caller, never inferred
     }));
+    return _filterHallucinations(raw);
   }
 
   // ── Chunked transcription for long lesson recordings ──
@@ -118,10 +119,28 @@ const TranscriptionService = (() => {
       if (onProgress) onProgress({ done: i + 1, total });
     }
 
-    return segments;
+    return _filterHallucinations(segments);
   }
 
   // ── Internal helpers ───────────────────────────────────
+
+  // Known Whisper hallucinations — segments matching these are dropped
+  const _HALLUCINATIONS = [
+    'ご視聴ありがとうございました',
+    'チャンネル登録よろしくお願いします',
+    'ありがとうございました',
+    'お疲れ様でした',
+    'Thank you for watching',
+    'Please subscribe',
+    'Like and subscribe',
+  ];
+
+  function _filterHallucinations(segments) {
+    return segments.filter(seg => {
+      const t = seg.text.trim();
+      return !_HALLUCINATIONS.some(h => t === h || t.includes(h));
+    });
+  }
 
   function _getOpenAIKey() {
     // Reads from the same Storage module used by the rest of the app
