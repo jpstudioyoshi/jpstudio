@@ -158,6 +158,7 @@ function lessonNotesRender() {
   if (el2) el2.innerHTML = html;
   // For the panel, use the full panel HTML which includes session selector
   if (el3) el3.innerHTML = lessonNotesGetFullPanelHTML();
+  if (el3) lessonNotesUpdatePanelHeader();
   // Wire all TextEntry components after render
   setTimeout(function() {
     try { (App.TextEntry||window.TextEntry)?.wireAll(document.getElementById('lessonNotesPanelContent')); } catch(e) {}
@@ -175,6 +176,7 @@ function lessonNotesRenderPanel() {
     lessonNotesLoadSessionsFromStorage().then(function() {
       const el2 = document.getElementById('lessonNotesPanelContent');
       if (el2) el2.innerHTML = lessonNotesGetFullPanelHTML();
+      lessonNotesUpdatePanelHeader();
     });
     const elWait = document.getElementById('lessonNotesPanelContent');
     if (elWait) elWait.innerHTML = '<div style="padding:40px;text-align:center;font-family:var(--ui);color:var(--ink-light)">…</div>';
@@ -183,23 +185,14 @@ function lessonNotesRenderPanel() {
   const el = document.getElementById('lessonNotesPanelContent');
   if (!el) return;
   el.innerHTML = lessonNotesGetFullPanelHTML();
+  lessonNotesUpdatePanelHeader();
 }
 
 function lessonNotesGetFullPanelHTML() {
   const sessions = lessonNotesGetSessions();
   const currentSession = LessonNotesState.currentIdx !== null ? sessions[LessonNotesState.currentIdx] : null;
   
-  // Session selector
-  let html = `
-    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-      <select id="lessonNotesPanelSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()" style="padding:8px 12px;font-family:var(--ui);font-size:0.85rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:6px;min-width:200px">
-        <option value="-1">— Select lesson —</option>
-        ${sessions.map((s, i) => `<option value="${i}" ${i === LessonNotesState.currentIdx ? 'selected' : ''}>${s.title || 'Untitled ' + (i+1)}</option>`).join('')}
-      </select>
-
-      ${currentSession ? `<button class="btn-action" onclick="lessonNotesDeleteFromPanel()">🗑 Delete</button>` : ''}
-    </div>
-  `;
+  let html = ``;
   
   // ── Top bar: status + session controls ───────────────────────────────────────
   html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">';
@@ -257,21 +250,6 @@ function lessonNotesGetFullPanelHTML() {
     return html;
   }
   
-  // Show lesson content
-  // Persistent tab bar — always visible regardless of view mode
-  const _vm = LessonNotesState.viewMode;
-  const _cur = LessonNotesState;
-  const hasContent = _cur.vocab.length > 0 || _cur.stories.length > 0 || _cur.grammar.length > 0 || _cur.errors.length > 0;
-  if (hasContent || LessonNotesState.extracting === false) {
-    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--border)">';
-    html += '<button class="yoshi-read-btn' + (_vm==='vocab'||_vm===''||(!_vm&&hasContent)?' active':'') + '" onclick="lessonNotesSetView(\'vocab\')">📚 Vocab (' + _cur.vocab.length + ')</button>';
-    html += '<button class="yoshi-read-btn' + (_vm==='stories'?' active':'') + '" onclick="lessonNotesSetView(\'stories\')">📖 Stories (' + _cur.stories.length + ')</button>';
-    html += '<button class="yoshi-read-btn' + (_vm==='keyphrases'?' active':'') + '" onclick="lessonNotesSetView(\'keyphrases\')">🔑 Phrases (' + _cur.keyPhrases.length + ')</button>';
-    html += '<button class="yoshi-read-btn' + (_vm==='grammar'||_vm==='grammardetail'?' active':'') + '" onclick="lessonNotesSetView(\'grammar\')">📝 Grammar (' + _cur.grammar.length + ')</button>';
-    html += '<button class="yoshi-read-btn' + (_vm==='errors'?' active':'') + '" onclick="lessonNotesSetView(\'errors\')">❌ Errors (' + _cur.errors.length + ')</button>';
-    html += lnRecordingTabButton(currentSession);
-    html += '</div>';
-  }
   html += lessonNotesGetHTML();
   return html;
 }
@@ -987,6 +965,41 @@ Examples of what it extracts:
   `;
 }
 
+function lessonNotesUpdatePanelHeader() {
+  const hdr = document.getElementById('yoshiPanelHeader');
+  if (!hdr) return;
+  const sessions = lessonNotesGetSessions();
+  const _cur = LessonNotesState;
+  const _vm = _cur.viewMode;
+  const hasContent = _cur.vocab.length > 0 || _cur.stories.length > 0 || _cur.grammar.length > 0 || _cur.errors.length > 0;
+  const currentSession = _cur.currentIdx !== null ? sessions[_cur.currentIdx] : null;
+
+  hdr.innerHTML = `
+    <div class="panel-section-title" style="flex:1;gap:8px;flex-wrap:wrap">
+      <span class="panel-section-title-jp">ヨシ</span>
+      ${hasContent ? `
+        <select class="btn-nav btn-sm" onchange="lessonNotesSetView(this.value)">
+          <option value="vocab" ${_vm==='vocab'||_vm===''?'selected':''}>📚 Vocab (${_cur.vocab.length})</option>
+          <option value="stories" ${_vm==='stories'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
+          <option value="keyphrases" ${_vm==='keyphrases'?'selected':''}>🔑 Phrases (${_cur.keyPhrases.length})</option>
+          <option value="grammar" ${_vm==='grammar'||_vm==='grammardetail'?'selected':''}>📝 Grammar (${_cur.grammar.length})</option>
+          <option value="errors" ${_vm==='errors'?'selected':''}>❌ Errors (${_cur.errors.length})</option>
+          ${currentSession ? `<option value="recording" ${_vm==='recording'?'selected':''}>▶ Recording</option>` : ''}
+        </select>
+      ` : ''}
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <select id="yoshiSessionSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()"
+        style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:180px">
+        <option value="-1">— Select lesson —</option>
+        ${sessions.map((s, i) => `<option value="${i}" ${i === _cur.currentIdx ? 'selected' : ''}>${s.title || 'Untitled ' + (i+1)}</option>`).join('')}
+      </select>
+      <button class="btn-nav btn-sm" onclick="lessonNotesNewFromPanel()">+</button>
+      ${currentSession ? `<button class="btn-icon btn-icon-del" onclick="lessonNotesDeleteFromPanel()">🗑</button>` : ''}
+    </div>
+  `;
+}
+
 function lessonNotesUpdateTabControls(sessions, hasContent) {
   const el = document.getElementById('lessonNotesTabControls');
   if (!el) return;
@@ -1087,25 +1100,40 @@ function lessonNotesRenderKeyPhrases() {
       </div>
     ` : `
       <div style="display:flex;f      <div style="display:flex;gap:6px;margin-bottom:14px">
-        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${!window._lnPhraseMode||window._lnPhraseMode==='browse'?'var(--teal)':'var(--paper-dark)'};color:${!window._lnPhraseMode||window._lnPhraseMode==='browse'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='browse';lessonNotesSetView('keyphrases')">Browse</button>
-        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${window._lnPhraseMode==='en-jp'?'var(--teal)':'var(--paper-dark)'};color:${window._lnPhraseMode==='en-jp'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='en-jp';lessonNotesSetView('keyphrases')">EN&rarr;JP</button>
-        <button style="padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:${window._lnPhraseMode==='jp-en'?'var(--teal)':'var(--paper-dark)'};color:${window._lnPhraseMode==='jp-en'?'#fff':'var(--ink)'}" onclick="window._lnPhraseMode='jp-en';lessonNotesSetView('keyphrases')">JP&rarr;EN</button>
+        <button class="btn-toggle btn-sm${!window._lnPhraseMode||window._lnPhraseMode==='browse'?' active':''}" onclick="window._lnPhraseMode='browse';lessonNotesSetView('keyphrases')">Browse</button>
+        <button class="btn-toggle btn-sm${window._lnPhraseMode==='en-jp'?' active':''}" onclick="window._lnPhraseMode='en-jp';lessonNotesSetView('keyphrases')">EN→JP</button>
+        <button class="btn-toggle btn-sm${window._lnPhraseMode==='jp-en'?' active':''}" onclick="window._lnPhraseMode='jp-en';lessonNotesSetView('keyphrases')">JP→EN</button>
       </div>
       ${!window._lnPhraseMode || window._lnPhraseMode === 'browse' ? `
-      <div style="display:flex;flex-direction:column;gap:10px">
-        ${LessonNotesState.keyPhrases.map((kp, i) => `
-          <div style="background:linear-gradient(135deg, rgba(212,165,116,0.08), rgba(212,165,116,0.02));border:1px solid rgba(212,165,116,0.3);border-radius:8px;padding:14px">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-              <span style="font-family:var(--jp);font-size:1.15rem;color:var(--ink)">${kp.phrase}</span>
-              <button class="btn-icon" onclick="jpSpeak('${(kp.phrase||'').replace(/'/g,"\'")}')">🔊</button>
+      ${(() => {
+        const GROUP_ORDER = ['Greetings & Openers','Classroom Language','Time & Sequence','Describing & Explaining','Expressing Feelings & Opinions','Questions & Requests','Grammar Connectors','Other'];
+        const grouped = {};
+        LessonNotesState.keyPhrases.forEach((kp, i) => {
+          const g = kp.group || 'Other';
+          if (!grouped[g]) grouped[g] = [];
+          grouped[g].push({...kp, _i: i});
+        });
+        const keys = [...GROUP_ORDER.filter(g => grouped[g]), ...Object.keys(grouped).filter(g => !GROUP_ORDER.includes(g))];
+        return keys.map(g => `
+          <div style="margin-bottom:20px">
+            <div style="font-family:var(--ui);font-size:0.7rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${g.toUpperCase()}</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              ${grouped[g].map(kp => `
+                <div style="background:linear-gradient(135deg,rgba(212,165,116,0.08),rgba(212,165,116,0.02));border:1px solid rgba(212,165,116,0.3);border-radius:8px;padding:14px">
+                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                    <span style="font-family:var(--jp);font-size:1.15rem;color:var(--ink)">${kp.phrase}</span>
+                    <button class="btn-icon" onclick="jpSpeak('${(kp.phrase||'').replace(/'/g,"\'")}')">🔊</button>
+                  </div>
+                  <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink-light)">${kp.meaning||''}</div>
+                  ${kp.example ? `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">${kp.example}</div>` : ''}
+                </div>
+              `).join('')}
             </div>
-            <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink-light)">${kp.meaning || ''}</div>
-            ${kp.example ? `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">${kp.example}</div>` : ''}
           </div>
-        `).join('')}
-      </div>
+        `).join('');
+      })()}
       <div style="margin-top:12px;text-align:center">
-        <button onclick="lessonNotesExtractKeyPhrases()" class="yoshi-read-btn">🔄 Re-extract</button>
+        <button onclick="lessonNotesExtractKeyPhrases()" class="btn-action btn-sm">🔄 Re-extract</button>
       </div>
       ` : `<div id="ln-phrase-drill-container" style="margin-top:8px"></div>`}
     `}
@@ -1129,8 +1157,20 @@ function lessonNotesRenderGrammar() {
           <button onclick="lessonNotesToggleShowHidden()" class="yoshi-read-btn">${LessonNotesState.showHiddenGrammar ? '👁 Hide' : '👁 Show'} hidden</button>
         </div>
       ` : ''}
-      <div style="display:flex;flex-direction:column;gap:10px;overflow-y:visible">
-        ${visibleGrammar.map(g => `
+      ${(() => {
+        const GROUP_ORDER = ['Particles','Verb Forms','Adjectives','Connectors & Conjunctions','Expressions & Set Phrases','Sentence Endings','Other'];
+        const grouped = {};
+        visibleGrammar.forEach(g => {
+          const grp = g.group || 'Other';
+          if (!grouped[grp]) grouped[grp] = [];
+          grouped[grp].push(g);
+        });
+        const keys = [...GROUP_ORDER.filter(g => grouped[g]), ...Object.keys(grouped).filter(g => !GROUP_ORDER.includes(g))];
+        return keys.map(grp => `
+          <div style="margin-bottom:20px">
+            <div style="font-family:var(--ui);font-size:0.7rem;letter-spacing:0.1em;color:var(--ink-light);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${grp.toUpperCase()}</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+              ${grouped[grp].map(g => `
           <div style="background:linear-gradient(135deg, rgba(48,213,200,0.08), rgba(48,213,200,0.02));border:1px solid ${LessonNotesState.grammarHidden.has(g._idx) ? 'var(--ink-light)' : 'rgba(48,213,200,0.3)'};border-radius:8px;padding:14px;transition:all 0.15s;${LessonNotesState.grammarHidden.has(g._idx) ? 'opacity:0.5' : ''}">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
               <span onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--jp);font-size:1.15rem;color:var(--teal);font-weight:500;cursor:pointer;flex:1">${g.pattern}</span>
@@ -1148,10 +1188,13 @@ function lessonNotesRenderGrammar() {
               </div>
             ` : ''}
           </div>
-        `).join('')}
-      </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      })()}
       <div style="margin-top:12px;text-align:center">
-        <button onclick="lessonNotesExtractGrammar()" class="yoshi-read-btn">🔄 Re-extract</button>
+        <button onclick="lessonNotesExtractGrammar()" class="btn-action btn-sm">🔄 Re-extract</button>
       </div>
     `}
   `;
@@ -1290,8 +1333,9 @@ async function lessonNotesExtractKeyPhrases() {
 - Conversational patterns
 - Cultural expressions
 
+Assign each phrase a group from: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other
 Return JSON array only:
-[{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence"}]
+[{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","group":"group name"}]
 
 Lesson content:
 ${docContent.slice(0, 8000)}` }]
@@ -1321,7 +1365,7 @@ async function lessonNotesExtractGrammar() {
   
   try {
     const data = await _fy_claudeAPI({
-      max_tokens: 2500,
+      max_tokens: 5000,
       messages: [{ role: 'user', content: `Analyze these Japanese lesson notes and identify grammatical patterns that a learner should understand. Don't just look for explicitly labeled grammar — analyze the Japanese sentences themselves to find:
 
 - Verb forms used (て-form, ～ました, ～ている, ～たい, potential ～られる, volitional ～ましょう, etc.)
@@ -1337,9 +1381,10 @@ async function lessonNotesExtractGrammar() {
 For each pattern found, provide a clear explanation suitable for a learner.
 
 Return JSON array only:
-[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","sourceText":"the exact sentence from the notes containing this pattern"}]
+Assign each point a group from: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other
+[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","sourceText":"the exact sentence from the notes containing this pattern","group":"group name"}]
 
-Find at least 5-8 grammar points. Look at EVERY Japanese sentence for grammar worth highlighting.
+Find the 10-15 most important grammar points only. Prioritise variety across groups over completeness.
 
 Lesson content:
 ${docContent.slice(0, 10000)}` }]
@@ -1633,7 +1678,8 @@ async function lessonNotesExtractKeyPhrasesSilent(docContent, apiKey) {
     const data = await _fy_claudeAPI({
       max_tokens: 4000,
       messages: [{ role: 'user', content: `Extract key phrases and expressions from these Japanese lesson notes. Focus on useful conversational phrases, set expressions, and idiomatic patterns.
-Return JSON array: [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","sourceText":"the exact line from the notes where this phrase appeared"}]
+Assign each phrase a group from: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other
+Return JSON array: [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","sourceText":"the exact line from the notes where this phrase appeared","group":"group name"}]
 Content: ${docContent.slice(0, 8000)}` }]
     ,
       track: 'lesson'
@@ -1678,7 +1724,8 @@ async function lessonNotesExtractGrammarSilent(docContent, apiKey) {
 For each pattern found, provide a clear explanation suitable for a learner.
 
 Return JSON array only:
-[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation"}]
+Assign each point a group from: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other
+[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","group":"group name"}]
 
 Find at least 5-8 grammar points. Look at EVERY Japanese sentence for grammar worth highlighting.
 
