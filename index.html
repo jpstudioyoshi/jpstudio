@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260529a">
+<link rel="stylesheet" href="style.css?v=20260530b">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -92,6 +92,16 @@
       <option value="drill">練習</option>
       <option value="custom">✏️ カスタム</option>
     </select>
+  </div>
+</div>
+<div id="yoshiPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">ヨシ</span>
+  </div>
+</div>
+<div id="progressPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">進捗</span>
   </div>
 </div>
 <div id="listenPanelHeader" class="panel-header-lower" style="display:none">
@@ -2361,14 +2371,12 @@
   </div>
 
   <div id="panel-lessonnotes" class="panel">
-    <div class="section-title"><span class="jp">ヨシ</span><span class="en-block"><span class="reading">よし</span><span class="en">(Lesson Notes)</span></span></div>
     <div id="yoshiTestResult" style="display:none;margin-bottom:16px;padding:10px 14px;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.82rem"></div>
     <div id="lessonNotesPanelContent"></div>
   </div>
 
   <!-- PROGRESS -->
   <div id="panel-progress" class="panel">
-    <div class="section-title"><span class="jp">進捗</span><span class="en-block"><span class="reading">しんちょく</span><span class="en">(Progress)</span></span></div>
 
     <!-- Daily Briefing — auto-opens, cached per day -->
     <div id="agentBriefing" style="margin-bottom:24px">

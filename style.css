@@ -352,6 +352,8 @@
   #panel-progress,
   #panel-translate,
   #panel-video { max-width: none; }
+  #panel-progress { padding-top: 75px; }
+  #panel-lessonnotes { padding-top: 75px; }
   #panel-video.vt-fullscreen { max-width: none !important; width: 100vw !important; }
 
   /* ── SECTION TITLE ── */
