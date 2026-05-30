@@ -1449,6 +1449,7 @@ function voiceNewChat() {
 }
 
 function voiceTopicChanged(val) {
+  if (val === 'four-three-two') { fttInit(); return; }
   const structured   = val === 'round-trip' || val === 'comprehension';
   const row          = document.getElementById('voiceStructuredRow');
   const label        = document.getElementById('voiceStructuredLabel');
@@ -1492,6 +1493,111 @@ function voiceTopicChanged(val) {
 }
 
 // Legacy — kept in case anything calls it
+// ── 4/3/2 Fluency Drill ──────────────────────────────────────────────────────
+function fttInit() {
+  VoiceState.ftt_active     = false;
+  VoiceState.ftt_round      = 0;
+  VoiceState.ftt_transcript = '';
+  VoiceState.ftt_minutes    = 4;
+  VoiceState.ftt_timer      = null;
+  VoiceState.ftt_all        = [];
+  const row = document.getElementById('voiceStructuredRow');
+  const label = document.getElementById('voiceStructuredLabel');
+  const topicInput = document.getElementById('rtTopicInput');
+  if (row) row.style.display = 'flex';
+  if (label) label.textContent = '⏱ Topic:';
+  if (topicInput) { topicInput.value = ''; topicInput.placeholder = 'What to talk about…'; }
+  const r2Btn = document.getElementById('rtRound2Btn');
+  const cmpBtn = document.getElementById('rtCompareBtn');
+  if (r2Btn) r2Btn.style.display = 'none';
+  if (cmpBtn) cmpBtn.style.display = 'none';
+  rtSetStatus('');
+  voiceNewChat();
+  voiceUpdateStatus('Choose a topic, then press 🎙️ to start Round 1 (4 min)');
+}
+
+
+
+function fttStartRound() {
+  const topicInput = document.getElementById('rtTopicInput');
+  const topic = topicInput?.value.trim() || 'free conversation';
+  VoiceState.ftt_round++;
+  VoiceState.ftt_transcript = '';
+  VoiceState.ftt_active = true;
+  const mins = [4, 3, 2][VoiceState.ftt_round - 1] || 2;
+  VoiceState.ftt_minutes = mins;
+  voiceUpdateStatus('Round ' + VoiceState.ftt_round + ' — speak freely');
+  const timerEl = document.getElementById('fttTimerRow');
+  if (timerEl) { timerEl.textContent = mins + ':00'; timerEl.style.display = 'block'; }
+  // Countdown timer
+  let secs = mins * 60;
+  VoiceState.ftt_timer = setInterval(() => {
+    secs--;
+    const m = Math.floor(secs / 60);
+    const s = String(secs % 60).padStart(2, '0');
+    if (timerEl) timerEl.textContent = m + ':' + s;
+    if (secs <= 0) {
+      clearInterval(VoiceState.ftt_timer);
+      VoiceState.ftt_active = false;
+      if (timerEl) timerEl.style.display = 'none';
+      voiceUpdateStatus('Round ' + VoiceState.ftt_round + ' complete — analysing…');
+      fttAnalyse(topic);
+    }
+  }, 1000);
+}
+
+async function fttAnalyse(topic) {
+  const transcript = VoiceState.ftt_transcript.trim();
+  if (!transcript) {
+    voiceUpdateStatus('No speech detected. Try again.');
+    fttShowNextRoundBtn();
+    return;
+  }
+  VoiceState.ftt_all.push({ round: VoiceState.ftt_round, transcript });
+  const level = document.getElementById('voiceLevel')?.value || 'N5';
+  const prompt = `The learner is practising a 4/3/2 fluency drill. They spoke freely on the topic "${topic}" for ${VoiceState.ftt_minutes} minutes. This is Round ${VoiceState.ftt_round} of 3.
+
+Transcript:
+${transcript}
+
+Give brief feedback (3-4 sentences) in English:
+- What they communicated well
+- One specific grammar or vocabulary point to notice
+- One thing to try in the next round
+Do not score. Do not be prescriptive. Be observational.`;
+  try {
+    const data = await (App.claudeAPI || window.claudeAPI)({
+      max_tokens: 300,
+      system: 'You are observing a Japanese speaking fluency drill. Give brief, practical feedback.',
+      messages: [{ role: 'user', content: prompt }],
+      track: 'speaking'
+    });
+    const feedback = (App.claudeText || window.claudeText)(data).trim();
+    VoiceState.messages.push({ role: 'assistant', content: '**Round ' + VoiceState.ftt_round + ' feedback:**\n' + feedback });
+    voiceRenderMessages();
+    if (VoiceState.ftt_round < 3) {
+      fttShowNextRoundBtn();
+    } else {
+      fttShowFinal();
+    }
+  } catch(e) {
+    voiceUpdateStatus('Analysis failed. ' + e.message);
+    fttShowNextRoundBtn();
+  }
+}
+
+function fttShowNextRoundBtn() {
+  const mins = [4, 3, 2][VoiceState.ftt_round] || 2;
+
+  voiceUpdateStatus('Ready for Round ' + (VoiceState.ftt_round + 1) + ' — same topic, ' + mins + ' min');
+}
+
+function fttShowFinal() {
+  voiceUpdateStatus('Drill complete — all 3 rounds done');
+  const startBtn = document.getElementById('fttStartBtn');
+  if (startBtn) startBtn.style.display = 'none';
+}
+
 function rtSetStatus(text) {
   const el = document.getElementById('rtStatus');
   if (!el) return;
@@ -2393,6 +2499,9 @@ async function voiceToggleRecord() {
     voiceUpdateStatus('Processing...');
   } else {
     // Start recording
+    if (VoiceState.ftt_round >= 0 && !VoiceState.ftt_active && document.getElementById('vt-four-three-two')?.classList.contains('active')) {
+      fttStartRound();
+    }
     try {
       VoiceState.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       VoiceState.mediaRecorder = new MediaRecorder(VoiceState.stream);
@@ -2483,6 +2592,11 @@ async function voiceProcessAudio(audioBlob) {
     if (VoiceState.rtRound >= 2) kanjiCorpusRecordChatProduction(userText); // round-trip R2 production
     voiceRenderMessages();
     
+    // 4/3/2 mode — accumulate only, no AI turn
+    if (VoiceState.ftt_active) {
+      VoiceState.ftt_transcript += (VoiceState.ftt_transcript ? '\n' : '') + userText;
+      return;
+    }
     // Send to Claude
     await voiceSendToClaude(userText);
     

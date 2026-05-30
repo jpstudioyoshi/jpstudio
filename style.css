@@ -343,6 +343,7 @@
   /* Full width panels */
   #panel-dashboard,
   #panel-read { padding-top: 75px; }
+  #panel-grammar2 { padding-top: 110px; }
   #panel-writing { padding-top: 75px; }
   #panel-listening { padding-top: 75px; }
   #panel-voice { padding-top: 75px; padding-bottom: 20vh; }

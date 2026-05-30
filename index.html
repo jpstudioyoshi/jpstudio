@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260530e">
+<link rel="stylesheet" href="style.css?v=20260530g">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -2076,6 +2076,7 @@
     </div><!-- end voice-sub-custom -->
 
   <div class="footer-upper" id="voiceFooterUpper" style="display:none">
+    <div id="fttTimerRow" style="display:none;width:100%;text-align:center;font-family:var(--ui);font-size:0.85rem;color:var(--teal);letter-spacing:0.05em;padding-bottom:4px"></div>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-travel" onclick="setButtonGroupActive('voiceTopic','vt-travel');voiceTopicChanged('travel')">Travel</button>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-shopping" onclick="setButtonGroupActive('voiceTopic','vt-shopping');voiceTopicChanged('shopping')">Shop</button>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-restaurant" onclick="setButtonGroupActive('voiceTopic','vt-restaurant');voiceTopicChanged('restaurant')">Food</button>
@@ -2084,6 +2085,7 @@
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-rp-restaurant" onclick="setButtonGroupActive('voiceTopic','vt-rp-restaurant');voiceTopicChanged('rp-restaurant')">Restaurant</button>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-rp-station" onclick="setButtonGroupActive('voiceTopic','vt-rp-station');voiceTopicChanged('rp-station')">Station</button>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-round-trip" onclick="setButtonGroupActive('voiceTopic','vt-round-trip');voiceTopicChanged('round-trip')">Round Trip</button>
+    <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-four-three-two" onclick="setButtonGroupActive('voiceTopic','vt-four-three-two');voiceTopicChanged('four-three-two')">4/3/2</button>
     <button class="btn-toggle btn-group" data-btn-toggle="voiceTopic" id="vt-comprehension" onclick="setButtonGroupActive('voiceTopic','vt-comprehension');voiceTopicChanged('comprehension')">Comprehension</button>
   </div>
   <div class="footer-lower" id="voiceFooterLower" style="display:none">

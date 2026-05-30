@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-30 (session 14 — WhatsApp import fix, Yoshi panel redesign, hallucination filter)
+Last updated: 2026-05-30 (session 14 — WhatsApp import fix, Yoshi panel redesign, hallucination filter, story reader)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -8,6 +8,12 @@ Last updated: 2026-05-30 (session 14 — WhatsApp import fix, Yoshi panel redesi
 - pbcopy for all grep/sed output.
 - Always prefix multi-line python3 edits with jp && to avoid directory drift.
 - "done" means command ran and printed OK.
+
+## Chat vs Claude Code — Decision Rule
+- **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
+- **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors, anything where "trace this call chain" is needed
+- Cost: Code uses more input tokens (reads full files). Chat is cheaper for small edits.
+- Code saves ~45-60 min vs chat for complex render path fixes.
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -48,6 +54,7 @@ All edits are done via terminal — no file upload/download.
 - grep -n "pattern" file | pbcopy — locate lines
 - Never paste grep output back into terminal
 - Update style.css?v= version string after CSS changes to bust Electron cache
+- Use /tmp/ temp files for complex JS replacements to avoid Python escaping issues
 
 **Critical lessons:**
 - python3 string matching fails silently on whitespace/encoding differences
@@ -57,7 +64,6 @@ All edits are done via terminal — no file upload/download.
 - Electron caches CSS — always bump style.css?v= version string after changes
 - position:fixed can be overridden by earlier duplicate rules — grep for all instances first
 - When line-number deletion leaves orphan braces — always run node check-syntax.js after edits
-- Use /tmp/ temp files for complex JS replacements to avoid Python escaping issues
 
 ## Design Language
 
@@ -66,8 +72,8 @@ All edits are done via terminal — no file upload/download.
 - **Sidebar:** context-sensitive subtabs top, reference panels bottom
 - **Section title:** `語彙 [Words ▾]` — kanji + dropdown for subtab switching, remembers last used
 - **Content area:** drill/content fills available space
-- **Upper footer:** intra-session controls (Reading/Pitch/Direction/Reset) — fixed to bottom
-- **Lower footer:** session setup filters (Level/Type/Size) — fixed to very bottom
+- **Upper footer:** intra-session controls (Prev/Again/Got it/Learned/Next, mode toggles) — fixed to bottom
+- **Lower footer:** session setup filters (Level/Type/Size, show toggles) — fixed to very bottom
 
 ### Footer implementation
 - Both footers use `position: fixed !important`
@@ -79,31 +85,14 @@ All edits are done via terminal — no file upload/download.
 ### Panel Headers
 All panels use `panel-header-lower` + `panel-section-title` pattern.
 Header divs declared in index.html, shown/hidden in `showPanel()` in core-foundation.js.
-Pattern:
-```html
-<div id="xyzPanelHeader" class="panel-header-lower" style="display:none">
-  <div class="panel-section-title">
-    <span class="panel-section-title-jp">JP</span>
-    <select class="btn-nav btn-sm" onchange="...">...</select>
-  </div>
-  <!-- right side controls -->
-</div>
-```
-showPanel() wires: voice, listen, writing, read, words, grammar, yoshi (lessonnotes), progress.
-`yoshiPanelHeader` and `progressPanelHeader` added this session.
-`panel-header-lower` now uses `min-height:56px; height:auto; flex-wrap:wrap` to accommodate wider content.
+`panel-header-lower` uses `min-height:56px; height:auto; flex-wrap:wrap`.
 Panel padding-top: `#panel-lessonnotes { padding-top: 75px }`, `#panel-progress { padding-top: 75px }`.
 
-### Filter chips
-- Blue chips (`filter-chip-blue`): level and size filters (word content)
-- Purple chips (`filter-chip-purple`): POS/type filters (grammar content)
-- Native checkbox/radio inputs hidden, `:has(input:checked)` controls active state
-- Level: radio buttons N5 / N4 (=N5+N4) / N3 (=all) — JS expands via `_expandLevel()`
-- Size: radio buttons 20 / All
+Panels with headers: voice, listen, writing, read, words, grammar, yoshi (lessonnotes), progress.
 
-### Accent colour
-- Blue/slate: #5b9bd5 (replacing teal #30d5c8)
-- Design rules: design-rules.md in project root
+`yoshiPanelHeader` renders dynamically via `lessonNotesUpdatePanelHeader()`:
+- Left: ヨシ title + view dropdown
+- Right: session selector + New (+) + Delete (🗑)
 
 ## Button System — COMPLETE
 All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-primary in live code.
@@ -121,76 +110,59 @@ All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-
 **Modifiers:**
 - `btn-sm` — 0.75rem, 3px 8px padding
 - `btn-xs` — 0.65rem, 1px 6px padding
-- `btn-icon-teal` — teal on hover (edit buttons)
-- `btn-icon-del` — red on hover (delete buttons)
+- `btn-icon-teal` — teal on hover
+- `btn-icon-del` — red on hover
 - `btn-rating-red` — red rating (Again)
 - `btn-rating-teal` — teal rating (Got it / Known)
 
-**Design system gaps (leave inline):** transient flash, 3-state gold toggles, recording red
+## Yoshi (Lesson Notes) Panel — THIS SESSION
 
-## Inline Style Migration — COMPLETE
-All JS files migrated. Remaining inline: transient flashes, 3-state gold, recording gradients, layout/margin one-offs.
-Video panel deferred until redesign decision.
+### Panel Header
+`yoshiPanelHeader` renders dynamically via `lessonNotesUpdatePanelHeader()`.
+Called from both `lessonNotesRender()` and `lessonNotesRenderPanel()`.
 
-## Vocab Panel Redesign — COMPLETE
-- Section title → `語彙 [Words ▾]` dropdown, remembers last subtab via localStorage
-- Filters in footer (upper + lower), fixed to bottom
-- Level filter: radio N5 / N4 / N3
-- Size filter: radio 20 / All
-- Card content vertically centred
-- style.css version: ?v=20260530e
-
-## Yoshi (Lesson Notes) Panel — REDESIGNED THIS SESSION
-**Panel header:** `yoshiPanelHeader` now renders dynamically via `lessonNotesUpdatePanelHeader()`:
-- Left: ヨシ title + view dropdown (Vocab Drill / All Words / Stories / Phrases / Grammar / Errors / Recording)
-- Right: session selector + New (+) + Delete (🗑)
-
-**View dropdown options:**
-- Vocab Drill — card drill with click-to-reveal
-- All Words — 2-column word table (no toggle button)
+### View Dropdown Options
+- Vocab Drill — card drill, click to reveal
+- All Words — 2-column word table
 - Stories — grid of story tiles
-- Phrases — 3-column grouped layout (groups: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other)
-- Grammar — 2-column grouped layout (groups: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other)
+- Phrases — 3-column grouped layout
+- Grammar — 2-column grouped layout
 - Errors — error list
 - Recording — linked recording player
 
-**Vocab Drill layout:**
-- Counter (x / total) above card — `.vocab-counter` class
-- Card uses `.ln-drill-card` / `.ln-drill-card-area` classes
+### Vocab Drill Layout
+- `.vocab-counter` above card (x / total)
+- Card: `.ln-drill-card` / `.ln-drill-card-area`
 - Click card to reveal
 - Under card: Prev / Again (red) / Got it (teal) / Learned (teal) / Next
-- Upper footer: JP→Reading / JP→Meaning / EN→JP / Listen / Shuffle (btn-toggle btn-sm)
+- Upper footer: JP→Reading / JP→Meaning / EN→JP / Listen / Shuffle
 - Lower footer: +Reading / +Meaning toggles
 
-**Extraction prompts updated:**
-- Phrases: now includes `group` field, 15-30 items
-- Grammar: now includes `group` field, 10-15 items max, max_tokens: 5000
-- Both silent extractors updated to match
+### Story Reader
+Opened via `lessonNotesOpenStory(idx)`.
+Subtabs: Read / Vocab / Notes / Edit (Cloze removed — dead feature).
+Dropdown stays on "Stories" when viewMode === 'reading' (fixed this session).
 
-**_fy_ wrappers added** to features-lesson-notes.js (were missing, caused import hang):
+### Extraction
+- Phrases: `group` field, 15-30 items, groups: Greetings & Openers / Classroom Language / Time & Sequence / Describing & Explaining / Expressing Feelings & Opinions / Questions & Requests / Grammar Connectors / Other
+- Grammar: `group` field, 10-15 items max, max_tokens:5000, groups: Particles / Verb Forms / Adjectives / Connectors & Conjunctions / Expressions & Set Phrases / Sentence Endings / Other
+
+### _fy_ wrappers (added this session)
 ```js
 const _fy_getApiKey  = () => (App.getApiKey  || window.getApiKey)?.();
 const _fy_claudeAPI  = (...a) => (App.claudeAPI || window.claudeAPI)?.(...a);
 const _fy_claudeText = (d) => (App.claudeText || window.claudeText)?.(d);
 ```
 
-**lessonNotesDrillAll() removed** — was causing "new lesson" page to open.
-
-**lessonNotesUpdatePanelHeader()** added — called from lessonNotesRender() (option A) and lessonNotesRenderPanel(). Keeps header in sync on all render paths.
-
-## Progress Panel Header
-`progressPanelHeader` added — static ヨシ title only for now. Controls remain inline.
-
 ## TranscriptionService — Hallucination Filter
-`_filterHallucinations(segments)` added to `src/services/TranscriptionService.js`.
-Applied in both `transcribe()` and `transcribeFile()` return paths.
+`_filterHallucinations(segments)` in `src/services/TranscriptionService.js`.
+Applied in both `transcribe()` and `transcribeFile()`.
 Known hallucinations: ご視聴ありがとうございました, チャンネル登録よろしくお願いします, ありがとうございました, お疲れ様でした, Thank you for watching, Please subscribe, Like and subscribe.
 
-## Settings — Teacher Track Checkbox
-Added to Microphone section in index.html:
-- Checkbox: "Record teacher track (loopback)"
-- Saves to `Storage.set('recordTeacherTrack', this.checked)`
-- AudioService.js needs to be wired to read this setting (not yet done — noted)
+## Settings — Teacher Track
+Checkbox added to Microphone section: "Record teacher track (loopback)".
+Saves to `Storage.set('recordTeacherTrack', this.checked)`.
+Wired in `AudioService.js` — reads setting before BlackHole discovery, skips loopback if false.
 
 ## CSS — ln-drill-card classes
 ```css
@@ -198,62 +170,59 @@ Added to Microphone section in index.html:
 .ln-drill-card { width: 380px; height: clamp(200px, calc(100vh - 440px), 280px); background: var(--paper-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 24px; }
 ```
 
-## Storage Migration
-### Migrated
-- gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS ✓
-
-### Still on localStorage
-- voice profile, voice pause data, video watch time, resources, learned words
-
 ## Known Issues
 - yoshiInitUI not defined on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
-- Teacher track checkbox in settings not yet wired to AudioService.js
+- Two parallel Yoshi render paths still exist (consolidation pending)
 
-## Token Optimisation — Future Work
-1. Voice conversation history — summarise after 10 exchanges
-2. Grammar sentence generation — cache by grammar_point+level in SQLite
-3. Translation breakdown — cache word lookups in SQLite
-4. Lesson mode — pre-load context once at entry
+## Pending Work — Priority Order
 
-## Design System Gaps
-1. Transient flash feedback — needs .btn-flash class
-2. 3-state gold toggles — left inline
-3. Recording state red — btn-active-red exists but undocumented
+### Next Session
+1. **Yoshi render path consolidation** — merge `lessonNotesRender()` (writes to #lessonNotesView / #lessonNotesViewMain) into `lessonNotesRenderPanel()` (writes to #lessonNotesPanelContent). Use Code. Check if #lessonNotesView and #lessonNotesViewMain still exist in index.html first.
+2. **Progress panel header** — add briefing refresh + About me controls into header
+3. **Dead code cleanup** — `lessonNotesUpdateTabControls()`, old `lessonNotesPanelSelect`
 
-## Video Panel — Design Note
-Flagged for proper UI integration when redesign decision is made.
+### TextInputDrill Component — Planned
+All text-input drills share the same structure but are independently built:
+1. Kana drill (core-kana.js) — auto-check on input
+2. Kana word drill (core-kana-drill.js)
+3. Grammar conjugation drill (features-grammar.js)
+4. Grammar sentence drill (features-grammar.js)
+5. Grammar pattern drill (features-grammar.js)
+6. Counter drill (core-counters.js)
+7. Yoshi story cloze — removed
 
-## Pending Work
-### Dropbox recordings redirect — pending decision
-- Move `getLessonsDir()` target in main.js to Dropbox folder
-- Migrate `audio_path` in `lesson_sessions` table (absolute paths will break)
+Plan: Build `src/ui/TextInputDrill.js` component. Migrate conjugation first (most complex = best test), then counters, then kana. Kana auto-check logic may need to stay separate.
+**Do after render consolidation.**
+
+### Dropbox Recordings Redirect — Pending Decision
+- Move `getLessonsDir()` in main.js to Dropbox folder
+- Migrate `audio_path` in `lesson_sessions` (absolute paths will break)
 - Depends on: Dropbox path, mobile app scope (iOS? read-only or record?)
-- Do not touch until Paul confirms details
 
-### Video → Audio pipeline
+### Video → Audio Pipeline
 - Screen record Teams call, extract audio with ffmpeg, send to Whisper
-- Already have ffmpeg + transcribeFile() — just needs file picker + ffmpeg extract step
-- One-off: ffmpeg -i input.mp4 -vn -c:a libopus output.webm
+- ffmpeg -i input.mp4 -vn -c:a libopus output.webm
+- Needs file picker + ffmpeg extract step in app
 
-### Teacher track checkbox wiring
-- `Storage.get('recordTeacherTrack')` needs to be read in AudioService.js before loopback setup
-- If false, skip BlackHole discovery entirely
-
-### Pitch Accent — unblocked, highest value next feature
-- renderPitchCurve() SVG function in core-foundation.js
-- Wire into vocab card render (already showing in current layout)
+### Pitch Accent — Unblocked, High Value
+- renderPitchCurve() SVG in core-foundation.js
+- Wire into vocab card render
 - pitchAPI: window.pitchAPI.lookup(kanji, reading) → pitch string or null
 
-### Lesson Mode Architecture
-- Global App.lessonMode = { id, label } state
+### Lesson Mode Architecture — Future
+- Global App.lessonMode = { id, label }
 - Each panel pre-filters by lesson_id when set
 - Topbar indicator showing current lesson
-- Yoshi panel becomes lesson manager/selector in sidebar
-
-### Grammar Sentences Phase 3, Phone Audio Export — frozen
 
 ## SQLite Schema (v9)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
 pitch_data: 124,137 entries
 Access: window.pitchAPI.lookup(kanji, reading)
+
+## Storage Migration Status
+### Migrated to kvAPI
+gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS ✓
+
+### Still on localStorage
+voice profile, voice pause data, video watch time, resources, learned words

@@ -396,23 +396,23 @@ function renderFourStrandRecency() {
   const _vocabDate = [rec.anki, rec.words, rec.counters].filter(Boolean).sort().pop() || null;
 
   const strands = [
-    { label: 'INPUT', items: [
+    { label: 'INPUT', sub: 'listening & reading', items: [
       { label: 'Reading',    key: 'reading',   panel: 'read'      },
       { label: 'Listening',  key: 'listening', panel: 'listening' },
       { label: 'Video',      key: 'video',     panel: 'video'     },
     ]},
-    { label: 'OUTPUT', items: [
+    { label: 'OUTPUT', sub: 'speaking & writing', items: [
       { label: 'Writing',    key: 'writing',   panel: 'writing'   },
       { label: 'Speaking',   key: 'speaking',  panel: 'voice'     },
     ]},
-    { label: 'STUDY', items: [
+    { label: 'STUDY', sub: 'deliberate learning', items: [
       { label: 'Vocabulary',   key: '_vocab',    panel: 'words'     },
       { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
       { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
       { label: 'Kana',         key: 'kana',      panel: 'kana'      },
       { label: 'Questions',    key: 'chat',      panel: 'dashboard' },
     ]},
-    { label: 'FLUENCY', items: [
+    { label: 'FLUENCY', sub: 'using what you know', items: [
       { label: 'Speaking',     key: 'speaking',  panel: 'voice'     },
       { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
       { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
@@ -456,7 +456,7 @@ function renderFourStrandRecency() {
     }
 
     html += '<div>'
-      + '<div style="font-family:var(--ui);font-size:0.62rem;letter-spacing:0.12em;color:var(--ink-light);opacity:0.75;margin-bottom:5px">' + strand.label + '</div>'
+      + '<div style="font-family:var(--ui);font-size:0.62rem;letter-spacing:0.12em;color:var(--ink-light);opacity:0.75;margin-bottom:5px">' + strand.label + (strand.sub ? '<span style="letter-spacing:0;opacity:0.6;margin-left:6px;font-size:0.58rem">' + strand.sub + '</span>' : '') + '</div>'
       + '<div style="display:flex;flex-wrap:wrap;gap:5px">';
 
     for (const item of strand.items) {

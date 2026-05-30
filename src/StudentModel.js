@@ -503,6 +503,19 @@ const StudentModel = (() => {
       '',
     ];
 
+    // Four Strands recency summary
+    (() => {
+      try {
+        const dr = safeJSON('drillLastCompleted', {});
+        const ds = k => { const v = dr[k]; if (!v) return 'never'; const d = Math.round((Date.now() - new Date(v).getTime()) / 86400000); return d === 0 ? 'today' : d === 1 ? 'yesterday' : d + ' days ago'; };
+        lines.push('### Four Strands — last activity');
+        lines.push(`Input: reading ${ds('reading')}, listening ${ds('listening')}, video ${ds('video')}`);
+        lines.push(`Output: writing ${ds('writing')}, speaking ${ds('speaking')}`);
+        lines.push(`Study: vocabulary ${ds('words')}, grammar ${ds('gramSent')}, conjugation ${ds('conj')}, kana ${ds('kana')}`);
+        lines.push(`Fluency: speaking ${ds('speaking')}, conjugation ${ds('conj')}`);
+        lines.push('');
+      } catch(e) {}
+    })();
     // Append transcript sample if available
     if (s.transcriptSample?.turns?.length) {
       lines.push('### Recent transcript sample (last 100 turns)');
