@@ -125,7 +125,7 @@ async function qrLoadText(text) {
 
 function qrShowPaste() {
   const rw = document.getElementById('qrReaderWrap');
-  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
+  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'none';
   const pa = document.getElementById('readPasteArea');
   if (rw) rw.style.display = 'none';
   if (pa) pa.style.display = 'block';
