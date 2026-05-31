@@ -1337,7 +1337,7 @@
     <!-- Quick Read -->
     <div id="readQuickPane" style="width:100%">
       <div id="readPasteArea" style="width:100%">
-        <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="min-height:200px;margin-bottom:12px"></textarea>
+        <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="min-height:600px;margin-bottom:12px"></textarea>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
           <button class="btn-action" id="qrRawSpeakBtn" onclick="qrSpeakRaw()" title="Read text aloud without analysing" disabled>Listen</button>
@@ -2144,7 +2144,7 @@
         <video id="vtVideo" style="display:none;width:100%;border-radius:8px;background:#000;cursor:pointer;flex:1;min-height:0;object-fit:contain" onclick="vtTogglePlay()"
           ontimeupdate="vtOnTimeUpdate()" onplay="vtOnPlay()" onpause="vtOnPause()" onloadedmetadata="vtOnLoaded()"></video>
         <div id="vtNoVideo" onclick="document.getElementById('vtVideoInput').click()" 
-          style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;border:2px dashed var(--border);border-radius:8px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;gap:8px;transition:border-color 0.15s"
+          style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:600px;border:2px dashed var(--border);border-radius:8px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;gap:8px;transition:border-color 0.15s"
           ondragover="event.preventDefault();this.style.borderColor='var(--teal)'"
           ondragleave="this.style.borderColor=''"
           ondrop="this.style.borderColor='';vtHandleDrop(event)">
@@ -2349,7 +2349,7 @@
         <button class="btn-nav" onclick="vtCloseBreakdown()">Close</button>
       </div>
       <div id="vtBreakdownLine" style="padding:16px 18px;font-family:var(--jp);font-size:1.15rem;color:var(--ink);line-height:1.8;border-bottom:1px solid var(--border);background:rgba(48,213,200,0.05);user-select:text"></div>
-      <div id="vtBreakdownContentPopup" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:200px;user-select:text">
+      <div id="vtBreakdownContentPopup" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:600px;user-select:text">
         <span style="color:var(--ink-light);font-size:0.85rem">Loading breakdown…</span>
       </div>
     </div>
