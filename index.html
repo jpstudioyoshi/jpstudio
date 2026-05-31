@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260531zi">
+<link rel="stylesheet" href="style.css?v=20260531y">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -129,7 +129,7 @@
     </select>
   </div>
 </div>
-<div id="wordsPanelHeader" class="panel-header-lower" style="display:none" style="display:none">
+<div id="wordsPanelHeader" class="panel-header-lower" style="display:none; background: rgba(255,165,0,0.5) !important;" style="display:none">
   <div class="panel-section-title">
     <span class="panel-section-title-jp">語彙</span>
     <select class="btn-nav btn-sm" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
@@ -741,7 +741,7 @@
       <div id="countProgress2" style="display:flex;justify-content:center;gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
 
       <!-- Drill card -->
-      <div id="countDrillArea2" style="background:transparent;border:none;border-radius:10px;padding:16px;margin-bottom:8px;width:fit-content;min-width:380px;margin-left:auto;margin-right:auto">
+      <div id="countDrillArea2" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:8px">
         <div id="countPrompt2" style="text-align:center;margin-bottom:12px">
           <div id="countPromptEmoji2" style="font-size:2.2rem;margin-bottom:6px;font-family:var(--jp);color:var(--teal)">数</div>
           <div id="countPromptText2" style="font-family:var(--ui);font-size:2.2rem;color:var(--ink-light)">select counters and start</div>
@@ -759,8 +759,8 @@
       <!-- Hidden ref grid (still needed by countRenderRefGrid2) -->
       <div id="countRefGrid2" style="display:none"></div>
 
-      <!-- Action buttons inline -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px">
+      <!-- Upper footer: drill actions -->
+      <div class="footer-upper">
         <button class="btn-action" id="countCheckBtn2" onclick="countCheck2()">Check</button>
         <button id="countNextBtn2" onclick="countAdvance2()" style="display:none" class="btn-rating btn-rating-teal">Next →</button>
         <button class="btn-action" onclick="countHear2()" title="Hear the answer">🔊</button>
@@ -770,12 +770,11 @@
       <!-- Lower footer: counter selection -->
       <div class="footer-lower">
         <div class="footer-lower-row" id="countCheckboxRow"></div>
-      </div>
-      <!-- Upper footer: session controls -->
-      <div class="footer-upper">
-        <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-toggle">🖼 Objects</button>
-        <button onclick="countForceNewSession2()" class="btn-nav">New session</button>
-        <button class="btn-nav" onclick="countShowMastery()">Mastery</button>
+        <div class="footer-lower-row">
+          <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-toggle">🖼 Objects</button>
+          <button onclick="countForceNewSession2()" class="btn-nav">New session</button>
+          <button class="btn-nav" onclick="countShowMastery()">Mastery</button>
+        </div>
       </div>
 
     </div><!-- end words-sub-counters -->

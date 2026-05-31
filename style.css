@@ -548,8 +548,8 @@
   .ln-drill-card { width: 380px; height: clamp(200px, calc(100vh - 440px), 280px); background: var(--paper-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 24px; }
 
   .vocab-controls { display: flex; gap: 12px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
-  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: none; height: 10vh; position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; }
-  .footer-lower { background: var(--paper-dark); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
+  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: rgba(0,255,0,0.3); height: 10vh; position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; }
+  .footer-lower { background: rgba(0,0,255,0.3); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
   .footer-lower-row { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 4px 12px; border-top: 0.5px solid rgba(255,255,255,0.04); }
   .footer-lower-row:first-child { border-top: none; }
   .filter-footer { border-top: 1px solid var(--border); background: var(--paper-dark); margin-top: 16px; padding: 4px 0; }
@@ -1537,7 +1537,7 @@
   .conj-footer-group:first-child { padding-left: 0; }
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
   #gram2-sub-conj { padding-top: 0; padding-bottom: 0; height: 447px; overflow: hidden; }
-  #words-sub-counters { padding-top: 60px; padding-bottom: 0; height: 547px; overflow: hidden; }
+  #words-sub-counters { padding-top: 0; padding-bottom: 0; height: 547px; overflow: hidden; background: rgba(255,0,0,0.3); }
   .conj-footer-upper { position: fixed; bottom: 179px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .conj-advanced-toggle {
     border-radius: 6px;
