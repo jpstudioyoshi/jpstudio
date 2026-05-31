@@ -733,9 +733,9 @@ function qrToggleListenMode() {
   const recordSection = document.getElementById('qrRecordSection');
   const btn = document.getElementById('qrListenModeBtn');
   
+  const container = document.getElementById('qrListenContainer');
   if (QuickReadState.listenModeOpen) {
-    panel.style.display = 'none';
-    if (recordSection) recordSection.style.display = 'none';
+    if (container) container.style.display = 'none';
     btn.classList.remove('active');
     QuickReadState.listenModeOpen = false;
     speechSynthesis.cancel();
@@ -757,8 +757,7 @@ function qrToggleListenMode() {
     if (QuickReadState.sentences.length === 0) return;
     
     QuickReadState.sentenceIdx = 0;
-    panel.style.display = 'block';
-    if (recordSection) recordSection.style.display = 'block';
+    if (container) container.style.display = 'block';
     btn.classList.add('active');
     QuickReadState.listenModeOpen = true;
     
