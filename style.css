@@ -1539,7 +1539,7 @@
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
   #gram2-sub-conj { padding-top: 0; padding-bottom: 0; height: 447px; overflow: hidden; }
   #words-sub-counters { padding-top: 60px; padding-bottom: 0; height: 547px; overflow: hidden; }
-  .conj-footer-upper { position: fixed; bottom: 179px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .conj-footer-upper { position: fixed; bottom: 179px; left: 52px; right: 0; z-index: 50; background: none; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; padding: 6px 12px; }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;
@@ -1609,11 +1609,11 @@
   }
   .conj-skip-btn:hover { border-color: var(--ink); color: var(--ink); }
 
-  .conj-feedback { font-family: var(--jp); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; min-width: 260px; height: 36px; border: 1px solid transparent; border-radius: 6px; padding: 0 16px; background: transparent; margin-left: auto; margin-right: 16px; }
+  .conj-feedback { font-family: var(--jp); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; width: 100%; height: 36px; border: 1px solid transparent; border-radius: 6px; padding: 0 16px; background: transparent; box-sizing: border-box; }
   .conj-feedback.show { border-color: var(--border); background: var(--paper); }
   .conj-feedback.show:not(.slip-fb):not(.wrong-fb) { color: var(--teal); }
-  .conj-feedback.slip-fb { color: var(--gold); }
-  .conj-feedback.wrong-fb { color: var(--red); }
+  .conj-feedback.slip-fb { color: var(--gold); border-color: var(--gold); background: rgba(255,197,61,0.10); }
+  .conj-feedback.wrong-fb { color: var(--red); border-color: var(--red); background: rgba(255,107,107,0.10); }
   .conj-feedback.correct-fb { color: var(--teal); border-color: var(--teal); background: rgba(48, 213, 200, 0.12); }
   .conj-answer-reveal {
     font-family: 'Noto Sans JP', sans-serif; font-size: 1.3rem;
