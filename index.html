@@ -1343,17 +1343,7 @@
         </div>
       </div>
       <div id="qrReaderWrap" style="display:none">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-          <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
-          <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()" title="One sentence per line">Lines</button>
-          <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()" title="Sentence-by-sentence listening">Listen</button>
-          <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
-          <button class="btn-action" onclick="qrSendToWrite()" title="Copy plain text to Write panel">Write</button>
-          <button class="btn-action" onclick="qrPrintPage()" title="Print with furigana (black on white)">Print</button>
-          <button class="btn-action" onclick="qrClear()" title="Clear and start over">Clear</button>
-          <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="margin-left:auto;min-width:160px"><option value="">— History —</option></select>
-          <button class="btn-destructive" onclick="qrDeleteHistory()">Delete</button>
-        </div>
+
         <div class="qr-reader-box">
         
         <!-- Sentence listening panel (hidden by default) -->
@@ -1474,7 +1464,17 @@
         <div id="epubPopupReading" style="font-family:var(--jp);font-size:0.9rem;color:var(--teal);margin-bottom:6px"></div>
         <div id="epubPopupMeaning" style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);line-height:1.5"></div>
       </div>
-    <div class="footer-upper"></div>
+    <div class="footer-upper" id="qrFooterUpper" style="display:none;gap:6px;flex-wrap:wrap">
+      <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
+      <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()">Lines</button>
+      <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Listen</button>
+      <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
+      <button class="btn-action" onclick="qrSendToWrite()">Write</button>
+      <button class="btn-action" onclick="qrPrintPage()">Print</button>
+      <button class="btn-action" onclick="qrClear()">Clear</button>
+      <select class="select-field" id="qrHistorySelect" onchange="qrLoadHistory(this.value)" style="min-width:140px"><option value="">— History —</option></select>
+      <button class="btn-destructive" onclick="qrDeleteHistory()">Delete</button>
+    </div>
     <div class="footer-lower"></div>
   </div>
   </div>
@@ -2918,7 +2918,7 @@
 <script src="src/features-lesson-notes.js?v=20260530s"></script>
   <script src="src/features-ln-p2.js?v=20260530b"></script>
 <script src="src/features-grammar.js?v=20260531"></script>
-<script src="src/features-reading.js?v=20260529d"></script>
+<script src="src/features-reading.js?v=1780238249"></script>
 <script src="src/features-video.js?v=20260529d"></script>
 <script src="src/features-pictures.js?v=20260529d"></script>
 <script src="src/features-progress.js?v=20260531"></script>

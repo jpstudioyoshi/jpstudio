@@ -125,6 +125,7 @@ async function qrLoadText(text) {
 
 function qrShowPaste() {
   const rw = document.getElementById('qrReaderWrap');
+  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
   const pa = document.getElementById('readPasteArea');
   if (rw) rw.style.display = 'none';
   if (pa) pa.style.display = 'block';
@@ -280,6 +281,7 @@ Text: ${textForAI}` }],
     qrRender(QuickReadState.segments);
 
     const rw = document.getElementById('qrReaderWrap');
+  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
     if (rw) rw.style.display = 'block';
     if (pa) pa.style.display = 'none';
@@ -636,8 +638,6 @@ async function qrLoadHistory(indexStr) {
   
   qrUpdateSegmentUI();
   
-  // Reset dropdown
-  document.getElementById('qrHistorySelect').value = '';
   
   // Restore segments if cached — avoids re-analysis API call
   if (item.segments && item.segments.length) {
@@ -645,6 +645,7 @@ async function qrLoadHistory(indexStr) {
     qrOnInput();
     qrRender(QuickReadState.segments);
     const rw = document.getElementById('qrReaderWrap');
+  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
     if (rw) rw.style.display = 'block';
     if (pa) pa.style.display = 'none';
@@ -1373,6 +1374,7 @@ function qrRestoreSession() {
 
     // Restore UI
     const rw = document.getElementById('qrReaderWrap');
+  const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
     if (rw) rw.style.display = 'block';
     if (pa) pa.style.display = 'none';

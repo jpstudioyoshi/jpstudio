@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-31 (session 16 — Satellite Gist sync, Progress tab listen log, Counter drill footer layout)
+Last updated: 2026-05-31 (session 17 — layout standardisation, Yoshi dead code removal, conjugation/counter drill fixes, Satellite sync fixed)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -25,6 +25,8 @@ Last updated: 2026-05-31 (session 16 — Satellite Gist sync, Progress tab liste
 - Token stored in remote URL — no password prompt needed.
 - Standard push: jp && git add -A && git commit -m "message" && git push
 - Pre-commit hook runs check-syntax.js automatically — always check output
+- **Token scope for jpStudio:** `repo` scope
+- **Token scope for Satellite Gist sync:** `gist` scope only — stored in phone localStorage, never in source
 
 ## Claude Code
 - Installed: @anthropic-ai/claude-code (sudo npm install -g @anthropic-ai/claude-code)
@@ -60,15 +62,16 @@ All edits are done via terminal — no file upload/download.
 - Use /tmp/ temp files for complex JS replacements to avoid Python escaping issues
 
 **Critical lessons:**
-- python3 string matching fails silently on whitespace/encoding differences
+- python3 string matching fails silently on whitespace/encoding differences — use line-number sed instead
 - sed replacing function names as well as call sites — always check after
 - Line numbers shift after edits — re-grep before editing again
 - Duplicate CSS rules accumulate — grep for class name before adding new rules
-- Electron caches CSS — always bump style.css?v= version string after changes
+- Electron caches CSS AND JS — always bump version strings after changes; use date +%s for guaranteed cache bust
 - position:fixed can be overridden by earlier duplicate rules — grep for all instances first
 - When line-number deletion leaves orphan braces — always run node check-syntax.js after edits
-- GitHub push protection auto-revokes tokens found in committed files — never put tokens in source
+- GitHub push protection auto-revokes tokens found in committed files or chat — never put tokens in source or chat
 - Always use jp && prefix — never assume current directory
+- const/let TDZ bugs in Electron: if a script aborts mid-load, later const/let declarations stay in dead zone — use var for shared cross-file state
 
 ## Satellite Audio Player
 
@@ -90,12 +93,11 @@ A standalone PWA (`index.html`) hosted at https://jpstudioyoshi.github.io/jpsat
 - File: listen-log.json
 - Format: [{ "date": "YYYY-MM-DD", "filename": "file.mp3", "seconds": 420 }, ...]
 
-### Token situation — INCOMPLETE
-- GitHub auto-revokes tokens found in committed files or chat
-- Three tokens burned this way
-- **Next session:** Use Cloudflare Worker proxy — token lives in CF environment variables, never in source
-- Satellite currently has no working token — sync gives 401
-- New token needed (previous ones all revoked)
+### Token situation — RESOLVED
+- Gist sync token uses `gist` scope only
+- Stored in phone localStorage via the Satellite settings UI
+- Never in source code or chat
+- Sync working as of session 17
 
 ### jpStudio integration
 - `src/features-listen-log.js` — new file added session 15
@@ -110,23 +112,34 @@ A standalone PWA (`index.html`) hosted at https://jpstudioyoshi.github.io/jpsat
 - Buttons need to be bigger for phone use
 - Use Claude Design to redesign: point at https://jpstudioyoshi.github.io/jpsat
 
-## Drill Layout Standard
+## Layout Standard — Session 17 Fixes
 
-### Conjugation drill (reference model)
-- Uses `conj-footer-upper` (position:fixed, bottom:155px) for action buttons
-- Uses `conj-footer` (position:fixed, bottom:0) for grouped filter checkboxes
-- **Known issue: vertical position of the drill card is wrong — too much empty space above card, needs fixing**
-- `conj-footer-upper` bottom value is hardcoded to match conj-footer height
+### Panel padding standard
+- Base: `.panel { padding-top: 98px }` — covers nav (50px) + quick translate bar (48px)
+- Panels with `panel-header-lower`: `padding-top: 158px` (98px + ~60px header)
+- Panels with footers: `padding-bottom: 20vh`
+- `panel-header-lower` is `position:fixed; top: 98px`
+- Nav bar changed from `position:sticky` to `position:fixed` (session 17)
 
-### Counter drill (session 16 work)
-- Converted from two-column (drill + sidebar) to single-column + standard footers
-- Now uses `footer-upper` (action buttons: Check, Next, 🔊, 📖) 
-- Now uses `footer-lower` (two rows: counter checkboxes + New/Mastery buttons)
+### Panels with panel-header-lower (padding-top: 158px)
+voice, listen, writing, read, words, grammar2, lessonnotes/yoshi, progress
+
+### Panels without panel-header-lower (padding-top: 98px)
+kana, dashboard, translate, video, recordings, and others
+
+### Conjugation drill — FIXED session 17
+- `#gram2-sub-conj`: `height: 447px; overflow: hidden; padding: 0`
+- `conj-footer-upper`: `position:fixed; bottom: 179px` (matches actual conj-footer height)
+- `.conj-drill-area`: `display:flex; flex-direction:column; gap:16px`
+- No scrolling, card correctly positioned
+
+### Counter drill — FIXED session 17
+- `#words-sub-counters`: `height: 447px; overflow:hidden; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:center`
+- Start button in footer-upper hides drill until pressed
+- `countStart2()` function in core-counters.js shows drill area on start
+- Counter mastery button removed (was defective)
 - `countRefGrid2` kept as hidden div for JS compatibility
 - `countCheckboxRow` is the visible footer checkbox container
-- Mastery button moved to lower footer row 2
-- Mastery panel (`counterMasteryPanel`) still renders in progress panel — needs fixing later
-- Card spacing tightened: padding 24→16px, margins reduced
 
 ### Standard footer pattern (footer-upper / footer-lower)
 ```css
@@ -135,17 +148,16 @@ A standalone PWA (`index.html`) hosted at https://jpstudioyoshi.github.io/jpsat
 .footer-lower-row { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px; }
 ```
 - Panel padding-bottom: 20vh to clear both footers
-- panel-words: `padding-bottom: 20vh; overflow:hidden`
 
 ## Design Language
 
 ### Layout Structure
-- **Top bar (nav):** primary panel switching — JP kanji + English label tabs
-- **Sidebar:** context-sensitive subtabs top, reference panels bottom
-- **Section title:** `語彙 [Words ▾]` — kanji + dropdown for subtab switching, remembers last used
-- **Content area:** drill/content fills available space
-- **Upper footer:** intra-session controls (Prev/Again/Got it/Learned/Next, mode toggles) — fixed to bottom
-- **Lower footer:** session setup filters (Level/Type/Size, show toggles) — fixed to very bottom
+- **Top bar (nav):** primary panel switching — JP kanji + English label tabs — `position:fixed; top:0`
+- **Quick translate bar:** `#globalQuickTranslate` — `position:fixed; top:50px`
+- **Panel header:** `panel-header-lower` — `position:fixed; top:98px`
+- **Content area:** starts at 98px (no header) or 158px (with header)
+- **Upper footer:** intra-session controls — fixed to bottom
+- **Lower footer:** session setup filters — fixed to very bottom
 
 ### Footer implementation
 - Both footers use `position: fixed !important`
@@ -157,8 +169,7 @@ A standalone PWA (`index.html`) hosted at https://jpstudioyoshi.github.io/jpsat
 ### Panel Headers
 All panels use `panel-header-lower` + `panel-section-title` pattern.
 Header divs declared in index.html, shown/hidden in `showPanel()` in core-foundation.js.
-`panel-header-lower` uses `min-height:56px; height:auto; flex-wrap:wrap`.
-Panel padding-top: `#panel-lessonnotes { padding-top: 75px }`, `#panel-progress { padding-top: 75px }`.
+`panel-header-lower` uses `min-height:56px; height:auto; flex-wrap:wrap; position:fixed; top:98px`.
 
 Panels with headers: voice, listen, writing, read, words, grammar, yoshi (lessonnotes), progress.
 
@@ -188,15 +199,19 @@ All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-
 - `btn-rating-teal` — teal rating (Got it / Known)
 
 ## Yoshi (Lesson Notes) Panel
-`yoshiPanelHeader` renders dynamically via `lessonNotesUpdatePanelHeader()`.
-Called from both `lessonNotesRender()` and `lessonNotesRenderPanel()`.
 
-### Render path consolidation — READY TO DO
-- `#lessonNotesView` and `#lessonNotesViewMain` confirmed absent from index.html (grep returns 0)
-- `lessonNotesRender()` and `lessonNotesRenderMain()` are therefore dead code
-- One Claude Code session needed — Opus 4.8
-- Brief: "Find all callers of lessonNotesRender() and lessonNotesRenderMain(). Report only, do not edit."
-- API rate limit hit session 15 before this could run — do first thing next Code session
+### Render path — CONSOLIDATED session 17
+- **Live path only:** `lessonNotesRenderPanel()` → `#lessonNotesPanelContent` in `#panel-lessonnotes`
+- Dead el1/el2 branches removed from `lessonNotesRender()`
+- `lessonNotesRender()` still exists (~57 callers) — now just an alias for the panel path
+- `yoshiParseWhatsapp` kept — live, used by Orchestrator + WhatsApp import
+
+### Dead code removed session 17 (~860 lines across 4 files)
+- `lessonNotesRenderMain()` — zero callers
+- `lessonNotesUpdateTabControls()` — always no-op
+- Entire legacy Yoshi-sessions subsystem: yoshiRender, yoshiOpenSession, yoshiShowSession, yoshiSwitchTab, yoshiDeleteSession, yoshiShowImportInline, yoshiParseDocx, yoshiImport, yoshiRenderCloze/CheckCloze/RevealAll/ResetCloze/ConfirmCloze, yoshiShowVocabPopup/VocabPopupAddRow/VocabPopupSave, yoshiAddVocab, yoshiLiveTitle, yoshiKanaDebounce, yoshiComputeBlanks, yoshiGetSessions, yoshiSaveSessions, yoshiCurrentIdx
+- `#yoshiMain` was never in index.html — orphaned since old features.js was removed
+- Stale root-level `core-foundation.js` (dated May 23) still exists — never loaded, harmless, cleanup later
 
 ### View Dropdown Options
 - Vocab Drill — card drill, click to reveal
@@ -250,39 +265,26 @@ Wired in `AudioService.js` — reads setting before BlackHole discovery, skips l
 ## Known Issues
 - yoshiInitUI not defined on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
-- Two parallel Yoshi render paths still exist (consolidation pending — Code session)
-- Satellite sync 401 — token injection unsolved, needs Cloudflare Worker next session
-- **Conjugation drill card vertical position wrong** — too much empty space above card. conj-footer-upper is at bottom:155px (hardcoded to conj-footer height). Panel has padding-top:80px. Investigate whether panel padding or card margin is the cause. Fix before counter drill.
-- Counter drill mastery panel renders into #counterMasteryPanel in progress panel — wrong location, defer
+- App opens on Questions (dashboard) panel instead of Progress — regression from session 17 nav fix
+- Counter drill stats display differs from conjugation (split left/right vs centred) — deferred to TextInputDrill component work
+- Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
 
 ## Pending Work — Priority Order
 
 ### Immediate (next chat session)
-1. **Conjugation drill vertical position** — fix empty space above drill card
-2. **Counter drill review** — check layout after session 16 changes, adjust to match conjugation
-3. **Counter drill mastery** — render inline not into progress panel
+1. **App startup panel** — app now opens on Questions instead of Progress, restore correct default
+2. **Yoshi panel padding** — verify 158px padding looks correct on all Yoshi subtabs
+3. **Counter drill stats** — centred stats row to match conjugation (defer to TextInputDrill)
 
 ### Next Code Session
-1. **Yoshi render path consolidation** — lessonNotesRender() and lessonNotesRenderMain() are dead code, remove safely
-2. **Satellite Cloudflare Worker** — token proxy so sync works without exposing credentials
+1. **TextInputDrill component** — `src/ui/TextInputDrill.js`, migrate conjugation first then counters then kana
+2. **Satellite UI redesign** — larger fonts, higher contrast, bigger buttons for phone use
 
 ### Medium term
 1. **REVIEW.md** — add to jpStudio repo root, DOM-write conflict prevention
 2. **DOM-write audit** — extend check-syntax.js to flag multiple writers to same element
 3. **Progress panel header** — add briefing refresh + About me controls into header
-4. **Dead code cleanup** — lessonNotesUpdateTabControls(), old lessonNotesPanelSelect
-
-### TextInputDrill Component — Planned
-All text-input drills share the same structure but are independently built:
-1. Kana drill (core-kana.js) — auto-check on input
-2. Kana word drill (core-kana-drill.js)
-3. Grammar conjugation drill (features-grammar.js)
-4. Grammar sentence drill (features-grammar.js)
-5. Grammar pattern drill (features-grammar.js)
-6. Counter drill (core-counters.js)
-
-Plan: Build `src/ui/TextInputDrill.js` component. Migrate conjugation first, then counters, then kana.
-**Do after render consolidation.**
+4. **Stale root core-foundation.js** — delete safely
 
 ### Dropbox Recordings Redirect — Pending Decision
 - Move `getLessonsDir()` in main.js to Dropbox folder
