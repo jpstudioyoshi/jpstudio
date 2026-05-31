@@ -1377,30 +1377,6 @@
             <button onclick="qrSetSpeed(1.2)" class="qr-speed-btn btn-toggle" data-speed="1.2">1.2×</button>
           </div>
         </div>
-        
-        <!-- Recording section - directly under Listen panel -->
-        <div id="qrRecordSection" style="padding:12px 24px;border-top:1px solid var(--border)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink-light)">🎙️ SENTENCE RECORDING</span>
-            <button class="btn-action" onclick="qrRecordToggle()" id="qrRecordBtn">Record</button>
-            <span id="qrRecordStatus" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)"></span>
-          </div>
-          
-          <!-- Segment bar -->
-          <div id="qrSegmentBar" style="display:flex;gap:6px;flex-wrap:wrap;min-height:24px;margin-bottom:10px"></div>
-          
-          <!-- Controls -->
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span id="qrSegmentCount" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">0 segments</span>
-            <button onclick="qrPlayAllSegments()" id="qrPlayAllBtn" disabled class="btn-action">Play all</button>
-            <button onclick="qrCombineSegments()" id="qrCombineBtn" disabled class="btn-action">Combine</button>
-            <button onclick="qrDownloadCombined()" id="qrDownloadBtn" disabled class="btn-action">Download</button>
-            <button class="btn-destructive" onclick="qrClearSegments()">Clear</button>
-          </div>
-          
-          <!-- Combined waveform -->
-          <canvas id="qrWaveform" style="display:none;width:100%;height:50px;margin-top:10px;background:var(--paper-dark);border-radius:4px"></canvas>
-        </div>
         </div><!-- end qrListenContainer -->
         
         <div id="qrReader" style="max-height:55vh;overflow-y:auto;scroll-behavior:smooth;padding-right:4px"></div>
@@ -1471,13 +1447,29 @@
     </div>
 
     <div class="footer-upper" id="qrFooterUpper" style="display:none">
-      <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
-      <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()">Lines</button>
-      <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Listen</button>
-      <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
-      <button class="btn-action" onclick="qrSendToWrite()">Write</button>
-      <button class="btn-action" onclick="qrPrintPage()">Print</button>
-      <button class="btn-action" onclick="qrClear()">Clear</button>
+      <div id="qrFooterBtns" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
+        <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()">Lines</button>
+        <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Listen</button>
+        <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
+        <button class="btn-action" onclick="qrSendToWrite()">Write</button>
+        <button class="btn-action" onclick="qrPrintPage()">Print</button>
+        <button class="btn-action" onclick="qrClear()">Clear</button>
+      </div>
+      <div id="qrRecordSection" style="display:none;width:100%">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink-light)">🎙️ SENTENCE RECORDING</span>
+          <button class="btn-action" onclick="qrRecordToggle()" id="qrRecordBtn">Record</button>
+          <span id="qrRecordStatus" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)"></span>
+          <div id="qrSegmentBar" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+          <span id="qrSegmentCount" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">0 segments</span>
+          <button onclick="qrPlayAllSegments()" id="qrPlayAllBtn" disabled class="btn-action">Play all</button>
+          <button onclick="qrCombineSegments()" id="qrCombineBtn" disabled class="btn-action">Combine</button>
+          <button onclick="qrDownloadCombined()" id="qrDownloadBtn" disabled class="btn-action">Download</button>
+          <button class="btn-destructive" onclick="qrClearSegments()">Clear</button>
+        </div>
+        <canvas id="qrWaveform" style="display:none;width:100%;height:40px;margin-top:6px;background:var(--paper-dark);border-radius:4px"></canvas>
+      </div>
     </div>
     <div class="footer-lower"></div>
   </div>
