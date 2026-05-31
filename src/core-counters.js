@@ -269,34 +269,32 @@ function countInit2() {
 
 function countRenderRefGrid2() {
   const grid = document.getElementById('countRefGrid2');
-  if (!grid) return;
-  
-  const counters = [
-    { key: 'tsu',           name: 'つ', desc: 'general',       on: true  },
-    { key: 'nin',           name: '人', desc: 'people',        on: true  },
-    { key: 'hon',           name: '本', desc: 'long things',   on: true  },
-    { key: 'mai',           name: '枚', desc: 'flat things',   on: true  },
-    { key: 'hiki',          name: '匹', desc: 'small animals', on: true  },
-    { key: 'dai',           name: '台', desc: 'machines',      on: true  },
-    { key: 'satsu',         name: '冊', desc: 'books',         on: true  },
-    { key: 'hai',           name: '杯', desc: 'cups',          on: true  },
-    { key: 'ko',            name: '個', desc: 'small round',   on: true  },
-  ];
+  const row  = document.getElementById('countCheckboxRow');
 
-  // Store counter list at module level for countUpdateOptions2 to use
+  const counters = [
+    { key: 'tsu',   name: 'つ', desc: 'general',       on: true  },
+    { key: 'nin',   name: '人', desc: 'people',        on: true  },
+    { key: 'hon',   name: '本', desc: 'long things',   on: true  },
+    { key: 'mai',   name: '枚', desc: 'flat things',   on: true  },
+    { key: 'hiki',  name: '匹', desc: 'small animals', on: true  },
+    { key: 'dai',   name: '台', desc: 'machines',      on: true  },
+    { key: 'satsu', name: '冊', desc: 'books',         on: true  },
+    { key: 'hai',   name: '杯', desc: 'cups',          on: true  },
+    { key: 'ko',    name: '個', desc: 'small round',   on: true  },
+  ];
   window._counterDrillList = counters;
 
-  grid.innerHTML = counters.map(c => `
-    <div style="display:flex;align-items:center;gap:6px">
+  const footerHtml = counters.map(c => `
+    <label class="btn-toggle" style="gap:4px">
       <input type="checkbox" id="countOpt2-${c.key}" ${c.on ? 'checked' : ''}
         onchange="countUpdateOptions2()"
-        style="width:13px;height:13px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;margin:0">
-      <button onclick="countShowRefPopup2('${c.key}')" title="${Object.values(COUNTER_DATA[c.key]?.readings || {}).slice(0,3).join(' · ')}..." style="display:flex;justify-content:space-between;align-items:center;flex:1;padding:5px 8px;background:var(--paper);border:1px solid var(--border);border-radius:5px;cursor:pointer;text-align:left">
-        <span style="font-family:var(--jp);font-size:1rem;color:var(--teal)">${c.name}</span>
-        <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${c.desc}</span>
-      </button>
-    </div>
+        style="width:12px;height:12px;accent-color:var(--teal);cursor:pointer;margin:0">
+      <span style="font-family:var(--jp);font-size:0.9rem;color:var(--teal)">${c.name}</span>
+      <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">${c.desc}</span>
+    </label>
   `).join('');
+  if (row) row.innerHTML = footerHtml;
+  if (grid) grid.innerHTML = footerHtml;
 }
 
 function countShowRefPopup2(counterKey) {

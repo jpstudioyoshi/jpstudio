@@ -343,7 +343,7 @@
   /* Full width panels */
   #panel-dashboard,
   #panel-read { padding-top: 75px; }
-  #panel-grammar2 { padding-top: 110px; }
+  #panel-grammar2 { padding-top: 110px; overflow: hidden; }
   #panel-writing { padding-top: 75px; }
   #panel-listening { padding-top: 75px; }
   #panel-voice { padding-top: 75px; padding-bottom: 20vh; }
@@ -1536,8 +1536,8 @@
   .conj-footer-group { display: flex; flex-direction: column; gap: 4px; padding: 0 16px; border-right: 1px solid var(--border); min-width: 110px; }
   .conj-footer-group:first-child { padding-left: 0; }
   .conj-footer-title { font-size: 0.62rem; color: var(--ink-light); font-family: var(--ui); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-  #gram2-sub-conj { padding-top: 80px; padding-bottom: 210px; }
-  .conj-footer-upper { position: fixed; bottom: 155px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  #gram2-sub-conj { padding-top: 0; padding-bottom: 0; height: 447px; overflow: hidden; }
+  .conj-footer-upper { position: fixed; bottom: 179px; left: 52px; right: 0; z-index: 50; background: none; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .conj-advanced-toggle {
     border-radius: 6px;
     font-size: 0.68rem; color: var(--teal); cursor: pointer;

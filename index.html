@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260530g">
+<link rel="stylesheet" href="style.css?v=20260531r">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -724,74 +724,60 @@
     </div>
     <!-- Counters Drill sub-tab -->
     <div id="words-sub-counters" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start">
-        
-        <!-- Main drill area -->
-        <div>
-          <!-- Session header -->
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div style="display:flex;gap:16px;align-items:center">
-              <span id="countRunIndicator2" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)"></span>
-              <span id="countQIndicator2" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)"></span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span style="font-family:var(--ui);font-size:0.85rem;color:var(--green)">✓ <span id="countCorrect2">0</span></span>
-              <span style="font-family:var(--ui);font-size:0.85rem;color:var(--coral)">✗ <span id="countWrong2">0</span></span>
-            </div>
-          </div>
-          
-          <!-- Progress dots -->
-          <div id="countProgress2" style="display:flex;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap"></div>
-          
-          <!-- Drill area -->
-          <div id="countDrillArea2" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px">
-            
-            <!-- Prompt -->
-            <div id="countPrompt2" style="text-align:center;margin-bottom:24px">
-              <div id="countPromptEmoji2" style="font-size:3rem;margin-bottom:12px;font-family:var(--jp);color:var(--teal)">数</div>
-              <div id="countPromptText2" style="font-family:var(--ui);font-size:2.2rem;color:var(--ink-light)">select counters and start</div>
-            </div>
-            
-            <!-- Input -->
-            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:16px">
-              <div style="display:flex;gap:10px;align-items:center">
-                <input type="text" id="countAnswer2" placeholder="Type reading..." 
-                  onkeydown="if(event.key==='Enter'){if(DrillFlow._advancing)return;if(DrillFlow._waitingEnter){DrillFlow.advance();return;}countCheck2();}"
-                  style="padding:12px 16px;font-family:var(--jp);font-size:1.2rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);width:200px;text-align:center;outline:none">
 
-              <button class="btn-action" id="countCheckBtn2" onclick="countCheck2()">Check</button>
-                <button id="countNextBtn2" onclick="countAdvance2()" style="display:none;padding:12px 20px;background:var(--gold);border:none;border-radius:8px;color:#1c1c1e;font-family:var(--ui);font-size:0.9rem;cursor:pointer">Next</button>
-                <button class="btn-action" onclick="countHear2()" title="Hear the answer">🔊</button>
-                <button class="btn-action" id="countLookupBtn2" onclick="countShowLookup2()" title="Show counter table">📖</button>
-              </div>
-            </div>
-            
-            <!-- Feedback -->
-            <div id="countFeedback2" style="text-align:center;min-height:50px;padding:12px">
-              <div id="countFeedbackText2" style="font-family:var(--jp);font-size:2.2rem"></div>
-            </div>
-          </div>
-          
+      <!-- Session header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;gap:16px;align-items:center">
+          <span id="countRunIndicator2" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)"></span>
+          <span id="countQIndicator2" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)"></span>
         </div>
-        
-        <!-- Reference sidebar -->
-        <div style="position:sticky;top:60px">
-          <div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
-            <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:10px">QUICK REFERENCE</div>
-            <div id="countRefGrid2" style="display:flex;flex-direction:column;gap:4px"></div>
-          </div>
-          <!-- Discreet action buttons below sidebar -->
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;padding-right:2px">
-            <div style="display:flex;gap:6px;align-items:center">
-              <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-nav">🖼 Objects</button>
-              <button onclick="countForceNewSession2()" class="btn-nav">New</button>
-            </div>
-            <button class="btn-action" onclick="countShowMastery()" style="font-size:0.75rem;padding:4px 10px">Mastery ▸</button>
-          </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-family:var(--ui);font-size:0.85rem;color:var(--green)">✓ <span id="countCorrect2">0</span></span>
+          <span style="font-family:var(--ui);font-size:0.85rem;color:var(--coral)">✗ <span id="countWrong2">0</span></span>
         </div>
-        
       </div>
-    </div><!-- end gram2-sub-count -->
+
+      <!-- Progress dots -->
+      <div id="countProgress2" style="display:flex;justify-content:center;gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
+
+      <!-- Drill card -->
+      <div id="countDrillArea2" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:8px">
+        <div id="countPrompt2" style="text-align:center;margin-bottom:12px">
+          <div id="countPromptEmoji2" style="font-size:2.2rem;margin-bottom:6px;font-family:var(--jp);color:var(--teal)">数</div>
+          <div id="countPromptText2" style="font-family:var(--ui);font-size:2.2rem;color:var(--ink-light)">select counters and start</div>
+        </div>
+        <div style="display:flex;justify-content:center;margin-bottom:16px">
+          <input type="text" id="countAnswer2" placeholder="Type reading..."
+            onkeydown="if(event.key==='Enter'){if(DrillFlow._advancing)return;if(DrillFlow._waitingEnter){DrillFlow.advance();return;}countCheck2();}"
+            style="padding:12px 16px;font-family:var(--jp);font-size:1.2rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);width:220px;text-align:center;outline:none">
+        </div>
+        <div id="countFeedback2" style="text-align:center;min-height:50px;padding:12px">
+          <div id="countFeedbackText2" style="font-family:var(--jp);font-size:2.2rem"></div>
+        </div>
+      </div>
+
+      <!-- Hidden ref grid (still needed by countRenderRefGrid2) -->
+      <div id="countRefGrid2" style="display:none"></div>
+
+      <!-- Upper footer: drill actions -->
+      <div class="footer-upper">
+        <button class="btn-action" id="countCheckBtn2" onclick="countCheck2()">Check</button>
+        <button id="countNextBtn2" onclick="countAdvance2()" style="display:none" class="btn-rating btn-rating-teal">Next →</button>
+        <button class="btn-action" onclick="countHear2()" title="Hear the answer">🔊</button>
+        <button class="btn-action" id="countLookupBtn2" onclick="countShowLookup2()" title="Show counter table">📖</button>
+      </div>
+
+      <!-- Lower footer: counter selection -->
+      <div class="footer-lower">
+        <div class="footer-lower-row" id="countCheckboxRow"></div>
+        <div class="footer-lower-row">
+          <button id="countObjectModeBtn" onclick="countToggleObjectMode()" class="btn-toggle">🖼 Objects</button>
+          <button onclick="countForceNewSession2()" class="btn-nav">New session</button>
+          <button class="btn-nav" onclick="countShowMastery()">Mastery</button>
+        </div>
+      </div>
+
+    </div><!-- end words-sub-counters -->
 
     <div id="words-sub-days" style="display:none">
       <div style="display:flex;gap:20px;align-items:flex-start">
@@ -2381,7 +2367,7 @@
   <div id="panel-progress" class="panel">
 
     <!-- Daily Briefing — auto-opens, cached per day -->
-    <div id="agentBriefing" style="margin-bottom:24px">
+    <div id="listenLogPanel" style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">LISTENING LOG</div><div style="display:flex;gap:6px"><button class="btn-action btn-xs" onclick="listenLogSync()">↻ Sync</button><button class="btn-action btn-xs" onclick="listenLogToggleSettings()">⚙</button></div></div><div id="listenLogStatus" style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">Not configured — tap ⚙</div><div id="listenLogSettingsPanel" style="display:none;margin-top:8px;padding:12px;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px"><div style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);margin-bottom:8px">Gist ID and GitHub token (stored locally only)</div><input id="listenLogGistId" placeholder="Gist ID" style="width:100%;padding:6px 8px;background:var(--field);border:1px solid var(--field-border);border-radius:4px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);margin-bottom:6px"><input id="listenLogToken" type="password" placeholder="GitHub token" style="width:100%;padding:6px 8px;background:var(--field);border:1px solid var(--field-border);border-radius:4px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);margin-bottom:8px"><button class="btn-action" onclick="listenLogSaveSettings()">Save &amp; Sync</button></div><div id="listenLogDisplay"></div></div><div id="agentBriefing" style="margin-bottom:24px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">TODAY</div>
         <div style="display:flex;gap:8px;align-items:center">
@@ -2933,7 +2919,8 @@
 <script src="src/features-reading.js?v=20260529d"></script>
 <script src="src/features-video.js?v=20260529d"></script>
 <script src="src/features-pictures.js?v=20260529d"></script>
-<script src="src/features-progress.js?v=20260529d"></script>
+<script src="src/features-progress.js?v=20260531"></script>
+  <script src="src/features-listen-log.js?v=20260531"></script>
 <script src="src/features-stroke.js?v=20260529d"></script>
 <script src="src/features-tools.js?v=20260529d"></script>
 <script src="src/features-voice.js?v=20260529d"></script>
@@ -2962,6 +2949,6 @@
 <script src="src/ui/TextEntry.js?v=20260529d"></script>
 <script src="src/ui/YoshiUI.js?v=20260529d"></script>
 
-<script src="src/design-overlay.js?v=20260530"></script>
+<script src="src/design-overlay.js?v=20260531"></script>
 </body>
 </html>

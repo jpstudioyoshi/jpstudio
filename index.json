@@ -46,41 +46,41 @@
     "name": "getLessonsDir",
     "file": "main.js",
     "line": 899,
-    "desc": "const dir = path.join(app.getPath('userData'), 'lessons');"
+    "desc": "const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 905,
+    "line": 906,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 915,
+    "line": 916,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1166,
+    "line": 1167,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1217,
+    "line": 1218,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1305,
+    "line": 1306,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
@@ -199,49 +199,42 @@
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 930,
+    "line": 931,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 994,
+    "line": 995,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1075,
+    "line": 1076,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1091,
+    "line": 1092,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1095,
+    "line": 1096,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1109,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "main.js",
-    "line": 1149,
+    "line": 1110,
     "desc": "db.run"
   },
   {
@@ -249,6 +242,13 @@
     "name": "DELETE",
     "file": "main.js",
     "line": 1150,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 1151,
     "desc": "db.run"
   },
   {
@@ -1662,245 +1662,245 @@
     "type": "function",
     "name": "countShowRefPopup2",
     "file": "src/core-counters.js",
-    "line": 302,
+    "line": 300,
     "desc": "const counter = COUNTER_DATA[counterKey];"
   },
   {
     "type": "function",
     "name": "countUpdateOptions2",
     "file": "src/core-counters.js",
-    "line": 342,
+    "line": 340,
     "desc": "CounterDrillState.activeCounters = [];"
   },
   {
     "type": "function",
     "name": "countBuildPool2",
     "file": "src/core-counters.js",
-    "line": 351,
+    "line": 349,
     "desc": "const pool = [];"
   },
   {
     "type": "function",
     "name": "countStartSession2",
     "file": "src/core-counters.js",
-    "line": 382,
+    "line": 380,
     "desc": "if (CounterDrillState.activeCounters.length === 0) {"
   },
   {
     "type": "function",
     "name": "countForceNewSession2",
     "file": "src/core-counters.js",
-    "line": 398,
+    "line": 396,
     "desc": "CounterDrillState.run = 1;"
   },
   {
     "type": "function",
     "name": "countResumeSession2",
     "file": "src/core-counters.js",
-    "line": 410,
+    "line": 408,
     "desc": "CounterDrillState.queue = saved.queue.map(item => {"
   },
   {
     "type": "function",
     "name": "countBuildRunQueue2",
     "file": "src/core-counters.js",
-    "line": 437,
+    "line": 435,
     "desc": "const pool = countBuildPool2();"
   },
   {
     "type": "function",
     "name": "_countShowStandard",
     "file": "src/core-counters.js",
-    "line": 481,
+    "line": 479,
     "desc": "const idx = Math.floor(Math.random() * item.counter.emoji.length);"
   },
   {
     "type": "function",
     "name": "countToggleObjectMode",
     "file": "src/core-counters.js",
-    "line": 498,
+    "line": 496,
     "desc": "const btn = document.getElementById('countObjectModeBtn');"
   },
   {
     "type": "function",
     "name": "countShowQuestion2",
     "file": "src/core-counters.js",
-    "line": 519,
+    "line": 517,
     "desc": "if (CounterDrillState.idx >= CounterDrillState.queue.length) {"
   },
   {
     "type": "function",
     "name": "countCheck2",
     "file": "src/core-counters.js",
-    "line": 591,
+    "line": 589,
     "desc": "if (CounterDrillState.run === 0) { countStartSession2(); return; }"
   },
   {
     "type": "function",
     "name": "countAdvance2",
     "file": "src/core-counters.js",
-    "line": 649,
+    "line": 647,
     "desc": "if (DrillFlow._advancing) return;"
   },
   {
     "type": "function",
     "name": "countEndRun2",
     "file": "src/core-counters.js",
-    "line": 661,
+    "line": 659,
     "desc": "const pct = Math.round((CounterDrillState.correct / CounterDrillState.queue.length) * 100);"
   },
   {
     "type": "function",
     "name": "countShowSummary2",
     "file": "src/core-counters.js",
-    "line": 752,
+    "line": 750,
     "desc": "const problems = Object.entries(CounterDrillState.sessionWrong)"
   },
   {
     "type": "function",
     "name": "countRenderProgress2",
     "file": "src/core-counters.js",
-    "line": 792,
+    "line": 790,
     "desc": "const el = document.getElementById('countProgress2');"
   },
   {
     "type": "function",
     "name": "countUpdateUI2",
     "file": "src/core-counters.js",
-    "line": 832,
+    "line": 830,
     "desc": "const runEl = document.getElementById('countRunIndicator2');"
   },
   {
     "type": "function",
     "name": "countHear2",
     "file": "src/core-counters.js",
-    "line": 847,
+    "line": 845,
     "desc": "if (CounterDrillState.current) {"
   },
   {
     "type": "function",
     "name": "countShowLookup2",
     "file": "src/core-counters.js",
-    "line": 853,
+    "line": 851,
     "desc": "const _escLookup = (e) => {"
   },
   {
     "type": "function",
     "name": "countShowMastery",
     "file": "src/core-counters.js",
-    "line": 914,
+    "line": 912,
     "desc": "const status = CM.getAllStatus();"
   },
   {
     "type": "function",
     "name": "daysToggleTable",
     "file": "src/core-counters.js",
-    "line": 990,
+    "line": 988,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');"
   },
   {
     "type": "function",
     "name": "daysStop",
     "file": "src/core-counters.js",
-    "line": 999,
+    "line": 997,
     "desc": "const drillEl = document.getElementById('daysDrillArea');"
   },
   {
     "type": "function",
     "name": "daysOfMonthInit",
     "file": "src/core-counters.js",
-    "line": 1007,
+    "line": 1005,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');"
   },
   {
     "type": "function",
     "name": "daysOfMonthDrill",
     "file": "src/core-counters.js",
-    "line": 1045,
+    "line": 1043,
     "desc": "const drillEl = document.getElementById('daysDrillArea');"
   },
   {
     "type": "function",
     "name": "daysNext",
     "file": "src/core-counters.js",
-    "line": 1063,
+    "line": 1061,
     "desc": "function daysCheck() {}"
   },
   {
     "type": "function",
     "name": "daysCheck",
     "file": "src/core-counters.js",
-    "line": 1064,
+    "line": 1062,
     "desc": "let _daysChecked = false;"
   },
   {
     "type": "function",
     "name": "conjugate",
     "file": "src/core-counters.js",
-    "line": 1082,
+    "line": 1080,
     "desc": "const t = word.type;"
   },
   {
     "type": "function",
     "name": "goalsLoad",
     "file": "src/core-counters.js",
-    "line": 1206,
+    "line": 1204,
     "desc": ""
   },
   {
     "type": "function",
     "name": "goalsSave",
     "file": "src/core-counters.js",
-    "line": 1213,
+    "line": 1211,
     "desc": "const g = {"
   },
   {
     "type": "function",
     "name": "goalsRestoreUI",
     "file": "src/core-counters.js",
-    "line": 1228,
+    "line": 1226,
     "desc": "const g = goalsLoad();"
   },
   {
     "type": "function",
     "name": "getConjOptions",
     "file": "src/core-counters.js",
-    "line": 1246,
+    "line": 1244,
     "desc": "const verbTypes = [];"
   },
   {
     "type": "function",
     "name": "startConjDrill",
     "file": "src/core-counters.js",
-    "line": 1270,
+    "line": 1268,
     "desc": "const {verbTypes, forms, polarities, registers} = getConjOptions();"
   },
   {
     "type": "function",
     "name": "renderConjDrill",
     "file": "src/core-counters.js",
-    "line": 1293,
+    "line": 1291,
     "desc": "const area = document.getElementById('conjDrillArea');"
   },
   {
     "type": "function",
     "name": "handleConjKey",
     "file": "src/core-counters.js",
-    "line": 1342,
+    "line": 1340,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "conjAutoConvert",
     "file": "src/core-counters.js",
-    "line": 1352,
+    "line": 1350,
     "desc": "if (!conjCurrentAnswer) return;"
   },
   {
     "type": "function",
     "name": "liveCheckConj",
     "file": "src/core-counters.js",
-    "line": 1376,
+    "line": 1374,
     "desc": "conjAutoConvert();"
   },
   {
@@ -1921,7 +1921,7 @@
     "type": "storage",
     "name": "GOALS",
     "file": "src/core-counters.js",
-    "line": 1222,
+    "line": 1220,
     "desc": "Storage.set"
   },
   {

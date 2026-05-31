@@ -897,7 +897,8 @@ ipcMain.handle('audio:waveform', async (event, filePath, buckets) => {
 const { execFile, execSync, spawn } = require('child_process');
 
 function getLessonsDir() {
-  const dir = path.join(app.getPath('userData'), 'lessons');
+  const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese audio files/JPstudiorecordings');
+  const dir = fs.existsSync(path.dirname(icloud)) ? icloud : path.join(app.getPath('userData'), 'lessons');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
