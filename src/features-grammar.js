@@ -1430,6 +1430,7 @@ function conjResumeSession(saved) {
   window._conjForms      = saved.forms;
   window._conjPolarities = saved.polarities;
   window._conjRegisters  = saved.registers;
+  conjTypedAnswers = new Array(conjQueue.length).fill(null);
   conjRevealed = false; conjCurrentAnswer = null;
 
   // Show resume notice briefly in feedback
@@ -1633,7 +1634,7 @@ function renderConjDrillG() {
       ? '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--gold);letter-spacing:0.06em">な-ADJ → conjugates with だ/です, not くない</div>'
       : '';
   const listenMode = typeof conjListenMode !== 'undefined' && conjListenMode;
-  const dotHtml = conjResults.map((r,i) =>
+  const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 10).map((r,i) =>
     '<div class="conj-dot ' + (r==='ok'?'ok':r==='miss'?'miss':r==='slip'?'slip':i===conjIdx?'cur':'') + '"></div>'
   ).join('');
   // Badge colour: register only — polite=blue, plain=neutral
