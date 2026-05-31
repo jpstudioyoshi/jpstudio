@@ -1535,7 +1535,11 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
 function renderConjDrillG() {
   const area = document.getElementById('conjDrillAreaG');
   if (!area) return;
-  
+
+  // No active drill yet (e.g. a display toggle was clicked before Start) —
+  // leave the idle state rather than rendering a summary with an unset conjRun.
+  if (!conjQueue || !conjQueue.length) return;
+
   // End of run
   if (conjIdx >= conjQueue.length) {
     const pct = Math.round(conjOk/(conjOk+conjMiss||1)*100);
@@ -1593,7 +1597,7 @@ function renderConjDrillG() {
           html += '<tr style="border-top:1px solid var(--border)">'
             + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem">' + err.word.dict + '</td>'
             + '<td style="padding:6px 8px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">' + err.badge + '</td>'
-            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem;color:var(--coral)">' + (typed || '—') + '</td>'
+            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem;color:var(--coral)">' + (typed?.val || '—') + '</td>'
             + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem;color:var(--teal)">' + err.answer + '</td>'
             + '</tr>';
         }
@@ -1807,20 +1811,20 @@ function checkConjG() {
   const isSlip = levClass && levClass.severity === 'slip';
   input.className = 'conj-input ' + (correct ? 'correct' : isSlip ? 'slip' : 'wrong');
   const fb = document.getElementById('conjFeedbackG');
-  fb.className = 'conj-feedback show' + (correct ? '' : isSlip ? ' slip-fb' : ' wrong-fb');
+  fb.className = 'conj-feedback show' + (correct ? ' correct-fb' : isSlip ? ' slip-fb' : ' wrong-fb');
   
   let fbHtml = '<div class="conj-answer-reveal">';
   if (correct) {
-    fbHtml += '✓ ' + item.answer;
+    fbHtml += item.answer;
   } else if (isSlip) {
     if (levClass.isRegisterConfusion) {
       const expected = item.reg === 'polite' ? '丁寧語 (polite)' : '普通体 (plain)';
-      fbHtml += '≈ register — answer is ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(' + expected + ' was asked)</span>';
+      fbHtml += 'register — answer is ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(' + expected + ' was asked)</span>';
     } else {
-      fbHtml += '≈ close — ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(dist ' + levClass.dist + ')</span>';
+      fbHtml += 'close — ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(dist ' + levClass.dist + ')</span>';
     }
   } else {
-    fbHtml += '✕ ' + item.answer;
+    fbHtml += item.answer;
     if (levClass) { const pLabel = levClass.pattern.split('|')[0].replace('-',' '); fbHtml += ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">— ' + pLabel + '</span>'; }
   }
   fbHtml += '</div>';

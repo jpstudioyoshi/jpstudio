@@ -1613,6 +1613,7 @@
   .conj-feedback.show:not(.slip-fb):not(.wrong-fb) { color: var(--teal); }
   .conj-feedback.slip-fb { color: var(--gold); }
   .conj-feedback.wrong-fb { color: var(--red); }
+  .conj-feedback.correct-fb { color: var(--teal); border-color: var(--teal); background: rgba(48, 213, 200, 0.12); }
   .conj-answer-reveal {
     font-family: 'Noto Sans JP', sans-serif; font-size: 1.3rem;
     color: var(--ink); margin-bottom: 8px;
