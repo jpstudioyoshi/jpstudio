@@ -454,7 +454,7 @@
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}else if(event.key==='Enter'&&event.shiftKey){event.preventDefault();this.value=(this.value.trim()+' break it down').trim();sendChat()}"
         style="width:100%;padding:12px 16px;font-family:'Noto Sans JP',var(--ui);font-size:1rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);outline:none;resize:none;line-height:1.6;border-radius:8px;box-sizing:border-box"></textarea>
       <div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">
-        <button class="chat-send" onclick="sendChat()">Send</button>
+        <button class="btn-action" onclick="sendChat()">Send</button>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
         </div>
         <span style="font-size:0.65rem;color:var(--ink-light);font-family:var(--ui);margin-left:auto">Enter to send · Shift+Enter adds "break it down"</span>
