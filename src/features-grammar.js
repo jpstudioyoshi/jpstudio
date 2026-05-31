@@ -1541,6 +1541,7 @@ function renderConjDrillG() {
   // leave the idle state rather than rendering a summary with an unset conjRun.
   if (!conjQueue || !conjQueue.length) return;
 
+  const _fb = document.getElementById('conjFeedbackG'); if (_fb) { _fb.textContent = ''; _fb.className = 'conj-feedback'; }
   // End of run
   if (conjIdx >= conjQueue.length) {
     const pct = Math.round(conjOk/(conjOk+conjMiss||1)*100);

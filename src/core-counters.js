@@ -1155,7 +1155,7 @@ function conjugate(word, form, pol, reg) {
 const GOALS_DEFAULTS = {
   kanaDrillSize:        20,
   wordsDrillSize:       20,
-  conjQuestionsPerRun:  10,
+  conjQuestionsPerRun:  15,
   conjSessionRuns:       3,
   sstGapDays:            3,
   sstMinUtterances:     3,
