@@ -1609,7 +1609,8 @@
   }
   .conj-skip-btn:hover { border-color: var(--ink); color: var(--ink); }
 
-  .conj-feedback { font-family: var(--jp); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; min-width: 260px; height: 36px; border: 1px solid var(--border); border-radius: 6px; padding: 0 16px; background: var(--paper); }
+  .conj-feedback { font-family: var(--jp); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; min-width: 260px; height: 36px; border: 1px solid transparent; border-radius: 6px; padding: 0 16px; background: transparent; margin-left: auto; margin-right: 16px; }
+  .conj-feedback.show { border-color: var(--border); background: var(--paper); }
   .conj-feedback.show:not(.slip-fb):not(.wrong-fb) { color: var(--teal); }
   .conj-feedback.slip-fb { color: var(--gold); }
   .conj-feedback.wrong-fb { color: var(--red); }
