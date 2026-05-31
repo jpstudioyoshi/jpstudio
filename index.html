@@ -426,8 +426,13 @@
 
   <!-- HOME (was Dashboard) -->
   <div id="panel-dashboard" class="panel active">
+  <div class="panel-header-lower" id="dashboardPanelHeader" style="display:block">
+    <div class="panel-section-title">
+      <span class="panel-section-title-jp">質問</span>
+      <span class="panel-section-title-en">Questions</span>
+    </div>
+  </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="section-title" style="margin-bottom:0"><span class="jp">質問</span><span class="en-block"><span class="reading">しつもん</span><span class="en">(Questions)</span></span></div>
       <button class="btn-action" id="chatHistoryToggle" onclick="toggleChatHistory()">
         HISTORY
       </button>
@@ -1335,9 +1340,9 @@
 
 
     <!-- Quick Read -->
-    <div id="readQuickPane" style="width:100%">
-      <div id="readPasteArea" style="width:100%">
-        <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="min-height:600px;margin-bottom:12px"></textarea>
+    <div id="readQuickPane" style="width:100%;flex:1;display:flex;flex-direction:column;min-height:0">
+      <div id="readPasteArea" style="width:100%;flex:1;display:flex;flex-direction:column;min-height:0">
+        <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="flex:1;min-height:60vh;margin-bottom:12px"></textarea>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
           <button class="btn-action" id="qrRawSpeakBtn" onclick="qrSpeakRaw()" title="Read text aloud without analysing" disabled>Listen</button>
@@ -1470,7 +1475,7 @@
       </div>
     </div>
 
-    <div class="footer-upper" id="qrFooterUpper" style="display:none;gap:6px;flex-wrap:wrap">
+    <div class="footer-upper" id="qrFooterUpper" style="display:none">
       <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
       <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()">Lines</button>
       <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Listen</button>
