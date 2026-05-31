@@ -179,7 +179,7 @@
           <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">Anthropic API Key (Claude)</label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="password" id="apikeyInput" placeholder="sk-ant-..." autocomplete="off"
-              style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
+              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
             <button class="btn-action" id="apikeyBtn">Save</button>
             <span id="apikeyStatus" style="font-size:0.75rem"></span>
           </div>
@@ -190,7 +190,7 @@
           <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">OpenAI API Key (Whisper)</label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="password" id="openaiKeyInput" placeholder="sk-..." autocomplete="off"
-              style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
+              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
             <button class="btn-action" id="openaiKeyBtn">Save</button>
             <span id="openaiKeyStatus" style="font-size:0.75rem"></span>
           </div>
@@ -2369,7 +2369,7 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">TODAY</div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn-action btn-xs" onclick="agentToggleContext()" id="agentContextBtn">About me</button>
+          <button class="btn-action" onclick="agentToggleContext()" id="agentContextBtn">About me</button>
           <button class="btn-action" onclick="agentClaudeBriefing(true)" id="agentClaudeBtn">Refresh</button>
         </div>
       </div>
@@ -2438,7 +2438,7 @@
         <div id="agentFollowUpRow" style="display:none;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
           <input type="text" id="agentFollowUpInput" placeholder="Ask a follow-up…"
             onkeydown="if(event.key==='Enter')agentClaudeFollowUp()"
-            style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
+            style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
           <button class="btn-action" id="agentFollowUpBtn" onclick="agentClaudeFollowUp()">Send</button>
         </div>
       </div>

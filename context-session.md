@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-31 (session 17 — layout standardisation, Yoshi dead code removal, conjugation/counter drill fixes, Satellite sync fixed, Read panel improvements, Dashboard header)
+Last updated: 2026-05-31 (session 18 — conjugation drill fixes, read panel listen layout)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -9,12 +9,14 @@ Last updated: 2026-05-31 (session 17 — layout standardisation, Yoshi dead code
 - Always prefix multi-line python3 edits with jp && to avoid directory drift.
 - "done" means command ran and printed OK.
 - Paul's eyesight is not great — prefer larger text, high contrast, bigger buttons in UI work.
+- Give commands one at a time — do not batch unrelated commands.
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
 - **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors, anything where "trace this call chain" is needed
 - Cost: Code uses more input tokens (reads full files). Chat is cheaper for small edits.
 - Code saves ~45-60 min vs chat for complex render path fixes.
+- Code tends to over-reach — give tight focused briefs, verify diff before committing.
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -39,7 +41,7 @@ Last updated: 2026-05-31 (session 17 — layout standardisation, Yoshi dead code
 - Switch to Opus 4.8 for hard debugging: claude config set model claude-opus-4-8
 
 ## Current Mode
-CONSOLIDATION — structural debt removal, layout standardisation. No feature expansion.
+STABILIZATION — bug fixing and layout polish. No feature expansion.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
@@ -49,6 +51,11 @@ CONSOLIDATION — structural debt removal, layout standardisation. No feature ex
 - `countDrillActions2` — inline action buttons div (new, hidden until start)
 - `countNewBtn2` — New session button in footer-upper (new, hidden until start)
 - `counterMasteryPanel` — still in progress panel at line ~2523
+
+**html-map.md additions from session 18 (read panel):**
+- `qrListenContainer` — fixed div wrapping qrListenPanel, top:154px below lower header
+- `qrFooterBtns` — wrapper div for read panel footer buttons (shown when listen mode off)
+- `qrRecordSection` — moved into qrFooterUpper, shown when listen mode on (replaces buttons)
 
 ## Terminal Workflow
 All edits are done via terminal — no file upload/download.
@@ -61,8 +68,8 @@ All edits are done via terminal — no file upload/download.
 **Standard patterns:**
 - python3 << 'PYEOF' for multi-line edits (most reliable)
 - Always prefix with jp && to avoid directory drift
-- sed -n X,Yp file | pbcopy — read a block
-- grep -n "pattern" file | pbcopy — locate lines
+- sed -n X,Yp file — read a block (no pbcopy — it swallows output)
+- grep -n "pattern" file | pbcopy — locate lines only
 - Never paste grep output back into terminal
 - Update style.css?v= version string after CSS changes to bust Electron cache
 - Use date +%s for guaranteed cache bust on JS files
@@ -77,235 +84,47 @@ All edits are done via terminal — no file upload/download.
 - When line-number deletion leaves orphan braces — always run node check-syntax.js after edits
 - GitHub push protection auto-revokes tokens found in committed files or chat — never put tokens in source or chat
 - Always use jp && prefix — never assume current directory
-- const/let TDZ bugs in Electron: if a script aborts mid-load, later const/let declarations stay in dead zone — use var for shared cross-file state
+- const/let TDZ bugs in Electron: if a script aborts mid-load, later const/let declarations stay in TDZ
+- pbcopy swallows terminal output — never use it for sed -n reads, only for grep locating
+- git stash pop restores Code session changes if accidentally stashed
 
-## Satellite Audio Player
-
-### What it is
-A standalone PWA (`index.html`) hosted at https://jpstudioyoshi.github.io/jpsat
-- Plays audio files loaded from phone storage
-- Records listening time per file per date
-- Syncs log to a private GitHub Gist
-- jpStudio Progress tab fetches from same Gist
-
-### Repo
-- https://github.com/jpstudioyoshi/jpsat (public)
-- Local: ~/Documents/jpsat/
-- Deploy: cd ~/Documents/jpsat && git ship
-
-### Gist
-- ID: 351c9b49c2640bdfeb891c6e0ceeeb37
-- File: listen-log.json
-- Format: [{ "date": "YYYY-MM-DD", "filename": "file.mp3", "seconds": 420 }, ...]
-
-### Token situation — RESOLVED
-- Gist sync token uses `gist` scope only
-- Stored in phone localStorage via the Satellite settings UI
-- Never in source code or chat
-- Sync working as of session 17
-
-### Satellite UI — session 17 changes
-- Dropzone removed from top — replaced with ＋ Add Audio / ✕ Clear button row below playlist
-- Player controls moved to top
-- Play button: 3.5rem, green (#4caf50), 100px × 100px
-- Other ctrl-btns: 2rem, 72px × 72px, full ink brightness
-- Speed buttons: 0.9× and 1× only
-- Font sizes bumped throughout (0.62→0.82, 0.65→0.85, 0.72→0.88, 0.75→0.92)
-- ink-mid: #c8c4bc, ink-dim: #8a8680 (brighter)
-- iOS limitation: cannot open specific folder in file picker
-
-### jpStudio integration
-- `src/features-listen-log.js` — new file added session 15
-- Added to index.html load order at line ~2937
-- HTML panel injected above `#agentBriefing` in `#panel-progress`
-- Functions: listenLogSync(), listenLogToggleSettings(), listenLogSaveSettings(), listenLogInit()
-- Credentials stored in Storage (jpsat_gist_id, jpsat_gist_token)
-- ⚙ button opens settings panel, ↻ Sync fetches from Gist and renders
-
-## Layout Standard — Session 17 Fixes
-
-### Panel padding standard
-- Base: `.panel { padding-top: 98px }` — covers nav (50px) + quick translate bar (48px)
-- Panels with `panel-header-lower`: `padding-top: 158px` (98px + ~60px header)
-- Panels with footers: `padding-bottom: 20vh`
-- `panel-header-lower` is `position:fixed; top: 98px`
-- Nav bar changed from `position:sticky` to `position:fixed` (session 17)
-
-### Panels with panel-header-lower (padding-top: 158px)
-voice, listen, writing, read, words, grammar2, lessonnotes/yoshi, progress
-
-### Panels without panel-header-lower (padding-top: 98px)
-kana, dashboard, translate, video, recordings, and others
-
-### Conjugation drill — FIXED session 17
-- `#gram2-sub-conj`: `height: 447px; overflow: hidden; padding: 0`
-- `conj-footer-upper`: `position:fixed; bottom: 179px` (matches actual conj-footer height)
-- `.conj-drill-area`: `display:flex; flex-direction:column; gap:16px`
-- No scrolling, card correctly positioned
-
-### Counter drill — FIXED session 17
-- `#words-sub-counters`: `height: 447px; overflow:hidden; padding-top:60px; display:flex; flex-direction:column; align-items:center; justify-content:center`
-- Start button in footer-upper hides drill until pressed
-- `countStart2()` function in core-counters.js shows drill area on start
-- Counter mastery button removed (was defective)
-- `countRefGrid2` kept as hidden div for JS compatibility
-- `countCheckboxRow` is the visible footer-lower checkbox container
-- `countDrillArea2` has `display:none` until Start pressed
-
-### Standard footer pattern (footer-upper / footer-lower)
-```css
-.footer-upper { position:fixed; bottom:10vh; left:52px; right:0; z-index:50; height:10vh; }
-.footer-lower { position:fixed; bottom:0; left:52px; right:0; z-index:50; height:10vh; }
-.footer-lower-row { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px; }
-```
-- Panel padding-bottom: 20vh to clear both footers
-
-## Design Language
-
-### Layout Structure
-- **Top bar (nav):** primary panel switching — JP kanji + English label tabs — `position:fixed; top:0`
-- **Quick translate bar:** `#globalQuickTranslate` — `position:fixed; top:50px`
-- **Panel header:** `panel-header-lower` — `position:fixed; top:98px`
-- **Content area:** starts at 98px (no header) or 158px (with header)
-- **Upper footer:** intra-session controls — fixed to bottom
-- **Lower footer:** session setup filters — fixed to very bottom
-
-### Footer implementation
-- Both footers use `position: fixed !important`
-- upper footer: `bottom: 10vh; left: 52px; right: 0`
-- lower footer: `bottom: 0; left: 52px; right: 0`
-- Each 10vh tall
-- CSS classes: `.footer-upper`, `.footer-lower`, `.footer-lower-row`
-
-### Panel Headers
-All panels use `panel-header-lower` + `panel-section-title` pattern.
-Header divs declared in index.html, shown/hidden in `showPanel()` in core-foundation.js.
-`panel-header-lower` uses `min-height:56px; height:auto; flex-wrap:wrap; position:fixed; top:98px`.
-
-Panels with headers: voice, listen, writing, read, words, grammar, yoshi (lessonnotes), progress, dashboard (added session 17).
-
-`yoshiPanelHeader` renders dynamically via `lessonNotesUpdatePanelHeader()`:
-- Left: ヨシ title + view dropdown
-- Right: session selector + New (+) + Delete (🗑)
-
-## Button System — COMPLETE
-All legacy classes removed. No btn-ghost, btn-danger, btn-subtle, btn-kana, btn-primary in live code.
-
-**Base classes:**
-- `btn-action` — primary action (teal hover)
-- `btn-nav` — navigation / secondary (ink hover)
-- `btn-toggle` — toggle state (teal when on)
-- `btn-group` — mutually exclusive group
-- `btn-destructive` — destructive actions (red hover)
-- `btn-rating` — SRS ratings
-- `btn-copy` — copy to clipboard
-- `btn-icon` — small icon-only buttons (🔊 ✕ ✎), low opacity at rest
-
-**Modifiers:**
-- `btn-sm` — 0.75rem, 3px 8px padding
-- `btn-xs` — 0.65rem, 1px 6px padding
-- `btn-icon-teal` — teal on hover
-- `btn-icon-del` — red on hover
-- `btn-rating-red` — red rating (Again)
-- `btn-rating-teal` — teal rating (Got it / Known)
-
-## Read Panel — Session 17 Changes
-- `#qrHistorySelect` and Delete button moved to `#readPanelHeader` (right side)
-- Quick action buttons (ふり仮名, Lines, Listen, Edit, Write, Print, Clear) moved to `#qrFooterUpper`
-- `#qrFooterUpper` shown/hidden via JS when qrReaderWrap is shown/hidden
-- `#qrFooterLower` — available for future use
-- `qrInput` textarea: `min-height:600px` (increased from 200px — Code fixed rendering issue)
-- History dropdown reset bug fixed — no longer resets to blank after loading a text (line 639-640 deleted from features-reading.js)
-- Quick chat buttons removed (Break it down, Example, How to use?, Difference?, Simpler, More examples)
-
-## Dashboard Panel — Session 17 Changes
-- Added `#dashboardPanelHeader` with panel-header-lower pattern
-- Title: 質問 (Questions)
-- Duplicate inline 質問 title removed
-- Send button changed from `.chat-send` to `.btn-action`
-
-## Yoshi (Lesson Notes) Panel
-
-### Render path — CONSOLIDATED session 17
-- **Live path only:** `lessonNotesRenderPanel()` → `#lessonNotesPanelContent` in `#panel-lessonnotes`
-- Dead el1/el2 branches removed from `lessonNotesRender()`
-- `lessonNotesRender()` still exists (~57 callers) — now just an alias for the panel path
-- `yoshiParseWhatsapp` kept — live, used by Orchestrator + WhatsApp import
-- Decision: did not split features-lesson-notes.js into two files — would create untidy cross-file dependencies
-
-### Dead code removed session 17 (~860 lines across 4 files)
-- `lessonNotesRenderMain()` — zero callers
-- `lessonNotesUpdateTabControls()` — always no-op
-- Entire legacy Yoshi-sessions subsystem: yoshiRender, yoshiOpenSession, yoshiShowSession, yoshiSwitchTab, yoshiDeleteSession, yoshiShowImportInline, yoshiParseDocx, yoshiImport, yoshiRenderCloze/CheckCloze/RevealAll/ResetCloze/ConfirmCloze, yoshiShowVocabPopup/VocabPopupAddRow/VocabPopupSave, yoshiAddVocab, yoshiLiveTitle, yoshiKanaDebounce, yoshiComputeBlanks, yoshiGetSessions, yoshiSaveSessions, yoshiCurrentIdx
-- `#yoshiMain` was never in index.html — orphaned since old features.js was removed
-- Stale root-level `core-foundation.js` (dated May 23) still exists — never loaded, harmless, cleanup later
-
-### View Dropdown Options
-- Vocab Drill — card drill, click to reveal
-- All Words — 2-column word table
-- Stories — grid of story tiles
-- Phrases — 3-column grouped layout
-- Grammar — 2-column grouped layout
-- Errors — error list
-- Recording — linked recording player
-
-### Vocab Drill Layout
-- `.vocab-counter` above card (x / total)
-- Card: `.ln-drill-card` / `.ln-drill-card-area`
-- Click card to reveal
-- Under card: Prev / Again (red) / Got it (teal) / Learned (teal) / Next
-- Upper footer: JP→Reading / JP→Meaning / EN→JP / Listen / Shuffle
-- Lower footer: +Reading / +Meaning toggles
-
-### Story Reader
-Opened via `lessonNotesOpenStory(idx)`.
-Subtabs: Read / Vocab / Notes / Edit (Cloze removed — dead feature).
-Dropdown stays on "Stories" when viewMode === 'reading' (fixed session 14).
-
-### Extraction
-- Phrases: `group` field, 15-30 items, groups: Greetings & Openers / Classroom Language / Time & Sequence / Describing & Explaining / Expressing Feelings & Opinions / Questions & Requests / Grammar Connectors / Other
-- Grammar: `group` field, 10-15 items max, max_tokens:5000, groups: Particles / Verb Forms / Adjectives / Connectors & Conjunctions / Expressions & Set Phrases / Sentence Endings / Other
-
-### _fy_ wrappers
-```js
-const _fy_getApiKey  = () => (App.getApiKey  || window.getApiKey)?.();
-const _fy_claudeAPI  = (...a) => (App.claudeAPI || window.claudeAPI)?.(...a);
-const _fy_claudeText = (d) => (App.claudeText || window.claudeText)?.(d);
-```
-
-## TranscriptionService — Hallucination Filter
-`_filterHallucinations(segments)` in `src/services/TranscriptionService.js`.
-Applied in both `transcribe()` and `transcribeFile()`.
-Known hallucinations: ご視聴ありがとうございました, チャンネル登録よろしくお願いします, ありがとうございました, お疲れ様でした, Thank you for watching, Please subscribe, Like and subscribe.
-
-## Settings — Teacher Track
-Checkbox added to Microphone section: "Record teacher track (loopback)".
-Saves to `Storage.set('recordTeacherTrack', this.checked)`.
-Wired in `AudioService.js` — reads setting before BlackHole discovery, skips loopback if false.
-
-## CSS — ln-drill-card classes
-```css
-.ln-drill-card-area { display: flex; justify-content: center; margin: 20px 0; }
-.ln-drill-card { width: 380px; height: clamp(200px, calc(100vh - 440px), 280px); background: var(--paper-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 24px; }
-```
-
-## Known Issues
-- yoshiInitUI not defined on startup — pre-existing, not blocking
+## Known Issues / Pre-existing
+- **DB startup errors** — `rows is not iterable` in features-progress.js, GrammarModel mastery load failing. Causes CONJ_SESSION_RUNS and CONJ_QUESTIONS_PER_RUN to be undefined on load (worked around with `|| 3` fallback). Root cause: sql.js or IPC handler issue on startup. Needs dedicated investigation.
+- `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
 - App opens on Questions (dashboard) panel instead of Progress — regression from session 17 nav fix
-- Counter drill stats display differs from conjugation (split left/right vs centred) — deferred to TextInputDrill component work
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
-- Conjugation drill: Enter key, input colour feedback, check/cross icons — sent to Code end of session 17
-- Counter drill: "undefined" in progress counter — sent to Code end of session 17
+
+## Session 18 — Completed Work
+
+### Conjugation Drill Fixes
+- **"undefined" in progress counter** — two causes fixed:
+  1. `conjTypedAnswers` not initialised on session resume → added init in `conjResumeSession`
+  2. `CONJ_SESSION_RUNS` undefined due to DB startup abort → `|| 3` fallback in stats bar and run summary
+- **typed object rendering as [object Object]** — `typed?.val` fix in error table
+- **Spurious re-render before Start** — guard `if (!conjQueue.length) return` at top of `renderConjDrillG`
+- **Enter key not working** — fixed as side effect of queue guard (spurious renders were stealing focus)
+- **Header feedback field colour** — added `correct-fb` CSS class, border+background for wrong/slip
+- **✓/✗ icons removed** from feedback text
+- **Feedback field position** — moved to own row in `.conj-footer-upper`, centred, full width
+- **Dot row** — capped at `CONJ_QUESTIONS_PER_RUN || 10` to avoid showing stale accumulated dots
+
+### Read Panel Listen Layout
+- `qrListenPanel` + `qrRecordSection` were scrolling with text — needed to be fixed
+- `qrListenContainer` — new fixed wrapper at `top:154px` (below lower header), contains `qrListenPanel`
+- `qrRecordSection` — moved into `qrFooterUpper`, replaces buttons when listen mode active
+- `qrFooterBtns` — new wrapper div for footer buttons, hidden when listen mode active
+- JS `qrToggleListenMode` updated to swap `qrFooterBtns` ↔ `qrRecordSection`
+- **Status: partially working — listen layout still buggy, needs follow-up next session**
 
 ## Pending Work — Priority Order
 
-### Immediate (next Code session)
-1. **Conjugation drill bugs** — Enter key not working, input field colour not changing, check/cross icons to remove, "undefined" in counter
-2. **App startup panel** — opens on Questions instead of Progress, restore correct default
-3. **Quick Reader footer** — `#qrFooterLower` wiring (Code started this, confirm complete)
+### Immediate (next session)
+1. **Read panel listen layout** — qrRecordSection swap with footer buttons not fully working; qrListenContainer positioning may need adjustment; full listen UX needs test and polish
+2. **DB startup failure** — `rows is not iterable`, kvAPI not persisting on cold start, CONJ_SESSION_RUNS undefined. Investigate sql.js IPC handler
+3. **App startup panel** — opens on Questions instead of Progress, restore correct default
 
-### Next Code Session
+### Next
 1. **TextInputDrill component** — `src/ui/TextInputDrill.js`, migrate conjugation first then counters then kana
 2. **Satellite UI** — further improvements beyond session 17 changes
 
