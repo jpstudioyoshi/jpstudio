@@ -1032,12 +1032,6 @@ window['daysCheck'] = daysCheck;
 // ═══════════════════════════════════════════════════════
 // CONJUGATION DRILL
 // ═══════════════════════════════════════════════════════
-const teMap = {く:'いて',ぐ:'いで',す:'して',つ:'って',ぬ:'んで',む:'んで',ぶ:'んで',う:'って',る:'って'};
-const masuMap = {く:'き',ぐ:'ぎ',す:'し',つ:'ち',ぬ:'に',む:'み',ぶ:'び',う:'い',る:'り'};
-const naiMap = {く:'か',ぐ:'が',す:'さ',つ:'た',ぬ:'な',む:'ま',ぶ:'ば',う:'わ',る:'ら'};
-const taMap = {く:'いた',ぐ:'いだ',す:'した',つ:'った',ぬ:'んだ',む:'んだ',ぶ:'んだ',う:'った',る:'った'};
-const volMap = {く:'こう',ぐ:'ごう',す:'そう',つ:'とう',ぬ:'のう',む:'もう',ぶ:'ぼう',う:'おう',る:'ろう'};
-
 function conjugate(word, form, pol, reg) {
   const t = word.type;
   const stem = word.dict.slice(0, -1); // remove last char
@@ -1132,6 +1126,11 @@ function conjugate(word, form, pol, reg) {
 
   // う-verbs
   if (t === 'u') {
+    const teMap   = {く:'いて',ぐ:'いで',す:'して',つ:'って',ぬ:'んで',む:'んで',ぶ:'んで',う:'って',る:'って'};
+    const masuMap = {く:'き',ぐ:'ぎ',す:'し',つ:'ち',ぬ:'に',む:'み',ぶ:'び',う:'い',る:'り'};
+    const naiMap  = {く:'か',ぐ:'が',す:'さ',つ:'た',ぬ:'な',む:'ま',ぶ:'ば',う:'わ',る:'ら'};
+    const taMap   = {く:'いた',ぐ:'いだ',す:'した',つ:'った',ぬ:'んだ',む:'んだ',ぶ:'んだ',う:'った',る:'った'};
+    const volMap  = {く:'こう',ぐ:'ごう',す:'そう',つ:'とう',ぬ:'のう',む:'もう',ぶ:'ぼう',う:'おう',る:'ろう'};
     const vstm = word.dict.slice(0,-1); // drop ending kana
     const mstem = vstm + (masuMap[end] || '');
     const nstem = vstm + (naiMap[end] || '');
@@ -1195,12 +1194,13 @@ function goalsRestoreUI() {
   setVal('goalSstMinUtterances',    g.sstMinUtterances);
 }
 
-// Make conj constants mutable (they were const — redeclare as let)
-let CONJ_QUESTIONS_PER_RUN = goalsLoad().conjQuestionsPerRun;
-let CONJ_SESSION_RUNS      = goalsLoad().conjSessionRuns;
-let conjQueue = [], conjIdx = 0, conjOk = 0, conjMiss = 0;
-let conjResults = [], conjRevealed = false, conjCurrentAnswer = null;
-let conjTypedAnswers = []; // stores what user typed for each item (for end-of-run review)
+// Shared conj state — var (not let) so these are hoisted/initialized before any
+// function reads them, immune to TDZ even if this script aborts earlier during load.
+var CONJ_QUESTIONS_PER_RUN = goalsLoad().conjQuestionsPerRun;
+var CONJ_SESSION_RUNS      = goalsLoad().conjSessionRuns;
+var conjQueue = [], conjIdx = 0, conjOk = 0, conjMiss = 0;
+var conjResults = [], conjRevealed = false, conjCurrentAnswer = null;
+var conjTypedAnswers = []; // stores what user typed for each item (for end-of-run review)
 
 function getConjOptions() {
   const verbTypes = [];

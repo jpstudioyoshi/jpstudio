@@ -594,20 +594,6 @@ window['mgShowSetup']  = mgShowSetup;
   window["vtWordSelect"] = vtWordSelect;
   window["wbCopyInput"] = wbCopyInput;
   window["wordsSwitchSub"] = wordsSwitchSub;
-  window["yoshiAIComplete"] = yoshiAIComplete;
-  window["yoshiAIVocab"] = yoshiAIVocab;
-  window["yoshiAddVocab"] = yoshiAddVocab;
-  window["yoshiCheckCloze"] = yoshiCheckCloze;
-  window["yoshiConfirmCloze"] = yoshiConfirmCloze;
-  window["yoshiImport"] = yoshiImport;
-  window["yoshiMiniCycleLoop"] = yoshiMiniCycleLoop;
-  window["yoshiMiniCycleLoopEl"] = yoshiMiniCycleLoopEl;
-  window["yoshiMiniSkip"] = yoshiMiniSkip;
-  window["yoshiMiniSkipEl"] = yoshiMiniSkipEl;
-  window["yoshiMiniToggle"] = yoshiMiniToggle;
-  window["yoshiMiniToggleEl"] = yoshiMiniToggleEl;
-  window["yoshiOpenSession"] = yoshiOpenSession;
-  window["yoshiParseDocx"] = yoshiParseDocx;
 
 // ═══════════════════════════════════════════════════════
 
@@ -625,18 +611,6 @@ window['mgShowSetup']  = mgShowSetup;
 // ═══════════════════════════════════════════════════════
 
 
-  window["yoshiReadTTSAll"] = yoshiReadTTSAll;
-  window["yoshiReadTTSStop"] = yoshiReadTTSStop;
-  window["yoshiReadToggleAll"] = yoshiReadToggleAll;
-  window["yoshiResetCloze"] = yoshiResetCloze;
-  window["yoshiRevealAll"] = yoshiRevealAll;
-  window["yoshiSwitchTab"] = yoshiSwitchTab;
-  window["yoshiToggleFurigana"] = yoshiToggleFurigana;
-  window["yoshiToggleParaEn"] = yoshiToggleParaEn;
-  window["yoshiVocabPopupAddRow"] = yoshiVocabPopupAddRow;
-  window["yoshiVocabPopupSave"] = yoshiVocabPopupSave;
-  window["yoshiWordClick"] = yoshiWordClick;
-  window["yoshiWordPopupClose"] = yoshiWordPopupClose;
 } catch(e) {}
 
 
