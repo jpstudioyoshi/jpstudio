@@ -1582,7 +1582,7 @@ function renderConjDrillG() {
     } else {
       // Run summary with errors
       let html = '<div class="conj-idle" style="background:var(--paper-dark);border:1px solid var(--border)"><span class="conj-idle-char">📊</span>';
-      html += '<strong>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</strong> — ' + conjOk + '/' + conjQueue.length + ' (' + pct + '%)<br>';
+      html += '<strong>Run ' + conjRun + '/' + (CONJ_SESSION_RUNS || 3) + '</strong> — ' + conjOk + '/' + conjQueue.length + ' (' + pct + '%)<br>';
       if (runErrors.length > 0) {
         html += '<div style="margin:12px 0;text-align:left">';
         html += '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);letter-spacing:0.06em;margin-bottom:8px">ERRORS THIS RUN</div>';
@@ -1646,7 +1646,7 @@ function renderConjDrillG() {
   if (newDrillBtn) newDrillBtn.style.display = '';
 
   area.innerHTML =
-    '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + CONJ_SESSION_RUNS + '</div><div>✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
+    '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + (CONJ_SESSION_RUNS || 3) + '</div><div>✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
     '<div class="conj-dot-row">' + dotHtml + '</div>' +
     '<div class="conj-card">' +
       (listenMode ? '' : '<div class="conj-word" style="color:' + typeColor + '">' + item.word.dict + '</div>') +
