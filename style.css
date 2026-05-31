@@ -238,8 +238,8 @@
     border-bottom: 1px solid var(--border);
     padding: 0 20px;
     overflow: visible;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 0; left: 52px; right: 0;
     z-index: 100;
   }
   nav button {
@@ -324,7 +324,7 @@
 
   /* ── LAYOUT ── */
   main { padding: 32px 44px; }
-  .panel { display: none; }
+  .panel { display: none; padding-top: 98px; }
   .panel.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   #panel-words.active { display: flex; flex-direction: column; max-height: calc(100vh - 90px); padding-top: 80px; padding-bottom: 20vh; overflow: hidden; }
   #words-sub-vocab { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
@@ -335,6 +335,7 @@
   #panel-grammar2,
   #panel-words,
   #panel-writing,
+  #panel-kana { padding-top: 158px; }
   #panel-kana,
   #panel-game,
   #panel-voice,
@@ -342,19 +343,19 @@
   #panel-resources { max-width: 1200px; margin: 0 auto; }
   /* Full width panels */
   #panel-dashboard,
-  #panel-read { padding-top: 75px; }
+  #panel-read { padding-top: 158px; padding-bottom: 20vh; }
   #panel-grammar2 { padding-top: 110px; overflow: hidden; }
-  #panel-writing { padding-top: 75px; }
-  #panel-listening { padding-top: 75px; }
-  #panel-voice { padding-top: 75px; padding-bottom: 20vh; }
-  #panel-read { padding-top: 75px; }
+  #panel-writing { padding-top: 158px; padding-bottom: 20vh; }
+  #panel-listening { padding-top: 158px; padding-bottom: 20vh; }
+  #panel-voice { padding-top: 98px; padding-bottom: 20vh; }
+  #panel-read { padding-top: 158px; padding-bottom: 20vh; }
   #panel-read,
   #panel-listening,
   #panel-progress,
   #panel-translate,
   #panel-video { max-width: none; }
-  #panel-progress { padding-top: 75px; }
-  #panel-lessonnotes { padding-top: 75px; }
+  #panel-progress { padding-top: 98px; }
+  #panel-lessonnotes { padding-top: 98px; }
   #panel-video.vt-fullscreen { max-width: none !important; width: 100vw !important; }
 
   /* ── SECTION TITLE ── */

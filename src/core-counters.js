@@ -376,6 +376,13 @@ function countBuildPool2() {
   }
   return pool;
 }
+function countStart2() {
+  document.getElementById("countDrillArea2").style.display = "";
+  document.getElementById("countDrillActions2").style.display = "flex";
+  document.getElementById("countStartBtn2").style.display = "none";
+  document.getElementById("countNewBtn2").style.display = "";
+  countStartSession2();
+}
 
 function countStartSession2() {
   if (CounterDrillState.activeCounters.length === 0) {
@@ -909,52 +916,6 @@ window['countCheck2'] = countCheck2;
 
 
 
-function countShowMastery() {
-  const status = CM.getAllStatus();
-  const keys = Object.keys(COUNTER_DATA);
-  const mastered = keys.filter(k => status[k]?.mastered);
-  const inProgress = keys.filter(k => !status[k]?.mastered);
-  const allDone = mastered.length === keys.length;
-
-  let html = '<div style="margin-bottom:16px">';
-  html += '<div style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:10px">COUNTER MASTERY</div>';
-
-  if (allDone) {
-    html += '<div style="color:var(--teal);font-family:var(--ui);font-size:0.88rem;margin-bottom:12px">✓ All counters mastered — maintenance mode only</div>';
-  }
-
-  html += '<div style="display:flex;flex-direction:column;gap:6px">';
-  for (const key of keys) {
-    const c = COUNTER_DATA[key];
-    const score = CM.getMasteryScore(key);
-    const pct = Math.round(score * 100);
-    const isMastered = status[key]?.mastered;
-    const color = isMastered ? 'var(--teal)' : score > 0 ? 'var(--gold)' : 'var(--border)';
-
-    // Per-number detail
-    let numPips = '';
-    for (let n = 1; n <= 10; n++) {
-      const m = CM.isMastered(key, n);
-      numPips += '<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:'
-        + (m ? 'var(--teal)' : 'var(--paper-mid)')
-        + ';border:1px solid var(--border);margin:1px;font-size:0.55rem;line-height:14px;text-align:center;color:var(--ink-light)">'
-        + n + '</span>';
-    }
-
-    html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--paper-dark)">'
-      + '<span style="font-family:var(--jp);font-size:1.1rem;color:' + color + ';min-width:28px">' + (c ? c.name : key) + '</span>'
-      + '<span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);min-width:70px">' + (c ? c.desc : key) + '</span>'
-      + '<div style="flex:1">' + numPips + '</div>'
-      + '<span style="font-family:var(--ui);font-size:0.72rem;color:' + color + ';min-width:32px;text-align:right">' + pct + '%</span>'
-      + (isMastered ? '<span style="font-family:var(--ui);font-size:0.7rem;color:var(--teal)">✓</span>' : '')
-      + '</div>';
-  }
-
-  html += '</div></div>';
-
-  const feedbackEl = document.getElementById('countFeedbackText2');
-  if (feedbackEl) feedbackEl.innerHTML = html;
-}
 window['countShowMastery'] = countShowMastery;
 // ── App registry ─────────────────────────────────────────
 try {
