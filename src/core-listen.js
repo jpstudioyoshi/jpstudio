@@ -22,6 +22,7 @@ const ListenState = {
 // ListenState.loopPauseTimer — see declaration above
 let listenNotesSave = null;
 let listenPlaying = false;
+let _listenAccumSecs = 0;
 let listenCurrentSpeed = 1.0;
 
 // Waveform state
@@ -329,6 +330,7 @@ function playSelected() {
 
 function loadListenTrack(idx, autoplay) {
   autoplay = false; // Manual play only
+  _listenAccumSecs = 0;
   if (idx < 0 || idx >= listenTracks.length) return;
   const track = listenTracks[idx];
   
@@ -506,6 +508,13 @@ function listenTimeUpdate() {
   const audio = document.getElementById('listenAudio');
   document.getElementById('listenTimeCur').textContent = fmtTime(audio.currentTime);
   document.getElementById('listenTimeDur').textContent = fmtTime(audio.duration);
+  if (listenPlaying) {
+    _listenAccumSecs += 0.25;
+    if (_listenAccumSecs >= 600) {
+      _listenAccumSecs = 0;
+      if (typeof drillLastCompletedWrite === 'function') drillLastCompletedWrite('listening');
+    }
+  }
   if (shadowingActive) {
     shadowCheckTime();
   } else if (listenAbLooping && listenAbA !== null && listenAbB !== null) {

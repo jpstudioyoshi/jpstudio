@@ -163,3 +163,20 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
+
+## Session 19 — Completed Work
+
+### GOALS_DEFAULTS TDZ crash
+- `const GOALS_DEFAULTS` was declared after `var CONJ_QUESTIONS_PER_RUN = goalsLoad()` which called it at parse time
+- Fixed by moving `GOALS_DEFAULTS` declaration to just before the `var` block in `core-counters.js`
+
+### API key save buttons unwired
+- `#apikeyBtn` and `#openaiKeyBtn` had no onclick handlers
+- Added `onclick="(App.saveApiKey||window.saveApiKey)()"` and equivalent for OpenAI
+- Root cause of key loss on restart — key was never being saved via UI
+
+### Pending
+- Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
+- Read panel listen layout — still buggy
+- DB startup failure (`rows is not iterable`) — still present but no longer blocking
+- App opens on wrong panel (Questions instead of Progress)
