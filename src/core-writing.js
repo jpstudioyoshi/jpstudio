@@ -248,13 +248,15 @@ let _writingFirstAttempt = null;
 let _writingCheckCount   = 0;
 
 async function checkWritingSentence() {
-  const _hdr = document.querySelector('.feedback-panel-header');
-  if (_hdr) { _hdr.classList.add('checking'); setTimeout(() => _hdr.classList.remove('checking'), 2000); }
+  const _fp = document.querySelector('.feedback-panel');
+  if (_fp) { _fp.style.background = 'rgba(48,213,200,0.06)'; _fp.style.transition = 'background 0.4s'; }
   const input = document.getElementById('writingInput');
   const text = input.value.trim();
   if (!text) return;
   const btn = document.getElementById('writingCheckBtn');
   const parsed = await wbCallTutor(text, btn, 'Check');
+  const _fp2 = document.querySelector('.feedback-panel');
+  if (_fp2) { _fp2.style.background = ''; }
   if (!parsed) return;
   
   // Only record error on the FIRST check of this sentence text
@@ -547,9 +549,12 @@ function handleWritingKey(e) {
 }
 
 function clearWritingFeedback() {
-  document.getElementById('feedbackEntries').innerHTML = '<div class="feedback-empty">Check or submit a sentence to see feedback.</div>';
+  document.getElementById('feedbackEntries').innerHTML = '<div class="feedback-empty">Type a sentence and click here to check it.</div>';
   document.getElementById('feedbackCount').textContent = '—';
-  // stub
+  const inp = document.getElementById('writingInput');
+  if (inp) { inp.value = ''; inp.focus(); }
+  const _fp = document.querySelector('.feedback-panel');
+  if (_fp) { _fp.style.background = ''; }
 }
 
 function saveWritingText() {
