@@ -1301,7 +1301,7 @@ async function lessonNotesExtractKeyPhrases() {
   
   try {
     const data = await _fy_claudeAPI({
-      max_tokens: 2000,
+      max_tokens: 6000,
       messages: [{ role: 'user', content: `Extract key phrases from these Japanese lesson notes. Focus on:
 - Important expressions and set phrases
 - Useful collocations
@@ -1651,11 +1651,11 @@ ${docContent.slice(0, 8000)}` }]
 async function lessonNotesExtractKeyPhrasesSilent(docContent, apiKey) {
   try {
     const data = await _fy_claudeAPI({
-      max_tokens: 4000,
+      max_tokens: 6000,
       messages: [{ role: 'user', content: `Extract key phrases and expressions from these Japanese lesson notes. Focus on useful conversational phrases, set expressions, and idiomatic patterns.
 Assign each phrase a group from: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other
 Return JSON array: [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","sourceText":"the exact line from the notes where this phrase appeared","group":"group name"}]
-Content: ${docContent.slice(0, 8000)}` }]
+Content: ${docContent.slice(0, 6000)}` }]
     ,
       track: 'lesson'
     });

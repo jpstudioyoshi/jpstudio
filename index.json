@@ -2447,188 +2447,188 @@
     "name": "checkWritingSentence",
     "file": "src/core-writing.js",
     "line": 250,
-    "desc": "const _hdr = document.querySelector('.feedback-panel-header');"
+    "desc": "const _fp = document.querySelector('.feedback-panel');"
   },
   {
     "type": "function",
     "name": "submitWritingSentence",
     "file": "src/core-writing.js",
-    "line": 281,
+    "line": 283,
     "desc": "const input = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 334,
+    "line": 336,
     "desc": "AppState.wbDragEl — see declaration below"
   },
   {
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 385,
+    "line": 387,
     "desc": "item.remove();"
   },
   {
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 397,
+    "line": 399,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {"
   },
   {
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 411,
+    "line": 413,
     "desc": "const n = writingSentences.length;"
   },
   {
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 417,
+    "line": 419,
     "desc": "AppState.wbDragEl = this;"
   },
   {
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 424,
+    "line": 426,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 429,
+    "line": 431,
     "desc": "this.classList.remove('drag-over');"
   },
   {
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 432,
+    "line": 434,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 449,
+    "line": 451,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');"
   },
   {
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 455,
+    "line": 457,
     "desc": "wbUpdateCount(); } // legacy stub"
   },
   {
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 457,
+    "line": 459,
     "desc": "const inp = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 469,
+    "line": 471,
     "desc": "const container = document.getElementById('feedbackEntries');"
   },
   {
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 517,
+    "line": 519,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');"
   },
   {
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 526,
+    "line": 528,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 535,
+    "line": 537,
     "desc": "writingSentences.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 544,
+    "line": 546,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }"
   },
   {
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 549,
-    "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Check or submit "
+    "line": 551,
+    "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Type a sentence "
   },
   {
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 555,
+    "line": 560,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }"
   },
   {
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 565,
+    "line": 570,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 585,
+    "line": 590,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 602,
+    "line": 607,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 614,
+    "line": 619,
     "desc": "const tLen = token.length;"
   },
   {
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 628,
+    "line": 633,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 295,
+    "line": 297,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 299,
+    "line": 301,
     "desc": "db.run"
   },
   {
