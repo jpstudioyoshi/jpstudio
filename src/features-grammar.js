@@ -1808,6 +1808,18 @@ function checkConjG() {
       conjSessionWrong[item.key] = (conjSessionWrong[item.key] || 0) + 1;
     }
   }
+  if (typeof window !== 'undefined' && window.db) {
+    const _ts = new Date().toISOString();
+    const _result = correct ? 'ok' : (levClass?.severity === 'slip' ? 'slip' : 'miss');
+    window.db.run(
+      'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+      [_ts, 'conj', item.key, correct ? 1 : 0, null]
+    ).catch(() => {});
+    window.db.run(
+      'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+      [_ts, 'conjugation', 'drill:answer', JSON.stringify({ key: item.key, word: item.word?.word || item.key, form: item.form, pol: item.pol, reg: item.reg, result: _result, typed: val })]
+    ).catch(() => {});
+  }
   ConjSession.saveProgress(conjQueue, conjIdx, conjResults, conjOk, conjMiss, conjRun, conjSessionCorrect, conjSessionWrong, window._conjVerbTypes, window._conjForms, window._conjPolarities, window._conjRegisters);
 
   const isSlip = levClass && levClass.severity === 'slip';
