@@ -1611,14 +1611,15 @@ function fttShowFinal() {
       target_s: [240, 180, 120]
     };
     if (window.db) {
+      const _ts = new Date().toISOString();
       window.db.run(
-        'INSERT INTO learning_events (event_type, payload, created_at) VALUES (?, ?, ?)',
-        ['fluency:432', JSON.stringify(payload), new Date().toISOString()]
-      );
+        'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [_ts, 'voice', 'fluency:432', JSON.stringify(payload)]
+      ).catch(() => {});
       window.db.run(
-        'INSERT INTO drill_results (drill_type, score, payload, created_at) VALUES (?, ?, ?, ?)',
-        ['432', null, JSON.stringify(payload), new Date().toISOString()]
-      );
+        'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+        [_ts, '432', payload.topic, null, null]
+      ).catch(() => {});
     }
   } catch(e) { console.warn('fttShowFinal instrumentation error:', e); }
 }
