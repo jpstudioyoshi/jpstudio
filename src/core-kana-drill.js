@@ -510,6 +510,19 @@ function checkMultiChoice(idx) {
     WS.saveProgress(KanaDrillState.queue, KanaDrillState.idx, KanaDrillState.results, KanaDrillState.correctCount, KanaDrillState.wrongCount);
   }
 
+  if (typeof window !== 'undefined' && window.db) {
+    const _ts = new Date().toISOString();
+    const _char = KanaDrillState.currentKana.char;
+    const _mode = KanaDrillState.mode || 'kana';
+    window.db.run(
+      'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+      [_ts, 'kana', _char, correct ? 1 : 0, null]
+    ).catch(() => {});
+    window.db.run(
+      'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+      [_ts, 'kana', 'drill:answer', JSON.stringify({ char: _char, reading: KanaDrillState.currentKana.word, mode: _mode, correct })]
+    ).catch(() => {});
+  }
   saveState(); updateDrillStats(); renderDrillProgress();
   document.getElementById('skipKanaBtn').textContent = 'Next →';
 }
