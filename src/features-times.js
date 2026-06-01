@@ -294,6 +294,14 @@ function answerTd(chosen, btn) {
         : ['date_month', 'date_day'];
       _tdIds.forEach(id => DrillSRS.record(STORAGE_KEYS.DRILL_SRS_TIMES, id, true));
     }
+    if (typeof window !== 'undefined' && window.db) {
+      const _ts = new Date().toISOString();
+      const _key = TimesState.question?.type || 'times';
+      window.db.run('INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+        [_ts, 'times', _key, 1, null]).catch(() => {});
+      window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: 'times', key: _key, label: TimesState.question?.label, result: 'correct' })]).catch(() => {});
+    }
 
     // Mark all buttons
     document.querySelectorAll('.td-choice').forEach(b => {
@@ -338,6 +346,14 @@ function answerTd(chosen, btn) {
         if (TimesState.question) {
           const _tdIds = TimesState.question.type === 'time' ? ['time_hour', 'time_minute'] : ['date_month', 'date_day'];
           _tdIds.forEach(id => DrillSRS.record(STORAGE_KEYS.DRILL_SRS_TIMES, id, false));
+        }
+        if (typeof window !== 'undefined' && window.db) {
+          const _ts = new Date().toISOString();
+          const _key = TimesState.question?.type || 'times';
+          window.db.run('INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+            [_ts, 'times', _key, 0, null]).catch(() => {});
+          window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+            [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: 'times', key: _key, label: TimesState.question?.label, result: 'wrong' })]).catch(() => {});
         }
         DrillFlow.wrong(() => nextTimesQuestion());
       }
