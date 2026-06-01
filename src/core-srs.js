@@ -484,6 +484,7 @@ function kanjiCorpusRecordLookup(word, context) {
     _corpusEntriesUpsert(ch, corpus[ch], ts);
     if (typeof window !== 'undefined' && window.db) {
       window.db.run('INSERT INTO corpus_lookups (word, looked_up_at, context) VALUES (?,?,?)', [ch, ts, ctx]).catch(() => {});
+      window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)', [ts, 'srs', 'vocab:lookup', JSON.stringify({ word: ch, context: ctx })]).catch(() => {});
     }
   }
   kanjiCorpusSave(corpus);

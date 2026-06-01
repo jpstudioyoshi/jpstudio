@@ -381,6 +381,10 @@ function _corpusWriteLookup(word, entry) {
     'INSERT INTO corpus_lookups (word, looked_up_at, context) VALUES (?, ?, ?)',
     [word, ts, ctx]
   ).catch(() => {});
+  window.db.run(
+    'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+    [ts, 'translate', 'vocab:lookup', JSON.stringify({ word, context: ctx })]
+  ).catch(() => {});
 }
 
 function qtHistoryAdd(word) {

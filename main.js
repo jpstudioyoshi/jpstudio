@@ -318,6 +318,21 @@ function createSchema() {
       t         INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS error_history_t ON error_history(t);
+    CREATE TABLE IF NOT EXISTS panel_sessions (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      panel      TEXT NOT NULL,
+      strand     INTEGER NOT NULL,
+      started_at TEXT NOT NULL,
+      ended_at   TEXT NOT NULL,
+      duration_s INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS learning_events (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at TEXT NOT NULL,
+      panel      TEXT NOT NULL,
+      event_type TEXT NOT NULL,
+      payload    TEXT
+    );
   `);
 
   // Set schema version if not set
