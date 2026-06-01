@@ -1604,6 +1604,45 @@ function wordsSwitchSub(name) {
   if (name === 'game') { /* game initialises on click */ }
 }
 
+// ── Panel session timer ──────────────────────────────────────────────────────
+const _STRAND_MAP = {
+  listen: 1, read: 1, video: 1,
+  voice: 2, lessonnotes: 2, writing: 2,
+  grammar2: 3, words: 3, kana: 3,
+  progress: null, settings: null, dashboard: null
+};
+let _panelSessionStart = null;
+let _panelSessionId    = null;
+let _panelLastInteract = null;
+
+function _panelInteractPing() { _panelLastInteract = Date.now(); }
+['click','keydown','mousedown'].forEach(ev =>
+  document.addEventListener(ev, _panelInteractPing, { passive: true })
+);
+
+function _panelSessionClose(leavingId) {
+  if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;
+  const strand = _STRAND_MAP[_panelSessionId];
+  if (strand == null) { _panelSessionStart = null; _panelSessionId = null; return; }
+  const endTime   = Math.min(_panelLastInteract, Date.now());
+  const duration  = Math.max(0, Math.round((endTime - _panelSessionStart) / 1000));
+  if (duration < 2) { _panelSessionStart = null; _panelSessionId = null; return; }
+  const startedAt = new Date(_panelSessionStart).toISOString();
+  const endedAt   = new Date(endTime).toISOString();
+  if (typeof window !== 'undefined' && window.db) {
+    window.db.run(
+      'INSERT INTO panel_sessions (panel, strand, started_at, ended_at, duration_s) VALUES (?,?,?,?,?)',
+      [_panelSessionId, strand, startedAt, endedAt, duration]
+    ).catch(() => {});
+    window.db.run(
+      'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+      [endedAt, _panelSessionId, 'session:time', JSON.stringify({ strand, duration_s: duration })]
+    ).catch(() => {});
+  }
+  _panelSessionStart = null;
+  _panelSessionId    = null;
+}
+
 function showPanel(id) {
   // Save Quick Read session when leaving the read panel
   const currentPanel = document.querySelector('.panel.active');
@@ -1730,6 +1769,13 @@ function showPanel(id) {
       }
       setVtDictateMode('hiragana');
     }, 50);
+  }
+  // Start panel session timer
+  _panelSessionClose(id);
+  if (_STRAND_MAP[id] != null) {
+    _panelSessionStart  = Date.now();
+    _panelSessionId     = id;
+    _panelLastInteract  = Date.now();
   }
 }
 window.showPanel = showPanel;
