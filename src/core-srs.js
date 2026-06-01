@@ -518,6 +518,8 @@ function kanjiCorpusRecordChatProduction(text) {
     if (typeof window !== 'undefined' && window.db) {
       window.db.run('INSERT INTO corpus_productions (word, produced_at, source, context) VALUES (?,?,?,?)',
         [ch, ts, 'chat', text.slice(0,40)]).catch(() => {});
+      window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [ts, 'chat', 'vocab:produced', JSON.stringify({ word: ch, context: text.slice(0,40) })]).catch(() => {});
     }
   }
   kanjiCorpusSave(corpus);
@@ -550,6 +552,8 @@ function kanjiCorpusRecordProduction(text, context) {
     if (typeof window !== 'undefined' && window.db) {
       window.db.run('INSERT INTO corpus_productions (word, produced_at, source, context) VALUES (?,?,?,?)',
         [ch, ts, 'writing', ctx]).catch(() => {});
+      window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [ts, 'writing', 'vocab:produced', JSON.stringify({ word: ch, context: ctx })]).catch(() => {});
     }
   }
   kanjiCorpusSave(corpus);

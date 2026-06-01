@@ -964,6 +964,11 @@ function recordError({ source, errorType, pattern, input, corrected }) {
     'INSERT INTO error_history (source, errorType, pattern, input, corrected, t) VALUES (?,?,?,?,?,?)',
     [source, errorType || '', pattern || '', input || '', corrected || '', t]
   )?.catch(e => console.warn('[recordError]', e));
+  const ts = new Date(t).toISOString();
+  window.db?.run(
+    'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+    [ts, source, 'error:recorded', JSON.stringify({ errorType, pattern, input, corrected })]
+  )?.catch(() => {});
 }
 
 function getApiKey()    { return Storage.getApiKey(); }
