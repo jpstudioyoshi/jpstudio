@@ -1297,7 +1297,7 @@ async function lessonNotesExtractKeyPhrases() {
   if (!docContent) { alert('No document content to analyze'); return; }
   
   const area = document.querySelector('#lessonNotesView, #lessonNotesViewMain');
-  if (area) area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-light)">Extracting key phrases...</div>';
+  if (area) area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-light)"><div style="font-size:2em;margin-bottom:12px">⏳</div>Extracting key phrases…</div>';
   
   try {
     const data = await _fy_claudeAPI({
@@ -1313,15 +1313,14 @@ Return JSON array only:
 [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","group":"group name"}]
 
 Lesson content:
-${docContent.slice(0, 8000)}` }]
-    ,
+${docContent.slice(0, 6000)}` }],
       track: 'lesson'
     });
     
     const text = _fy_claudeText(data) || '[]';
     LessonNotesState.keyPhrases = _lnParseJsonArray(text);
   } catch (e) {
-    console.error('Key phrase extraction error:', e);
+    console.error('[KP] extraction error:', e);
   }
   
   lessonNotesRender();
