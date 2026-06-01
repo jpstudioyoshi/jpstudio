@@ -1522,7 +1522,7 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
   const recentKeys = new Set(window._conjLastRunKeys || []);
   const deduped = pool.filter(c => !recentKeys.has(c.key));
   const finalPool = deduped.length >= CONJ_QUESTIONS_PER_RUN ? deduped : pool;
-  const shuffled = finalPool.sort(() => Math.random() - 0.5).slice(0, CONJ_QUESTIONS_PER_RUN);
+  const shuffled = finalPool.sort(() => Math.random() - 0.5).slice(0, CONJ_QUESTIONS_PER_RUN || 15);
   conjQueue = shuffled.length > 5 ? conjDeConsecutive(shuffled) : shuffled;
   window._conjLastRunKeys = conjQueue.map(c => c.key);
   conjTypedAnswers = new Array(conjQueue.length).fill(null);
@@ -1635,7 +1635,7 @@ function renderConjDrillG() {
       ? '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--gold);letter-spacing:0.06em">な-ADJ → conjugates with だ/です, not くない</div>'
       : '';
   const listenMode = typeof conjListenMode !== 'undefined' && conjListenMode;
-  const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 10).map((r,i) =>
+  const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 15).map((r,i) =>
     '<div class="conj-dot ' + (r==='ok'?'ok':r==='miss'?'miss':r==='slip'?'slip':i===conjIdx?'cur':'') + '"></div>'
   ).join('');
   // Badge colour: register only — polite=blue, plain=neutral
