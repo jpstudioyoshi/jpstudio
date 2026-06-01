@@ -131,6 +131,18 @@ const DrillCard = (() => {
     const correct = typed === answer;
     _checked = true;
     _results[_idx] = correct ? 'ok' : 'miss';
+    if (typeof window !== 'undefined' && window.db) {
+      const _ts = new Date().toISOString();
+      const _dtype = _cfg.trackingLabel || 'drillcard';
+      window.db.run(
+        'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+        [_ts, _dtype, answer, correct ? 1 : 0, null]
+      ).catch(() => {});
+      window.db.run(
+        'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: _dtype, answer, typed, correct })]
+      ).catch(() => {});
+    }
 
     if (correct) {
       _correct++;
