@@ -23,6 +23,7 @@ const ListenState = {
 let listenNotesSave = null;
 let listenPlaying = false;
 let _listenAccumSecs = 0;
+let _listenTotalMins = 0;
 let listenCurrentSpeed = 1.0;
 
 // Waveform state
@@ -510,9 +511,24 @@ function listenTimeUpdate() {
   document.getElementById('listenTimeDur').textContent = fmtTime(audio.duration);
   if (listenPlaying) {
     _listenAccumSecs += 0.25;
-    if (_listenAccumSecs >= 600) {
+    if (_listenAccumSecs >= 60) {
       _listenAccumSecs = 0;
-      if (typeof drillLastCompletedWrite === 'function') drillLastCompletedWrite('listening');
+      _listenTotalMins += 1;
+      // Append 1-minute entry to listen log cache (same format as Satellite)
+      try {
+        const Storage = App.Storage || window.Storage;
+        const CACHE_KEY = 'jpsat_listen_log_cache';
+        const trackName = (typeof listenCurrentIdx !== 'undefined' && listenTracks && listenTracks[listenCurrentIdx])
+          ? listenTracks[listenCurrentIdx].name : 'unknown';
+        const today = new Date().toISOString().slice(0, 10);
+        const log = JSON.parse(Storage.get(CACHE_KEY) || '[]');
+        log.push({ date: today, filename: trackName, seconds: 60, source: 'jpStudio' });
+        Storage.set(CACHE_KEY, JSON.stringify(log));
+      } catch(e) {}
+      // Write strand every 10 minutes
+      if (_listenTotalMins % 10 === 0) {
+        if (typeof drillLastCompletedWrite === 'function') drillLastCompletedWrite('listening');
+      }
     }
   }
   if (shadowingActive) {

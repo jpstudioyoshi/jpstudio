@@ -2551,623 +2551,623 @@
     "type": "function",
     "name": "readId3Title",
     "file": "src/core-listen.js",
-    "line": 39,
+    "line": 40,
     "desc": "Instead we read the ID3v2 tag from the file bytes to get the real title."
   },
   {
     "type": "function",
     "name": "tryShiftJIS",
     "file": "src/core-listen.js",
-    "line": 100,
+    "line": 101,
     "desc": ""
   },
   {
     "type": "function",
     "name": "tryDecodeFilename",
     "file": "src/core-listen.js",
-    "line": 109,
+    "line": 110,
     "desc": "if (/[\\u3040-\\u30ff\\u4e00-\\u9fff]/.test(name)) return name; // already Japanese"
   },
   {
     "type": "function",
     "name": "loadListenFiles",
     "file": "src/core-listen.js",
-    "line": 120,
+    "line": 121,
     "desc": "const audioExts = /\\.(mp3|m4a|wav|ogg|aac|flac|opus|weba|mp4)$/i;"
   },
   {
     "type": "function",
     "name": "handleListenDrop",
     "file": "src/core-listen.js",
-    "line": 165,
+    "line": 166,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "readEntry",
     "file": "src/core-listen.js",
-    "line": 186,
+    "line": 187,
     "desc": "return new Promise(resolve => {"
   },
   {
     "type": "function",
     "name": "showListenLayout",
     "file": "src/core-listen.js",
-    "line": 208,
+    "line": 209,
     "desc": "if (!listenTracks.length) return;"
   },
   {
     "type": "function",
     "name": "_ensureDictPanelState",
     "file": "src/core-listen.js",
-    "line": 213,
+    "line": 214,
     "desc": "if (document.getElementById('dictationPanel').style.display === 'none') return;"
   },
   {
     "type": "function",
     "name": "renderListenPlaylist",
     "file": "src/core-listen.js",
-    "line": 226,
+    "line": 227,
     "desc": "const el = document.getElementById('listenPlaylist');"
   },
   {
     "type": "function",
     "name": "loadAndPlayTrack",
     "file": "src/core-listen.js",
-    "line": 258,
+    "line": 259,
     "desc": "loadListenTrack(idx, false);"
   },
   {
     "type": "function",
     "name": "removeListenTrack",
     "file": "src/core-listen.js",
-    "line": 262,
+    "line": 263,
     "desc": "if (idx < 0 || idx >= listenTracks.length) return;"
   },
   {
     "type": "function",
     "name": "toggleSelectAll",
     "file": "src/core-listen.js",
-    "line": 301,
+    "line": 302,
     "desc": "document.querySelectorAll('.listen-check').forEach(cb => cb.checked = checked);"
   },
   {
     "type": "function",
     "name": "updateSelectAll",
     "file": "src/core-listen.js",
-    "line": 305,
+    "line": 306,
     "desc": "const all = document.querySelectorAll('.listen-check');"
   },
   {
     "type": "function",
     "name": "getCheckedIndices",
     "file": "src/core-listen.js",
-    "line": 312,
+    "line": 313,
     "desc": "return Array.from(document.querySelectorAll('.listen-check:checked'))"
   },
   {
     "type": "function",
     "name": "playSelected",
     "file": "src/core-listen.js",
-    "line": 317,
+    "line": 318,
     "desc": "const sel = listenTracks[listenCurrentIdx >= 0 ? listenCurrentIdx : 0];"
   },
   {
     "type": "function",
     "name": "loadListenTrack",
     "file": "src/core-listen.js",
-    "line": 331,
+    "line": 332,
     "desc": "autoplay = false; // Manual play only"
   },
   {
     "type": "function",
     "name": "listenQueueNext",
     "file": "src/core-listen.js",
-    "line": 370,
+    "line": 371,
     "desc": "if (listenQueue.length && listenQueuePos >= 0) {"
   },
   {
     "type": "function",
     "name": "listenUpdateNavBtns",
     "file": "src/core-listen.js",
-    "line": 384,
+    "line": 385,
     "desc": "const prevBtn = document.querySelector('.btn-action[title=\"Previous\"]');"
   },
   {
     "type": "function",
     "name": "listenQueuePrev",
     "file": "src/core-listen.js",
-    "line": 393,
+    "line": 394,
     "desc": "if (listenQueue.length && listenQueuePos > 0) {"
   },
   {
     "type": "function",
     "name": "toggleListenPlay",
     "file": "src/core-listen.js",
-    "line": 402,
+    "line": 403,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "listenTransToggleKana",
     "file": "src/core-listen.js",
-    "line": 433,
+    "line": 434,
     "desc": "Translation cache is defined earlier in the file (GLOBAL QUICK TRANSLATE section)"
   },
   {
     "type": "function",
     "name": "listenTransClear",
     "file": "src/core-listen.js",
-    "line": 437,
+    "line": 438,
     "desc": "const inp = document.getElementById('listenTranscribeText');"
   },
   {
     "type": "function",
     "name": "renderListenSession",
     "file": "src/core-listen.js",
-    "line": 467,
+    "line": 468,
     "desc": "const list = document.getElementById('listenSessionList');"
   },
   {
     "type": "function",
     "name": "listenSessionDelete",
     "file": "src/core-listen.js",
-    "line": 488,
+    "line": 489,
     "desc": "if (i >= 0 && i < ListenState.sessionLookups.length) {"
   },
   {
     "type": "function",
     "name": "updatePlayBtn",
     "file": "src/core-listen.js",
-    "line": 495,
+    "line": 496,
     "desc": "const btn = document.getElementById('listenPlayBtn');"
   },
   {
     "type": "function",
     "name": "listenOnEnded",
     "file": "src/core-listen.js",
-    "line": 500,
+    "line": 501,
     "desc": "listenPlaying = false; updatePlayBtn();"
   },
   {
     "type": "function",
     "name": "listenTimeUpdate",
     "file": "src/core-listen.js",
-    "line": 507,
+    "line": 508,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "setListenLoopPause",
     "file": "src/core-listen.js",
-    "line": 537,
+    "line": 553,
     "desc": "listenLoopPauseSecs = secs;"
   },
   {
     "type": "function",
     "name": "setListenSpeed",
     "file": "src/core-listen.js",
-    "line": 542,
+    "line": 558,
     "desc": "listenCurrentSpeed = rate;"
   },
   {
     "type": "function",
     "name": "listenSkip",
     "file": "src/core-listen.js",
-    "line": 553,
+    "line": 569,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "fmtTime",
     "file": "src/core-listen.js",
-    "line": 558,
+    "line": 574,
     "desc": "if (!s || isNaN(s)) return '0:00';"
   },
   {
     "type": "function",
     "name": "cycleLoop",
     "file": "src/core-listen.js",
-    "line": 568,
+    "line": 584,
     "desc": "if (listenAbLooping || loopSetState === 'a' || loopSetState === 'b') {"
   },
   {
     "type": "function",
     "name": "updateLoopSetUI",
     "file": "src/core-listen.js",
-    "line": 581,
+    "line": 597,
     "desc": "kept as alias for safety"
   },
   {
     "type": "function",
     "name": "clearAbLoop",
     "file": "src/core-listen.js",
-    "line": 616,
+    "line": 632,
     "desc": "listenAbA = null; listenAbB = null; listenAbLooping = false; loopSetState = null;"
   },
   {
     "type": "function",
     "name": "waveformClick",
     "file": "src/core-listen.js",
-    "line": 622,
+    "line": 638,
     "desc": "const canvas = document.getElementById('listenWaveform');"
   },
   {
     "type": "function",
     "name": "updateListenTimeDisplay",
     "file": "src/core-listen.js",
-    "line": 683,
+    "line": 699,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "saveListenNote",
     "file": "src/core-listen.js",
-    "line": 692,
+    "line": 708,
     "desc": "clearTimeout(listenNotesSave);"
   },
   {
     "type": "function",
     "name": "clearListenPlaylist",
     "file": "src/core-listen.js",
-    "line": 704,
+    "line": 720,
     "desc": "listenTracks.forEach(t => URL.revokeObjectURL(t.url));"
   },
   {
     "type": "function",
     "name": "decodeWaveform",
     "file": "src/core-listen.js",
-    "line": 730,
+    "line": 746,
     "desc": "const waveMsg = document.getElementById('listenWaveMsg');"
   },
   {
     "type": "function",
     "name": "findSilenceBoundary",
     "file": "src/core-listen.js",
-    "line": 761,
+    "line": 777,
     "desc": "direction: 'before' scans leftward, 'after' scans rightward."
   },
   {
     "type": "function",
     "name": "drawWaveform",
     "file": "src/core-listen.js",
-    "line": 816,
+    "line": 832,
     "desc": "const canvas = document.getElementById('listenWaveform');"
   },
   {
     "type": "function",
     "name": "toggleDictationMode",
     "file": "src/core-listen.js",
-    "line": 981,
+    "line": 997,
     "desc": "── Toggle dictation mode ─────────────────────────────────"
   },
   {
     "type": "function",
     "name": "newDictSentence",
     "file": "src/core-listen.js",
-    "line": 1019,
+    "line": 1035,
     "desc": "dictSentence = N5_SENTENCES[Math.floor(Math.random() * N5_SENTENCES.length)];"
   },
   {
     "type": "function",
     "name": "playDictSentence",
     "file": "src/core-listen.js",
-    "line": 1029,
+    "line": 1045,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "checkDictation",
     "file": "src/core-listen.js",
-    "line": 1034,
+    "line": 1050,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "showDictReveal",
     "file": "src/core-listen.js",
-    "line": 1086,
+    "line": 1102,
     "desc": "if (!dictSentence) return;"
   },
   {
     "type": "function",
     "name": "onDictationInput",
     "file": "src/core-listen.js",
-    "line": 1095,
+    "line": 1111,
     "desc": "if (!dictationActive) return;"
   },
   {
     "type": "function",
     "name": "onDictationInputAudio",
     "file": "src/core-listen.js",
-    "line": 1139,
+    "line": 1155,
     "desc": "onDictationInput(); }"
   },
   {
     "type": "function",
     "name": "cancelDictResume",
     "file": "src/core-listen.js",
-    "line": 1141,
+    "line": 1157,
     "desc": "if (dictResumeTimer)    { clearTimeout(dictResumeTimer);    dictResumeTimer = null; }"
   },
   {
     "type": "function",
     "name": "updateDictCountdown",
     "file": "src/core-listen.js",
-    "line": 1148,
+    "line": 1164,
     "desc": "const cd = document.getElementById('dictCountdown');"
   },
   {
     "type": "function",
     "name": "setDictStatus",
     "file": "src/core-listen.js",
-    "line": 1157,
+    "line": 1173,
     "desc": "const el = document.getElementById('dictStatus');"
   },
   {
     "type": "function",
     "name": "clearDictation",
     "file": "src/core-listen.js",
-    "line": 1172,
+    "line": 1188,
     "desc": "const ta = document.getElementById('dictationText') || document.getElementById('dictationTextAudio')"
   },
   {
     "type": "function",
     "name": "copyDictation",
     "file": "src/core-listen.js",
-    "line": 1179,
+    "line": 1195,
     "desc": "const ta  = document.getElementById('dictationTextAudio') || document.getElementById('dictationText'"
   },
   {
     "type": "function",
     "name": "toggleShadowing",
     "file": "src/core-listen.js",
-    "line": 1202,
+    "line": 1218,
     "desc": ""
   },
   {
     "type": "function",
     "name": "shadowOnEnded",
     "file": "src/core-listen.js",
-    "line": 1243,
+    "line": 1259,
     "desc": "shadowAdvanceOrRepeat();"
   },
   {
     "type": "function",
     "name": "shadowCheckTime",
     "file": "src/core-listen.js",
-    "line": 1248,
+    "line": 1264,
     "desc": "if (!shadowingActive || listenAbB === null) return;"
   },
   {
     "type": "function",
     "name": "shadowAdvanceOrRepeat",
     "file": "src/core-listen.js",
-    "line": 1258,
+    "line": 1274,
     "desc": "shadowRepsDone++;"
   },
   {
     "type": "function",
     "name": "shadowContinue",
     "file": "src/core-listen.js",
-    "line": 1284,
+    "line": 1300,
     "desc": "updateShadowStatus();"
   },
   {
     "type": "function",
     "name": "updateShadowStatus",
     "file": "src/core-listen.js",
-    "line": 1307,
+    "line": 1323,
     "desc": "const el = document.getElementById('shadowStatus');"
   },
   {
     "type": "function",
     "name": "listenPopulateMics",
     "file": "src/core-listen.js",
-    "line": 1321,
+    "line": 1337,
     "desc": "ListenState.sh* — see declaration below"
   },
   {
     "type": "function",
     "name": "listenSetMic",
     "file": "src/core-listen.js",
-    "line": 1354,
+    "line": 1370,
     "desc": "ListenState.selectedMicId = deviceId || null;"
   },
   {
     "type": "function",
     "name": "listenRequestMicAccess",
     "file": "src/core-listen.js",
-    "line": 1364,
+    "line": 1380,
     "desc": "const select = document.getElementById('listenMicSelect');"
   },
   {
     "type": "function",
     "name": "listenShPlayback",
     "file": "src/core-listen.js",
-    "line": 1371,
+    "line": 1387,
     "desc": "if (!ListenState.shRecordedBlob) return;"
   },
   {
     "type": "function",
     "name": "listenShDrawWaveform",
     "file": "src/core-listen.js",
-    "line": 1392,
+    "line": 1408,
     "desc": "const canvas = document.getElementById('listenShWaveform');"
   },
   {
     "type": "function",
     "name": "setListenRecMode",
     "file": "src/core-listen.js",
-    "line": 1445,
+    "line": 1461,
     "desc": "ListenState.recMode — see declaration below"
   },
   {
     "type": "function",
     "name": "updateListenSegmentUI",
     "file": "src/core-listen.js",
-    "line": 1464,
+    "line": 1480,
     "desc": "const countEl = document.getElementById('listenSegmentCount');"
   },
   {
     "type": "function",
     "name": "listenSegDragStart",
     "file": "src/core-listen.js",
-    "line": 1494,
+    "line": 1510,
     "desc": "ListenState.dragIdx — see declaration below"
   },
   {
     "type": "function",
     "name": "listenSegDragOver",
     "file": "src/core-listen.js",
-    "line": 1500,
+    "line": 1516,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "listenSegDrop",
     "file": "src/core-listen.js",
-    "line": 1507,
+    "line": 1523,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "listenSegDragEnd",
     "file": "src/core-listen.js",
-    "line": 1521,
+    "line": 1537,
     "desc": "ListenState.dragIdx = -1;"
   },
   {
     "type": "function",
     "name": "listenShRecord",
     "file": "src/core-listen.js",
-    "line": 1529,
+    "line": 1545,
     "desc": "const btn = document.getElementById('listenShRecordBtn');"
   },
   {
     "type": "function",
     "name": "listenPlaySegment",
     "file": "src/core-listen.js",
-    "line": 1588,
+    "line": 1604,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "listenDeleteSegment",
     "file": "src/core-listen.js",
-    "line": 1594,
+    "line": 1610,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;"
   },
   {
     "type": "function",
     "name": "listenClearSegments",
     "file": "src/core-listen.js",
-    "line": 1600,
+    "line": 1616,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenPlayAllSegments",
     "file": "src/core-listen.js",
-    "line": 1608,
+    "line": 1624,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenCombineSegments",
     "file": "src/core-listen.js",
-    "line": 1628,
+    "line": 1644,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "listenDownloadSegments",
     "file": "src/core-listen.js",
-    "line": 1678,
+    "line": 1694,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;"
   },
   {
     "type": "function",
     "name": "getVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1768,
+    "line": 1784,
     "desc": ""
   },
   {
     "type": "function",
     "name": "saveVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1775,
+    "line": 1791,
     "desc": ""
   },
   {
     "type": "function",
     "name": "dropVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1786,
+    "line": 1802,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "renderVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1804,
+    "line": 1820,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "updateVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1831,
+    "line": 1847,
     "desc": "const bms = getVocabBookmarks(trackName);"
   },
   {
     "type": "function",
     "name": "parseTimeStr",
     "file": "src/core-listen.js",
-    "line": 1836,
+    "line": 1852,
     "desc": "str = str.trim();"
   },
   {
     "type": "function",
     "name": "updateVocabTime",
     "file": "src/core-listen.js",
-    "line": 1849,
+    "line": 1865,
     "desc": "const secs = parseTimeStr(value);"
   },
   {
     "type": "function",
     "name": "deleteVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1862,
+    "line": 1878,
     "desc": "const bms = getVocabBookmarks(trackName);"
   },
   {
     "type": "function",
     "name": "clearVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1869,
+    "line": 1885,
     "desc": "if (listenCurrentIdx < 0) return;"
   },
   {
     "type": "function",
     "name": "seekToBookmark",
     "file": "src/core-listen.js",
-    "line": 1876,
+    "line": 1892,
     "desc": "const audio = document.getElementById('listenAudio');"
   },
   {
     "type": "function",
     "name": "jishoLookup",
     "file": "src/core-listen.js",
-    "line": 1882,
+    "line": 1898,
     "desc": "const q = (word || '').trim();"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-listen.js",
-    "line": 1054,
+    "line": 1070,
     "desc": "The student is practising Japanese dictation at N5 level. The sentence that was "
   },
   {
