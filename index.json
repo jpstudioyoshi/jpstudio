@@ -8347,176 +8347,190 @@
     "type": "function",
     "name": "fttAnalyse",
     "file": "src/features-voice.js",
-    "line": 1549,
+    "line": 1550,
     "desc": "const transcript = VoiceState.ftt_transcript.trim();"
   },
   {
     "type": "function",
     "name": "fttShowNextRoundBtn",
     "file": "src/features-voice.js",
-    "line": 1589,
+    "line": 1591,
     "desc": "const mins = [4, 3, 2][VoiceState.ftt_round] || 2;"
   },
   {
     "type": "function",
     "name": "fttShowFinal",
     "file": "src/features-voice.js",
-    "line": 1595,
+    "line": 1597,
     "desc": "voiceUpdateStatus('Drill complete — all 3 rounds done');"
   },
   {
     "type": "function",
     "name": "rtSetStatus",
     "file": "src/features-voice.js",
-    "line": 1601,
+    "line": 1626,
     "desc": "const el = document.getElementById('rtStatus');"
   },
   {
     "type": "function",
     "name": "rtStartConversation",
     "file": "src/features-voice.js",
-    "line": 1608,
+    "line": 1633,
     "desc": "const topicInput = document.getElementById('rtTopicInput');"
   },
   {
     "type": "function",
     "name": "rtCheckProgress",
     "file": "src/features-voice.js",
-    "line": 1677,
+    "line": 1702,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtStartRound2",
     "file": "src/features-voice.js",
-    "line": 1693,
+    "line": 1718,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtCompare",
     "file": "src/features-voice.js",
-    "line": 1767,
+    "line": 1792,
     "desc": "VoiceState.rtMessages2 = [...VoiceState.messages];"
   },
   {
     "type": "function",
     "name": "rtShowDebrief",
     "file": "src/features-voice.js",
-    "line": 1849,
+    "line": 1874,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtNewSession",
     "file": "src/features-voice.js",
-    "line": 2094,
+    "line": 2119,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtShowHistory",
     "file": "src/features-voice.js",
-    "line": 2105,
+    "line": 2130,
     "desc": "document.getElementById('rtHistoryPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtReopenDebrief",
     "file": "src/features-voice.js",
-    "line": 2163,
+    "line": 2188,
     "desc": "if (!VoiceState.rtLastDebrief) return;"
   },
   {
     "type": "function",
     "name": "voiceReviewErrors",
     "file": "src/features-voice.js",
-    "line": 2175,
+    "line": 2200,
     "desc": "const userMessages = VoiceState.messages.filter(m => m.role === 'user').map(m => m.content);"
   },
   {
     "type": "function",
     "name": "voiceClearChat",
     "file": "src/features-voice.js",
-    "line": 2306,
+    "line": 2331,
     "desc": "voiceNewChat();"
   },
   {
     "type": "function",
     "name": "voiceRenderMessages",
     "file": "src/features-voice.js",
-    "line": 2310,
+    "line": 2335,
     "desc": "const history = document.getElementById('voiceChatHistory');"
   },
   {
     "type": "function",
     "name": "voicePlayLastRecording",
     "file": "src/features-voice.js",
-    "line": 2374,
+    "line": 2399,
     "desc": "if (!VoiceState.lastRecordingUrl) {"
   },
   {
     "type": "function",
     "name": "voicePlaySentenceBySentence",
     "file": "src/features-voice.js",
-    "line": 2385,
+    "line": 2410,
     "desc": "VoiceState.sentence* — see declaration above"
   },
   {
     "type": "function",
     "name": "voicePlayCurrentSentence",
     "file": "src/features-voice.js",
-    "line": 2405,
+    "line": 2430,
     "desc": "if (!VoiceState.sentencePlaying || VoiceState.sentenceIdx >= VoiceState.sentenceQueue.length) {"
   },
   {
     "type": "function",
     "name": "voiceSentenceTap",
     "file": "src/features-voice.js",
-    "line": 2442,
+    "line": 2467,
     "desc": "if (!VoiceState.sentencePlaying) return;"
   },
   {
     "type": "function",
     "name": "voiceStopSentences",
     "file": "src/features-voice.js",
-    "line": 2463,
+    "line": 2488,
     "desc": "if (VoiceState.sentencePlaying && (VoiceState.sentenceWaiting || speechSynthesis.speaking)) {"
   },
   {
     "type": "function",
     "name": "voiceToggleRecord",
     "file": "src/features-voice.js",
-    "line": 2480,
+    "line": 2505,
     "desc": "const btn = document.getElementById('voiceRecordBtn');"
   },
   {
     "type": "function",
     "name": "voiceProcessAudio",
     "file": "src/features-voice.js",
-    "line": 2538,
+    "line": 2563,
     "desc": "const openaiKey = getOpenAIKey();"
   },
   {
     "type": "function",
     "name": "voiceSendToClaude",
     "file": "src/features-voice.js",
-    "line": 2609,
+    "line": 2634,
     "desc": "if (VoiceState.interviewMode) {"
   },
   {
     "type": "function",
     "name": "voiceSendText",
     "file": "src/features-voice.js",
-    "line": 2807,
+    "line": 2832,
     "desc": "const input = document.getElementById('voiceTextInput');"
   },
   {
     "type": "function",
     "name": "voiceUploadAudio",
     "file": "src/features-voice.js",
-    "line": 2840,
+    "line": 2865,
     "desc": "Export functions"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-voice.js",
+    "line": 1614,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-voice.js",
+    "line": 1618,
+    "desc": "db.run"
   },
   {
     "type": "prompt",
@@ -8543,14 +8557,14 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-voice.js",
-    "line": 1558,
+    "line": 1560,
     "desc": "The learner is practising a 4/3/2 fluency drill. They spoke freely on the topic "
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-voice.js",
-    "line": 2186,
+    "line": 2211,
     "desc": "Review my Japanese from this conversation. Here are my messages: ${…}. ${…}`).jo"
   },
   {

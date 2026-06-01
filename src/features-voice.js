@@ -1501,6 +1501,7 @@ function fttInit() {
   VoiceState.ftt_minutes    = 4;
   VoiceState.ftt_timer      = null;
   VoiceState.ftt_all        = [];
+  VoiceState.ftt_start_ts   = null;
   const row = document.getElementById('voiceStructuredRow');
   const label = document.getElementById('voiceStructuredLabel');
   const topicInput = document.getElementById('rtTopicInput');
@@ -1523,6 +1524,7 @@ function fttStartRound() {
   VoiceState.ftt_round++;
   VoiceState.ftt_transcript = '';
   VoiceState.ftt_active = true;
+  VoiceState.ftt_start_ts = Date.now();
   const mins = [4, 3, 2][VoiceState.ftt_round - 1] || 2;
   VoiceState.ftt_minutes = mins;
   voiceUpdateStatus('Round ' + VoiceState.ftt_round + ' — speak freely');
@@ -1552,7 +1554,8 @@ async function fttAnalyse(topic) {
     fttShowNextRoundBtn();
     return;
   }
-  VoiceState.ftt_all.push({ round: VoiceState.ftt_round, transcript });
+  const ftt_actual_s = VoiceState.ftt_start_ts ? Math.round((Date.now() - VoiceState.ftt_start_ts) / 1000) : (VoiceState.ftt_minutes * 60);
+  VoiceState.ftt_all.push({ round: VoiceState.ftt_round, transcript, actual_s: ftt_actual_s });
   const level = document.getElementById('voiceLevel')?.value || 'N5';
   const prompt = `The learner is practising a 4/3/2 fluency drill. They spoke freely on the topic "${topic}" for ${VoiceState.ftt_minutes} minutes. This is Round ${VoiceState.ftt_round} of 3.
 
@@ -1595,6 +1598,29 @@ function fttShowFinal() {
   voiceUpdateStatus('Drill complete — all 3 rounds done');
   const startBtn = document.getElementById('fttStartBtn');
   if (startBtn) startBtn.style.display = 'none';
+  // Instrument completed 4/3/2 drill
+  try {
+    const topic = document.getElementById('rtTopicInput')?.value.trim() || 'free conversation';
+    const rounds = VoiceState.ftt_all;
+    const payload = {
+      topic,
+      input_type: 'spoken',
+      delivery_1_s: (rounds[0] || {}).actual_s || null,
+      delivery_2_s: (rounds[1] || {}).actual_s || null,
+      delivery_3_s: (rounds[2] || {}).actual_s || null,
+      target_s: [240, 180, 120]
+    };
+    if (window.db) {
+      window.db.run(
+        'INSERT INTO learning_events (event_type, payload, created_at) VALUES (?, ?, ?)',
+        ['fluency:432', JSON.stringify(payload), new Date().toISOString()]
+      );
+      window.db.run(
+        'INSERT INTO drill_results (drill_type, score, payload, created_at) VALUES (?, ?, ?, ?)',
+        ['432', null, JSON.stringify(payload), new Date().toISOString()]
+      );
+    }
+  } catch(e) { console.warn('fttShowFinal instrumentation error:', e); }
 }
 
 function rtSetStatus(text) {
