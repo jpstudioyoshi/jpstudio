@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-05-31 (session 18 — conjugation drill fixes, read panel listen layout)
+Last updated: 2026-06-01 (session 20 — learning_events instrumentation, architecture planning)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -41,7 +41,9 @@ Last updated: 2026-05-31 (session 18 — conjugation drill fixes, read panel lis
 - Switch to Opus 4.8 for hard debugging: claude config set model claude-opus-4-8
 
 ## Current Mode
-STABILIZATION — bug fixing and layout polish. No feature expansion.
+ARCHITECTURE — inter-panel communication, intelligent hub, Nation four strands framework.
+Legacy architectural rendering conflicts resolved. Feature development open.
+See ARCHITECTURE_HUB.md in project Knowledge for full design.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
@@ -75,7 +77,7 @@ All edits are done via terminal — no file upload/download.
 - Use date +%s for guaranteed cache bust on JS files
 
 **Critical lessons:**
-- python3 string matching fails silently on whitespace/encoding differences — use line-number sed instead
+- python3 string matching fails silently on whitespace/encoding differences — use repr() to inspect before retrying
 - sed replacing function names as well as call sites — always check after
 - Line numbers shift after edits — re-grep before editing again
 - Duplicate CSS rules accumulate — grep for class name before adding new rules
@@ -87,6 +89,7 @@ All edits are done via terminal — no file upload/download.
 - const/let TDZ bugs in Electron: if a script aborts mid-load, later const/let declarations stay in TDZ
 - pbcopy swallows terminal output — never use it for sed -n reads, only for grep locating
 - git stash pop restores Code session changes if accidentally stashed
+- Blank lines in python3 heredoc match strings cause MATCH FAILED — always use repr() to inspect first
 
 ## Known Issues / Pre-existing
 - **DB startup errors** — `rows is not iterable` in features-progress.js, GrammarModel mastery load failing. Causes CONJ_SESSION_RUNS and CONJ_QUESTIONS_PER_RUN to be undefined on load (worked around with `|| 3` fallback). Root cause: sql.js or IPC handler issue on startup. Needs dedicated investigation.
@@ -94,39 +97,76 @@ All edits are done via terminal — no file upload/download.
 - PDF print line breaks — pre-existing
 - App opens on Questions (dashboard) panel instead of Progress — regression from session 17 nav fix
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
+- Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
+- Read panel listen layout — still buggy
 
-## Session 18 — Completed Work
+## Session 20 — Completed Work
 
-### Conjugation Drill Fixes
-- **"undefined" in progress counter** — two causes fixed:
-  1. `conjTypedAnswers` not initialised on session resume → added init in `conjResumeSession`
-  2. `CONJ_SESSION_RUNS` undefined due to DB startup abort → `|| 3` fallback in stats bar and run summary
-- **typed object rendering as [object Object]** — `typed?.val` fix in error table
-- **Spurious re-render before Start** — guard `if (!conjQueue.length) return` at top of `renderConjDrillG`
-- **Enter key not working** — fixed as side effect of queue guard (spurious renders were stealing focus)
-- **Header feedback field colour** — added `correct-fb` CSS class, border+background for wrong/slip
-- **✓/✗ icons removed** from feedback text
-- **Feedback field position** — moved to own row in `.conj-footer-upper`, centred, full width
-- **Dot row** — capped at `CONJ_QUESTIONS_PER_RUN || 10` to avoid showing stale accumulated dots
+### Architecture Planning (this thread — reserved for architecture discussion)
+- Agreed Paul Nation Four Strands as the organising framework for the whole system
+- Designed runtime architecture: AppEvents (bus) → StudentModel (Verteilerstelle) → panels
+- StudentModel has two layers: mechanical (rule-based) and intelligent (trigger-based LLM)
+- Measurement set agreed — see ARCHITECTURE_HUB.md
+- Implementation phases agreed: Foundation → Instrumentation → Audit → Strand balance → Intelligence
+- ARCHITECTURE_HUB.md written and uploaded to project Knowledge
 
-### Read Panel Listen Layout
-- `qrListenPanel` + `qrRecordSection` were scrolling with text — needed to be fixed
-- `qrListenContainer` — new fixed wrapper at `top:154px` (below lower header), contains `qrListenPanel`
-- `qrRecordSection` — moved into `qrFooterUpper`, replaces buttons when listen mode active
-- `qrFooterBtns` — new wrapper div for footer buttons, hidden when listen mode active
-- JS `qrToggleListenMode` updated to swap `qrFooterBtns` ↔ `qrRecordSection`
-- **Status: partially working — listen layout still buggy, needs follow-up next session**
+### learning_events Infrastructure
+- Added `panel_sessions` and `learning_events` tables to `createSchema()` in main.js
+- `panel_sessions`: panel, strand, started_at, ended_at, duration_s
+- `learning_events`: created_at, panel, event_type, payload (JSON)
+
+### Panel Session Timer
+- Added `_STRAND_MAP`, `_panelSessionStart`, `_panelLastInteract` to core-foundation.js
+- Timer deducts to last interaction timestamp on panel switch (not clock time)
+- Interaction signals: click, keydown, mousedown, audio playback, microphone active
+- Sessions < 2 seconds discarded
+- Panels with null strand (progress, settings, dashboard) not recorded
+- Writes to both `panel_sessions` and `learning_events` (event_type: `session:time`)
+
+### learning_events Wiring — Completed
+| Event | Source | File |
+|---|---|---|
+| `vocab:lookup` | quick translate | core-foundation.js |
+| `vocab:lookup` | SRS/kanji drill | core-srs.js |
+| `vocab:produced` | chat production | core-srs.js |
+| `vocab:produced` | writing production | core-srs.js |
+| `error:recorded` | all error sources | core-foundation.js |
+| `drill:answer` | conjugation drill | features-grammar.js |
+| `drill:answer` | kana drill | core-kana-drill.js |
+| `drill:answer` | words SRS | core-vocab.js |
+| `drill:answer` | times drill | features-times.js |
+| `drill:answer` | DrillCard (counters, days, all DrillCard drills) | src/ui/DrillCard.js |
+| `writing:submitted` | writing panel | core-writing.js |
+| `session:time` | all panels via showPanel() | core-foundation.js |
+
+### Writing iteration tracking
+- `_writingFirstAttempt` — captures text on first check, cleared on submit
+- `_writingCheckCount` — counts check attempts per sentence, reset on submit
+- `writing:submitted` payload includes: first_attempt, final_text, check_count
+
+### DB Schema additions
+- `drill_results` now receiving writes for first time (conjugation, kana, words, times, DrillCard)
+- `writing_sessions` now receiving writes for first time
 
 ## Pending Work — Priority Order
 
-### Immediate (next session)
-1. **Read panel listen layout** — qrRecordSection swap with footer buttons not fully working; qrListenContainer positioning may need adjustment; full listen UX needs test and polish
-2. **DB startup failure** — `rows is not iterable`, kvAPI not persisting on cold start, CONJ_SESSION_RUNS undefined. Investigate sql.js IPC handler
-3. **App startup panel** — opens on Questions instead of Progress, restore correct default
+### Immediate
+1. **Read panel listen layout** — still buggy, needs follow-up
+2. **DB startup failure** — `rows is not iterable`, still present
+3. **App startup panel** — opens on Questions instead of Progress
 
-### Next
-1. **TextInputDrill component** — `src/ui/TextInputDrill.js`, migrate conjugation first then counters then kana
-2. **Satellite UI** — further improvements beyond session 17 changes
+### Architecture / Instrumentation (next sessions)
+1. **Remaining learning_events wiring:**
+   - Voice drill answers (needs thought — uses scoring not typed input)
+   - Anki reviews (needs thought)
+   - STT-scored conjugation (core-stt.js lines 795, 821)
+   - Lesson session saves (Yoshi)
+   - `_conjRecordGrammarEvidence` — unclear where it writes
+2. **Data audit (Phase 3)** — run app through typical session, verify what actually lands in DB vs what should
+3. **StudentModel audit** — what does it currently own, what is it called for
+4. **Progress panel / Genki taxonomy audit** — what's wired vs display-only
+5. **AnalysisService audit** — does it do grammar tagging on transcripts
+6. **AppEvents usage audit** — which panels currently emit/listen
 
 ### Medium term
 1. **REVIEW.md** — add to jpStudio repo root, DOM-write conflict prevention
@@ -152,8 +192,8 @@ All edits are done via terminal — no file upload/download.
 - Each panel pre-filters by lesson_id when set
 - Topbar indicator showing current lesson
 
-## SQLite Schema (v9)
-Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
+## SQLite Schema (current)
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events
 pitch_data: 124,137 entries
 Access: window.pitchAPI.lookup(kanji, reading)
 
@@ -164,19 +204,7 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
 
-## Session 19 — Completed Work
-
-### GOALS_DEFAULTS TDZ crash
-- `const GOALS_DEFAULTS` was declared after `var CONJ_QUESTIONS_PER_RUN = goalsLoad()` which called it at parse time
-- Fixed by moving `GOALS_DEFAULTS` declaration to just before the `var` block in `core-counters.js`
-
-### API key save buttons unwired
-- `#apikeyBtn` and `#openaiKeyBtn` had no onclick handlers
-- Added `onclick="(App.saveApiKey||window.saveApiKey)()"` and equivalent for OpenAI
-- Root cause of key loss on restart — key was never being saved via UI
-
-### Pending
-- Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
-- Read panel listen layout — still buggy
-- DB startup failure (`rows is not iterable`) — still present but no longer blocking
-- App opens on wrong panel (Questions instead of Progress)
+## Session 20 Addendum
+- STT conjugation instrumentation dropped — STT too imprecise for single-syllable conjugation differences
+- Read-aloud and 4/3/2 instrumentation delegated to listen thread
+- Current mode note: listen thread handling all spoken performance instrumentation

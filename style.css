@@ -2816,3 +2816,17 @@
 .btn-rating-teal:hover { background: var(--teal); border-color: var(--teal); color: var(--ink); }
 .select-std { font-family: var(--ui); font-size: 0.85rem; background: none; border: none; border-bottom: 1px solid var(--border); color: var(--ink); cursor: pointer; outline: none; padding: 2px 4px; margin-left: 10px; }
 .select-field { padding:6px 10px; font-family:var(--ui); font-size:0.82rem; background:var(--field); border:1px solid var(--field-border); border-radius:6px; color:var(--ink); outline:none; cursor:pointer; }
+
+/* ============================================================
+   LAYOUT CONSTANTS — standard panel chrome values
+   Generated: 2026-06-01
+   ============================================================
+   nav bar:          top: 0;      height: 50px
+   quick-translate:  top: 50px;   height: 48px
+   panel-header-lower: top: 98px; (nav 50 + qt 48)
+   panel padding — 2-row header:  padding-top: 98px
+   panel padding — 3-row header:  padding-top: 158px  (98 + 60px lower header)
+   footer-upper:     bottom: 10vh; height: 10vh; left: 52px; right: 0
+   footer-lower:     bottom: 0;    height: 10vh; left: 52px; right: 0
+   sidebar width:    52px
+   ============================================================ */

@@ -1513,7 +1513,6 @@ function fttInit() {
   if (cmpBtn) cmpBtn.style.display = 'none';
   rtSetStatus('');
   voiceNewChat();
-  voiceUpdateStatus('Choose a topic, then press 🎙️ to start Round 1 (4 min)');
 }
 
 

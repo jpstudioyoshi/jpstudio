@@ -38,105 +38,98 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 532,
+    "line": 547,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');"
   },
   {
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 899,
+    "line": 914,
     "desc": "const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 906,
+    "line": 921,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 916,
+    "line": 931,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1167,
+    "line": 1182,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1218,
+    "line": 1233,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1306,
+    "line": 1321,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 326,
+    "line": 341,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 339,
+    "line": 354,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 348,
+    "line": 363,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 399,
+    "line": 414,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 452,
+    "line": 467,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 468,
+    "line": 483,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 477,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 494,
+    "line": 492,
     "desc": "db.run"
   },
   {
@@ -150,105 +143,112 @@
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 526,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 613,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 664,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 732,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "main.js",
-    "line": 789,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 806,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "main.js",
-    "line": 814,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 931,
+    "line": 524,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 995,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1076,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1092,
+    "line": 541,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1096,
+    "line": 628,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 679,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 747,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 804,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 821,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 829,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 946,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1110,
+    "line": 1010,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1091,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1107,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 1111,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1125,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1150,
+    "line": 1165,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1151,
+    "line": 1166,
     "desc": "db.run"
   },
   {
@@ -885,329 +885,343 @@
     "type": "function",
     "name": "qtHistoryAdd",
     "file": "src/core-foundation.js",
-    "line": 386,
+    "line": 390,
     "desc": "if (!word || /^(KANJI|READING|MEANING|DICT|JAPANESE):/i.test(word)) return;"
   },
   {
     "type": "function",
     "name": "qtHistoryUpdate",
     "file": "src/core-foundation.js",
-    "line": 398,
+    "line": 402,
     "desc": "const menu = document.getElementById('globalQTHistoryMenu');"
   },
   {
     "type": "function",
     "name": "toggleQTHistory",
     "file": "src/core-foundation.js",
-    "line": 420,
+    "line": 424,
     "desc": "e.stopPropagation();"
   },
   {
     "type": "function",
     "name": "selectQTHistory",
     "file": "src/core-foundation.js",
-    "line": 428,
+    "line": 432,
     "desc": "const input = document.getElementById('globalQTInput');"
   },
   {
     "type": "function",
     "name": "globalQTSelectHistory",
     "file": "src/core-foundation.js",
-    "line": 445,
+    "line": 449,
     "desc": "if (!word) return;"
   },
   {
     "type": "function",
     "name": "globalQuickTranslate",
     "file": "src/core-foundation.js",
-    "line": 502,
+    "line": 506,
     "desc": "const input = document.getElementById('globalQTInput');"
   },
   {
     "type": "function",
     "name": "globalQTSpeak",
     "file": "src/core-foundation.js",
-    "line": 663,
+    "line": 667,
     "desc": "if (!_qtLastJapanese) return;"
   },
   {
     "type": "function",
     "name": "globalQTClear",
     "file": "src/core-foundation.js",
-    "line": 677,
+    "line": 681,
     "desc": "_qtLastJapanese = '';"
   },
   {
     "type": "function",
     "name": "renderPitchCurve",
     "file": "src/core-foundation.js",
-    "line": 686,
+    "line": 690,
     "desc": "if (!kana || pitchStr === null || pitchStr === undefined) return '';"
   },
   {
     "type": "function",
     "name": "renderLookupsTable",
     "file": "src/core-foundation.js",
-    "line": 709,
+    "line": 713,
     "desc": "const tbody    = document.getElementById('lookupsTableBody');"
   },
   {
     "type": "function",
     "name": "lookupDelete",
     "file": "src/core-foundation.js",
-    "line": 808,
+    "line": 812,
     "desc": "const tmp = document.createElement('div');"
   },
   {
     "type": "function",
     "name": "clearLookupCache",
     "file": "src/core-foundation.js",
-    "line": 820,
+    "line": 824,
     "desc": "if (!confirm('Clear all cached translations?')) return;"
   },
   {
     "type": "function",
     "name": "apiUsageLoad",
     "file": "src/core-foundation.js",
-    "line": 909,
+    "line": 913,
     "desc": "AppState.apiUsage — see declaration below"
   },
   {
     "type": "function",
     "name": "apiUsageSave",
     "file": "src/core-foundation.js",
-    "line": 916,
+    "line": 920,
     "desc": "Storage.set(STORAGE_KEYS.API_USAGE, JSON.stringify(AppState.apiUsage));"
   },
   {
     "type": "function",
     "name": "apiUsageTrack",
     "file": "src/core-foundation.js",
-    "line": 920,
+    "line": 924,
     "desc": "AppState.apiUsage.inputTokens += inputTokens;"
   },
   {
     "type": "function",
     "name": "apiUsageGetCost",
     "file": "src/core-foundation.js",
-    "line": 933,
+    "line": 937,
     "desc": "return (AppState.apiUsage.inputTokens * COST_PER_INPUT_TOKEN) + (AppState.apiUsage.outputTokens * CO"
   },
   {
     "type": "function",
     "name": "apiUsageReset",
     "file": "src/core-foundation.js",
-    "line": 937,
+    "line": 941,
     "desc": "if (confirm('Reset API usage tracking? This cannot be undone.')) {"
   },
   {
     "type": "function",
     "name": "recordError",
     "file": "src/core-foundation.js",
-    "line": 955,
+    "line": 959,
     "desc": "Writes one row to error_history with a full timestamp."
   },
   {
     "type": "function",
     "name": "getApiKey",
     "file": "src/core-foundation.js",
-    "line": 965,
+    "line": 974,
     "desc": "return Storage.getApiKey(); }"
   },
   {
     "type": "function",
     "name": "getOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 966,
+    "line": 975,
     "desc": "return Storage.getOpenAIKey(); }"
   },
   {
     "type": "function",
     "name": "claudeAPI",
     "file": "src/core-foundation.js",
-    "line": 969,
+    "line": 978,
     "desc": "const apiKey = getApiKey();"
   },
   {
     "type": "function",
     "name": "claudeText",
     "file": "src/core-foundation.js",
-    "line": 1005,
+    "line": 1014,
     "desc": "return data.content?.[0]?.text || '';"
   },
   {
     "type": "function",
     "name": "saveApiKey",
     "file": "src/core-foundation.js",
-    "line": 1009,
+    "line": 1018,
     "desc": "const val = document.getElementById('apikeyInput').value.trim();"
   },
   {
     "type": "function",
     "name": "saveOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 1023,
+    "line": 1032,
     "desc": "saveHFToken removed — diarization removed"
   },
   {
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1458,
+    "line": 1467,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer"
   },
   {
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1460,
+    "line": 1469,
     "desc": "const input = document.createElement('input');"
   },
   {
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1479,
+    "line": 1488,
     "desc": "Storage.clearAll();"
   },
   {
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1489,
+    "line": 1498,
     "desc": "STATE"
   },
   {
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1511,
+    "line": 1520,
     "desc": "Storage.setState(state); }"
   },
   {
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1514,
+    "line": 1523,
     "desc": "const today = new Date().toDateString();"
   },
   {
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1531,
+    "line": 1540,
     "desc": "API KEY BAR"
   },
   {
     "type": "function",
     "name": "wordsSubFromSelect",
     "file": "src/core-foundation.js",
-    "line": 1560,
+    "line": 1569,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "wordsSwitchSubRestore",
     "file": "src/core-foundation.js",
-    "line": 1565,
+    "line": 1574,
     "desc": "const last = localStorage.getItem('wordsLastSub') || 'vocab';"
   },
   {
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1584,
+    "line": 1593,
     "desc": "['vocab','anki','game','counters','days'].forEach(s => {"
+  },
+  {
+    "type": "function",
+    "name": "_panelInteractPing",
+    "file": "src/core-foundation.js",
+    "line": 1618,
+    "desc": "_panelLastInteract = Date.now(); }"
+  },
+  {
+    "type": "function",
+    "name": "_panelSessionClose",
+    "file": "src/core-foundation.js",
+    "line": 1623,
+    "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1598,
+    "line": 1646,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1729,
+    "line": 1784,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1751,
+    "line": 1806,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1787,
+    "line": 1842,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1795,
+    "line": 1850,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1806,
+    "line": 1861,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1885,
+    "line": 1940,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1907,
+    "line": 1962,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
     "type": "storage",
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
-    "line": 1561,
+    "line": 1570,
     "desc": "localStorage"
   },
   {
     "type": "storage",
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
-    "line": 1573,
+    "line": 1582,
     "desc": "localStorage"
   },
   {
     "type": "storage",
     "name": "TRANSLATE_CACHE",
     "file": "src/core-foundation.js",
-    "line": 499,
+    "line": 503,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "API_USAGE",
     "file": "src/core-foundation.js",
-    "line": 917,
+    "line": 921,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1646,
+    "line": 1694,
     "desc": "Storage.set"
   },
   {
@@ -1274,17 +1288,38 @@
     "desc": "db.run"
   },
   {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-foundation.js",
+    "line": 384,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-foundation.js",
+    "line": 1633,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-foundation.js",
+    "line": 1637,
+    "desc": "db.run"
+  },
+  {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 580,
+    "line": 584,
     "desc": "Translate this Japanese word/phrase to English. Reply in this exact format only:"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 582,
+    "line": 586,
     "desc": "Translate this English word/phrase to Japanese. Reply in this exact format only:"
   },
   {
@@ -1410,29 +1445,43 @@
     "type": "function",
     "name": "setKanaTimer",
     "file": "src/core-kana-drill.js",
-    "line": 517,
+    "line": 530,
     "desc": "kanaTimerSeconds = parseInt(s); }"
   },
   {
     "type": "function",
     "name": "kanaToggleHint",
     "file": "src/core-kana-drill.js",
-    "line": 518,
+    "line": 531,
     "desc": "const show = true; // hint always shown"
   },
   {
     "type": "function",
     "name": "setKanaMode",
     "file": "src/core-kana-drill.js",
-    "line": 524,
+    "line": 537,
     "desc": "const _timerRow    = document.getElementById('kanaTimerRow');"
   },
   {
     "type": "function",
     "name": "toggleKanaDakuten",
     "file": "src/core-kana-drill.js",
-    "line": 606,
+    "line": 619,
     "desc": "KanaDrillState.dakutenEnabled = document.getElementById('kanaDakutenCheck')?.checked || false;"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-kana-drill.js",
+    "line": 517,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-kana-drill.js",
+    "line": 521,
+    "desc": "db.run"
   },
   {
     "type": "function",
@@ -2012,14 +2061,14 @@
     "type": "function",
     "name": "kanjiCorpusRecordChatProduction",
     "file": "src/core-srs.js",
-    "line": 493,
+    "line": 494,
     "desc": "const kanji = kanjiExtract(text);"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRecordProduction",
     "file": "src/core-srs.js",
-    "line": 525,
+    "line": 528,
     "desc": "const kanji = kanjiExtract(text);"
   },
   {
@@ -2054,14 +2103,35 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 518,
+    "line": 487,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 550,
+    "line": 519,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-srs.js",
+    "line": 521,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-srs.js",
+    "line": 553,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-srs.js",
+    "line": 555,
     "desc": "db.run"
   },
   {
@@ -2376,176 +2446,190 @@
     "type": "function",
     "name": "checkWritingSentence",
     "file": "src/core-writing.js",
-    "line": 248,
+    "line": 250,
     "desc": "const _hdr = document.querySelector('.feedback-panel-header');"
   },
   {
     "type": "function",
     "name": "submitWritingSentence",
     "file": "src/core-writing.js",
-    "line": 277,
+    "line": 281,
     "desc": "const input = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 315,
+    "line": 334,
     "desc": "AppState.wbDragEl — see declaration below"
   },
   {
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 366,
+    "line": 385,
     "desc": "item.remove();"
   },
   {
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 378,
+    "line": 397,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {"
   },
   {
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 392,
+    "line": 411,
     "desc": "const n = writingSentences.length;"
   },
   {
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 398,
+    "line": 417,
     "desc": "AppState.wbDragEl = this;"
   },
   {
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 405,
+    "line": 424,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 410,
+    "line": 429,
     "desc": "this.classList.remove('drag-over');"
   },
   {
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 413,
+    "line": 432,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 430,
+    "line": 449,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');"
   },
   {
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 436,
+    "line": 455,
     "desc": "wbUpdateCount(); } // legacy stub"
   },
   {
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 438,
+    "line": 457,
     "desc": "const inp = document.getElementById('writingInput');"
   },
   {
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 450,
+    "line": 469,
     "desc": "const container = document.getElementById('feedbackEntries');"
   },
   {
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 498,
+    "line": 517,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');"
   },
   {
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 507,
+    "line": 526,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 516,
+    "line": 535,
     "desc": "writingSentences.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 525,
+    "line": 544,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }"
   },
   {
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 530,
+    "line": 549,
     "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Check or submit "
   },
   {
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 536,
+    "line": 555,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }"
   },
   {
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 546,
+    "line": 565,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 566,
+    "line": 585,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 583,
+    "line": 602,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();"
   },
   {
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 595,
+    "line": 614,
     "desc": "const tLen = token.length;"
   },
   {
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 609,
+    "line": 628,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-writing.js",
+    "line": 295,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-writing.js",
+    "line": 299,
+    "desc": "db.run"
   },
   {
     "type": "function",
@@ -3216,301 +3300,315 @@
     "type": "function",
     "name": "renderVocab",
     "file": "src/core-vocab.js",
-    "line": 225,
+    "line": 237,
     "desc": "const vocabCardEl   = document.getElementById('vocabCard');"
   },
   {
     "type": "function",
     "name": "prevVocab",
     "file": "src/core-vocab.js",
-    "line": 357,
+    "line": 369,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "nextVocab",
     "file": "src/core-vocab.js",
-    "line": 364,
+    "line": 376,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "flipVocab",
     "file": "src/core-vocab.js",
-    "line": 372,
+    "line": 384,
     "desc": "vocabFlipped = !vocabFlipped;"
   },
   {
     "type": "function",
     "name": "toggleVcDirection",
     "file": "src/core-vocab.js",
-    "line": 377,
+    "line": 389,
     "desc": "vcDirection = vcDirection === 'jp-en' ? 'en-jp' : 'jp-en';"
   },
   {
     "type": "function",
     "name": "resetVocabDeck",
     "file": "src/core-vocab.js",
-    "line": 383,
+    "line": 395,
     "desc": "state.vocabProgress = {};"
   },
   {
     "type": "function",
     "name": "toggleVocabList",
     "file": "src/core-vocab.js",
-    "line": 392,
+    "line": 404,
     "desc": "const list = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "renderVocabList",
     "file": "src/core-vocab.js",
-    "line": 403,
+    "line": 415,
     "desc": "const container = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "deleteVocabCard",
     "file": "src/core-vocab.js",
-    "line": 438,
+    "line": 450,
     "desc": "state.vocab.splice(idx, 1);"
   },
   {
     "type": "function",
     "name": "printVocabList",
     "file": "src/core-vocab.js",
-    "line": 454,
+    "line": 466,
     "desc": "const cards = state.vocab;"
   },
   {
     "type": "function",
     "name": "vcFetch",
     "file": "src/core-vocab.js",
-    "line": 474,
+    "line": 486,
     "desc": "const category = document.getElementById('vcFetchCategory').value.trim();"
   },
   {
     "type": "function",
     "name": "vcFetchSelectAll",
     "file": "src/core-vocab.js",
-    "line": 534,
+    "line": 546,
     "desc": "document.querySelectorAll('.vc-fetch-check').forEach(el => el.checked = checked);"
   },
   {
     "type": "function",
     "name": "vcFetchAdd",
     "file": "src/core-vocab.js",
-    "line": 538,
+    "line": 550,
     "desc": "const words = window._vcFetchWords || [];"
   },
   {
     "type": "function",
     "name": "vcToggleHint",
     "file": "src/core-vocab.js",
-    "line": 574,
+    "line": 586,
     "desc": "const hint = document.getElementById('vcHint');"
   },
   {
     "type": "function",
     "name": "transAddToVocab",
     "file": "src/core-vocab.js",
-    "line": 583,
+    "line": 595,
     "desc": "const src = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "renderGrammar",
     "file": "src/core-vocab.js",
-    "line": 605,
+    "line": 617,
     "desc": "GRAMMAR"
   },
   {
     "type": "function",
     "name": "toggleGrammar",
     "file": "src/core-vocab.js",
-    "line": 622,
+    "line": 634,
     "desc": "const el = document.getElementById('ge' + i);"
   },
   {
     "type": "function",
     "name": "appendChatMsg",
     "file": "src/core-vocab.js",
-    "line": 631,
+    "line": 643,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "updateChatMsg",
     "file": "src/core-vocab.js",
-    "line": 668,
+    "line": 680,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "transSpeakOutput",
     "file": "src/core-vocab.js",
-    "line": 716,
+    "line": 728,
     "desc": "const inp = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "chatQuick",
     "file": "src/core-vocab.js",
-    "line": 726,
+    "line": 738,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "sendChat",
     "file": "src/core-vocab.js",
-    "line": 732,
+    "line": 744,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "startChatSpeech",
     "file": "src/core-vocab.js",
-    "line": 774,
+    "line": 786,
     "desc": "sttStart('chatInput', 'chatSpeechBtn', 'ja');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusFilter",
     "file": "src/core-vocab.js",
-    "line": 796,
+    "line": 808,
     "desc": "KanjiCorpusState — see above"
   },
   {
     "type": "function",
     "name": "kanjiCorpusSort",
     "file": "src/core-vocab.js",
-    "line": 803,
+    "line": 815,
     "desc": "KanjiCorpusState.sort = sort;"
   },
   {
     "type": "function",
     "name": "kanjiSetView",
     "file": "src/core-vocab.js",
-    "line": 812,
+    "line": 824,
     "desc": "KanjiCorpusState — see below"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRender",
     "file": "src/core-vocab.js",
-    "line": 819,
+    "line": 831,
     "desc": "const grid   = document.getElementById('kanjiCorpusGrid');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusShowDetail",
     "file": "src/core-vocab.js",
-    "line": 935,
+    "line": 947,
     "desc": "const detail = document.getElementById('kanjiCorpusDetail');"
   },
   {
     "type": "function",
     "name": "vcFilter",
     "file": "src/core-vocab.js",
-    "line": 1010,
+    "line": 1022,
     "desc": "VocabCorpusState — see below"
   },
   {
     "type": "function",
     "name": "vcSort",
     "file": "src/core-vocab.js",
-    "line": 1017,
+    "line": 1029,
     "desc": "VocabCorpusState.sort = s;"
   },
   {
     "type": "function",
     "name": "vcLevels",
     "file": "src/core-vocab.js",
-    "line": 1024,
+    "line": 1036,
     "desc": "const levels = new Set();"
   },
   {
     "type": "function",
     "name": "vcRenderTargets",
     "file": "src/core-vocab.js",
-    "line": 1037,
+    "line": 1049,
     "desc": "Target words are now surfaced via the priority score in the Words drill."
   },
   {
     "type": "function",
     "name": "vcRenderTargetsInline",
     "file": "src/core-vocab.js",
-    "line": 1041,
+    "line": 1053,
     "desc": "const list = document.getElementById('vcTargetsList2');"
   },
   {
     "type": "function",
     "name": "vcDrillWord",
     "file": "src/core-vocab.js",
-    "line": 1047,
+    "line": 1059,
     "desc": "try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "vocabPriorityContext",
     "file": "src/core-vocab.js",
-    "line": 1057,
+    "line": 1069,
     "desc": "Returns a compact text block summarising vocabulary state for Claude."
   },
   {
     "type": "function",
     "name": "wordPriorityScore",
     "file": "src/core-vocab.js",
-    "line": 1159,
+    "line": 1171,
     "desc": "srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown."
   },
   {
     "type": "function",
     "name": "wordEnrichWithSRS",
     "file": "src/core-vocab.js",
-    "line": 1222,
+    "line": 1234,
     "desc": "Enrich a vcMergeEntry with its SRS data and priority score."
   },
   {
     "type": "function",
     "name": "vcBuildPriorityList",
     "file": "src/core-vocab.js",
-    "line": 1236,
+    "line": 1248,
     "desc": "Build a priority-sorted word list. Thin wrapper over vcBuildList that adds"
   },
   {
     "type": "function",
     "name": "vcBuildList",
     "file": "src/core-vocab.js",
-    "line": 1242,
+    "line": 1254,
     "desc": "const corpus = kanjiCorpusGet(); // personal encounter data keyed by word"
   },
   {
     "type": "function",
     "name": "vcMergeEntry",
     "file": "src/core-vocab.js",
-    "line": 1272,
+    "line": 1284,
     "desc": "const lookupCount   = cached?.count || 0;"
   },
   {
     "type": "function",
     "name": "vcRender",
     "file": "src/core-vocab.js",
-    "line": 1308,
+    "line": 1320,
     "desc": "const tbody  = document.getElementById('vcTableBody');"
   },
   {
     "type": "function",
     "name": "vcShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1383,
+    "line": 1395,
     "desc": "const detail = document.getElementById('vcDetail');"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 205,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 209,
+    "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-vocab.js",
-    "line": 488,
+    "line": 500,
     "desc": "Give me ${…} Japanese vocabulary words in the category: \"${…}\". Level: N5-N4 beg"
   },
   {
@@ -4084,57 +4182,85 @@
     "type": "function",
     "name": "startTdTimer",
     "file": "src/features-times.js",
-    "line": 352,
+    "line": 368,
     "desc": "if (TimesState.blitz) return;"
   },
   {
     "type": "function",
     "name": "clearTdTimer",
     "file": "src/features-times.js",
-    "line": 380,
+    "line": 396,
     "desc": "if (TimesState.timerInterval) { clearInterval(TimesState.timerInterval); TimesState.timerInterval = "
   },
   {
     "type": "function",
     "name": "timeOut",
     "file": "src/features-times.js",
-    "line": 384,
+    "line": 400,
     "desc": "TimesState.answered = true;"
   },
   {
     "type": "function",
     "name": "updateTdScore",
     "file": "src/features-times.js",
-    "line": 408,
+    "line": 424,
     "desc": "const el = (id) => document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "openTimesSettings",
     "file": "src/features-times.js",
-    "line": 416,
+    "line": 432,
     "desc": "const s = document.getElementById('tdSettings');"
   },
   {
     "type": "function",
     "name": "loadTdVoice",
     "file": "src/features-times.js",
-    "line": 428,
+    "line": 444,
     "desc": "const voices = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "setTdVoice",
     "file": "src/features-times.js",
-    "line": 448,
+    "line": 464,
     "desc": "const voices = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "shuffle",
     "file": "src/features-times.js",
-    "line": 461,
+    "line": 477,
     "desc": "const a = [...arr];"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-times.js",
+    "line": 300,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-times.js",
+    "line": 302,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-times.js",
+    "line": 353,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-times.js",
+    "line": 355,
+    "desc": "db.run"
   },
   {
     "type": "function",
@@ -4574,70 +4700,70 @@
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1843,
+    "line": 1855,
     "desc": "conjAutoConvertG();"
   },
   {
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1854,
+    "line": 1866,
     "desc": "if (conjIdx <= 0) return;"
   },
   {
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1868,
+    "line": 1880,
     "desc": "if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }"
   },
   {
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 1876,
+    "line": 1888,
     "desc": "Grammar2State.lastSubtab = name;"
   },
   {
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 1929,
+    "line": 1941,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';"
   },
   {
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 1975,
+    "line": 1987,
     "desc": "const area = document.getElementById('particleDrillArea');"
   },
   {
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 2058,
+    "line": 2070,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered"
   },
   {
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 2066,
+    "line": 2078,
     "desc": "if (_pdResults[exIdx] !== null) return;"
   },
   {
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 2074,
+    "line": 2086,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;"
   },
   {
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2112,
+    "line": 2124,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for"
   },
   {
@@ -4653,6 +4779,20 @@
     "file": "src/features-grammar.js",
     "line": 1161,
     "desc": "Storage.set"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-grammar.js",
+    "line": 1814,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/features-grammar.js",
+    "line": 1818,
+    "desc": "db.run"
   },
   {
     "type": "prompt",
