@@ -1152,14 +1152,7 @@ function conjugate(word, form, pol, reg) {
   return {answer: '—', badge: form};
 }
 
-const GOALS_DEFAULTS = {
-  kanaDrillSize:        20,
-  wordsDrillSize:       20,
-  conjQuestionsPerRun:  15,
-  conjSessionRuns:       3,
-  sstGapDays:            3,
-  sstMinUtterances:     3,
-};
+
 
 function goalsLoad() {
   try {
@@ -1193,6 +1186,15 @@ function goalsRestoreUI() {
   setVal('goalSstGapDays',          g.sstGapDays);
   setVal('goalSstMinUtterances',    g.sstMinUtterances);
 }
+
+const GOALS_DEFAULTS = {
+  kanaDrillSize:        20,
+  wordsDrillSize:       20,
+  conjQuestionsPerRun:  15,
+  conjSessionRuns:       3,
+  sstGapDays:            3,
+  sstMinUtterances:     3,
+};
 
 // Shared conj state — var (not let) so these are hoisted/initialized before any
 // function reads them, immune to TDZ even if this script aborts earlier during load.
