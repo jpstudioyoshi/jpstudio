@@ -244,6 +244,8 @@ async function wbCallTutor(text, btnEl, btnLabel) {
 // Track which sentence text has already had its first-check error recorded
 // Resets when the user starts a genuinely new sentence (clears input or submits)
 let _writingCheckedSentences = new Set();
+let _writingFirstAttempt = null;
+let _writingCheckCount   = 0;
 
 async function checkWritingSentence() {
   const _hdr = document.querySelector('.feedback-panel-header');
@@ -262,6 +264,8 @@ async function checkWritingSentence() {
     }
   }
   // Mark this text as having been checked (regardless of correct/incorrect)
+  if (!_writingFirstAttempt) _writingFirstAttempt = text;
+  _writingCheckCount++;
   _writingCheckedSentences.add(text);
   // Keep set from growing unbounded
   if (_writingCheckedSentences.size > 50) {
@@ -284,6 +288,21 @@ async function submitWritingSentence() {
   // Submit without checking if user chooses to skip check
   writingChatHistory.push({role:'user', content:text});
   kanjiCorpusRecordProduction(text, text.slice(0, 40)); // record on submit only
+  if (typeof window !== 'undefined' && window.db) {
+    const _ts = new Date().toISOString();
+    const _first = _writingFirstAttempt || text;
+    const _attempts = _writingCheckCount;
+    window.db.run(
+      'INSERT INTO writing_sessions (created_at, text, is_correct) VALUES (?,?,?)',
+      [_ts, text, 1]
+    ).catch(() => {});
+    window.db.run(
+      'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+      [_ts, 'writing', 'writing:submitted', JSON.stringify({ first_attempt: _first.slice(0,80), final_text: text.slice(0,80), check_count: _attempts })]
+    ).catch(() => {});
+  }
+  _writingFirstAttempt = null;
+  _writingCheckCount   = 0;
   const entry = {original:text, corrected:text, isCorrect:true, note:'', detail:''};
   writingSentences.push(entry);
   wbAddItem(entry, writingSentences.length - 1);
