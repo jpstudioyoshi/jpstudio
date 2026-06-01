@@ -1319,6 +1319,11 @@ ${docContent.slice(0, 6000)}` }],
     
     const text = _fy_claudeText(data) || '[]';
     LessonNotesState.keyPhrases = _lnParseJsonArray(text);
+    if (LessonNotesState.currentIdx !== null) {
+      const sessions = lessonNotesGetSessions();
+      sessions[LessonNotesState.currentIdx].keyPhrases = LessonNotesState.keyPhrases;
+      lessonNotesSaveSessions(sessions);
+    }
   } catch (e) {
     console.error('[KP] extraction error:', e);
   }
