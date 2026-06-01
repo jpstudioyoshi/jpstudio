@@ -138,3 +138,53 @@ Run before every deploy:
 cd ~/Documents/jpStudio && node check-syntax.js
 ```
 Generates `audit-YYYY-MM-DD.md` at project root.
+
+## learning_events — Event Type Registry
+All instrumentation writes to learning_events using this exact column order:
+INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)
+
+| event_type        | panel      | payload fields                                                                 | status  |
+|-------------------|------------|--------------------------------------------------------------------------------|---------|
+| vocab:lookup      | translate  | word, context                                                                  | live    |
+| vocab:lookup      | srs        | word, context                                                                  | live    |
+| vocab:produced    | chat       | word, context                                                                  | live    |
+| vocab:produced    | writing    | word, context                                                                  | live    |
+| error:recorded    | various    | errorType, pattern, input, corrected                                           | live    |
+| drill:answer      | conjugation| key, word, form, pol, reg, result, typed                                       | live    |
+| drill:answer      | kana       | char, reading, mode, correct                                                   | live    |
+| drill:answer      | words      | key, word, reading, result                                                     | live    |
+| drill:answer      | words      | drill_type:times, key, label, result                                           | live    |
+| drill:answer      | words      | drill_type:drillcard, answer, typed, correct                                   | live    |
+| session:time      | various    | strand, duration_s                                                             | live    |
+| writing:submitted | writing    | first_attempt, final_text, check_count                                         | live    |
+| fluency:432       | voice      | topic, input_type, delivery_1_s, delivery_2_s, delivery_3_s, target_s         | live    |
+| reading:aloud     | read       | text_id, accuracy, tts_duration_s, learner_duration_s, check_count            | pending |
+
+## drill_results — drill_type Registry
+Schema: INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)
+
+| drill_type  | item_key          | source                  | status  |
+|-------------|-------------------|-------------------------|---------|
+| conj        | verb_form_pol_reg | features-grammar.js     | live    |
+| kana        | character         | core-kana-drill.js      | live    |
+| words       | jp/kana string    | core-vocab.js           | live    |
+| times       | time/date type    | features-times.js       | live    |
+| drillcard   | answer string     | src/ui/DrillCard.js     | live    |
+| 432         | topic string      | features-voice.js       | live    |
+| read_aloud  | text_id           | features-reading.js     | pending |
+
+## panel_sessions — strand map
+Schema: INSERT INTO panel_sessions (panel, strand, started_at, ended_at, duration_s) VALUES (?,?,?,?,?)
+Timer deducts to last interaction. Sessions < 2s discarded. null strand panels not recorded.
+
+| panel       | strand | description              |
+|-------------|--------|--------------------------|
+| listen      | 1      | meaning-focused input    |
+| read        | 1      | meaning-focused input    |
+| video       | 1      | meaning-focused input    |
+| voice       | 2      | meaning-focused output   |
+| lessonnotes | 2      | meaning-focused output   |
+| writing     | 2      | meaning-focused output   |
+| grammar2    | 3      | language-focused learning|
+| words       | 3      | language-focused learning|
+| kana        | 3      | language-focused learning|

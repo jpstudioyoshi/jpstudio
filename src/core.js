@@ -537,9 +537,7 @@ document.addEventListener('storageReady', function() {
   (function() {
     try {
       const launchPanel = agentGetLaunchPanel();
-      if (launchPanel && launchPanel !== 'dashboard') {
-        showPanel(launchPanel);
-      }
+      showPanel(launchPanel && launchPanel !== 'dashboard' ? launchPanel : 'progress');
     } catch(e) {}
   })();
 

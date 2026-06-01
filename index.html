@@ -1222,7 +1222,12 @@
             onkeydown="handleWritingKey(event)"></textarea>
           <div class="writing-btn-row">
             <span data-kana-for="writingInput"></span>
-
+            <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
+              <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
+              <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
+              <button class="btn-action" onclick="saveWritingText()">Save</button>
+              <button class="btn-destructive" onclick="clearWritingFeedback()">Clear</button>
+            </div>
           </div>
         </div>
 
@@ -1242,20 +1247,9 @@
       </div>
 
       <!-- Right column: sticky feedback panel -->
-      <div class="feedback-panel">
-        <div class="feedback-panel-header">
-          <div style="display:flex;align-items:center;gap:8px">
-            <button class="btn-action" onclick="checkWritingSentence()">Check</button>
-            <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
-            <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
-            <button class="btn-action" onclick="saveWritingText()">Save</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <button class="btn-destructive" onclick="clearWritingFeedback()">Clear</button>
-          </div>
-        </div>
+      <div class="feedback-panel" onclick="checkWritingSentence()" style="cursor:pointer;border:1px solid var(--border);border-radius:10px;overflow:hidden">
         <div class="feedback-entries" id="feedbackEntries">
-          <div class="feedback-empty">Type a sentence and click above to check it.</div>
+          <div class="feedback-empty">Type a sentence and click here to check it.</div>
         </div>
       </div>
 
