@@ -199,6 +199,18 @@ function markVocab(v) {
     // Feed SRS — incorrect answer
     try { DrillSRS.record(STORAGE_KEYS.DRILL_SRS_WORDS, srsKey, false); } catch(e) {}
   }
+  if (typeof window !== 'undefined' && window.db) {
+    const _ts = new Date().toISOString();
+    const _result = v === 'again' ? 'again' : v === 'gotit' ? 'gotit' : 'know';
+    window.db.run(
+      'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
+      [_ts, 'words', srsKey, v !== 'again' ? 1 : 0, null]
+    ).catch(() => {});
+    window.db.run(
+      'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+      [_ts, 'words', 'drill:answer', JSON.stringify({ key: srsKey, word: card?.jp || srsKey, reading: card?.kana || '', result: _result })]
+    ).catch(() => {});
+  }
 
   saveState();
 
