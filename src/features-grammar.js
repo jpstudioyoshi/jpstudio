@@ -1557,7 +1557,7 @@ function renderConjDrillG() {
     // Write recency on every run completion (not just session end)
     drillLastCompletedWrite('conj');
 
-    if (conjRun >= CONJ_SESSION_RUNS) {
+    if (conjRun >= (CONJ_SESSION_RUNS || 3)) {
       // Session complete
       const problems = Object.entries(conjSessionWrong).filter(([k,v]) => v > 0).sort((a,b) => b[1] - a[1]).slice(0, 5);
       let summary = '<div class="conj-idle" style="background:var(--paper-dark);border:1px solid var(--border)"><span class="conj-idle-char">🎌</span><strong>Session complete!</strong> (' + CONJ_SESSION_RUNS + ' runs)<br>';
