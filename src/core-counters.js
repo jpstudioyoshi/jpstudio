@@ -625,8 +625,7 @@ function countCheck2() {
     CounterDrillState.sessionCorrect[CounterDrillState.current.key] = (CounterDrillState.sessionCorrect[CounterDrillState.current.key] || 0) + 1;
     document.getElementById('countCorrect2').textContent = CounterDrillState.correct;
     const kanjiForm = CounterDrillState.current.num + (CounterDrillState.current.counter.name || CounterDrillState.current.counterKey);
-    feedbackEl.innerHTML = '<span style="color:var(--green)">✓ ' + correct + '</span>'
-      + ' <span style="color:var(--ink-light);font-size:0.85rem">(' + kanjiForm + ')</span>';
+    feedbackEl.innerHTML = '';
     jpSpeak(correct, 0.9);
     CM.recordCorrect(CounterDrillState.current.counterKey, CounterDrillState.current.num);
     document.getElementById('countLookupBtn2').style.display = 'none';
@@ -642,8 +641,7 @@ function countCheck2() {
     const errorType2 = cmInferErrorType(input, item2.counterKey, item2.num);
     CM.recordWrong(item2.counterKey, item2.num, errorType2);
 
-    feedbackEl.innerHTML = '<span style="color:var(--coral)">✗ ' + input + '</span>'
-      + '<br><span style="color:var(--teal);font-size:1.3rem">' + correct + '</span>';
+    feedbackEl.innerHTML = '';
 
     jpSpeak(correct, 0.85);
     CounterDrillState.waiting = true;

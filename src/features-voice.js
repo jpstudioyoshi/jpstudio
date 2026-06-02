@@ -339,7 +339,7 @@ function agentRenderThread() {
     const color = isUser ? 'var(--ink-light)' : 'var(--teal)';
     return '<div style="margin-bottom:14px">'
       + '<div style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.1em;color:' + color + ';margin-bottom:4px">' + label + '</div>'
-      + '<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + (m.content || '') + '</div>'
+      + '<div style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + (m.content || '') + '</div>'
       + '</div>';
   }).join('');
   thread.scrollTop = thread.scrollHeight;
@@ -386,7 +386,7 @@ async function agentClaudeBriefing(force) {
     const cached = briefingLoadCache();
     if (cached) {
       respDiv.style.display = 'block';
-      thread.innerHTML = '<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + cached + '</div>';
+      thread.innerHTML = '<div style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + cached + '</div>';
       _agentConversation = [{ role: 'assistant', content: cached }];
       const followUp = document.getElementById('agentFollowUpRow');
       if (followUp) followUp.style.display = 'flex';
@@ -491,7 +491,7 @@ async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
 
   const replyId = 'agent-reply-' + Date.now();
   const replyHTML = '<div style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.1em;color:var(--teal);margin-bottom:4px">CLAUDE</div>'
-    + '<div id="' + replyId + '-text" style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);line-height:1.7;white-space:pre-wrap"></div>';
+    + '<div id="' + replyId + '-text" style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap"></div>';
 
   if (appendOnly) {
     const block = document.createElement('div');
