@@ -208,3 +208,11 @@ voice profile, voice pause data, video watch time, resources, learned words
 - STT conjugation instrumentation dropped — STT too imprecise for single-syllable conjugation differences
 - Read-aloud and 4/3/2 instrumentation delegated to listen thread
 - Current mode note: listen thread handling all spoken performance instrumentation
+
+## Counters to Add — Priority
+Add these 5 counters to COUNTER_DATA in core-counters.js:
+- 階 (kai) — floors of a building
+- 回 (kai/do) — number of times
+- 番 (ban) — number in sequence
+- 足 (soku) — pairs of footwear
+- 着 (chaku/ki) — clothing items

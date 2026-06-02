@@ -1605,8 +1605,7 @@ function renderConjDrillG() {
         }
         html += '</tbody></table></div>';
       }
-      html += '<span style="color:var(--ink-light);font-family:var(--ui);font-size:0.78rem">Next run focuses on problem items</span><br>';
-      html += '<button class="btn-action" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button></div>';
+      html += '<div style="margin-bottom:12px"><button class="btn-action" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button> <span style="color:var(--ink-light);font-family:var(--ui);font-size:0.78rem;margin-left:8px">Next run focuses on problem items</span></div>';
       area.innerHTML = html;
     }
     return;
@@ -1696,7 +1695,7 @@ function handleConjKeyG(e) {
 // Allow Enter to advance to next run from the summary screen
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
-  const btn = document.querySelector('#conjDrillAreaG .conj-start-btn');
+  const btn = document.querySelector('#conjDrillAreaG .btn-action');
   if (btn) { e.preventDefault(); conjNextRun(); }
 });
 
