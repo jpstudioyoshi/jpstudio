@@ -641,7 +641,7 @@ function countCheck2() {
     const errorType2 = cmInferErrorType(input, item2.counterKey, item2.num);
     CM.recordWrong(item2.counterKey, item2.num, errorType2);
 
-    feedbackEl.innerHTML = '';
+    feedbackEl.innerHTML = '<span style="color:var(--teal);font-size:1.3rem">' + correct + '</span>';
 
     jpSpeak(correct, 0.85);
     CounterDrillState.waiting = true;
