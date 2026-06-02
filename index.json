@@ -4665,105 +4665,105 @@
     "type": "function",
     "name": "conjNextRun",
     "file": "src/features-grammar.js",
-    "line": 1680,
+    "line": 1679,
     "desc": "conjRun++;"
   },
   {
     "type": "function",
     "name": "handleConjKeyG",
     "file": "src/features-grammar.js",
-    "line": 1685,
+    "line": 1684,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "conjAutoConvertG",
     "file": "src/features-grammar.js",
-    "line": 1703,
+    "line": 1702,
     "desc": "if (!conjCurrentAnswer) return;"
   },
   {
     "type": "function",
     "name": "conjClassifyError",
     "file": "src/features-grammar.js",
-    "line": 1727,
+    "line": 1726,
     "desc": "const dist = cmLevenshtein(typed, correct);"
   },
   {
     "type": "function",
     "name": "checkConjG",
     "file": "src/features-grammar.js",
-    "line": 1771,
+    "line": 1770,
     "desc": "const input = document.getElementById('conjInputG');"
   },
   {
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1855,
+    "line": 1854,
     "desc": "conjAutoConvertG();"
   },
   {
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1866,
+    "line": 1865,
     "desc": "if (conjIdx <= 0) return;"
   },
   {
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1880,
+    "line": 1879,
     "desc": "if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }"
   },
   {
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 1888,
+    "line": 1887,
     "desc": "Grammar2State.lastSubtab = name;"
   },
   {
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 1941,
+    "line": 1940,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';"
   },
   {
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 1987,
+    "line": 1986,
     "desc": "const area = document.getElementById('particleDrillArea');"
   },
   {
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 2070,
+    "line": 2069,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered"
   },
   {
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 2078,
+    "line": 2077,
     "desc": "if (_pdResults[exIdx] !== null) return;"
   },
   {
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 2086,
+    "line": 2085,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;"
   },
   {
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2124,
+    "line": 2123,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for"
   },
   {
@@ -4784,14 +4784,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1814,
+    "line": 1813,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1818,
+    "line": 1817,
     "desc": "db.run"
   },
   {

@@ -1695,6 +1695,8 @@ function handleConjKeyG(e) {
 // Allow Enter to advance to next run from the summary screen
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
+  const input = document.getElementById('conjInputG');
+  if (input) return; // mid-drill — let handleConjKeyG handle it
   const btn = document.querySelector('#conjDrillAreaG .btn-action');
   if (btn) { e.preventDefault(); conjNextRun(); }
 });
@@ -1832,7 +1834,7 @@ function checkConjG() {
   } else if (isSlip) {
     if (levClass.isRegisterConfusion) {
       const expected = item.reg === 'polite' ? '丁寧語 (polite)' : '普通体 (plain)';
-      fbHtml += 'register — answer is ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(' + expected + ' was asked)</span>';
+      fbHtml += item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(' + expected + ')</span>';
     } else {
       fbHtml += 'close — ' + item.answer + ' <span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)">(dist ' + levClass.dist + ')</span>';
     }
