@@ -19,8 +19,8 @@
 
 function updateProgressPanel() {
   try { (App.StudentModel || window.StudentModel)?.snapshotAsync().then(s => console.log('[StudentModel]', s)); } catch(e) {}
-  progressRenderCost();
-  progressRenderErrors();
+  try { (App.progressRenderCost || window.progressRenderCost)?.(); } catch(e) {}
+  try { (App.progressRenderErrors || window.progressRenderErrors)?.(); } catch(e) {}
   if (typeof renderSpokenErrorsProgress === 'function') {
     renderSpokenErrorsProgress();
   }
@@ -33,6 +33,7 @@ function updateProgressPanel() {
   try { (App.renderAdjMastery     || window.renderAdjMastery)?.();     } catch(e) {}
   try { (App.renderCounterMastery || window.renderCounterMastery)?.(); } catch(e) {}
   try { (App.renderGramSentHeatmap || window.renderGramSentHeatmap)?.(); } catch(e) {}
+  try { (App.renderStrandBalance || window.renderStrandBalance)?.(); } catch(e) {}
 }
 
 function progressRenderCost() {

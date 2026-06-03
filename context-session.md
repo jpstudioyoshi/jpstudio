@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-01 (session 20 — StudentModel wired, Phase 2b steps 1+2 complete)
+Last updated: 2026-06-01 (session 20 — Phase 2b complete, Phase 3 Step 1 complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -103,6 +103,8 @@ All edits are done via terminal — no file upload/download.
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
 - Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
 - Read panel listen layout — still buggy
+- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
+- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference
 
 ## Session 20 — Completed Work
 
@@ -115,48 +117,50 @@ All edits are done via terminal — no file upload/download.
 - ARCHITECTURE_HUB.md written and uploaded to project Knowledge
 - event_type registry and drill_type registry added to context-static.md
 
-### learning_events Infrastructure
+### learning_events Infrastructure — Phase 1+2 Complete
 - Added `panel_sessions` and `learning_events` tables to `createSchema()` in main.js
-- Panel session timer added to core-foundation.js — deducts to last interaction, sessions < 2s discarded
+- Panel session timer in core-foundation.js — deducts to last interaction, sessions < 2s discarded
+- All major drill types wired to `drill_results` and `learning_events`
+- Writing iteration tracking added
 
 ### learning_events Wiring — Complete
 | Event | Source | File |
 |---|---|---|
 | `vocab:lookup` | quick translate | core-foundation.js |
 | `vocab:lookup` | SRS/kanji drill | core-srs.js |
-| `vocab:produced` | chat production | core-srs.js |
-| `vocab:produced` | writing production | core-srs.js |
+| `vocab:produced` | chat + writing | core-srs.js |
 | `error:recorded` | all error sources | core-foundation.js |
-| `drill:answer` | conjugation drill | features-grammar.js |
-| `drill:answer` | kana drill | core-kana-drill.js |
-| `drill:answer` | words SRS | core-vocab.js |
-| `drill:answer` | times drill | features-times.js |
-| `drill:answer` | DrillCard (counters, days) | src/ui/DrillCard.js |
+| `drill:answer` | conjugation, kana, words, times, DrillCard | various |
 | `writing:submitted` | writing panel | core-writing.js |
 | `fluency:432` | 4/3/2 drill | features-voice.js |
 | `session:time` | all panels | core-foundation.js |
 
-### StudentModel — Phase 2b
-- Audit complete — fully inert but well-structured, good foundation
+### StudentModel — Phase 2b + Phase 3 Step 1 Complete
+- Audit complete — was fully inert, now wired
 - **Step 1 ✅** — `invalidate()` wired into all 7 drill completion points
-- **Step 2 ✅** — `snapshotAsync()` fires on every progress panel open; console confirms full snapshot flowing; app starts on progress panel so fires immediately on launch
-- **Step 3 pending** — AppEvents subscription skeleton in StudentModel
+- **Step 2 ✅** — `snapshotAsync()` fires on every progress panel open; confirmed in console
+- **Step 3 ✅** — AppEvents subscription skeleton live; StudentModel subscribes to 7 event types on startup; new constants added to AppEvents.js: `DRILL_ANSWER`, `VOCAB_LOOKUP`, `VOCAB_PRODUCED`, `ERROR_RECORDED`, `WRITING_SUBMITTED`, `FLUENCY_432`, `SESSION_TIME`
+- **Phase 3 Step 1 ✅** — `AppEvents.emit()` wired into all 8 panel emission points; `[StudentModel] received: drill:answer` confirmed in console during conjugation drill
+
+### Two parallel streams now running
+- `learning_events` — persistent DB record, always written, historical record
+- `AppEvents` — live bus, in-memory, for real-time reactions
+Both stay. Different purposes.
 
 ### Other
 - STT conjugation instrumentation dropped — too imprecise for single-syllable differences
 - 4/3/2 column mismatch fixed in features-voice.js
 - Read-aloud not yet built — delegated to listen thread
-- App now opens on Progress panel ✅ (was opening on Questions — now fixed)
+- App now opens on Progress panel ✅
 
 ## Pending Work — Priority Order
 
 ### Architecture / StudentModel (StudentModel thread)
-1. **Step 3** — AppEvents subscription skeleton in StudentModel
-2. **Strand balance display** — progress panel shows real strand time chart from panel_sessions
-3. **Data audit (Phase 3)** — run app through typical session, verify DB writes
+1. **Phase 3 Step 2** — strand imbalance detection: on SESSION_TIME event, query panel_sessions for last 7 days, calculate time per strand, emit warning if any strand < 20% of total. First real intelligence, no LLM needed.
+2. **UI decision** — what does a strand imbalance warning look like? Decide before Step 2.
+3. **Data audit** — run app through typical session, verify what actually lands in DB
 4. **Progress panel / Genki taxonomy audit** — what's wired vs display-only
 5. **AnalysisService audit** — grammar tagging on transcripts
-6. **AppEvents usage audit** — which panels currently emit/listen
 
 ### Remaining learning_events wiring
 - Voice drill answers (needs thought)
@@ -164,7 +168,7 @@ All edits are done via terminal — no file upload/download.
 - Lesson session saves (Yoshi)
 - `_conjRecordGrammarEvidence` — unclear where it writes
 - Read-aloud — listen thread
-- Round trip (Yoshi AI turntaking) — session duration only when built
+- Round trip — session duration only when built
 
 ### Known issues
 1. **Read panel listen layout** — still buggy
@@ -194,11 +198,3 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
-
-## Pre-existing console errors (fix in stabilization pass)
-- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
-- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference, remove it
-
-## Pre-existing console errors (fix in stabilization pass)
-- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
-- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference, remove it

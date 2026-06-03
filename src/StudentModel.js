@@ -365,6 +365,23 @@ const StudentModel = (() => {
     } catch(e) { return { turns: [] }; }
   }
 
+  async function collectStrandBalance() {
+    try {
+      if (!window.db) return { strands: {}, totalMins: 0, hasData: false };
+      const since = new Date(Date.now() - 7 * 86400000).toISOString();
+      const rows = await window.db.query(
+        'SELECT strand, SUM(duration_s) as total_s FROM panel_sessions WHERE started_at >= ? GROUP BY strand',
+        [since]
+      );
+      const strands = { 1: 0, 2: 0, 3: 0, 4: 0 };
+      for (const r of (rows || [])) {
+        if (r.strand >= 1 && r.strand <= 4) strands[r.strand] = Math.round((r.total_s || 0) / 60);
+      }
+      const totalMins = Object.values(strands).reduce((a, b) => a + b, 0);
+      return { strands, totalMins, hasData: totalMins > 0 };
+    } catch(e) { return { strands: { 1: 0, 2: 0, 3: 0, 4: 0 }, totalMins: 0, hasData: false }; }
+  }
+
   // ── Public API ─────────────────────────────────────────────────────────────
 
   /**
@@ -407,14 +424,16 @@ const StudentModel = (() => {
   async function snapshotAsync() {
     const base = snapshot();
     try {
-      const [lessonSessions, transcriptSample] = await Promise.all([
+      const [lessonSessions, transcriptSample, strandBalance] = await Promise.all([
         collectLessonSessions(),
         collectRecentTranscriptSample(),
+        collectStrandBalance(),
       ]);
       const full = {
         ...base,
         lessonSessions,
         transcriptSample,
+        strandBalance,
         generatedAt: Date.now(),
         isPartial:   false,
       };

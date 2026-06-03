@@ -646,8 +646,8 @@ if (fs.existsSync(idxHtmlPath)) {
   let html = fs.readFileSync(idxHtmlPath, 'utf8');
   // Replace existing ?v=XXXXXXXX or add fresh one
   const updated = html
-    .replace(/(<script[^>]+src="[^"]+\.js)(?:\?v=\d+)?(")/g,   `$1?v=${ver}$2`)
-    .replace(/(<link[^>]+href="[^"]+\.css)(?:\?v=\d+)?(")/g,   `$1?v=${ver}$2`);
+    .replace(/(<script[^>]+src="[^"]+\.js)(?:\?v=[^"]+)?(")/g,   `$1?v=${ver}$2`)
+    .replace(/(<link[^>]+href="[^"]+\.css)(?:\?v=[^"]+)?(")/g,   `$1?v=${ver}$2`);
   if (updated !== html) {
     fs.writeFileSync(idxHtmlPath, updated, 'utf8');
     console.log(`Cache busters updated in index.html (v=${ver})`);
