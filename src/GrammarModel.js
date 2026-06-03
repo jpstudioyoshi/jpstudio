@@ -301,20 +301,35 @@ const GrammarModel = (() => {
           lastAsked = qEv.last_seen || null;
         }
       }
+      // Encountered evidence — from Yoshi session analysis
+      const encEv = m?.evidence?.find(e => e.type === 'encountered');
+      let encounterCount = 0, lastEncountered = null;
+      if (encEv) {
+        try {
+          const encData = JSON.parse(encEv.notes || '{}');
+          encounterCount  = encData.count || 1;
+          lastEncountered = encData.last_session || encEv.last_seen || null;
+        } catch(e) {
+          encounterCount  = 1;
+          lastEncountered = encEv.last_seen || null;
+        }
+      }
       return {
-        id:           n.id,
-        label:        n.label,
-        genki:        n.genki,
-        group:        n.group,
-        prerequisites: n.prerequisites,
-        score:        Math.round(score * 100),
-        rawScore:     score,
+        id:             n.id,
+        label:          n.label,
+        genki:          n.genki,
+        group:          n.group,
+        prerequisites:  n.prerequisites,
+        score:          Math.round(score * 100),
+        rawScore:       score,
         status,
-        last_seen:    m?.last_seen ?? null,
-        override:     m?.override ?? false,
-        weakPrereqs:  getWeakPrerequisites(n.id),
+        last_seen:      m?.last_seen ?? null,
+        override:       m?.override ?? false,
+        weakPrereqs:    getWeakPrerequisites(n.id),
         questionCount,
         lastAsked,
+        encounterCount,
+        lastEncountered,
       };
     });
   }

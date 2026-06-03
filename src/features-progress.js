@@ -1136,13 +1136,22 @@ async function renderGrammarCoverage() {
         else if (daysSince < 30) qBorder = '2px dashed #e879f9';
       }
 
+      // Encountered dot — teal dot if seen in Yoshi session within 30 days
+      let encDot = '';
+      if (node.encounterCount > 0 && node.lastEncountered) {
+        const daysSinceEnc = (Date.now() - new Date(node.lastEncountered).getTime()) / 86400000;
+        if (daysSinceEnc < 30) {
+          encDot = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-left:5px;flex-shrink:0" title="encountered in recent Yoshi session"></span>';
+          if (node.lastEncountered) tip += ' · seen in session ' + Math.round(daysSinceEnc) + 'd ago';
+        }
+      }
       html += '<div title="' + tip + '" '
         + 'onclick="grammarNodeClick(\'' + node.id + '\')" '
         + 'style="cursor:pointer;padding:5px 10px;border-radius:5px;display:flex;align-items:center;'
         + 'background:' + st.bg + ';border:' + qBorder + ';'
         + 'font-family:var(--ui);font-size:0.76rem;color:' + st.text + ';'
         + 'white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis">'
-        + node.label
+        + node.label + encDot
         + '</div>';
 
     }
