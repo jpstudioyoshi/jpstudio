@@ -88,8 +88,7 @@ const DrillSRS = {
 
   saveAll(storageKey, data) {
     this._cache[storageKey] = data;
-    // Always write localStorage as fallback
-    (App.Storage || window.Storage).setJSON(storageKey, data);
+    // Write to SQL only — localStorage kept as read-only migration fallback in hydrate()
     // Dual-write to SQL — fire-and-forget, one upsert per changed item
     if (typeof window !== 'undefined' && window.db) {
       const drillType = this._drillType(storageKey);
@@ -225,7 +224,6 @@ const DrillSRS = {
   // Clear all data for a drill
   reset(storageKey) {
     this._cache[storageKey] = {};
-    (App.Storage || window.Storage).setJSON(storageKey, {});
     if (typeof window !== 'undefined' && window.db) {
       window.db.run('DELETE FROM srs_items WHERE drill_type = ?', [this._drillType(storageKey)]).catch(() => {});
     }
