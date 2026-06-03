@@ -658,6 +658,7 @@ function strandWeightsSave() {
     (App.Storage || window.Storage).setJSON(STRAND_WEIGHTS_KEY, out);
     const msg = document.getElementById('strandWeightsMsg');
     if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+    try { (App.renderStrandBalance || window.renderStrandBalance)?.(); } catch(e) {}
   } catch(e) { console.warn('[strandWeightsSave]', e); }
 }
 
