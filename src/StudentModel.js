@@ -588,6 +588,31 @@ const StudentModel = (() => {
         console.log('[StudentModel] received:', evt, payload);
         invalidate();
       });
+
+    // Recording session — write voice panel time based on actual mic usage
+    let _recStartTime = null;
+    AE.on(AE.RECORDING_STARTED, (payload) => {
+      _recStartTime = payload?.startTime ? new Date(payload.startTime).getTime() : Date.now();
+    });
+    AE.on(AE.RECORDING_STOPPED, (payload) => {
+      if (!_recStartTime) return;
+      const dur = payload?.durationSecs || Math.round((Date.now() - _recStartTime) / 1000);
+      const startedAt = new Date(_recStartTime).toISOString();
+      const endedAt = new Date().toISOString();
+      if (dur < 5) { _recStartTime = null; return; }
+      if (typeof window !== 'undefined' && window.db) {
+        window.db.run(
+          'INSERT INTO panel_sessions (panel, strand, started_at, ended_at, duration_s) VALUES (?,?,?,?,?)',
+          ['voice', 2, startedAt, endedAt, dur]
+        ).catch(() => {});
+        window.db.run(
+          'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+          [endedAt, 'voice', 'session:time', JSON.stringify({ strand: 2, duration_s: dur, source: 'recording' })]
+        ).catch(() => {});
+      }
+      _recStartTime = null;
+      invalidate();
+    });
     });
 
     console.log('[StudentModel] subscribed to', events.length, 'AppEvents');

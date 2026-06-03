@@ -1610,7 +1610,7 @@ function wordsSwitchSub(name) {
 // ── Panel session timer ──────────────────────────────────────────────────────
 const _STRAND_MAP = {
   listen: 1, read: 1, video: 1,
-  voice: 2, lessonnotes: 2, writing: 2,
+  lessonnotes: 2, writing: 2,
   grammar2: 3, words: 3, kana: 3,
   progress: null, settings: null, dashboard: null
 };

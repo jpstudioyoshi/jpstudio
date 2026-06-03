@@ -6289,35 +6289,35 @@
     "type": "function",
     "name": "_weekBounds",
     "file": "src/features-progress.js",
-    "line": 505,
+    "line": 504,
     "desc": "const now  = new Date();"
   },
   {
     "type": "function",
     "name": "_todayBounds",
     "file": "src/features-progress.js",
-    "line": 516,
+    "line": 515,
     "desc": "const now = new Date();"
   },
   {
     "type": "function",
     "name": "_filterHistory",
     "file": "src/features-progress.js",
-    "line": 522,
+    "line": 521,
     "desc": "if (!history || !history.length) return [];"
   },
   {
     "type": "function",
     "name": "_accuracyFromHistory",
     "file": "src/features-progress.js",
-    "line": 534,
+    "line": 533,
     "desc": "Falls back to all-time history when period is empty."
   },
   {
     "type": "function",
     "name": "renderStrandBalance",
     "file": "src/features-progress.js",
-    "line": 565,
+    "line": 564,
     "desc": "const el = document.getElementById('strandBalanceChart');"
   },
   {
@@ -6345,154 +6345,154 @@
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 665,
+    "line": 667,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 675,
+    "line": 677,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 874,
+    "line": 876,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 958,
+    "line": 960,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 1066,
+    "line": 1068,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1154,
+    "line": 1156,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1220,
+    "line": 1222,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1245,
+    "line": 1247,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1287,
+    "line": 1289,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1332,
+    "line": 1334,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1349,
+    "line": 1351,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1389,
+    "line": 1391,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1397,
+    "line": 1399,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1468,
+    "line": 1470,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1512,
+    "line": 1514,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1522,
+    "line": 1524,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1551,
+    "line": 1553,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1608,
+    "line": 1610,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1663,
+    "line": 1665,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1677,
+    "line": 1679,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1689,
+    "line": 1691,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };"
   },
   {
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1703,
+    "line": 1705,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');"
   },
   {
