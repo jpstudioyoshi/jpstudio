@@ -653,6 +653,28 @@ const StudentModel = (() => {
           ).catch(() => {});
         }
       }
+      // Wire transcript_vocab → srs_items (words drill)
+      if (Array.isArray(analysis.keyVocab) && window.db) {
+        for (const v of analysis.keyVocab) {
+          if (!v.jp) continue;
+          try {
+            const word = await window.db.get(
+              'SELECT id FROM words WHERE jp = ? OR reading = ? LIMIT 1',
+              [v.jp, v.reading || v.jp]
+            );
+            if (!word) continue;
+            const existing = await window.db.get(
+              "SELECT id FROM srs_items WHERE item_key = ? AND drill_type = 'words' LIMIT 1",
+              [v.jp]
+            );
+            if (existing) continue;
+            await window.db.run(
+              "INSERT INTO srs_items (drill_type, item_key, interval, ease, due_date) VALUES ('words', ?, 0, 2.5, ?)",
+              [v.jp, ts]
+            );
+          } catch(e) {}
+        }
+      }
       // Persist grammarPoints → grammar_mastery as 'encountered' evidence
       const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
       if (GM && window.db) {
