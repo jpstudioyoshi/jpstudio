@@ -594,6 +594,73 @@ async function renderStrandBalance() {
   } catch(e) { console.warn('[renderStrandBalance]', e); el.innerHTML = ''; }
 }
 
+
+// ── Strand Weights ────────────────────────────────────────────────────────────
+const STRAND_WEIGHTS_KEY = 'STRAND_WEIGHTS';
+const STRAND_WEIGHTS_DEFAULTS = {
+  voice:       { label: 'Voice (general)',        s1:50,  s2:50,  s3:0,   s4:0  },
+  yoshi:       { label: 'Yoshi / lesson session', s1:50,  s2:50,  s3:0,   s4:0  },
+  fluency432:  { label: '4/3/2',                  s1:0,   s2:0,   s3:0,   s4:100},
+  readaloud:   { label: 'Read-aloud',             s1:0,   s2:50,  s3:0,   s4:50 },
+  conjugation: { label: 'Conjugation drill',      s1:0,   s2:0,   s3:100, s4:0  },
+  kana:        { label: 'Kana drill',             s1:0,   s2:0,   s3:100, s4:0  },
+  words:       { label: 'Words / SRS',            s1:0,   s2:0,   s3:100, s4:0  },
+  times:       { label: 'Times drill',            s1:0,   s2:0,   s3:100, s4:0  },
+  counters:    { label: 'Counters / DrillCard',   s1:0,   s2:0,   s3:100, s4:0  },
+  writing:     { label: 'Writing',                s1:0,   s2:100, s3:0,   s4:0  },
+  read:        { label: 'Read panel',             s1:100, s2:0,   s3:0,   s4:0  },
+  listen:      { label: 'Listen panel',           s1:100, s2:0,   s3:0,   s4:0  },
+  video:       { label: 'Video',                  s1:100, s2:0,   s3:0,   s4:0  },
+};
+
+function strandWeightsLoad() {
+  try {
+    const saved = (App.Storage || window.Storage).getJSON(STRAND_WEIGHTS_KEY, null);
+    if (saved) return saved;
+  } catch(e) {}
+  // Return defaults (not saved)
+  const out = {};
+  for (const [k, v] of Object.entries(STRAND_WEIGHTS_DEFAULTS)) {
+    out[k] = { s1: v.s1, s2: v.s2, s3: v.s3, s4: v.s4 };
+  }
+  return out;
+}
+
+function strandWeightsRender() {
+  const el = document.getElementById('strandWeightsGrid');
+  if (!el) return;
+  const current = strandWeightsLoad();
+  const inputStyle = 'width:52px;padding:3px 4px;font-family:var(--ui);font-size:0.78rem;background:var(--paper-dark);border:1px solid var(--border);border-radius:3px;color:var(--ink);text-align:center';
+  const rows = Object.entries(STRAND_WEIGHTS_DEFAULTS).map(([key, def]) => {
+    const val = current[key] || def;
+    return `<div style="display:grid;grid-template-columns:1fr 60px 60px 60px 60px;gap:6px;align-items:center;margin-bottom:5px">
+      <div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">${def.label}</div>
+      <input type="number" id="sw_${key}_s1" min="0" max="100" value="${val.s1}" oninput="strandWeightsSave()" style="${inputStyle}">
+      <input type="number" id="sw_${key}_s2" min="0" max="100" value="${val.s2}" oninput="strandWeightsSave()" style="${inputStyle}">
+      <input type="number" id="sw_${key}_s3" min="0" max="100" value="${val.s3}" oninput="strandWeightsSave()" style="${inputStyle}">
+      <input type="number" id="sw_${key}_s4" min="0" max="100" value="${val.s4}" oninput="strandWeightsSave()" style="${inputStyle}">
+    </div>`;
+  }).join('');
+  el.innerHTML = rows;
+}
+
+function strandWeightsSave() {
+  const out = {};
+  for (const key of Object.keys(STRAND_WEIGHTS_DEFAULTS)) {
+    out[key] = {
+      s1: parseInt(document.getElementById(`sw_${key}_s1`)?.value || 0),
+      s2: parseInt(document.getElementById(`sw_${key}_s2`)?.value || 0),
+      s3: parseInt(document.getElementById(`sw_${key}_s3`)?.value || 0),
+      s4: parseInt(document.getElementById(`sw_${key}_s4`)?.value || 0),
+    };
+  }
+  try {
+    (App.Storage || window.Storage).setJSON(STRAND_WEIGHTS_KEY, out);
+    const msg = document.getElementById('strandWeightsMsg');
+    if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+  } catch(e) { console.warn('[strandWeightsSave]', e); }
+}
+
 // ── Radio button controls ─────────────────────────────────────────────────────
 function masteryViewSet(view) {
   _masteryView = view;
@@ -1707,7 +1774,7 @@ function renderGramSentHeatmap() {
 
 // ── App registry — features-progress.js exports ───────────────────────────
 Object.assign(App, {
-  renderStrandBalance, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
+  renderStrandBalance, strandWeightsRender, strandWeightsSave, strandWeightsLoad, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
   weightsRender, weightsSave, weightsReset,
   renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage,
   grammarNodeClick, drillLastCompletedWrite,

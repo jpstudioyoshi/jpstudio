@@ -1681,7 +1681,7 @@ function showPanel(id) {
   const _pph = document.getElementById('progressPanelHeader'); if (_pph) _pph.style.display = id === 'progress' ? 'flex' : 'none';
   const _vfu = document.getElementById('voiceFooterUpper'); if (_vfu) _vfu.style.display = id === 'voice' ? 'flex' : 'none';
   const _vfl = document.getElementById('voiceFooterLower'); if (_vfl) _vfl.style.display = id === 'voice' ? 'flex' : 'none';
-  if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); }
+  if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); try { (App.strandWeightsRender || window.strandWeightsRender)?.(); } catch(e) {} }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }
   if (id === 'vocab') { showPanel('words'); return; }

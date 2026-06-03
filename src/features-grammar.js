@@ -766,6 +766,16 @@ async function gramSentAnalyseErrors() {
     });
     if (sessions.length > 200) sessions.splice(0, sessions.length - 200);
     (App.Storage || window.Storage).setJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, sessions);
+    if (typeof window !== 'undefined' && window.db) {
+      const _ts = new Date().toISOString();
+      const _dur = GramSentState.startedAt ? Math.round((Date.now() - GramSentState.startedAt) / 1000) : 0;
+      const _start = new Date(GramSentState.startedAt || Date.now()).toISOString();
+      window.db.run('INSERT INTO panel_sessions (panel, strand, started_at, ended_at, duration_s) VALUES (?,?,?,?,?)',
+        ['sentences', 2, _start, _ts, _dur]).catch(() => {});
+      window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+        [_ts, 'sentences', 'session:time', JSON.stringify({ strand: 2, duration_s: _dur, target: GramSentState.target, ok: GramSentState.ok, total: GramSentState.sentences.length })]).catch(() => {});
+      try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.SESSION_TIME, { panel: 'sentences', strand: 2, duration_s: _dur }); } catch(e) {}
+    }
   } catch(e) {
     console.warn('[gramSent] error analysis failed:', e.message);
   }

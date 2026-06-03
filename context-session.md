@@ -198,3 +198,9 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
+
+## Strand mapping notes (for architecture thread)
+- Current _STRAND_MAP is panel-level only — grammar2=3, voice=2 etc.
+- Subtab-level mapping needed for accurate strand classification (e.g. 4/3/2 drill in voice = fluency, sentence building in grammar2 = deliberate vs fluency TBD)
+- Strand 4 (fluency) currently always zero — no panel mapped to it yet
+- Weighting decisions (how much each strand counts) deferred to architecture thread

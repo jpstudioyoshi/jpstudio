@@ -370,13 +370,38 @@ const StudentModel = (() => {
       if (!window.db) return { strands: {}, totalMins: 0, hasData: false };
       const since = new Date(Date.now() - 7 * 86400000).toISOString();
       const rows = await window.db.query(
-        'SELECT strand, SUM(duration_s) as total_s FROM panel_sessions WHERE started_at >= ? GROUP BY strand',
+        'SELECT panel, duration_s FROM panel_sessions WHERE started_at >= ?',
         [since]
       );
+      // Load saved weights or fall back to defaults
+      const PANEL_TO_WEIGHT = {
+        grammar2: 'conjugation', voice: 'voice', lessonnotes: 'yoshi',
+        writing: 'writing', read: 'read', listen: 'listen', video: 'video',
+        words: 'words', kana: 'kana', sentences: 'sentences'
+      };
+      const FALLBACK_STRAND = { listen:1, read:1, video:1, voice:2, lessonnotes:2, writing:2, grammar2:3, words:3, kana:3, sentences:2 };
+      let weights = null;
+      try {
+        const w = (typeof Storage !== 'undefined' ? Storage : window.Storage)?.getJSON('STRAND_WEIGHTS', null);
+        if (w && typeof w === 'object') weights = w;
+      } catch(e) {}
       const strands = { 1: 0, 2: 0, 3: 0, 4: 0 };
       for (const r of (rows || [])) {
-        if (r.strand >= 1 && r.strand <= 4) strands[r.strand] = Math.round((r.total_s || 0) / 60);
+        const dur = r.duration_s || 0;
+        const wKey = PANEL_TO_WEIGHT[r.panel];
+        const w = weights && wKey ? weights[wKey] : null;
+        if (w) {
+          strands[1] += dur * (w.s1 / 100);
+          strands[2] += dur * (w.s2 / 100);
+          strands[3] += dur * (w.s3 / 100);
+          strands[4] += dur * (w.s4 / 100);
+        } else {
+          const s = FALLBACK_STRAND[r.panel];
+          if (s) strands[s] += dur;
+        }
       }
+      // Convert to minutes
+      for (const k of [1,2,3,4]) strands[k] = Math.round(strands[k] / 60);
       const totalMins = Object.values(strands).reduce((a, b) => a + b, 0);
       return { strands, totalMins, hasData: totalMins > 0 };
     } catch(e) { return { strands: { 1: 0, 2: 0, 3: 0, 4: 0 }, totalMins: 0, hasData: false }; }
