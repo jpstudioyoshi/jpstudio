@@ -44,6 +44,15 @@ const AppEvents = (() => {
     SESSION_SAVED:          'SESSION_SAVED',        // { session }
     SESSIONS_LOADED:        'SESSIONS_LOADED',      // { sessions[] }
 
+    // Drill / learning events (StudentModel layer)
+    DRILL_ANSWER:   'drill:answer',      // { panel, key, form, result }
+    VOCAB_LOOKUP:   'vocab:lookup',      // { word, reading }
+    VOCAB_PRODUCED: 'vocab:produced',    // { word, context }
+    ERROR_RECORDED: 'error:recorded',    // { panel, pattern, errorType }
+    WRITING_SUBMITTED: 'writing:submitted', // { checkCount, firstAttempt }
+    FLUENCY_432:    'fluency:432',       // { activity, durationSeconds }
+    SESSION_TIME:   'session:time',      // { panel, seconds }
+
     // Errors
     RECORDING_ERROR:        'RECORDING_ERROR',      // { message }
     TRANSCRIPTION_ERROR:    'TRANSCRIPTION_ERROR',  // { track, message }

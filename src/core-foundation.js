@@ -1455,6 +1455,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try { _qtHistory = JSON.parse(Storage.get(QT_HISTORY_KEY, '[]')); } catch(e) {}
     // Signal that storage is ready — deferred startup calls listen for this
     document.dispatchEvent(new Event('storageReady'));
+    try { (App.StudentModel || window.StudentModel)?.init(); } catch(e) { console.warn('[StudentModel.init]', e); }
   }).catch(e => {
     console.error('[Storage.init] failed:', e);
     document.dispatchEvent(new Event('storageReady')); // still unblock on failure

@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-01 (session 20 — learning_events instrumentation, architecture planning)
+Last updated: 2026-06-01 (session 20 — StudentModel wired, Phase 2b steps 1+2 complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -44,6 +44,11 @@ Last updated: 2026-06-01 (session 20 — learning_events instrumentation, archit
 ARCHITECTURE — inter-panel communication, intelligent hub, Nation four strands framework.
 Legacy architectural rendering conflicts resolved. Feature development open.
 See ARCHITECTURE_HUB.md in project Knowledge for full design.
+
+## Thread Structure
+- **Architecture thread** — design decisions, cross-cutting concerns, doc updates (this thread)
+- **StudentModel thread** — all wiring into and out of StudentModel
+- Other threads for their respective panels/features
 
 ## HTML Element Map
 `html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
@@ -95,35 +100,26 @@ All edits are done via terminal — no file upload/download.
 - **DB startup errors** — `rows is not iterable` in features-progress.js, GrammarModel mastery load failing. Causes CONJ_SESSION_RUNS and CONJ_QUESTIONS_PER_RUN to be undefined on load (worked around with `|| 3` fallback). Root cause: sql.js or IPC handler issue on startup. Needs dedicated investigation.
 - `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
-- App opens on Questions (dashboard) panel instead of Progress — regression from session 17 nav fix
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
 - Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
 - Read panel listen layout — still buggy
 
 ## Session 20 — Completed Work
 
-### Architecture Planning (this thread — reserved for architecture discussion)
+### Architecture Planning
 - Agreed Paul Nation Four Strands as the organising framework for the whole system
 - Designed runtime architecture: AppEvents (bus) → StudentModel (Verteilerstelle) → panels
 - StudentModel has two layers: mechanical (rule-based) and intelligent (trigger-based LLM)
 - Measurement set agreed — see ARCHITECTURE_HUB.md
 - Implementation phases agreed: Foundation → Instrumentation → Audit → Strand balance → Intelligence
 - ARCHITECTURE_HUB.md written and uploaded to project Knowledge
+- event_type registry and drill_type registry added to context-static.md
 
 ### learning_events Infrastructure
 - Added `panel_sessions` and `learning_events` tables to `createSchema()` in main.js
-- `panel_sessions`: panel, strand, started_at, ended_at, duration_s
-- `learning_events`: created_at, panel, event_type, payload (JSON)
+- Panel session timer added to core-foundation.js — deducts to last interaction, sessions < 2s discarded
 
-### Panel Session Timer
-- Added `_STRAND_MAP`, `_panelSessionStart`, `_panelLastInteract` to core-foundation.js
-- Timer deducts to last interaction timestamp on panel switch (not clock time)
-- Interaction signals: click, keydown, mousedown, audio playback, microphone active
-- Sessions < 2 seconds discarded
-- Panels with null strand (progress, settings, dashboard) not recorded
-- Writes to both `panel_sessions` and `learning_events` (event_type: `session:time`)
-
-### learning_events Wiring — Completed
+### learning_events Wiring — Complete
 | Event | Source | File |
 |---|---|---|
 | `vocab:lookup` | quick translate | core-foundation.js |
@@ -135,62 +131,57 @@ All edits are done via terminal — no file upload/download.
 | `drill:answer` | kana drill | core-kana-drill.js |
 | `drill:answer` | words SRS | core-vocab.js |
 | `drill:answer` | times drill | features-times.js |
-| `drill:answer` | DrillCard (counters, days, all DrillCard drills) | src/ui/DrillCard.js |
+| `drill:answer` | DrillCard (counters, days) | src/ui/DrillCard.js |
 | `writing:submitted` | writing panel | core-writing.js |
-| `session:time` | all panels via showPanel() | core-foundation.js |
+| `fluency:432` | 4/3/2 drill | features-voice.js |
+| `session:time` | all panels | core-foundation.js |
 
-### Writing iteration tracking
-- `_writingFirstAttempt` — captures text on first check, cleared on submit
-- `_writingCheckCount` — counts check attempts per sentence, reset on submit
-- `writing:submitted` payload includes: first_attempt, final_text, check_count
+### StudentModel — Phase 2b
+- Audit complete — fully inert but well-structured, good foundation
+- **Step 1 ✅** — `invalidate()` wired into all 7 drill completion points
+- **Step 2 ✅** — `snapshotAsync()` fires on every progress panel open; console confirms full snapshot flowing; app starts on progress panel so fires immediately on launch
+- **Step 3 pending** — AppEvents subscription skeleton in StudentModel
 
-### DB Schema additions
-- `drill_results` now receiving writes for first time (conjugation, kana, words, times, DrillCard)
-- `writing_sessions` now receiving writes for first time
+### Other
+- STT conjugation instrumentation dropped — too imprecise for single-syllable differences
+- 4/3/2 column mismatch fixed in features-voice.js
+- Read-aloud not yet built — delegated to listen thread
+- App now opens on Progress panel ✅ (was opening on Questions — now fixed)
 
 ## Pending Work — Priority Order
 
-### Immediate
-1. **Read panel listen layout** — still buggy, needs follow-up
-2. **DB startup failure** — `rows is not iterable`, still present
-3. **App startup panel** — opens on Questions instead of Progress
-
-### Architecture / Instrumentation (next sessions)
-1. **Remaining learning_events wiring:**
-   - Voice drill answers (needs thought — uses scoring not typed input)
-   - Anki reviews (needs thought)
-   - STT-scored conjugation (core-stt.js lines 795, 821)
-   - Lesson session saves (Yoshi)
-   - `_conjRecordGrammarEvidence` — unclear where it writes
-2. **Data audit (Phase 3)** — run app through typical session, verify what actually lands in DB vs what should
-3. **StudentModel audit** — what does it currently own, what is it called for
+### Architecture / StudentModel (StudentModel thread)
+1. **Step 3** — AppEvents subscription skeleton in StudentModel
+2. **Strand balance display** — progress panel shows real strand time chart from panel_sessions
+3. **Data audit (Phase 3)** — run app through typical session, verify DB writes
 4. **Progress panel / Genki taxonomy audit** — what's wired vs display-only
-5. **AnalysisService audit** — does it do grammar tagging on transcripts
+5. **AnalysisService audit** — grammar tagging on transcripts
 6. **AppEvents usage audit** — which panels currently emit/listen
 
+### Remaining learning_events wiring
+- Voice drill answers (needs thought)
+- Anki reviews (needs thought)
+- Lesson session saves (Yoshi)
+- `_conjRecordGrammarEvidence` — unclear where it writes
+- Read-aloud — listen thread
+- Round trip (Yoshi AI turntaking) — session duration only when built
+
+### Known issues
+1. **Read panel listen layout** — still buggy
+2. **DB startup failure** — `rows is not iterable`, still present
+
 ### Medium term
-1. **REVIEW.md** — add to jpStudio repo root, DOM-write conflict prevention
-2. **DOM-write audit** — extend check-syntax.js to flag multiple writers to same element
-3. **Progress panel header** — add briefing refresh + About me controls into header
-4. **Stale root core-foundation.js** — delete safely
+1. **REVIEW.md** — add to jpStudio repo root
+2. **Progress panel header** — briefing refresh + About me controls
+3. **Stale root core-foundation.js** — delete safely
+4. **DrillSRS migration** — from kvAPI to `srs_items` DB table
 
-### Dropbox Recordings Redirect — Pending Decision
-- Move `getLessonsDir()` in main.js to Dropbox folder
-- Migrate `audio_path` in `lesson_sessions` (absolute paths will break)
-
-### Video → Audio Pipeline
-- ffmpeg -i input.mp4 -vn -c:a libopus output.webm
-- Needs file picker + ffmpeg extract step in app
-
-### Pitch Accent — Unblocked, High Value
-- renderPitchCurve() SVG in core-foundation.js
-- Wire into vocab card render
-- pitchAPI: window.pitchAPI.lookup(kanji, reading) → pitch string or null
-
-### Lesson Mode Architecture — Future
-- Global App.lessonMode = { id, label }
-- Each panel pre-filters by lesson_id when set
-- Topbar indicator showing current lesson
+### Future
+- Dropbox recordings redirect
+- Video → Audio pipeline (ffmpeg)
+- Pitch accent wiring
+- Lesson Mode Architecture
+- Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
 
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events
@@ -203,16 +194,3 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
-
-## Session 20 Addendum
-- STT conjugation instrumentation dropped — STT too imprecise for single-syllable conjugation differences
-- Read-aloud and 4/3/2 instrumentation delegated to listen thread
-- Current mode note: listen thread handling all spoken performance instrumentation
-
-## Counters to Add — Priority
-Add these 5 counters to COUNTER_DATA in core-counters.js:
-- 階 (kai) — floors of a building
-- 回 (kai/do) — number of times
-- 番 (ban) — number in sequence
-- 足 (soku) — pairs of footwear
-- 着 (chaku/ki) — clothing items

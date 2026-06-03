@@ -3622,189 +3622,189 @@
     "type": "function",
     "name": "progressRenderCost",
     "file": "src/core.js",
-    "line": 37,
+    "line": 38,
     "desc": "const container = document.getElementById('progress-cost-display');"
   },
   {
     "type": "function",
     "name": "getGramData",
     "file": "src/core.js",
-    "line": 112,
+    "line": 113,
     "desc": "return Storage.getJSON(STORAGE_KEYS.GRAM_NOTES, {});"
   },
   {
     "type": "function",
     "name": "saveGramData",
     "file": "src/core.js",
-    "line": 115,
+    "line": 116,
     "desc": "Storage.setJSON(STORAGE_KEYS.GRAM_NOTES, data);"
   },
   {
     "type": "function",
     "name": "migrateTextToEntries",
     "file": "src/core.js",
-    "line": 118,
+    "line": 119,
     "desc": "return text.split(/\\n---\\n/).map(chunk => {"
   },
   {
     "type": "function",
     "name": "getGramEntries",
     "file": "src/core.js",
-    "line": 127,
+    "line": 128,
     "desc": "const data = getGramData();"
   },
   {
     "type": "function",
     "name": "loadGramNotes",
     "file": "src/core.js",
-    "line": 137,
+    "line": 138,
     "desc": "escHtml moved to core-foundation.js"
   },
   {
     "type": "function",
     "name": "gramNotesShowTab",
     "file": "src/core.js",
-    "line": 139,
+    "line": 140,
     "desc": "GRAM_TABS.forEach(t => {"
   },
   {
     "type": "function",
     "name": "gramNotesFromSelect",
     "file": "src/core.js",
-    "line": 157,
+    "line": 158,
     "desc": "localStorage.setItem('gramNotesSub', val);"
   },
   {
     "type": "function",
     "name": "renderGramEntries",
     "file": "src/core.js",
-    "line": 162,
+    "line": 163,
     "desc": "const container = document.getElementById('gnote-entries-' + tab);"
   },
   {
     "type": "function",
     "name": "addGramEntry",
     "file": "src/core.js",
-    "line": 188,
+    "line": 189,
     "desc": "const input = document.getElementById('gnote-input-' + tab);"
   },
   {
     "type": "function",
     "name": "deleteGramEntry",
     "file": "src/core.js",
-    "line": 198,
+    "line": 199,
     "desc": "const data = getGramData();"
   },
   {
     "type": "function",
     "name": "moveGramEntry",
     "file": "src/core.js",
-    "line": 204,
+    "line": 205,
     "desc": "if (!toTab || toTab === fromTab) return;"
   },
   {
     "type": "function",
     "name": "editGramEntry",
     "file": "src/core.js",
-    "line": 216,
+    "line": 217,
     "desc": "const entryEl = document.getElementById('gentry-' + tab + '-' + idx);"
   },
   {
     "type": "function",
     "name": "saveGramEntryEdit",
     "file": "src/core.js",
-    "line": 236,
+    "line": 237,
     "desc": "const entryEl = document.getElementById('gentry-' + tab + '-' + idx);"
   },
   {
     "type": "function",
     "name": "cancelGramEntryEdit",
     "file": "src/core.js",
-    "line": 245,
+    "line": 246,
     "desc": "renderGramEntries(tab); }"
   },
   {
     "type": "function",
     "name": "gramSearch",
     "file": "src/core.js",
-    "line": 247,
+    "line": 248,
     "desc": "const resultsEl = document.getElementById('gramSearchResults');"
   },
   {
     "type": "function",
     "name": "showGramTab",
     "file": "src/core.js",
-    "line": 315,
+    "line": 316,
     "desc": "document.querySelectorAll('.gramnote-tab').forEach(b => b.classList.remove('active'));"
   },
   {
     "type": "function",
     "name": "showGramTabAndHighlight",
     "file": "src/core.js",
-    "line": 323,
+    "line": 324,
     "desc": "document.getElementById('gramSearchInput').value = '';"
   },
   {
     "type": "function",
     "name": "htmlToPlainMarkdown",
     "file": "src/core.js",
-    "line": 342,
+    "line": 343,
     "desc": "function nodeToText(node, inTable) {"
   },
   {
     "type": "function",
     "name": "openGramSendDialog",
     "file": "src/core.js",
-    "line": 387,
+    "line": 388,
     "desc": "const msgEl = document.getElementById(msgId);"
   },
   {
     "type": "function",
     "name": "sendToGramNote",
     "file": "src/core.js",
-    "line": 421,
+    "line": 422,
     "desc": ""
   },
   {
     "type": "function",
     "name": "saveListenPrefs",
     "file": "src/core.js",
-    "line": 440,
+    "line": 441,
     "desc": ""
   },
   {
     "type": "function",
     "name": "restoreListenPrefs",
     "file": "src/core.js",
-    "line": 455,
+    "line": 456,
     "desc": ""
   },
   {
     "type": "storage",
     "name": "gramNotesSub",
     "file": "src/core.js",
-    "line": 158,
+    "line": 159,
     "desc": "localStorage"
   },
   {
     "type": "storage",
     "name": "agentLastProgressView",
     "file": "src/core.js",
-    "line": 26,
+    "line": 27,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core.js",
-    "line": 116,
+    "line": 117,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "LISTEN_TRACK_NAMES",
     "file": "src/core.js",
-    "line": 443,
+    "line": 444,
     "desc": "Storage.set"
   },
   {

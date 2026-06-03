@@ -529,7 +529,27 @@ const StudentModel = (() => {
     return lines.filter(l => l !== null).join('\n');
   }
 
-  return { snapshot, snapshotAsync, invalidate, claudeSummary };
+  // ── AppEvents subscriptions ───────────────────────────────────────────────
+  function init() {
+    const AE = (typeof AppEvents !== 'undefined') ? AppEvents : null;
+    if (!AE) { console.warn('[StudentModel] AppEvents not available — skipping subscriptions'); return; }
+
+    const events = [
+      AE.DRILL_ANSWER, AE.VOCAB_LOOKUP, AE.VOCAB_PRODUCED,
+      AE.ERROR_RECORDED, AE.WRITING_SUBMITTED, AE.FLUENCY_432, AE.SESSION_TIME,
+    ];
+
+    events.forEach(evt => {
+      AE.on(evt, (payload) => {
+        console.log('[StudentModel] received:', evt, payload);
+        invalidate();
+      });
+    });
+
+    console.log('[StudentModel] subscribed to', events.length, 'AppEvents');
+  }
+
+  return { snapshot, snapshotAsync, invalidate, claudeSummary, init };
 
 })();
 
