@@ -155,7 +155,25 @@ const DrillSRS = {
     item.lastCorrect = correct;
     item.seen        = (item.seen || 0) + 1;
     all[itemId]      = item;
-    this.saveAll(storageKey, all);
+    // Write only the changed item — not the whole object
+    this._cache[storageKey] = all;
+    if (typeof window !== 'undefined' && window.db) {
+      const drillType = this._drillType(storageKey);
+      const now = new Date().toISOString();
+      window.db.run(
+        `INSERT INTO srs_items (item_key, drill_type, interval, ease, due_date, history, seen, last_reviewed)
+         VALUES (?,?,?,?,?,?,?,?)
+         ON CONFLICT(item_key, drill_type) DO UPDATE SET
+           interval=excluded.interval, ease=excluded.ease,
+           due_date=excluded.due_date, history=excluded.history,
+           seen=excluded.seen, last_reviewed=excluded.last_reviewed`,
+        [itemId, drillType,
+         item.interval ?? 0, item.ease ?? 2.5,
+         item.due ? new Date(item.due).toISOString() : null,
+         JSON.stringify(item.history || []),
+         item.seen ?? 0, now]
+      ).catch(() => {});
+    }
     return item;
   },
 
