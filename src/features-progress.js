@@ -1141,7 +1141,7 @@ async function renderGrammarCoverage() {
       if (node.encounterCount > 0 && node.lastEncountered) {
         const daysSinceEnc = (Date.now() - new Date(node.lastEncountered).getTime()) / 86400000;
         if (daysSinceEnc < 30) {
-          encDot = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-left:5px;flex-shrink:0" title="encountered in recent Yoshi session"></span>';
+          encDot = '<span onclick="event.stopPropagation();grammarDismissEncounter(\'' + node.id + '\')" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-left:5px;flex-shrink:0;cursor:pointer" title="seen in Yoshi session — click to dismiss"></span>';
           if (node.lastEncountered) tip += ' · seen in session ' + Math.round(daysSinceEnc) + 'd ago';
         }
       }
@@ -1223,6 +1223,15 @@ function grammarNodeClick(nodeId) {
     ${weakSection}
     ${qSection}
   `;
+}
+
+async function grammarDismissEncounter(nodeId) {
+  const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
+  if (!GM) return;
+  try {
+    await GM.setOverride(nodeId, 1, 'dismissed');
+    (App.renderGrammarCoverage || window.renderGrammarCoverage)();
+  } catch(e) {}
 }
 
 
