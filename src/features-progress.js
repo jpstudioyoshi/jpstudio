@@ -598,6 +598,7 @@ async function renderStrandBalance() {
 // ── Strand Weights ────────────────────────────────────────────────────────────
 const STRAND_WEIGHTS_KEY = 'STRAND_WEIGHTS';
 const STRAND_WEIGHTS_DEFAULTS = {
+  sentences:   { label: 'Sentence Building',  s1:0,   s2:100, s3:50,  s4:0  },
   voice:       { label: 'Voice (general)',        s1:50,  s2:50,  s3:0,   s4:0  },
   yoshi:       { label: 'Yoshi / lesson session', s1:50,  s2:50,  s3:0,   s4:0  },
   fluency432:  { label: '4/3/2',                  s1:0,   s2:0,   s3:0,   s4:100},
