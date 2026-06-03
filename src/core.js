@@ -18,6 +18,7 @@
 // ═══════════════════════════════════════════════════════
 
 function updateProgressPanel() {
+  try { (App.StudentModel || window.StudentModel)?.snapshotAsync().then(s => console.log('[StudentModel]', s)); } catch(e) {}
   progressRenderCost();
   progressRenderErrors();
   if (typeof renderSpokenErrorsProgress === 'function') {
