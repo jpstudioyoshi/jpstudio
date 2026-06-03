@@ -9023,6 +9023,20 @@
     "desc": "═══════════════════════════════════════════════════════════════════════════════"
   },
   {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 604,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 608,
+    "desc": "db.run"
+  },
+  {
     "type": "function",
     "name": "IssueTracker",
     "file": "src/IssueTracker.js",

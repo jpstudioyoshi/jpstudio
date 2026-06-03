@@ -450,8 +450,7 @@ function renderFourStrandRecency() {
     let summaryText = '';
     if (bestItem !== null) {
       const whenStr = bestDays === 0 ? 'today' : bestDays === 1 ? 'yesterday' : bestDays + ' days ago';
-      const lbl = labels[bestItem.key];
-      summaryText = bestItem.label + (lbl ? ' — ' + lbl : '') + ' · ' + whenStr;
+      summaryText = bestItem.label + ' · ' + whenStr;
     }
 
     html += '<div>'
@@ -575,14 +574,17 @@ async function renderStrandBalance() {
     }
     const LABELS = { 1: 'Input', 2: 'Output', 3: 'Deliberate', 4: 'Fluency' };
     const total = sb.totalMins || 1;
+    const sessions = sb.sessions || {};
     const rows = [1, 2, 3, 4].map(n => {
       const mins = sb.strands[n] || 0;
       const pct  = total > 0 ? Math.round(mins / total * 100) : 0;
+      const count = sessions[n] || 0;
       const color = mins === 0 ? 'var(--error, #e05)' : pct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
+      const countStr = count > 0 ? count + (count === 1 ? ' session' : ' sessions') : 'none';
       return `<div style="margin-bottom:7px">
         <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:0.72rem;margin-bottom:2px">
           <span style="color:var(--ink)">${n} — ${LABELS[n]}</span>
-          <span style="color:${color}">${mins}min (${pct}%)</span>
+          <span style="color:${color};font-size:0.68rem">${countStr}</span>
         </div>
         <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">
           <div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>
