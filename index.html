@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260603">
+<link rel="stylesheet" href="style.css?v=1780505747">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -45,6 +45,7 @@
   <button id="progressNavBtn" data-panel="progress" data-reading="しんちょく">進捗</button>
   <button data-panel="gramnotes" data-reading="ノート">ノート</button>
   <button data-panel="vocab-corpus" data-reading="ごいろく">語彙録</button>
+  <button onclick="showPanel('kana'); setKanaMode('strokes')" data-reading="ひつじゅん" title="Stroke order">筆順</button>
   <button data-panel="resources" data-reading="しりょう">資料</button>
     <div id="progressSidebarControls" style="display:none;padding:8px 6px;border-top:1px solid var(--border);margin-top:8px;flex-direction:column;gap:6px">
     <label style="display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--ui);font-size:0.62rem;color:var(--ink);cursor:pointer;text-align:center">today<input type="radio" name="progressRange" value="today" onchange="progRangeSet('today')"></label>
@@ -133,7 +134,13 @@
     <button class="btn-destructive btn-sm" onclick="qrDeleteHistory()">Delete</button>
   </div>
 </div>
-<div id="wordsPanelHeader" class="panel-header-lower" style="display:none" style="display:none">
+<div id="kanaPanelHeader" class="panel-header-lower" style="display:none">
+  <div class="panel-section-title">
+    <span class="panel-section-title-jp">文字</span>
+    <span class="panel-section-title-en">Kanji Reference</span>
+  </div>
+</div>
+<div id="wordsPanelHeader" class="panel-header-lower" style="display:none">
   <div class="panel-section-title">
     <span class="panel-section-title-jp">語彙</span>
     <select class="btn-nav btn-sm" id="wordsSubSelect" onchange="wordsSubFromSelect(this.value)">
@@ -479,16 +486,9 @@
 
   <!-- KANA DRILL -->
   <div id="panel-kana" class="panel">
-    <div class="section-title"><span class="jp">文字</span><span class="en-block"><span class="reading">moji</span><span class="en">(Characters)</span></span></div>
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;min-height:38px">
       <div class="drill-mode-bar" style="margin-bottom:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
-        <button class="mode-btn" onclick="setKanaMode('hiragana')">ひらがな</button>
-        <button class="mode-btn active" onclick="setKanaMode('katakana')">カタカナ</button>
-        <button class="mode-btn" onclick="setKanaMode('words')">言葉</button>
-        <button class="mode-btn" onclick="setKanaMode('strokes')">筆順</button>
-        <label id="kanaDakutenLabel" style="display:flex;align-items:center;gap:5px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);cursor:pointer;margin-left:4px">
-          <input type="checkbox" id="kanaDakutenCheck" checked onchange="toggleKanaDakuten()" style="accent-color:var(--teal)"> 濁点
-        </label>
+
         <div id="kanaTimerRow" style="display:flex;align-items:center;gap:10px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);margin-left:8px">
           <span>⏱</span>
           <select class="select-std" id="kanaTimerSelect" onchange="setKanaTimer(parseInt(this.value))">
@@ -600,7 +600,6 @@
       <div id="kanaProgressLabel" style="font-family:var(--ui);font-size:0.8rem;letter-spacing:0.08em;color:var(--ink-light)">
         Your Progress Map — <span style="color:var(--teal)">■</span> mastered &nbsp; <span style="color:var(--red)">■</span> needs work
       </div>
-      <button class="btn-toggle" id="kanaGridToggleBtn" onclick="kanaToggleGrid()">Show grid</button>
     </div>
     <div class="kana-grid" id="kanaGrid"></div>
 
@@ -608,6 +607,8 @@
       <div id="strokeTiles" style="display:none"></div><!-- kept for JS compat -->
       <div id="strokeDisplay" style="min-width:fit-content"></div>
     </div>
+    <div class="footer-lower"><div class="footer-lower-row" id="kanaFooterLower"></div></div>
+    <div class="footer-upper" id="kanaFooterUpper"></div>
 
   </div>
 

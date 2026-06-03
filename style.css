@@ -1516,6 +1516,7 @@
   #panelHeaderLowerLeft { flex: 1; }
   .panel-section-title { display: flex; align-items: center; gap: 12px; }
   .panel-section-title-jp { font-family: var(--jp); font-size: 2.2rem; color: var(--ink); }
+  .panel-section-title-en { font-family: var(--ui); font-size: 0.72rem; color: var(--ink-light); letter-spacing: 0.08em; text-transform: uppercase; }
   .panel-header-lower {
     position: fixed;
     top: 98px;
