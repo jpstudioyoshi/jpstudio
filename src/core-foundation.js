@@ -1735,6 +1735,7 @@ function showPanel(id) {
     updateProgressPanel();
     if (typeof renderConjMastery === 'function') renderConjMastery();
     if (typeof renderCounterMastery === 'function') renderCounterMastery();
+    if (typeof renderGramSentHeatmap === 'function') renderGramSentHeatmap();
   }
   if (id === 'resources') { try { resourcesRender(); } catch(e) {} }
   if (id === 'counters') { showPanel('words'); wordsSwitchSub('counters'); return; }

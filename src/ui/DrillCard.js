@@ -142,6 +142,7 @@ const DrillCard = (() => {
         'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
         [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: _dtype, answer, typed, correct })]
       ).catch(() => {});
+    try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
     }
 
     if (correct) {

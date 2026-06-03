@@ -210,6 +210,7 @@ function markVocab(v) {
       'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
       [_ts, 'words', 'drill:answer', JSON.stringify({ key: srsKey, word: card?.jp || srsKey, reading: card?.kana || '', result: _result })]
     ).catch(() => {});
+  try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
   }
 
   saveState();

@@ -302,6 +302,7 @@ async function submitWritingSentence() {
       'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
       [_ts, 'writing', 'writing:submitted', JSON.stringify({ first_attempt: _first.slice(0,80), final_text: text.slice(0,80), check_count: _attempts })]
     ).catch(() => {});
+  try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
   }
   _writingFirstAttempt = null;
   _writingCheckCount   = 0;

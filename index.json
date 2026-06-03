@@ -4455,343 +4455,343 @@
     "type": "function",
     "name": "_gramSentAvoidList",
     "file": "src/features-grammar.js",
-    "line": 473,
+    "line": 477,
     "desc": "const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);"
   },
   {
     "type": "function",
     "name": "_gramSentPrefetch",
     "file": "src/features-grammar.js",
-    "line": 481,
+    "line": 485,
     "desc": "if (GramSentState.generating) return;"
   },
   {
     "type": "function",
     "name": "gramSentGenerate",
     "file": "src/features-grammar.js",
-    "line": 497,
+    "line": 501,
     "desc": "const area = document.getElementById('gramSentDrillArea');"
   },
   {
     "type": "function",
     "name": "gramSentRenderCard",
     "file": "src/features-grammar.js",
-    "line": 543,
+    "line": 547,
     "desc": "── Card rendering ─────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "gramSentToggleHint",
     "file": "src/features-grammar.js",
-    "line": 598,
+    "line": 602,
     "desc": "const hint = document.getElementById('gramSentCardHint');"
   },
   {
     "type": "function",
     "name": "gramSentCheck",
     "file": "src/features-grammar.js",
-    "line": 607,
+    "line": 611,
     "desc": "── Checking ───────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "gramSentAdvance",
     "file": "src/features-grammar.js",
-    "line": 680,
+    "line": 684,
     "desc": "GramSentState.idx++;"
   },
   {
     "type": "function",
     "name": "gramSentSkip",
     "file": "src/features-grammar.js",
-    "line": 706,
+    "line": 710,
     "desc": "if (!GramSentState.checked) {"
   },
   {
     "type": "function",
     "name": "gramSentFeedbackClick",
     "file": "src/features-grammar.js",
-    "line": 714,
+    "line": 718,
     "desc": "const hintArea = document.getElementById('gramSentHintArea');"
   },
   {
     "type": "function",
     "name": "gramSentAnalyseErrors",
     "file": "src/features-grammar.js",
-    "line": 723,
+    "line": 727,
     "desc": "── Complete screen ────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "gramSentRenderComplete",
     "file": "src/features-grammar.js",
-    "line": 770,
+    "line": 774,
     "desc": "const area = document.getElementById('gramSentDrillArea');"
   },
   {
     "type": "function",
     "name": "gramSentAskQuestion",
     "file": "src/features-grammar.js",
-    "line": 799,
+    "line": 803,
     "desc": "── Ask a question about the current sentence ──────────"
   },
   {
     "type": "function",
     "name": "gramSentInit",
     "file": "src/features-grammar.js",
-    "line": 835,
+    "line": 839,
     "desc": "── Init (called when sent tab opens) ─────────────────"
   },
   {
     "type": "function",
     "name": "questionRecordGrammarEvidence",
     "file": "src/features-grammar.js",
-    "line": 848,
+    "line": 852,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "_unclassifiedAppend",
     "file": "src/features-grammar.js",
-    "line": 913,
+    "line": 917,
     "desc": ""
   },
   {
     "type": "function",
     "name": "unclassifiedRender",
     "file": "src/features-grammar.js",
-    "line": 922,
+    "line": 926,
     "desc": "const list = document.getElementById('gnote-unclassified-list');"
   },
   {
     "type": "function",
     "name": "unclassifiedClear",
     "file": "src/features-grammar.js",
-    "line": 947,
+    "line": 951,
     "desc": "if (!confirm('Clear all unclassified questions?')) return;"
   },
   {
     "type": "function",
     "name": "teSetMode",
     "file": "src/features-grammar.js",
-    "line": 1066,
+    "line": 1070,
     "desc": "TeFormState.mode = mode;"
   },
   {
     "type": "function",
     "name": "teSetGroup",
     "file": "src/features-grammar.js",
-    "line": 1098,
+    "line": 1102,
     "desc": "TeFormState.group = group;"
   },
   {
     "type": "function",
     "name": "conjAddFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1236,
+    "line": 1240,
     "desc": "const batch = FREQ_VERBS_ORDERED.slice(_conjFreqVerbsAdded, _conjFreqVerbsAdded + 10);"
   },
   {
     "type": "function",
     "name": "conjResetFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1249,
+    "line": 1253,
     "desc": "window._conjExtraVerbs = [];"
   },
   {
     "type": "function",
     "name": "conjUpdateFreqCount",
     "file": "src/features-grammar.js",
-    "line": 1255,
+    "line": 1259,
     "desc": "const el = document.getElementById('conjFreqVerbCount');"
   },
   {
     "type": "function",
     "name": "startConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1274,
+    "line": 1278,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "_conjUpdateSpecialFilterUI",
     "file": "src/features-grammar.js",
-    "line": 1344,
+    "line": 1348,
     "desc": "const ruOnly = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "conjUpdateOptions",
     "file": "src/features-grammar.js",
-    "line": 1358,
+    "line": 1362,
     "desc": "conjUpdateFreqCount();"
   },
   {
     "type": "function",
     "name": "conjForceNewSession",
     "file": "src/features-grammar.js",
-    "line": 1363,
+    "line": 1367,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;"
   },
   {
     "type": "function",
     "name": "conjResumeSession",
     "file": "src/features-grammar.js",
-    "line": 1415,
+    "line": 1419,
     "desc": "conjQueue = saved.queue.map(item => {"
   },
   {
     "type": "function",
     "name": "conjDeConsecutive",
     "file": "src/features-grammar.js",
-    "line": 1446,
+    "line": 1450,
     "desc": "if (queue.length <= 5) return queue;"
   },
   {
     "type": "function",
     "name": "conjBuildRunQueue",
     "file": "src/features-grammar.js",
-    "line": 1476,
+    "line": 1480,
     "desc": "window._conjVerbTypes = verbTypes;"
   },
   {
     "type": "function",
     "name": "renderConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1536,
+    "line": 1540,
     "desc": "const area = document.getElementById('conjDrillAreaG');"
   },
   {
     "type": "function",
     "name": "conjNextRun",
     "file": "src/features-grammar.js",
-    "line": 1679,
+    "line": 1683,
     "desc": "conjRun++;"
   },
   {
     "type": "function",
     "name": "handleConjKeyG",
     "file": "src/features-grammar.js",
-    "line": 1684,
+    "line": 1688,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "conjAutoConvertG",
     "file": "src/features-grammar.js",
-    "line": 1704,
+    "line": 1708,
     "desc": "if (!conjCurrentAnswer) return;"
   },
   {
     "type": "function",
     "name": "conjClassifyError",
     "file": "src/features-grammar.js",
-    "line": 1728,
+    "line": 1732,
     "desc": "const dist = cmLevenshtein(typed, correct);"
   },
   {
     "type": "function",
     "name": "checkConjG",
     "file": "src/features-grammar.js",
-    "line": 1772,
+    "line": 1776,
     "desc": "const input = document.getElementById('conjInputG');"
   },
   {
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1856,
+    "line": 1860,
     "desc": "conjAutoConvertG();"
   },
   {
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1867,
+    "line": 1871,
     "desc": "if (conjIdx <= 0) return;"
   },
   {
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1881,
+    "line": 1885,
     "desc": "if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }"
   },
   {
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 1889,
+    "line": 1893,
     "desc": "Grammar2State.lastSubtab = name;"
   },
   {
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 1942,
+    "line": 1946,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';"
   },
   {
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 1988,
+    "line": 1992,
     "desc": "const area = document.getElementById('particleDrillArea');"
   },
   {
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 2071,
+    "line": 2075,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered"
   },
   {
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 2079,
+    "line": 2083,
     "desc": "if (_pdResults[exIdx] !== null) return;"
   },
   {
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 2087,
+    "line": 2091,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;"
   },
   {
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2125,
+    "line": 2129,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for"
   },
   {
     "type": "storage",
     "name": "GRAMMAR_ERRORS",
     "file": "src/features-grammar.js",
-    "line": 1118,
+    "line": 1122,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "CONJ_SESSION",
     "file": "src/features-grammar.js",
-    "line": 1161,
+    "line": 1165,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1815,
+    "line": 1819,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1819,
+    "line": 1823,
     "desc": "db.run"
   },
   {
@@ -4805,21 +4805,21 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-grammar.js",
-    "line": 462,
+    "line": 466,
     "desc": "Generate 1 Japanese sentence for a ${…} learner practising: \"${…}\".\\n${…}\\n${…}\\"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-grammar.js",
-    "line": 816,
+    "line": 820,
     "desc": "Current sentence: \"${…}\" (${…}). Grammar target: \"${…}\". Student asks: \"${…}\". A"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-grammar.js",
-    "line": 861,
+    "line": 865,
     "desc": "You are classifying a Japanese learner question for a grammar tracking system.\\n"
   },
   {

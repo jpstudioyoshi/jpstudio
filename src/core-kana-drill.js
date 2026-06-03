@@ -522,6 +522,7 @@ function checkMultiChoice(idx) {
       'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
       [_ts, 'kana', 'drill:answer', JSON.stringify({ char: _char, reading: KanaDrillState.currentKana.word, mode: _mode, correct })]
     ).catch(() => {});
+  try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
   }
   saveState(); updateDrillStats(); renderDrillProgress();
   document.getElementById('skipKanaBtn').textContent = 'Next →';
