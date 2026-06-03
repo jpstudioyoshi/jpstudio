@@ -1825,6 +1825,7 @@ function checkConjG() {
       [_ts, 'conjugation', 'drill:answer', JSON.stringify({ key: item.key, word: item.word?.word || item.key, form: item.form, pol: item.pol, reg: item.reg, result: _result, typed: val })]
     ).catch(() => {});
   try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'conjugation', key: item.key, word: item.word?.word || item.key, form: item.form, pol: item.pol, reg: item.reg, result: _result }); } catch(e) {}
   }
   ConjSession.saveProgress(conjQueue, conjIdx, conjResults, conjOk, conjMiss, conjRun, conjSessionCorrect, conjSessionWrong, window._conjVerbTypes, window._conjForms, window._conjPolarities, window._conjRegisters);
 

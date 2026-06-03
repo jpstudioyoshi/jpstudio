@@ -194,3 +194,11 @@ gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, 
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
+
+## Pre-existing console errors (fix in stabilization pass)
+- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
+- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference, remove it
+
+## Pre-existing console errors (fix in stabilization pass)
+- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
+- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference, remove it

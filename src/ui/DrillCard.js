@@ -143,6 +143,7 @@ const DrillCard = (() => {
         [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: _dtype, answer, typed, correct })]
       ).catch(() => {});
     try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+    try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'words', drill_type: _dtype, answer, typed, correct }); } catch(e) {}
     }
 
     if (correct) {

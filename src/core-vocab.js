@@ -211,6 +211,7 @@ function markVocab(v) {
       [_ts, 'words', 'drill:answer', JSON.stringify({ key: srsKey, word: card?.jp || srsKey, reading: card?.kana || '', result: _result })]
     ).catch(() => {});
   try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'words', key: srsKey, word: card?.jp || srsKey, result: _result }); } catch(e) {}
   }
 
   saveState();

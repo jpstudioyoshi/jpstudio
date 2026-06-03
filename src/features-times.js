@@ -302,6 +302,7 @@ function answerTd(chosen, btn) {
       window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
         [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: 'times', key: _key, label: TimesState.question?.label, result: 'correct' })]).catch(() => {});
     try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+    try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'times', key: _key, label: TimesState.question?.label, result: 'correct' }); } catch(e) {}
     }
 
     // Mark all buttons
@@ -356,6 +357,7 @@ function answerTd(chosen, btn) {
           window.db.run('INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
             [_ts, 'words', 'drill:answer', JSON.stringify({ drill_type: 'times', key: _key, label: TimesState.question?.label, result: 'wrong' })]).catch(() => {});
         try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+        try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'times', key: _key, label: TimesState.question?.label, result: 'wrong' }); } catch(e) {}
         }
         DrillFlow.wrong(() => nextTimesQuestion());
       }

@@ -523,6 +523,7 @@ function checkMultiChoice(idx) {
       [_ts, 'kana', 'drill:answer', JSON.stringify({ char: _char, reading: KanaDrillState.currentKana.word, mode: _mode, correct })]
     ).catch(() => {});
   try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'kana', char: _char, mode: _mode, correct }); } catch(e) {}
   }
   saveState(); updateDrillStats(); renderDrillProgress();
   document.getElementById('skipKanaBtn').textContent = 'Next →';

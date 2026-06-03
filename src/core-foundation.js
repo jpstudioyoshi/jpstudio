@@ -385,6 +385,7 @@ function _corpusWriteLookup(word, entry) {
     'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
     [ts, 'translate', 'vocab:lookup', JSON.stringify({ word, context: ctx })]
   ).catch(() => {});
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.VOCAB_LOOKUP, { word, context: ctx }); } catch(e) {}
 }
 
 function qtHistoryAdd(word) {
@@ -969,6 +970,7 @@ function recordError({ source, errorType, pattern, input, corrected }) {
     'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
     [ts, source, 'error:recorded', JSON.stringify({ errorType, pattern, input, corrected })]
   )?.catch(() => {});
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.ERROR_RECORDED, { panel: source, errorType, pattern, input, corrected }); } catch(e) {}
 }
 
 function getApiKey()    { return Storage.getApiKey(); }
