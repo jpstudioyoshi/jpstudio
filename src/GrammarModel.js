@@ -113,8 +113,8 @@ const GrammarModel = (() => {
     try {
       if (!window.kvAPI) return;
       const result = await window.kvAPI.get(WEIGHTS_KEY);
-      if (!result || !result.value) return;
-      const overrides = JSON.parse(result.value);
+      if (!result) return;
+      const overrides = JSON.parse(result);
       for (const [key, val] of Object.entries(overrides)) {
         if (key in WEIGHTS && typeof val === 'number' && val >= 0 && val <= 2) {
           WEIGHTS[key] = val;

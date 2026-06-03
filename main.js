@@ -303,6 +303,16 @@ function createSchema() {
       recommendation  TEXT,
       accepted        INTEGER
     );
+    CREATE TABLE IF NOT EXISTS grammar_mastery (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      node_id       TEXT NOT NULL,
+      evidence_type TEXT NOT NULL,
+      score         REAL DEFAULT 0,
+      override      INTEGER DEFAULT 0,
+      last_seen     TEXT,
+      notes         TEXT,
+      UNIQUE(node_id, evidence_type)
+    );
     CREATE TABLE IF NOT EXISTS kv_store (
       key        TEXT PRIMARY KEY,
       value      TEXT,
