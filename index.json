@@ -38,217 +38,217 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 557,
+    "line": 565,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');"
   },
   {
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 924,
+    "line": 932,
     "desc": "const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese"
   },
   {
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 931,
+    "line": 939,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 941,
+    "line": 949,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];"
   },
   {
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1192,
+    "line": 1200,
     "desc": "mainWindow = new BrowserWindow({"
   },
   {
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1243,
+    "line": 1251,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {"
   },
   {
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1331,
+    "line": 1339,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 351,
+    "line": 359,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 364,
+    "line": 372,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 373,
+    "line": 381,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 424,
+    "line": 432,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 477,
+    "line": 485,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 493,
+    "line": 501,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 502,
+    "line": 510,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 519,
+    "line": 527,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 534,
+    "line": 542,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 551,
+    "line": 559,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 638,
+    "line": 646,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 689,
+    "line": 697,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 757,
+    "line": 765,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 814,
+    "line": 822,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
-    "file": "main.js",
-    "line": 831,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
     "file": "main.js",
     "line": 839,
     "desc": "db.run"
   },
   {
     "type": "storage",
-    "name": "INSERT",
+    "name": "DELETE",
     "file": "main.js",
-    "line": 956,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1020,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1101,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1117,
+    "line": 847,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1121,
+    "line": 964,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1135,
+    "line": 1028,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1109,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1125,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 1129,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1143,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1175,
+    "line": 1183,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1176,
+    "line": 1184,
     "desc": "db.run"
   },
   {
@@ -4273,28 +4273,28 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/GrammarModel.js",
-    "line": 164,
+    "line": 165,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/GrammarModel.js",
-    "line": 172,
+    "line": 173,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/GrammarModel.js",
-    "line": 191,
+    "line": 192,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "src/GrammarModel.js",
-    "line": 207,
+    "line": 208,
     "desc": "db.run"
   },
   {
@@ -9051,6 +9051,13 @@
     "desc": "db.run"
   },
   {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 650,
+    "desc": "db.run"
+  },
+  {
     "type": "function",
     "name": "IssueTracker",
     "file": "src/IssueTracker.js",
@@ -9215,42 +9222,42 @@
     "type": "function",
     "name": "yoshiStartRecording",
     "file": "src/Orchestrator.js",
-    "line": 267,
+    "line": 276,
     "desc": "── Backward-compatibility shims ──────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "yoshiStopRecording",
     "file": "src/Orchestrator.js",
-    "line": 275,
+    "line": 284,
     "desc": "await Orchestrator.stopLesson();"
   },
   {
     "type": "function",
     "name": "yoshiLoadLessonSessions",
     "file": "src/Orchestrator.js",
-    "line": 279,
+    "line": 288,
     "desc": "return Orchestrator.loadSessions();"
   },
   {
     "type": "function",
     "name": "yoshiDeleteLessonSession",
     "file": "src/Orchestrator.js",
-    "line": 283,
+    "line": 292,
     "desc": "const msg = (audioPath || teacherPath)"
   },
   {
     "type": "function",
     "name": "yoshiTranscribeCurrent",
     "file": "src/Orchestrator.js",
-    "line": 292,
+    "line": 301,
     "desc": "const btn = document.getElementById('overlayTranscribeBtn');"
   },
   {
     "type": "function",
     "name": "yoshiSaveWhatsapp",
     "file": "src/Orchestrator.js",
-    "line": 304,
+    "line": 313,
     "desc": "const el  = document.getElementById('lessonWhatsappPaste');"
   },
   {

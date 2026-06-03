@@ -654,26 +654,32 @@ const StudentModel = (() => {
         }
       }
       // Persist grammarPoints → grammar_mastery as 'encountered' evidence
-      if (Array.isArray(analysis.grammarPoints) && window.db) {
-        const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
-        if (GM) {
+      const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
+      if (GM && window.db) {
+        // Prefer explicit node IDs returned by Claude; fall back to fuzzy match
+        const nodeIds = Array.isArray(analysis.grammarNodeIds) && analysis.grammarNodeIds.length
+          ? analysis.grammarNodeIds
+          : [];
+        const useFuzzy = nodeIds.length === 0 && Array.isArray(analysis.grammarPoints);
+        const idsToRecord = nodeIds.length ? nodeIds : [];
+        if (useFuzzy) {
           await GM.reload();
           const coverageMap = GM.getCoverageMap();
           for (const point of analysis.grammarPoints) {
-            // Fuzzy match free-text grammar point against node labels
             const needle = point.toLowerCase().replace(/[〜～]/g, '').trim();
             const match = coverageMap.find(n =>
               n.label.toLowerCase().includes(needle) ||
               needle.includes(n.label.toLowerCase()) ||
               n.id.replace(/_/g,' ').includes(needle)
             );
-            if (match) {
-              try {
-                await GM.recordEvidence(match.id, 'encountered', 0.5,
-                  JSON.stringify({ count: 1, last_session: ts, text: point.slice(0, 80) }));
-              } catch(e) {}
-            }
+            if (match) idsToRecord.push(match.id);
           }
+        }
+        for (const nodeId of idsToRecord) {
+          try {
+            await GM.recordEvidence(nodeId, 'encountered', 0.5,
+              JSON.stringify({ count: 1, last_session: ts }));
+          } catch(e) {}
         }
       }
       invalidate();

@@ -129,9 +129,24 @@ const AnalysisService = (() => {
   }
 
   function _buildPrompt(transcriptText, waText) {
+    // Build node ID list from GrammarModel if available
+    let nodeList = '';
+    try {
+      const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
+      if (GM) {
+        const nodes = GM.getCoverageMap();
+        if (nodes && nodes.length) {
+          nodeList = nodes.map(n => n.id + ' (' + n.label + ', Genki ch.' + (n.genki || '?') + ')').join(', ');
+        }
+      }
+    } catch(e) {}
+
     let prompt = 'Analyse this Japanese lesson. The student is a German-speaking beginner (N5-N4 level).\n\n';
     prompt += 'TRANSCRIPT:\n' + transcriptText + '\n\n';
     if (waText) prompt += 'WHATSAPP NOTES:\n' + waText + '\n\n';
+    if (nodeList) {
+      prompt += 'GRAMMAR NODE IDs (use these exact IDs in grammarNodeIds):\n' + nodeList + '\n\n';
+    }
     prompt +=
       'Return ONLY JSON with this structure:\n' +
       '{\n' +
@@ -140,8 +155,10 @@ const AnalysisService = (() => {
       '  "studentErrors": [{"text": "what student said", "correction": "correct form", "type": "particle|conjugation|vocabulary|other"}],\n' +
       '  "keyVocab": [{"jp": "日本語", "en": "Japanese", "reading": "にほんご"}],\n' +
       '  "grammarPoints": ["point 1", "point 2"],\n' +
+      '  "grammarNodeIds": ["node_id_1", "node_id_2"],\n' +
       '  "teacherNotes": "any key points the teacher emphasised"\n' +
-      '}';
+      '}\n' +
+      'For grammarNodeIds: pick only IDs from the GRAMMAR NODE IDs list above that match grammar covered in this lesson. Empty array if none match.';
     return prompt;
   }
 
