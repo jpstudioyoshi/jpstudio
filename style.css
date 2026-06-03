@@ -326,7 +326,7 @@
   main { padding: 32px 44px; }
   .panel { display: none; padding-top: 98px; }
   .panel.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  #panel-words.active { display: flex; flex-direction: column; max-height: calc(100vh - 90px); padding-top: 80px; padding-bottom: 20vh; overflow: hidden; }
+  #panel-words.active { display: flex; flex-direction: column; max-height: calc(100vh - 98px); padding-top: 158px; padding-bottom: 20vh; overflow: hidden; }
   #words-sub-vocab { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
   #words-sub-vocab .vocab-card-area { flex: 1; overflow: hidden; }
   

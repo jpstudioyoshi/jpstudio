@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-01 (session 20 — Phase 2b complete, Phase 3 Step 1 complete)
+Last updated: 2026-06-03 (session 21 — strand balance chart, Yoshi wiring, weights UI, Phase 3 complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -42,7 +42,7 @@ Last updated: 2026-06-01 (session 20 — Phase 2b complete, Phase 3 Step 1 compl
 
 ## Current Mode
 ARCHITECTURE — inter-panel communication, intelligent hub, Nation four strands framework.
-Legacy architectural rendering conflicts resolved. Feature development open.
+Phase 3 complete. Moving into Phase 4: Yoshi-driven learning.
 See ARCHITECTURE_HUB.md in project Knowledge for full design.
 
 ## Thread Structure
@@ -53,16 +53,10 @@ See ARCHITECTURE_HUB.md in project Knowledge for full design.
 ## HTML Element Map
 `html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
 
-**html-map.md additions from session 17 (counter drill):**
-- `countStartBtn2` — Start button in footer-upper (new)
-- `countDrillActions2` — inline action buttons div (new, hidden until start)
-- `countNewBtn2` — New session button in footer-upper (new, hidden until start)
-- `counterMasteryPanel` — still in progress panel at line ~2523
-
-**html-map.md additions from session 18 (read panel):**
-- `qrListenContainer` — fixed div wrapping qrListenPanel, top:154px below lower header
-- `qrFooterBtns` — wrapper div for read panel footer buttons (shown when listen mode off)
-- `qrRecordSection` — moved into qrFooterUpper, shown when listen mode on (replaces buttons)
+**Session 21 additions:**
+- `strandBalanceChart` — strand balance chart container, above drillRecencyGraphic in progress panel
+- `strandWeightsGrid` — strand weights input grid in settings panel
+- `strandWeightsMsg` — "Saved" confirmation span in settings panel
 
 ## Terminal Workflow
 All edits are done via terminal — no file upload/download.
@@ -73,112 +67,103 @@ All edits are done via terminal — no file upload/download.
 - git ship — git add -A && git commit -m "update" && git push (jpsat repo)
 
 **Standard patterns:**
-- python3 << 'PYEOF' for multi-line edits (most reliable)
+- python3 - << 'PYEOF' for multi-line edits (most reliable — note the dash)
 - Always prefix with jp && to avoid directory drift
-- sed -n X,Yp file — read a block (no pbcopy — it swallows output)
+- sed -n X,Yp file | pbcopy — read a block
 - grep -n "pattern" file | pbcopy — locate lines only
-- Never paste grep output back into terminal
 - Update style.css?v= version string after CSS changes to bust Electron cache
 - Use date +%s for guaranteed cache bust on JS files
 
 **Critical lessons:**
-- python3 string matching fails silently on whitespace/encoding differences — use repr() to inspect before retrying
-- sed replacing function names as well as call sites — always check after
-- Line numbers shift after edits — re-grep before editing again
-- Duplicate CSS rules accumulate — grep for class name before adding new rules
-- Electron caches CSS AND JS — always bump version strings after changes; use date +%s for guaranteed cache bust
-- position:fixed can be overridden by earlier duplicate rules — grep for all instances first
-- When line-number deletion leaves orphan braces — always run node check-syntax.js after edits
-- GitHub push protection auto-revokes tokens found in committed files or chat — never put tokens in source or chat
-- Always use jp && prefix — never assume current directory
-- const/let TDZ bugs in Electron: if a script aborts mid-load, later const/let declarations stay in TDZ
+- python3 string matching fails silently on whitespace/encoding — use repr() to inspect before retrying
+- Template literal backticks in heredocs need careful escaping — use python3 - << 'PYEOF' with raw strings
+- Blank lines in match strings cause MATCH FAILED — always use repr() to inspect first
+- Cache buster regex was \?v=\d+ — now fixed to \?v=[^"]+ to catch letter suffixes
 - pbcopy swallows terminal output — never use it for sed -n reads, only for grep locating
+- Always use jp && prefix — never assume current directory
+- Never paste code blocks directly into terminal — always use python3 heredoc scripts
 - git stash pop restores Code session changes if accidentally stashed
-- Blank lines in python3 heredoc match strings cause MATCH FAILED — always use repr() to inspect first
 
 ## Known Issues / Pre-existing
-- **DB startup errors** — `rows is not iterable` in features-progress.js, GrammarModel mastery load failing. Causes CONJ_SESSION_RUNS and CONJ_QUESTIONS_PER_RUN to be undefined on load (worked around with `|| 3` fallback). Root cause: sql.js or IPC handler issue on startup. Needs dedicated investigation.
+- **DB startup errors** — `rows is not iterable` in features-progress.js. Root cause: sql.js or IPC handler. Needs investigation.
 - `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
 - Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
 - Read panel listen layout — still buggy
-- `countShowMastery is not defined` — core-counters.js line 926, function renamed or missing
-- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, dead App registry reference
+- `countShowMastery is not defined` — core-counters.js line 926
+- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, remove it
 
-## Session 20 — Completed Work
+## Session 21 — Completed Work
 
-### Architecture Planning
-- Agreed Paul Nation Four Strands as the organising framework for the whole system
-- Designed runtime architecture: AppEvents (bus) → StudentModel (Verteilerstelle) → panels
-- StudentModel has two layers: mechanical (rule-based) and intelligent (trigger-based LLM)
-- Measurement set agreed — see ARCHITECTURE_HUB.md
-- Implementation phases agreed: Foundation → Instrumentation → Audit → Strand balance → Intelligence
-- ARCHITECTURE_HUB.md written and uploaded to project Knowledge
-- event_type registry and drill_type registry added to context-static.md
+### Cache buster fix
+- `check-syntax.js` regex fixed: `\?v=\d+` → `\?v=[^"]+`
+- Was silently skipping files with letter suffixes — likely cause of weeks of stale cache issues
 
-### learning_events Infrastructure — Phase 1+2 Complete
-- Added `panel_sessions` and `learning_events` tables to `createSchema()` in main.js
-- Panel session timer in core-foundation.js — deducts to last interaction, sessions < 2s discarded
-- All major drill types wired to `drill_results` and `learning_events`
-- Writing iteration tracking added
+### StudentModel fully wired
+- `invalidate()` → all 7 drill completion points
+- `snapshotAsync()` → progress panel open
+- AppEvents subscription → 7 event types
+- `AppEvents.emit()` → all 8 panel emission points
+- `SESSION_SAVED` → writes Yoshi sessions to `panel_sessions` with `panel='yoshi'`
+- `RECORDING_STARTED`/`STOPPED` → writes voice recording time to `panel_sessions`
+- Voice panel removed from `_STRAND_MAP` — timer was counting dev discussion time
 
-### learning_events Wiring — Complete
-| Event | Source | File |
-|---|---|---|
-| `vocab:lookup` | quick translate | core-foundation.js |
-| `vocab:lookup` | SRS/kanji drill | core-srs.js |
-| `vocab:produced` | chat + writing | core-srs.js |
-| `error:recorded` | all error sources | core-foundation.js |
-| `drill:answer` | conjugation, kana, words, times, DrillCard | various |
-| `writing:submitted` | writing panel | core-writing.js |
-| `fluency:432` | 4/3/2 drill | features-voice.js |
-| `session:time` | all panels | core-foundation.js |
+### Strand balance chart
+- Live in progress panel, stacked bars
+- Yoshi portion shown in teal, other activity in strand colour
+- Bar length = weighted contribution (not raw minutes)
+- Amber < 20%, red at zero
+- Re-renders on weight save (with cache invalidation)
+- Tile snippet text removed — was noise
 
-### StudentModel — Phase 2b + Phase 3 Step 1 Complete
-- Audit complete — was fully inert, now wired
-- **Step 1 ✅** — `invalidate()` wired into all 7 drill completion points
-- **Step 2 ✅** — `snapshotAsync()` fires on every progress panel open; confirmed in console
-- **Step 3 ✅** — AppEvents subscription skeleton live; StudentModel subscribes to 7 event types on startup; new constants added to AppEvents.js: `DRILL_ANSWER`, `VOCAB_LOOKUP`, `VOCAB_PRODUCED`, `ERROR_RECORDED`, `WRITING_SUBMITTED`, `FLUENCY_432`, `SESSION_TIME`
-- **Phase 3 Step 1 ✅** — `AppEvents.emit()` wired into all 8 panel emission points; `[StudentModel] received: drill:answer` confirmed in console during conjugation drill
+### Strand weights UI
+- 14 activities in settings, S1-S4 inputs, auto-saves to `STRAND_WEIGHTS` kvAPI key
+- `sentences` (Sentence Building) added: S1:0, S2:100, S3:50, S4:0
+- Fluency tiles fixed: removed conjugation and vocab, added writing
 
-### Two parallel streams now running
-- `learning_events` — persistent DB record, always written, historical record
-- `AppEvents` — live bus, in-memory, for real-time reactions
-Both stay. Different purposes.
+### Sentence building instrumentation
+- `GramSentState.startedAt` added at session init
+- Completion hook writes to `panel_sessions` (`panel='sentences'`) and `learning_events`
 
-### Other
-- STT conjugation instrumentation dropped — too imprecise for single-syllable differences
-- 4/3/2 column mismatch fixed in features-voice.js
-- Read-aloud not yet built — delegated to listen thread
-- App now opens on Progress panel ✅
+### FLUENCY tiles corrected
+- Removed: Conjugation, Vocabulary
+- Added: Writing
 
 ## Pending Work — Priority Order
 
-### Architecture / StudentModel (StudentModel thread)
-1. **Phase 3 Step 2** — strand imbalance detection: on SESSION_TIME event, query panel_sessions for last 7 days, calculate time per strand, emit warning if any strand < 20% of total. First real intelligence, no LLM needed.
-2. **UI decision** — what does a strand imbalance warning look like? Decide before Step 2.
-3. **Data audit** — run app through typical session, verify what actually lands in DB
-4. **Progress panel / Genki taxonomy audit** — what's wired vs display-only
-5. **AnalysisService audit** — grammar tagging on transcripts
+### Phase 4 — Yoshi-driven learning (next major work)
+Both features require **AnalysisService audit first** (Claude Code session):
+1. **Vocabulary: less arbitrary** — SRS deck driven by Yoshi session vocab + N5 core
+   - AnalysisService currently extracts vocab — need to know format and reliability
+   - Connect: Yoshi transcript vocab → SRS deck on SESSION_SAVED
+2. **Grammar → Genki integration** — grammar forms from Yoshi sessions light up Genki sections
+   - Initially: prompt to read the relevant chapter
+   - Later: auto-generate sentence drill sentences targeting that form
+   - Requires: AnalysisService grammar tagging audit + Genki taxonomy audit
 
-### Remaining learning_events wiring
+### Phase 3 remaining
+1. **Strand imbalance notification** — outbound StudentModel signal when strand < 20%
+2. **4/3/2 separation** — currently inside voice panel time, needs own `panel_sessions` entry for separate bar colour
+
+### Pending audits
+1. **AnalysisService** — what does it extract, how reliable, what format
+2. **Genki taxonomy** — what grammar points, structure, currently wired to anything
+3. **Data audit** — run typical session, verify DB writes
+
+### Known instrumentation gaps
 - Voice drill answers (needs thought)
 - Anki reviews (needs thought)
-- Lesson session saves (Yoshi)
+- Lesson session saves (Yoshi grammar tags)
 - `_conjRecordGrammarEvidence` — unclear where it writes
 - Read-aloud — listen thread
 - Round trip — session duration only when built
 
-### Known issues
-1. **Read panel listen layout** — still buggy
-2. **DB startup failure** — `rows is not iterable`, still present
-
 ### Medium term
-1. **REVIEW.md** — add to jpStudio repo root
-2. **Progress panel header** — briefing refresh + About me controls
-3. **Stale root core-foundation.js** — delete safely
-4. **DrillSRS migration** — from kvAPI to `srs_items` DB table
+- DrillSRS migration from kvAPI to `srs_items` DB table
+- REVIEW.md at project root
+- Progress panel header — briefing refresh + About me controls
+- Stale root core-foundation.js — delete safely
 
 ### Future
 - Dropbox recordings redirect
@@ -190,17 +175,13 @@ Both stay. Different purposes.
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events
 pitch_data: 124,137 entries
-Access: window.pitchAPI.lookup(kanji, reading)
+
+## kvAPI keys (session 21 additions)
+- `STRAND_WEIGHTS` — strand weight settings, 14 activity keys, s1/s2/s3/s4 per key
 
 ## Storage Migration Status
 ### Migrated to kvAPI
-gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS ✓
+gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS, STRAND_WEIGHTS ✓
 
 ### Still on localStorage
 voice profile, voice pause data, video watch time, resources, learned words
-
-## Strand mapping notes (for architecture thread)
-- Current _STRAND_MAP is panel-level only — grammar2=3, voice=2 etc.
-- Subtab-level mapping needed for accurate strand classification (e.g. 4/3/2 drill in voice = fluency, sentence building in grammar2 = deliberate vs fluency TBD)
-- Strand 4 (fluency) currently always zero — no panel mapped to it yet
-- Weighting decisions (how much each strand counts) deferred to architecture thread

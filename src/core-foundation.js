@@ -1581,20 +1581,13 @@ function wordsSwitchSubRestore() {
   wordsSwitchSub(last);
 }
 
-function wordsSubFromSelect(val) {
-  localStorage.setItem('wordsLastSub', val);
-  wordsSwitchSub(val);
-}
-
-function wordsSwitchSubRestore() {
-  const last = localStorage.getItem('wordsLastSub') || 'vocab';
-  const sel = document.getElementById('wordsSubSelect');
-  if (sel) sel.value = last;
-  wordsSwitchSub(last);
+function kanjiRefToggle() {
+  const p = document.getElementById('kanjiRefPanel');
+  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
 }
 
 function wordsSwitchSub(name) {
-  ['vocab','anki','game','counters','days'].forEach(s => {
+  ['vocab','anki','game','counters','days','kana'].forEach(s => {
     const el = document.getElementById('words-sub-' + s);
     const btn = document.getElementById('words-sub-btn-' + s);
     if (el) el.style.display = s === name ? 'block' : 'none';
@@ -1605,6 +1598,7 @@ function wordsSwitchSub(name) {
   if (name === 'counters') countInit2();
   if (name === 'days') daysOfMonthInit();
   if (name === 'game') { /* game initialises on click */ }
+  if (name === 'kana') { if (typeof initKanaDrill === 'function') initKanaDrill(); }
 }
 
 // ── Panel session timer ──────────────────────────────────────────────────────

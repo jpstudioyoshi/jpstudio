@@ -1114,79 +1114,86 @@
   },
   {
     "type": "function",
+    "name": "kanjiRefToggle",
+    "file": "src/core-foundation.js",
+    "line": 1584,
+    "desc": "const p = document.getElementById('kanjiRefPanel');"
+  },
+  {
+    "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1596,
-    "desc": "['vocab','anki','game','counters','days'].forEach(s => {"
+    "line": 1589,
+    "desc": "['vocab','anki','game','counters','days','kana'].forEach(s => {"
   },
   {
     "type": "function",
     "name": "_panelInteractPing",
     "file": "src/core-foundation.js",
-    "line": 1621,
+    "line": 1614,
     "desc": "_panelLastInteract = Date.now(); }"
   },
   {
     "type": "function",
     "name": "_panelSessionClose",
     "file": "src/core-foundation.js",
-    "line": 1626,
+    "line": 1619,
     "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1649,
+    "line": 1642,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1788,
+    "line": 1781,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1810,
+    "line": 1803,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1846,
+    "line": 1839,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1854,
+    "line": 1847,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1865,
+    "line": 1858,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1944,
+    "line": 1937,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1966,
+    "line": 1959,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
@@ -1194,13 +1201,6 @@
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
     "line": 1573,
-    "desc": "localStorage"
-  },
-  {
-    "type": "storage",
-    "name": "wordsLastSub",
-    "file": "src/core-foundation.js",
-    "line": 1585,
     "desc": "localStorage"
   },
   {
@@ -1221,7 +1221,7 @@
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1697,
+    "line": 1690,
     "desc": "Storage.set"
   },
   {
@@ -1298,14 +1298,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1636,
+    "line": 1629,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1640,
+    "line": 1633,
     "desc": "db.run"
   },
   {
@@ -6324,175 +6324,175 @@
     "type": "function",
     "name": "strandWeightsLoad",
     "file": "src/features-progress.js",
-    "line": 618,
+    "line": 617,
     "desc": ""
   },
   {
     "type": "function",
     "name": "strandWeightsRender",
     "file": "src/features-progress.js",
-    "line": 631,
+    "line": 630,
     "desc": "const el = document.getElementById('strandWeightsGrid');"
   },
   {
     "type": "function",
     "name": "strandWeightsSave",
     "file": "src/features-progress.js",
-    "line": 649,
+    "line": 648,
     "desc": "const out = {};"
   },
   {
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 669,
+    "line": 668,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 679,
+    "line": 678,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 878,
+    "line": 877,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 962,
+    "line": 961,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 1070,
+    "line": 1069,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1158,
+    "line": 1157,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1224,
+    "line": 1223,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1249,
+    "line": 1248,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1291,
+    "line": 1290,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1336,
+    "line": 1335,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1353,
+    "line": 1352,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1393,
+    "line": 1392,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1401,
+    "line": 1400,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1472,
+    "line": 1471,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1516,
+    "line": 1515,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1526,
+    "line": 1525,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1555,
+    "line": 1554,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1612,
+    "line": 1611,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1667,
+    "line": 1666,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1681,
+    "line": 1680,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1693,
+    "line": 1692,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };"
   },
   {
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1707,
+    "line": 1706,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');"
   },
   {
@@ -9026,14 +9026,28 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 605,
+    "line": 608,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 609,
+    "line": 612,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 627,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 631,
     "desc": "db.run"
   },
   {
