@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=1780505747">
+<link rel="stylesheet" href="style.css?v=1780509267">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -149,6 +149,9 @@
       <option value="days">Days</option>
       <option value="anki">Anki</option>
       <option value="game">Pictures</option>
+      <option value="hiragana">ひらがな</option>
+      <option value="katakana">カタカナ</option>
+      <option value="words">言葉</option>
     </select>
   </div>
 </div>
@@ -484,133 +487,6 @@
     <div class="chat-messages" id="chatMessages" style="flex:1;overflow-y:auto;min-height:300px;max-height:calc(100vh - 320px)"></div>
   </div>
 
-  <!-- KANA DRILL -->
-  <div id="panel-kana" class="panel">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;min-height:38px">
-      <div class="drill-mode-bar" style="margin-bottom:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
-
-        <div id="kanaTimerRow" style="display:flex;align-items:center;gap:10px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);margin-left:8px">
-          <span>⏱</span>
-          <select class="select-std" id="kanaTimerSelect" onchange="setKanaTimer(parseInt(this.value))">
-            <option value="0" selected>Off</option>
-            <option value="2">2s</option>
-            <option value="3">3s</option>
-            <option value="4">4s</option>
-          </select>
-
-        </div>
-      </div>
-      <div style="position:relative;height:36px;display:flex;align-items:center" id="kanaRightSlot">
-      <div id="kanaStrokeInputRow" style="display:none;align-items:flex-start;gap:10px">
-        <div style="display:flex;flex-direction:column;align-self:center;gap:2px">
-          <div id="strokeReadingsDisplay" style="font-family:var(--jp);font-size:2.2rem;color:var(--teal);white-space:nowrap"></div>
-          <div id="strokeMeaningDisplay" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);white-space:nowrap"></div>
-          <div id="strokeWordMeaning" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink);white-space:nowrap"></div>
-        </div>
-        <div id="strokeInputWrap" style="display:flex;align-items:center;gap:6px">
-          <input id="strokeSearchInput" type="text"
-            style="width:200px;padding:7px 12px;background:#000;border:1px solid var(--border);
-                   border-radius:4px;color:var(--ink);font-family:var(--jp);font-size:1.4rem;
-                   outline:none;text-align:center;caret-color:var(--teal)"
-            placeholder="日本語" maxlength="12"
-            oninput="strokeOnInput(this)"
-            onkeydown="handleStrokeKey(event)">
-        </div>
-        <div id="strokeTilesInline" style="display:flex;flex-direction:row;gap:6px;align-items:flex-end;overflow-x:auto"></div>
-        <div id="strokeEditWrap" style="display:none;align-items:flex-start;gap:6px">
-          <button class="btn-action" id="strokeEditBtn" onclick="strokeShowInput()">Edit</button>
-          <button class="btn-action" id="strokeKanjiBtn" onclick="kanaToKanji(document.getElementById('strokeSearchInput'), this)">漢字</button>
-        </div>
-      </div>
-      </div><!-- end right-slot wrapper -->
-    </div>
-    <div class="drill-container">
-      <div class="drill-stats-row">
-        <div>Correct: <strong id="drillCorrect">0</strong></div>
-        <div>Wrong: <strong id="drillWrong">0</strong></div>
-        <div>Remaining: <strong id="drillRemaining">0</strong></div>
-        <div id="kanaSessionInfo" style="font-family:var(--ui);font-size:0.78rem;color:var(--teal)"></div>
-        <div id="timerDisplay" style="display:none;font-family:var(--ui);align-items:center;gap:6px">
-          ⏱ <strong id="timerVal" style="font-size:2.2rem;color:var(--ink)">3</strong>s
-        </div>
-      </div>
-      <div id="timerBarWrap" style="display:none;width:100%;height:3px;background:var(--border);margin:6px 0 2px">
-        <div id="timerBar" style="height:3px;background:var(--teal);width:100%;"></div>
-      </div>
-      <div class="drill-progress" id="drillProgress"></div>
-      <div style="position:relative;display:inline-block">
-        <div class="drill-char" id="drillChar"></div>
-        <button class="btn-action" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">Listen</button>
-      </div>
-      <div id="kanaWordHint" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);text-align:center;min-height:1.2em;margin-bottom:4px"></div>
-      <div class="feedback-msg" id="feedbackMsg"></div>
-      <div class="answer-area" style="display:flex;gap:8px;justify-content:center;align-items:center">
-        <input type="text" class="answer-input" id="answerInput" placeholder="type romanization..."
-               autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
-               onkeydown="handleKanaKey(event)" oninput="handleKanaInput(this)">
-        <button class="btn-nav" id="skipKanaBtn" onclick="skipKana()">Next</button>
-      </div>
-
-
-      <!-- Words mode options -->
-      <div id="wordsDrillOptions" style="display:none;margin-top:16px;padding:12px;background:rgba(48,213,200,0.05);border:1px solid var(--border);border-radius:8px">
-        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Mode:</span>
-            <select class="select-std" id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)">
-              <option value="kana2rom">カタカナ → romaji</option>
-              <option value="kana2en" selected>カタカナ → English</option>
-              <option value="en2kana">English → カタカナ</option>
-              <option value="listen">🔊 Listening</option>
-              <option value="multi">Multiple Choice</option>
-            </select>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Category:</span>
-            <select class="select-std" id="wordsCategorySelect" onchange="setWordsCategory(this.value)">
-              <option value="all">All categories</option>
-              <option value="food">🍜 Food & Drink</option>
-              <option value="tech">💻 Tech</option>
-              <option value="travel">✈️ Travel</option>
-              <option value="fashion">👔 Fashion</option>
-              <option value="fun">🎮 Fun & Sports</option>
-              <option value="work">💼 Work</option>
-              <option value="places">🏠 Places</option>
-              <option value="health">🏥 Health</option>
-            </select>
-          </div>
-        </div>
-        <div id="wordsCategoryLabel" style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--teal);font-family:var(--ui);display:none"></div>
-      </div>
-
-      <!-- Multiple choice options (hidden by default) -->
-      <div id="wordsMultiChoice" style="display:none;margin-top:12px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto">
-          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(0)"></button>
-          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(1)"></button>
-          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(2)"></button>
-          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(3)"></button>
-        </div>
-      </div>
-
-    </div>
-
-    <hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div id="kanaProgressLabel" style="font-family:var(--ui);font-size:0.8rem;letter-spacing:0.08em;color:var(--ink-light)">
-        Your Progress Map — <span style="color:var(--teal)">■</span> mastered &nbsp; <span style="color:var(--red)">■</span> needs work
-      </div>
-    </div>
-    <div class="kana-grid" id="kanaGrid"></div>
-
-    <div id="kanaStrokesPanel" style="display:none;margin-top:8px;overflow-x:auto">
-      <div id="strokeTiles" style="display:none"></div><!-- kept for JS compat -->
-      <div id="strokeDisplay" style="min-width:fit-content"></div>
-    </div>
-    <div class="footer-lower"><div class="footer-lower-row" id="kanaFooterLower"></div></div>
-    <div class="footer-upper" id="kanaFooterUpper"></div>
-
-  </div>
 
   <!-- VOCAB -->
   <div id="panel-words" class="panel">
@@ -914,6 +790,126 @@
       </div>
 
     </div>
+    <div id="words-sub-hiragana" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;min-height:38px">
+      <div class="drill-mode-bar" style="margin-bottom:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px">
+
+        <div id="kanaTimerRow" style="display:flex;align-items:center;gap:10px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);margin-left:8px">
+          <span>⏱</span>
+          <select class="select-std" id="kanaTimerSelect" onchange="setKanaTimer(parseInt(this.value))">
+            <option value="0" selected>Off</option>
+            <option value="2">2s</option>
+            <option value="3">3s</option>
+            <option value="4">4s</option>
+          </select>
+
+        </div>
+      </div>
+      <div style="position:relative;height:36px;display:flex;align-items:center" id="kanaRightSlot">
+      <div id="kanaStrokeInputRow" style="display:none;align-items:flex-start;gap:10px">
+        <div style="display:flex;flex-direction:column;align-self:center;gap:2px">
+          <div id="strokeReadingsDisplay" style="font-family:var(--jp);font-size:2.2rem;color:var(--teal);white-space:nowrap"></div>
+          <div id="strokeMeaningDisplay" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);white-space:nowrap"></div>
+          <div id="strokeWordMeaning" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink);white-space:nowrap"></div>
+        </div>
+        <div id="strokeInputWrap" style="display:flex;align-items:center;gap:6px">
+          <input id="strokeSearchInput" type="text"
+            style="width:200px;padding:7px 12px;background:#000;border:1px solid var(--border);
+                   border-radius:4px;color:var(--ink);font-family:var(--jp);font-size:1.4rem;
+                   outline:none;text-align:center;caret-color:var(--teal)"
+            placeholder="日本語" maxlength="12"
+            oninput="strokeOnInput(this)"
+            onkeydown="handleStrokeKey(event)">
+        </div>
+        <div id="strokeTilesInline" style="display:flex;flex-direction:row;gap:6px;align-items:flex-end;overflow-x:auto"></div>
+        <div id="strokeEditWrap" style="display:none;align-items:flex-start;gap:6px">
+          <button class="btn-action" id="strokeEditBtn" onclick="strokeShowInput()">Edit</button>
+          <button class="btn-action" id="strokeKanjiBtn" onclick="kanaToKanji(document.getElementById('strokeSearchInput'), this)">漢字</button>
+        </div>
+      </div>
+      </div><!-- end right-slot wrapper -->
+    </div>
+    <div class="drill-container">
+      <div class="drill-stats-row">
+        <div>Correct: <strong id="drillCorrect">0</strong></div>
+        <div>Wrong: <strong id="drillWrong">0</strong></div>
+        <div>Remaining: <strong id="drillRemaining">0</strong></div>
+        <div id="kanaSessionInfo" style="font-family:var(--ui);font-size:0.78rem;color:var(--teal)"></div>
+        <div id="timerDisplay" style="display:none;font-family:var(--ui);align-items:center;gap:6px">
+          ⏱ <strong id="timerVal" style="font-size:2.2rem;color:var(--ink)">3</strong>s
+        </div>
+      </div>
+      <div id="timerBarWrap" style="display:none;width:100%;height:3px;background:var(--border);margin:6px 0 2px">
+        <div id="timerBar" style="height:3px;background:var(--teal);width:100%;"></div>
+      </div>
+      <div class="drill-progress" id="drillProgress"></div>
+      <div style="position:relative;display:inline-block">
+        <div class="drill-char" id="drillChar"></div>
+      </div>
+      <div id="kanaWordHint" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);text-align:center;min-height:1.2em;margin-bottom:4px"></div>
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <div class="answer-area" style="display:flex;gap:8px;justify-content:center;align-items:center">
+        <input type="text" class="answer-input" id="answerInput" placeholder="type romanization..."
+               autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+               onkeydown="handleKanaKey(event)" oninput="handleKanaInput(this)">
+
+      </div>
+
+
+      <!-- Words mode options -->
+      <div id="wordsDrillOptions" style="display:none;margin-top:16px;padding:12px;background:rgba(48,213,200,0.05);border:1px solid var(--border);border-radius:8px">
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Mode:</span>
+            <select class="select-std" id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)">
+              <option value="kana2rom">カタカナ → romaji</option>
+              <option value="kana2en" selected>カタカナ → English</option>
+              <option value="en2kana">English → カタカナ</option>
+              <option value="listen">🔊 Listening</option>
+              <option value="multi">Multiple Choice</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Category:</span>
+            <select class="select-std" id="wordsCategorySelect" onchange="setWordsCategory(this.value)">
+              <option value="all">All categories</option>
+              <option value="food">🍜 Food & Drink</option>
+              <option value="tech">💻 Tech</option>
+              <option value="travel">✈️ Travel</option>
+              <option value="fashion">👔 Fashion</option>
+              <option value="fun">🎮 Fun & Sports</option>
+              <option value="work">💼 Work</option>
+              <option value="places">🏠 Places</option>
+              <option value="health">🏥 Health</option>
+            </select>
+          </div>
+        </div>
+        <div id="wordsCategoryLabel" style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--teal);font-family:var(--ui);display:none"></div>
+      </div>
+
+      <!-- Multiple choice options (hidden by default) -->
+      <div id="wordsMultiChoice" style="display:none;margin-top:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto">
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(0)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(1)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(2)"></button>
+          <button class="multi-choice-btn btn-group" onclick="checkMultiChoice(3)"></button>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div id="kanaStrokesPanel" style="display:none;margin-top:8px;overflow-x:auto">
+      <div id="strokeTiles" style="display:none"></div><!-- kept for JS compat -->
+      <div id="strokeDisplay" style="min-width:fit-content"></div>
+    </div>
+    <div class="footer-lower"><div class="footer-lower-row" id="kanaFooterLower"></div></div>
+    <div class="footer-upper" id="kanaFooterUpper"><button class="btn-action" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">Listen</button><button class="btn-nav" id="skipKanaBtn" onclick="skipKana()">Next</button></div>
+    </div>
+    <div id="words-sub-katakana" style="display:none"></div>
+    <div id="words-sub-words" style="display:none"></div>
   </div><!-- end panel-words -->
 
 

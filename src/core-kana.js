@@ -319,7 +319,7 @@ function kanaShowMastery() {
   let html = (allDone
     ? '<span style="color:var(--teal)">All ' + KanaDrillState.mode + ' mastered! Maintenance only.</span>'
     : '<span style="color:var(--gold)">Today\'s session complete — ' + stats.mastered + '/' + stats.total + ' mastered</span>')
-    + '<br><button onclick="kanaStartFreshSession()" style="margin-top:8px;padding:6px 16px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer">New session anyway</button>';
+    
 
   if (fbEl) { fbEl.innerHTML = html; fbEl.className = 'feedback-msg'; }
   document.getElementById('skipKanaBtn').textContent = 'New Session →';

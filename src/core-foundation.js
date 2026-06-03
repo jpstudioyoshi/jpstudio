@@ -1587,7 +1587,7 @@ function kanjiRefToggle() {
 }
 
 function wordsSwitchSub(name) {
-  ['vocab','anki','game','counters','days','kana'].forEach(s => {
+  ['vocab','anki','game','counters','days','kana','hiragana','katakana','words'].forEach(s => {
     const el = document.getElementById('words-sub-' + s);
     const btn = document.getElementById('words-sub-btn-' + s);
     if (el) el.style.display = s === name ? 'block' : 'none';
@@ -1599,6 +1599,14 @@ function wordsSwitchSub(name) {
   if (name === 'days') daysOfMonthInit();
   if (name === 'game') { /* game initialises on click */ }
   if (name === 'kana') { if (typeof initKanaDrill === 'function') initKanaDrill(); }
+  if (name === 'hiragana' || name === 'katakana' || name === 'words') {
+    // All three share the hiragana subtab DOM
+    const h = document.getElementById('words-sub-hiragana');
+    if (h) h.style.display = 'block';
+    const modeMap = { hiragana: 'hiragana', katakana: 'katakana', words: 'words' };
+    if (typeof setKanaMode === 'function') setKanaMode(modeMap[name]);
+    if (typeof initKanaDrill === 'function') initKanaDrill();
+  }
 }
 
 // ── Panel session timer ──────────────────────────────────────────────────────
