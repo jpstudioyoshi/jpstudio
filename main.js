@@ -303,6 +303,14 @@ function createSchema() {
       recommendation  TEXT,
       accepted        INTEGER
     );
+    CREATE TABLE IF NOT EXISTS transcript_vocab (
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id  TEXT NOT NULL,
+      word        TEXT NOT NULL,
+      reading     TEXT,
+      meaning     TEXT,
+      created_at  TEXT NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS grammar_mastery (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       node_id       TEXT NOT NULL,

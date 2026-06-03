@@ -159,46 +159,77 @@ See below.
 
 ## Yoshi-Driven Learning (Phase 4)
 
-Two concrete features to build, both depending on AnalysisService audit first:
+### Audits complete
+- **AnalysisService** ✅ — fully built, extracts keyVocab + grammarPoints, but orphaned (never called)
+- **Orchestrator** ✅ — analyzeLesson() never wired into pipeline; ANALYSIS_COMPLETE never emitted
+
+### Two vocabulary sources — kept separate by design
+| Source | Table | Path | Trust level |
+|---|---|---|---|
+| WhatsApp / doc-paste | `lesson_phrases` | lessonNotesExtract*Silent | High — curated, confirmed communication |
+| Audio transcript analysis | `transcript_vocab` (new) | AnalysisService.analyzeLesson() | Softer — Claude's interpretation |
+
+WhatsApp vocab is the truth. Audio-derived vocab refers to it. Never mix into the same table.
+Grammar from doc-paste stays in `LessonNotesState.grammar` (memory only for now).
+`extracted_grammar` column on `lesson_sessions` — exists, dead, available for audio grammar tags.
+
+### Pipeline gap to fill
+`_runProcessingPipeline` in Orchestrator.js currently:
+1. Transcribes → merges → saves → emits SESSION_SAVED
+2. **Never calls analyzeLesson()**
+3. `analysis: {}` is persisted into notes_text on every save
+
+Fix: after `_currentSession.merge()`, before `saveSession()`:
+- Call `AnalysisService.analyzeLesson(session)`
+- Persist `keyVocab` → new `transcript_vocab` table
+- Persist `grammarPoints` → `lesson_sessions.extracted_grammar`
+- Emit `ANALYSIS_COMPLETE` with analysis object
+- StudentModel listens → feeds vocab to SRS, flags grammar against GrammarModel
 
 ### 4a — Vocabulary: less arbitrary, more contextual
-**Current state:** Words deck is frequency-based N5 list, arbitrary relative to actual learning.
-**Target:** SRS deck driven by words encountered in real Yoshi conversations + N5 core.
-**Nation rationale:** Words encountered in meaningful context are the ones worth drilling.
-**Infrastructure needed:**
-- AnalysisService audit — what vocabulary does it currently extract from Yoshi transcripts?
-- Connection: Yoshi transcript vocab → SRS deck (new words added on session save)
-- Scope: N5 words + Yoshi session vocabulary initially
-**Prerequisite:** AnalysisService audit
+**Current state:** Words deck is frequency-based N5 list, arbitrary.
+**Target:** SRS deck includes words from real Yoshi conversations + N5 core.
+**Nation rationale:** Words encountered in meaningful context are worth drilling.
+**New table needed:**
+```sql
+CREATE TABLE IF NOT EXISTS transcript_vocab (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id  TEXT NOT NULL,
+  word        TEXT NOT NULL,
+  reading     TEXT,
+  meaning     TEXT,
+  created_at  TEXT NOT NULL
+);
+```
+**Pipeline:** SESSION_SAVED → analyzeLesson() → transcript_vocab → SRS deck on next open
 
 ### 4b — Grammar points → Genki display integration
-**Current state:** Genki taxonomy in progress panel is static display, no connection to activity.
-**Target:** Grammar forms encountered in Yoshi sessions light up relevant Genki sections.
-**Initial behaviour:** "You used/encountered passive form — here's the Genki chapter" prompt.
+**Current state:** Genki taxonomy in progress panel is static, no connection to activity.
+**Target:** Grammar forms from Yoshi sessions light up relevant Genki sections.
+**Initial behaviour:** "You used passive form — here's the Genki chapter" prompt.
 **Later behaviour:** Auto-generate sentence drill sentences targeting that form.
-**Nation rationale:** Gap detection — form encountered in input but not yet studied deliberately.
-**Infrastructure needed:**
-- AnalysisService audit — does it tag grammar points from transcripts currently?
-- Genki taxonomy audit — what grammar points are listed, what's their structure?
-- Connection: transcript grammar tags → Genki display highlights
-**Prerequisite:** AnalysisService audit + Genki taxonomy audit
+**Nation rationale:** Gap detection — form encountered in input, not yet studied deliberately.
+**Grammar mapping challenge:** `grammarPoints` from AnalysisService is free text (e.g. "て-form").
+**Options:**
+- (a) Post-processing pass maps free text → GrammarModel node IDs
+- (b) Extend AnalysisService prompt to request Genki chapter numbers directly ← preferred
+**Prerequisite:** Genki taxonomy audit (what grammar points, how structured)
 
-### Required audit before building either feature
-AnalysisService (`src/services/AnalysisService.js`) — Claude Code session:
-- What does it currently extract from a Yoshi transcript?
-- Does it tag vocabulary? Grammar points? Both?
-- How reliable/complete is the extraction?
-- What format does it return — structured JSON, free text, both?
-- Is it currently connected to anything downstream?
+### Build sequence for Phase 4
+1. Add `transcript_vocab` table to schema
+2. Wire `analyzeLesson()` into Orchestrator pipeline
+3. Emit `ANALYSIS_COMPLETE`
+4. StudentModel subscribes → writes transcript_vocab, flags extracted_grammar
+5. Genki taxonomy audit → map grammar tags
+6. Wire grammar highlights to progress panel Genki display
 
 ---
 
 ## Pending Audits
 
-1. **AnalysisService** — prerequisite for Phase 4 (vocab + Genki integration)
-2. **Genki taxonomy** — what grammar points, how structured, wired to anything?
-3. **AppEvents usage** — which panels currently emit/listen beyond what we wired
-4. **Data audit** — run app through typical session, verify DB writes vs expectations
+1. **Genki taxonomy** ← next — what grammar points, structure, wired to anything?
+2. **AppEvents usage** — which panels emit/listen beyond what we wired
+3. **Data audit** — run typical session, verify DB writes vs expectations
 
 ---
 

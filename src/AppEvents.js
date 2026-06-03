@@ -53,6 +53,8 @@ const AppEvents = (() => {
     FLUENCY_432:    'fluency:432',       // { activity, durationSeconds }
     SESSION_TIME:   'session:time',      // { panel, seconds }
 
+    ANALYSIS_COMPLETE:     'ANALYSIS_COMPLETE',    // { session, analysis }
+
     // Errors
     RECORDING_ERROR:        'RECORDING_ERROR',      // { message }
     TRANSCRIPTION_ERROR:    'TRANSCRIPTION_ERROR',  // { track, message }

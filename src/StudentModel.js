@@ -638,6 +638,47 @@ const StudentModel = (() => {
     });
     });
 
+    // Analysis complete — persist vocab and grammar evidence
+    AE.on(AE.ANALYSIS_COMPLETE, async (payload) => {
+      const { session, analysis } = payload || {};
+      if (!analysis || !session?.id) return;
+      const ts = new Date().toISOString();
+      // Persist keyVocab → transcript_vocab
+      if (Array.isArray(analysis.keyVocab) && window.db) {
+        for (const v of analysis.keyVocab) {
+          if (!v.jp) continue;
+          window.db.run(
+            'INSERT OR IGNORE INTO transcript_vocab (session_id, word, reading, meaning, created_at) VALUES (?,?,?,?,?)',
+            [session.id, v.jp, v.reading || '', v.en || '', ts]
+          ).catch(() => {});
+        }
+      }
+      // Persist grammarPoints → grammar_mastery as 'encountered' evidence
+      if (Array.isArray(analysis.grammarPoints) && window.db) {
+        const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;
+        if (GM) {
+          await GM.reload();
+          const coverageMap = GM.getCoverageMap();
+          for (const point of analysis.grammarPoints) {
+            // Fuzzy match free-text grammar point against node labels
+            const needle = point.toLowerCase().replace(/[〜～]/g, '').trim();
+            const match = coverageMap.find(n =>
+              n.label.toLowerCase().includes(needle) ||
+              needle.includes(n.label.toLowerCase()) ||
+              n.id.replace(/_/g,' ').includes(needle)
+            );
+            if (match) {
+              try {
+                await GM.recordEvidence(match.id, 'encountered', 0.5,
+                  JSON.stringify({ count: 1, last_session: ts, text: point.slice(0, 80) }));
+              } catch(e) {}
+            }
+          }
+        }
+      }
+      invalidate();
+    });
+
     console.log('[StudentModel] subscribed to', events.length, 'AppEvents');
   }
 

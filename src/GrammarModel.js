@@ -25,6 +25,7 @@ const GrammarModel = (() => {
     conjugation_drill:0.6,   // conjugation drill results
     counter_drill:    0.5,   // counter drill
     question:         0.3,   // question asked about this node — engagement signal, not mastery
+    encountered:      0.2,   // heard/used in Yoshi session — recency signal, not mastery
     override:         1.0,   // manual override always wins
   };
 

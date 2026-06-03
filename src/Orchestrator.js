@@ -167,6 +167,15 @@ const Orchestrator = (() => {
 
     AppEvents.emit(AppEvents.TRANSCRIPTION_COMPLETE, { session: _currentSession });
 
+    // ── Analysis pass ────────────────────────────────────────────────────────
+    try {
+      const analysis = await AnalysisService.analyzeLesson(_currentSession);
+      _currentSession.analysis = analysis;
+      AppEvents.emit(AppEvents.ANALYSIS_COMPLETE, { session: _currentSession, analysis });
+    } catch(e) {
+      console.warn('[Orchestrator] Analysis failed:', e.message);
+    }
+
     try {
       await StorageService.saveSession(_currentSession);
       AppEvents.emit(AppEvents.SESSION_SAVED, { session: _currentSession });
