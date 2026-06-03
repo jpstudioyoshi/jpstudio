@@ -414,9 +414,8 @@ function renderFourStrandRecency() {
     ]},
     { label: 'FLUENCY', sub: 'using what you know', items: [
       { label: 'Speaking',     key: 'speaking',  panel: 'voice'     },
+      { label: 'Writing',      key: 'writing',   panel: 'writing'   },
       { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
-      { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
-      { label: 'Vocabulary',   key: '_vocab',    panel: 'words'     },
     ]},
   ];
   // Inject computed vocab date into rec for tile lookup
