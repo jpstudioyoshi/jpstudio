@@ -6289,210 +6289,210 @@
     "type": "function",
     "name": "_weekBounds",
     "file": "src/features-progress.js",
-    "line": 504,
+    "line": 503,
     "desc": "const now  = new Date();"
   },
   {
     "type": "function",
     "name": "_todayBounds",
     "file": "src/features-progress.js",
-    "line": 515,
+    "line": 514,
     "desc": "const now = new Date();"
   },
   {
     "type": "function",
     "name": "_filterHistory",
     "file": "src/features-progress.js",
-    "line": 521,
+    "line": 520,
     "desc": "if (!history || !history.length) return [];"
   },
   {
     "type": "function",
     "name": "_accuracyFromHistory",
     "file": "src/features-progress.js",
-    "line": 533,
+    "line": 532,
     "desc": "Falls back to all-time history when period is empty."
   },
   {
     "type": "function",
     "name": "renderStrandBalance",
     "file": "src/features-progress.js",
-    "line": 564,
+    "line": 563,
     "desc": "const el = document.getElementById('strandBalanceChart');"
   },
   {
     "type": "function",
     "name": "strandWeightsLoad",
     "file": "src/features-progress.js",
-    "line": 616,
+    "line": 618,
     "desc": ""
   },
   {
     "type": "function",
     "name": "strandWeightsRender",
     "file": "src/features-progress.js",
-    "line": 629,
+    "line": 631,
     "desc": "const el = document.getElementById('strandWeightsGrid');"
   },
   {
     "type": "function",
     "name": "strandWeightsSave",
     "file": "src/features-progress.js",
-    "line": 647,
+    "line": 649,
     "desc": "const out = {};"
   },
   {
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 667,
+    "line": 669,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 677,
+    "line": 679,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 876,
+    "line": 878,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 960,
+    "line": 962,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 1068,
+    "line": 1070,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1156,
+    "line": 1158,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1222,
+    "line": 1224,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1247,
+    "line": 1249,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1289,
+    "line": 1291,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1334,
+    "line": 1336,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1351,
+    "line": 1353,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1391,
+    "line": 1393,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1399,
+    "line": 1401,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1470,
+    "line": 1472,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1514,
+    "line": 1516,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1524,
+    "line": 1526,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1553,
+    "line": 1555,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1610,
+    "line": 1612,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1665,
+    "line": 1667,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1679,
+    "line": 1681,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1691,
+    "line": 1693,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };"
   },
   {
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1705,
+    "line": 1707,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');"
   },
   {
@@ -9026,14 +9026,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 604,
+    "line": 605,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 608,
+    "line": 609,
     "desc": "db.run"
   },
   {

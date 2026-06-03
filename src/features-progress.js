@@ -578,17 +578,16 @@ async function renderStrandBalance() {
     const rows = [1, 2, 3, 4].map(n => {
       const mins = sb.strands[n] || 0;
       const pct  = total > 0 ? Math.round(mins / total * 100) : 0;
-      const count = sessions[n] || 0;
+      const yMins = (sb.yoshiMins || {})[n] || 0;
+      const yPct  = total > 0 ? Math.round(yMins / total * 100) : 0;
+      const oPct  = Math.max(0, pct - yPct);
       const color = mins === 0 ? 'var(--error, #e05)' : pct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
-      const countStr = count > 0 ? count + (count === 1 ? ' session' : ' sessions') : 'none';
+      const barHtml = yPct > 0
+        ? `<div style="width:${yPct}%;height:100%;background:var(--teal);border-radius:3px 0 0 3px;display:inline-block"></div><div style="width:${oPct}%;height:100%;background:${color};display:inline-block"></div>`
+        : `<div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>`;
       return `<div style="margin-bottom:7px">
-        <div style="display:flex;justify-content:space-between;font-family:var(--ui);font-size:0.72rem;margin-bottom:2px">
-          <span style="color:var(--ink)">${n} — ${LABELS[n]}</span>
-          <span style="color:${color};font-size:0.68rem">${countStr}</span>
-        </div>
-        <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">
-          <div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>
-        </div>
+        <div style="font-family:var(--ui);font-size:0.72rem;margin-bottom:2px;color:var(--ink)">${n} — ${LABELS[n]}</div>
+        <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">${barHtml}</div>
       </div>`;
     }).join('');
     el.innerHTML = `<div style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);opacity:0.6;margin-bottom:6px">last 7 days</div>` + rows;

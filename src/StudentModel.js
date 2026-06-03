@@ -387,24 +387,26 @@ const StudentModel = (() => {
       } catch(e) {}
       const strands = { 1: 0, 2: 0, 3: 0, 4: 0 };
       const sessions = { 1: 0, 2: 0, 3: 0, 4: 0 };
+      const yoshiMins = { 1: 0, 2: 0, 3: 0, 4: 0 };
       for (const r of (rows || [])) {
         const dur = r.duration_s || 0;
         const wKey = PANEL_TO_WEIGHT[r.panel];
         const w = weights && wKey ? weights[wKey] : null;
+        const isYoshi = r.panel === 'yoshi';
         if (w) {
-          if (w.s1 > 0) { strands[1] += dur * (w.s1 / 100); sessions[1]++; }
-          if (w.s2 > 0) { strands[2] += dur * (w.s2 / 100); sessions[2]++; }
-          if (w.s3 > 0) { strands[3] += dur * (w.s3 / 100); sessions[3]++; }
-          if (w.s4 > 0) { strands[4] += dur * (w.s4 / 100); sessions[4]++; }
+          if (w.s1 > 0) { strands[1] += dur * (w.s1 / 100); sessions[1]++; if (isYoshi) yoshiMins[1] += dur * (w.s1 / 100); }
+          if (w.s2 > 0) { strands[2] += dur * (w.s2 / 100); sessions[2]++; if (isYoshi) yoshiMins[2] += dur * (w.s2 / 100); }
+          if (w.s3 > 0) { strands[3] += dur * (w.s3 / 100); sessions[3]++; if (isYoshi) yoshiMins[3] += dur * (w.s3 / 100); }
+          if (w.s4 > 0) { strands[4] += dur * (w.s4 / 100); sessions[4]++; if (isYoshi) yoshiMins[4] += dur * (w.s4 / 100); }
         } else {
           const s = FALLBACK_STRAND[r.panel];
-          if (s) { strands[s] += dur; sessions[s]++; }
+          if (s) { strands[s] += dur; sessions[s]++; if (isYoshi) yoshiMins[s] += dur; }
         }
       }
       // Convert to minutes
-      for (const k of [1,2,3,4]) strands[k] = Math.round(strands[k] / 60);
+      for (const k of [1,2,3,4]) { strands[k] = Math.round(strands[k] / 60); yoshiMins[k] = Math.round(yoshiMins[k] / 60); }
       const totalMins = Object.values(strands).reduce((a, b) => a + b, 0);
-      return { strands, sessions, totalMins, hasData: totalMins > 0 };
+      return { strands, sessions, yoshiMins, totalMins, hasData: totalMins > 0 };
     } catch(e) { return { strands: { 1: 0, 2: 0, 3: 0, 4: 0 }, totalMins: 0, hasData: false }; }
   }
 
@@ -595,6 +597,26 @@ const StudentModel = (() => {
     AE.on(AE.RECORDING_STARTED, (payload) => {
       _recStartTime = payload?.startTime ? new Date(payload.startTime).getTime() : Date.now();
     });
+    AE.on(AE.SESSION_SAVED, (payload) => {
+      const session = payload?.session;
+      if (!session) return;
+      const dur = session.durationSeconds || 0;
+      if (dur < 30) return;
+      const startedAt = session.startTime ? new Date(session.startTime).toISOString() : new Date(Date.now() - dur * 1000).toISOString();
+      const endedAt = session.endTime ? new Date(session.endTime).toISOString() : new Date().toISOString();
+      if (typeof window !== 'undefined' && window.db) {
+        window.db.run(
+          'INSERT INTO panel_sessions (panel, strand, started_at, ended_at, duration_s) VALUES (?,?,?,?,?)',
+          ['yoshi', 2, startedAt, endedAt, dur]
+        ).catch(() => {});
+        window.db.run(
+          'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
+          [endedAt, 'yoshi', 'session:time', JSON.stringify({ strand: 2, duration_s: dur, source: 'yoshi' })]
+        ).catch(() => {});
+      }
+      invalidate();
+    });
+
     AE.on(AE.RECORDING_STOPPED, (payload) => {
       if (!_recStartTime) return;
       const dur = payload?.durationSecs || Math.round((Date.now() - _recStartTime) / 1000);
