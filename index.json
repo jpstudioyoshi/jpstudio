@@ -1124,76 +1124,76 @@
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
     "line": 1589,
-    "desc": "['vocab','anki','game','counters','days','kana'].forEach(s => {"
+    "desc": "['vocab','anki','game','counters','days','kana','hiragana','katakana','words'].forEach(s => {"
   },
   {
     "type": "function",
     "name": "_panelInteractPing",
     "file": "src/core-foundation.js",
-    "line": 1615,
+    "line": 1623,
     "desc": "_panelLastInteract = Date.now(); }"
   },
   {
     "type": "function",
     "name": "_panelSessionClose",
     "file": "src/core-foundation.js",
-    "line": 1620,
+    "line": 1628,
     "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1643,
+    "line": 1651,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1783,
+    "line": 1791,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1805,
+    "line": 1813,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1841,
+    "line": 1849,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1849,
+    "line": 1857,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1860,
+    "line": 1868,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1939,
+    "line": 1947,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1961,
+    "line": 1969,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
@@ -1221,7 +1221,7 @@
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1692,
+    "line": 1700,
     "desc": "Storage.set"
   },
   {
@@ -1298,14 +1298,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1630,
+    "line": 1638,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1634,
+    "line": 1642,
     "desc": "db.run"
   },
   {

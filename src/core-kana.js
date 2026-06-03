@@ -631,7 +631,7 @@ document.addEventListener('keydown', e => {
     if (skipBtn && (skipBtn.textContent.includes('New Session') || skipBtn.textContent.includes('Next Run'))) {
       e.preventDefault();
       e.stopPropagation();
-      skipKana();
+      if (KanaDrillState.sessionRun === 0) { kanaStartFreshSession(); } else { skipKana(); }
       return;
     }
     return;
@@ -675,6 +675,8 @@ function updateDrillStats() {
 }
 
 function renderDrillProgress() {
+  if (!document.getElementById("drillProgress")) return;
+  if (!document.getElementById("drillProgress")) return;
   const el = document.getElementById('drillProgress');
   el.innerHTML = KanaDrillState.results.slice(0, KanaDrillState.queue.length).map((r, i) =>
     `<div class="progress-dot ${r==='correct'?'done':r==='wrong'?'wrong-dot':i===KanaDrillState.idx?'current':''}"></div>`
@@ -707,6 +709,7 @@ function showDrillComplete() {
 }
 
 function renderKanaGrid() {
+  if (!document.getElementById("kanaGrid")) return;
   const allKana = (KanaDrillState.mode === 'katakana' || KanaDrillState.mode === 'words') ? KATAKANA : HIRAGANA;
   const el = document.getElementById('kanaGrid');
   el.innerHTML = allKana.map(k => {

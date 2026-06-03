@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=1780509267">
+<link rel="stylesheet" href="style.css?v=1780510617">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -856,36 +856,7 @@
       </div>
 
 
-      <!-- Words mode options -->
-      <div id="wordsDrillOptions" style="display:none;margin-top:16px;padding:12px;background:rgba(48,213,200,0.05);border:1px solid var(--border);border-radius:8px">
-        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Mode:</span>
-            <select class="select-std" id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)">
-              <option value="kana2rom">カタカナ → romaji</option>
-              <option value="kana2en" selected>カタカナ → English</option>
-              <option value="en2kana">English → カタカナ</option>
-              <option value="listen">🔊 Listening</option>
-              <option value="multi">Multiple Choice</option>
-            </select>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:0.72rem;color:var(--ink-light);font-family:var(--ui)">Category:</span>
-            <select class="select-std" id="wordsCategorySelect" onchange="setWordsCategory(this.value)">
-              <option value="all">All categories</option>
-              <option value="food">🍜 Food & Drink</option>
-              <option value="tech">💻 Tech</option>
-              <option value="travel">✈️ Travel</option>
-              <option value="fashion">👔 Fashion</option>
-              <option value="fun">🎮 Fun & Sports</option>
-              <option value="work">💼 Work</option>
-              <option value="places">🏠 Places</option>
-              <option value="health">🏥 Health</option>
-            </select>
-          </div>
-        </div>
-        <div id="wordsCategoryLabel" style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--teal);font-family:var(--ui);display:none"></div>
-      </div>
+
 
       <!-- Multiple choice options (hidden by default) -->
       <div id="wordsMultiChoice" style="display:none;margin-top:12px">
@@ -905,8 +876,27 @@
       <div id="strokeTiles" style="display:none"></div><!-- kept for JS compat -->
       <div id="strokeDisplay" style="min-width:fit-content"></div>
     </div>
-    <div class="footer-lower"><div class="footer-lower-row" id="kanaFooterLower"></div></div>
-    <div class="footer-upper" id="kanaFooterUpper"><button class="btn-action" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">Listen</button><button class="btn-nav" id="skipKanaBtn" onclick="skipKana()">Next</button></div>
+    <div class="footer-lower"><div class="footer-lower-row" id="kanaFooterLower">
+        <select class="select-std" id="wordsChallengeMode" onchange="setWordsChallengeMode(this.value)">
+          <option value="kana2rom">カタカナ → romaji</option>
+          <option value="kana2en" selected>カタカナ → English</option>
+          <option value="en2kana">English → カタカナ</option>
+          <option value="listen">🔊 Listening</option>
+          <option value="multi">Multiple Choice</option>
+        </select>
+        <select class="select-std" id="wordsCategorySelect" onchange="setWordsCategory(this.value)">
+          <option value="all">All categories</option>
+          <option value="food">🍜 Food & Drink</option>
+          <option value="tech">💻 Tech</option>
+          <option value="travel">✈️ Travel</option>
+          <option value="fashion">👔 Fashion</option>
+          <option value="fun">🎮 Fun & Sports</option>
+          <option value="work">💼 Work</option>
+          <option value="places">🏠 Places</option>
+          <option value="health">🏥 Health</option>
+        </select>
+      </div></div>
+    <div class="footer-upper" id="kanaFooterUpper"><button class="btn-action" id="kanaTtsBtn" onclick="kanaSpeakCurrent()" title="Listen">Listen</button><button class="btn-nav" id="skipKanaBtn" onclick="KanaDrillState.sessionRun===0 ? kanaStartFreshSession() : skipKana()">Next</button></div>
     </div>
     <div id="words-sub-katakana" style="display:none"></div>
     <div id="words-sub-words" style="display:none"></div>
@@ -2758,7 +2748,7 @@
 <script src="src/core-foundation.js?v=20260603"></script>
 <script src="src/core-anki.js?v=20260603"></script>
 <script src="src/core-kana-drill.js?v=20260603"></script>
-<script src="src/core-kana.js?v=20260603"></script>
+<script src="src/core-kana.js?v=1780509638"></script>
 <script src="src/core-counters.js?v=20260603"></script>
 <script src="src/core-srs.js?v=20260603"></script>
 <script src="src/core-stt.js?v=20260603"></script>

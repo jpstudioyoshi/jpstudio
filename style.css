@@ -2831,3 +2831,5 @@
    footer-lower:     bottom: 0;    height: 10vh; left: 52px; right: 0
    sidebar width:    52px
    ============================================================ */
+  #drillProgress { display: none !important; }
+  #drillProgress { display: none !important; }
