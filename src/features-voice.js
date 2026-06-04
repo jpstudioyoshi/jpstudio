@@ -1529,7 +1529,9 @@ function fttStartRound() {
   const mins = [4, 3, 2][VoiceState.ftt_round - 1] || 2;
   VoiceState.ftt_minutes = mins;
   voiceUpdateStatus('Round ' + VoiceState.ftt_round + ' — speak freely');
-  const timerEl = document.getElementById('fttTimerRow');
+  const timerEl = document.getElementById('ftt432Timer');
+  const footerLower = document.getElementById('voiceFooterLower');
+  if (footerLower) footerLower.style.display = '';
   if (timerEl) { timerEl.textContent = mins + ':00'; timerEl.style.display = 'block'; }
   // Countdown timer
   let secs = mins * 60;
