@@ -2849,13 +2849,11 @@
   .fs-1 { font-size: var(--fs-1); }
   .fs-2 { font-size: var(--fs-2); }
   .fs-3 { font-size: var(--fs-3); }
-  .fs-1 * { font-size: var(--fs-1); }
-  .fs-2 * { font-size: var(--fs-2); }
-  .fs-3 * { font-size: var(--fs-3); }
   .fs-4 { font-size: var(--fs-4); }
-  .fs-4 * { font-size: var(--fs-4); }
   .fs-body { font-size: var(--fs-body); }
-  .fs-body * { font-size: var(--fs-body); }
-  .fs-body { font-size: var(--fs-body); }
-  .fs-body * { font-size: var(--fs-body); }
+  .fs-1 p, .fs-1 li, .fs-1 span, .fs-1 td, .fs-1 h1, .fs-1 h2, .fs-1 h3 { font-size: var(--fs-1); }
+  .fs-2 p, .fs-2 li, .fs-2 span, .fs-2 td, .fs-2 h1, .fs-2 h2, .fs-2 h3 { font-size: var(--fs-2); }
+  .fs-3 p, .fs-3 li, .fs-3 span, .fs-3 td, .fs-3 h1, .fs-3 h2, .fs-3 h3 { font-size: var(--fs-3); }
+  .fs-4 p, .fs-4 li, .fs-4 span, .fs-4 td, .fs-4 h1, .fs-4 h2, .fs-4 h3 { font-size: var(--fs-4); }
+  .fs-body p, .fs-body li, .fs-body span, .fs-body td, .fs-body h1, .fs-body h2, .fs-body h3, .fs-body blockquote { font-size: var(--fs-body); }
   #agentClaudeThread { font-size: var(--fs-body); }
