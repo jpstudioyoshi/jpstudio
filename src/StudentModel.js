@@ -375,11 +375,11 @@ const StudentModel = (() => {
       );
       // Load saved weights or fall back to defaults
       const PANEL_TO_WEIGHT = {
-        grammar2: 'conjugation', voice: 'voice', lessonnotes: 'yoshi',
+        grammar2: 'conjugation', fluency432: 'fluency432', voice: 'voice', lessonnotes: 'yoshi',
         writing: 'writing', read: 'read', listen: 'listen', video: 'video',
         words: 'words', kana: 'kana', sentences: 'sentences'
       };
-      const FALLBACK_STRAND = { listen:1, read:1, video:1, voice:2, lessonnotes:2, writing:2, grammar2:3, words:3, kana:3, sentences:2 };
+      const FALLBACK_STRAND = { listen:1, read:1, video:1, voice:2, lessonnotes:2, writing:2, grammar2:3, words:3, kana:3, sentences:2, fluency432:4 };
       let weights = null;
       try {
         const w = (typeof Storage !== 'undefined' ? Storage : window.Storage)?.getJSON('STRAND_WEIGHTS', null);

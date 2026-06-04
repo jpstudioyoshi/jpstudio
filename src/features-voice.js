@@ -1621,6 +1621,12 @@ function fttShowFinal() {
         'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
         [_ts, '432', payload.topic, null, null]
       ).catch(() => {});
+      const _dur_s = (payload.delivery_1_s || 0) + (payload.delivery_2_s || 0) + (payload.delivery_3_s || 0);
+      const _started = new Date(Date.now() - _dur_s * 1000).toISOString();
+      window.db.run(
+        'INSERT INTO panel_sessions (panel, strand, duration_s, started_at, ended_at) VALUES (?,?,?,?,?)',
+        ['fluency432', 4, _dur_s, _started, _ts]
+      ).catch(() => {});
     }
   } catch(e) { console.warn('fttShowFinal instrumentation error:', e); }
 }
