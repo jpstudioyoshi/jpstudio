@@ -435,13 +435,13 @@ English text: "${text}"`;
         const word = parts[0]||'';
         return `<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:5px 0;border-bottom:1px solid var(--border);align-items:center">
           <span style="font-family:var(--jp);font-size:1rem;min-width:60px;cursor:pointer;display:flex;align-items:center;gap:5px" onclick="jpSpeak('${word.replace(/'/g,"\'")}',0.85)" title="Hear pronunciation">${escBdHtml(word)}<span style="font-size:0.6rem;color:var(--ink-light)">🔊</span></span>
-          <span style="font-family:var(--ui);font-size:0.9rem;color:var(--ink-light)">${escBdHtml(parts.slice(1).join(' — '))}</span>
+          <span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${escBdHtml(parts.slice(1).join(' — '))}</span>
         </div>`;
       }).join('')
     );
     fillTab('transBdGrammar', parsed.grammar_notes, v => {
       const notes = Array.isArray(v) ? v : [v];
-      return notes.map(n => `<div style="padding:6px 0 6px 12px;border-left:2px solid var(--teal);margin-bottom:8px;font-family:var(--ui);font-size:0.9rem;line-height:1.6">${escBdHtml(n)}</div>`).join('');
+      return notes.map(n => `<div style="padding:6px 0 6px 12px;border-left:2px solid var(--teal);margin-bottom:8px;font-family:var(--ui);font-size:inherit;line-height:1.6">${escBdHtml(n)}</div>`).join('');
     });
     // Auto-show spelling tab if issues found, otherwise keep current tab
     const spellingHasIssues = parsed.spelling_suggestions && !parsed.spelling_suggestions.includes('No issues');
@@ -454,10 +454,10 @@ English text: "${text}"`;
           const v = parsed.spelling_suggestions;
           return v.split('\n').filter(l=>l.trim()).map(line => {
             const parts = line.split('→').map(p=>p.trim());
-            if (parts.length < 2) return `<div style="font-family:var(--ui);font-size:0.83rem;padding:4px 0">${escBdHtml(line)}</div>`;
+            if (parts.length < 2) return `<div style="font-family:var(--ui);font-size:inherit;padding:4px 0">${escBdHtml(line)}</div>`;
             const [wrong, rest] = parts;
             const [correct, ...expl] = (rest||'').split('—').map(p=>p.trim());
-            return `<div style="font-family:var(--ui);font-size:0.83rem;padding:4px 0"><span style="color:var(--red);text-decoration:line-through">${escBdHtml(wrong)}</span> → <span style="color:var(--sage)">${escBdHtml(correct)}</span>${expl.length ? `<span style="color:var(--ink-light);margin-left:6px">${escBdHtml(expl.join(' '))}</span>` : ''}</div>`;
+            return `<div style="font-family:var(--ui);font-size:inherit;padding:4px 0"><span style="color:var(--red);text-decoration:line-through">${escBdHtml(wrong)}</span> → <span style="color:var(--sage)">${escBdHtml(correct)}</span>${expl.length ? `<span style="color:var(--ink-light);margin-left:6px">${escBdHtml(expl.join(' '))}</span>` : ''}</div>`;
           }).join('');
         })();
       }
@@ -467,10 +467,10 @@ English text: "${text}"`;
     }
 
     fillTab('transBdSpelling', parsed.spelling_suggestions, v => {
-      if (v.includes('No issues')) return `<div style="font-family:var(--ui);font-size:0.85rem;color:var(--sage);padding:8px 0">✓ ${escBdHtml(v)}</div>`;
+      if (v.includes('No issues')) return `<div style="font-family:var(--ui);font-size:inherit;color:var(--sage);padding:8px 0">✓ ${escBdHtml(v)}</div>`;
       return v.split('\n').filter(l=>l.trim()).map(line => {
         const parts = line.split('→').map(p=>p.trim());
-        if (parts.length < 2) return `<div style="font-family:var(--ui);font-size:0.85rem;padding:6px 0">${escBdHtml(line)}</div>`;
+        if (parts.length < 2) return `<div style="font-family:var(--ui);font-size:inherit;padding:6px 0">${escBdHtml(line)}</div>`;
         const [wrong, rest] = parts;
         const [correct, ...expl] = (rest||'').split('—').map(p=>p.trim());
         return `<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px 10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">
@@ -481,13 +481,13 @@ English text: "${text}"`;
       }).join('');
     });
     fillTab('transBdLevel', parsed.level_note, v =>
-      `<div style="font-family:var(--ui);font-size:0.87rem;line-height:1.7">${escBdHtml(v)}</div>`
+      `<div style="font-family:var(--ui);font-size:inherit;line-height:1.7">${escBdHtml(v)}</div>`
     );
     fillTab('transBdAlt', parsed.alternatives, v => {
       const alts = Array.isArray(v) ? v : (typeof v === 'string' ? v.split('\n').filter(l=>l.trim()) : []);
       return alts.map((a, i) => `<div style="display:flex;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border)">
         <span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);min-width:1.2rem">${i+1}</span>
-        <span style="font-family:var(--jp);font-size:0.97rem;line-height:1.7">${escBdHtml(a)}</span>
+        <span style="font-family:var(--jp);font-size:inherit;line-height:1.7">${escBdHtml(a)}</span>
       </div>`).join('');
     });
 
@@ -562,11 +562,11 @@ function renderTransHistory() {
       <div style="display:flex;gap:10px;align-items:flex-start">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-            <span class="trans-session-jp" style="font-family:var(--jp);font-size:0.95rem;color:var(--ink);cursor:pointer" onclick="loadTransHistory(${i})" title="Click to reload">${escBdHtml(h.src)}</span>
+            <span class="trans-session-jp" style="font-family:var(--jp);font-size:inherit;color:var(--ink);cursor:pointer" onclick="loadTransHistory(${i})" title="Click to reload">${escBdHtml(h.src)}</span>
             ${h.reading ? `<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${escBdHtml(h.reading)}</span>` : ''}
           </div>
-          <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-bottom:4px">${escBdHtml(h.tgt)}</div>
-          ${h.notes ? `<div style="font-family:var(--ui);font-size:0.78rem;color:var(--teal);font-style:italic;margin-top:4px">📝 ${escBdHtml(h.notes)}</div>` : ''}
+          <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);margin-bottom:4px">${escBdHtml(h.tgt)}</div>
+          ${h.notes ? `<div style="font-family:var(--ui);font-size:inherit;color:var(--teal);font-style:italic;margin-top:4px">📝 ${escBdHtml(h.notes)}</div>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
           <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">${h.time || ''}</span>
@@ -603,7 +603,7 @@ function loadTransHistory(i) {
         const word = parts[0]||'';
         return `<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:5px 0;border-bottom:1px solid var(--border);align-items:center">
           <span style="font-family:var(--jp);font-size:1rem;min-width:60px;cursor:pointer;display:flex;align-items:center;gap:5px" onclick="jpSpeak('${word.replace(/'/g,"\\'")}',0.85)" title="Hear pronunciation">${escBdHtml(word)}<span style="font-size:0.6rem;color:var(--ink-light)">🔊</span></span>
-          <span style="font-family:var(--ui);font-size:0.9rem;color:var(--ink-light)">${escBdHtml(parts.slice(1).join(' — '))}</span>
+          <span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${escBdHtml(parts.slice(1).join(' — '))}</span>
         </div>`;
       }).join('');
       bdEl.className = 'trans-breakdown-body';
@@ -613,7 +613,7 @@ function loadTransHistory(i) {
     const gramEl = document.getElementById('transBdGrammar');
     if (gramEl) {
       const notes = Array.isArray(h.grammar) ? h.grammar : [h.grammar];
-      gramEl.innerHTML = notes.map(n => `<div style="padding:6px 0 6px 12px;border-left:2px solid var(--teal);margin-bottom:8px;font-family:var(--ui);font-size:0.9rem;line-height:1.6">${escBdHtml(n)}</div>`).join('');
+      gramEl.innerHTML = notes.map(n => `<div style="padding:6px 0 6px 12px;border-left:2px solid var(--teal);margin-bottom:8px;font-family:var(--ui);font-size:inherit;line-height:1.6">${escBdHtml(n)}</div>`).join('');
       gramEl.className = 'trans-breakdown-body';
     }
   }

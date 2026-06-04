@@ -386,7 +386,7 @@ function lessonNotesRenderDrillCard() {
     
     // Show hints if enabled
     if (LessonNotesState.showReading && reading && LessonNotesState.drillRevealed < 1) {
-      hints = `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink-light);margin-top:4px">${reading}</div>`;
+      hints = `<div style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);margin-top:4px">${reading}</div>`;
     }
   } else if (LessonNotesState.drillMode === 'jp2reading' || LessonNotesState.drillMode === 'jp2en') {
     prompt = word;
@@ -395,10 +395,10 @@ function lessonNotesRenderDrillCard() {
     
     // Show hints if enabled
     if (LessonNotesState.showMeaning && meaning && LessonNotesState.drillRevealed < 2) {
-      hints = `<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-top:4px">${meaning}</div>`;
+      hints = `<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);margin-top:4px">${meaning}</div>`;
     }
     if (LessonNotesState.showReading && reading && LessonNotesState.drillRevealed < 1) {
-      hints = `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink-light);margin-top:4px">${reading}</div>`;
+      hints = `<div style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);margin-top:4px">${reading}</div>`;
     }
   } else if (LessonNotesState.drillMode === 'listening') {
     const safeWord = word.replace(/'/g, "\\'");
@@ -469,7 +469,7 @@ function lessonNotesShowMastered() {
       <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">MASTERED WORDS (${words.length})</span>
       <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
     </div>
-    <div style="font-family:var(--jp);font-size:0.95rem;line-height:2;color:var(--ink);max-height:200px;overflow-y:auto">
+    <div style="font-family:var(--jp);font-size:inherit;line-height:2;color:var(--ink);max-height:200px;overflow-y:auto">
       ${words.length > 0 ? words.map(w => `<span style="display:inline-block;background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:2px 8px;margin:2px">${w}</span>`).join('') : '<span style="color:var(--ink-light)">No mastered words yet</span>'}
     </div>
   `;
@@ -521,12 +521,12 @@ async function lessonNotesBreakdown(word) {
         <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">BREAKDOWN <span style="font-size:0.65rem">📋</span></span>
         <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
       </div>
-      <div style="font-family:var(--jp);font-size:0.9rem;line-height:1.8;color:var(--ink);white-space:pre-wrap">${LessonNotesState.breakdownCache[word]}</div>
+      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${LessonNotesState.breakdownCache[word]}</div>
     `;
     return;
   }
   
-  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Breaking down "${word}"...</div>`;
+  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Breaking down "${word}"...</div>`;
   
   const apiKey = _fy_getApiKey();
   if (!apiKey) {
@@ -563,7 +563,7 @@ Keep it concise and formatted clearly.` }]
         <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">BREAKDOWN</span>
         <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
       </div>
-      <div style="font-family:var(--jp);font-size:0.9rem;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
+      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
     `;
   } catch (e) {
     area.innerHTML = `<div style="color:var(--red);font-family:var(--ui)">Error: ${e.message}</div>`;
@@ -575,7 +575,7 @@ async function lessonNotesExamples(word) {
   if (!area) return;
   
   area.style.display = 'block';
-  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Finding examples for "${word}"...</div>`;
+  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Finding examples for "${word}"...</div>`;
   
   const apiKey = _fy_getApiKey();
   if (!apiKey) {
@@ -606,7 +606,7 @@ Make sentences progressively more complex. Keep formatting clean and consistent.
         <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">EXAMPLES</span>
         <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
       </div>
-      <div style="font-family:var(--jp);font-size:0.9rem;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
+      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
     `;
   } catch (e) {
     area.innerHTML = `<div style="color:var(--red);font-family:var(--ui)">Error: ${e.message}</div>`;
@@ -826,7 +826,7 @@ function lessonNotesRenderEditView() {
   const html = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
       <button class="yoshi-read-btn" onclick="LessonNotesState.editMode=false;lessonNotesRender()">← Back to Drill</button>
-      <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink)">${currentSession?.title || 'Untitled'}</span>
+      <span style="font-family:var(--ui);font-size:inherit;color:var(--ink)">${currentSession?.title || 'Untitled'}</span>
     </div>
     
     <div id="lessonNotesDropZone" 
@@ -838,7 +838,7 @@ function lessonNotesRenderEditView() {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <input type="text" id="lessonNotesTitle" placeholder="Lesson title" 
           value="${currentSession?.title || ''}"
-          style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;border-radius:6px;outline:none">
+          style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:inherit;border-radius:6px;outline:none">
         <label style="padding:6px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);cursor:pointer">
           📄 Browse
           <input type="file" accept=".docx,.txt" onchange="lessonNotesHandleFile(this.files[0])" style="display:none">
@@ -846,7 +846,7 @@ function lessonNotesRenderEditView() {
         <button class="yoshi-read-btn" onclick="lessonNotesExtract()">✨ Re-extract</button>
       </div>
       
-      <textarea id="lessonNotesInput" style="width:100%;min-height:200px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.9rem;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>
+      <textarea id="lessonNotesInput" style="width:100%;min-height:200px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:inherit;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>
     </div>
   `;
   
@@ -1279,7 +1279,7 @@ try {
     if (!bar) return;
     bar.style.display = 'flex';
     bar.innerHTML =
-      '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--gold);flex:1">'
+      '<span style="font-family:var(--ui);font-size:inherit;color:var(--gold);flex:1">'
       + '⏺ Recording saved — ready to transcribe</span>'
       + '<button class="btn-action" id="yoshiTranscribeNowBtn" onclick="yoshiTranscribeNow()" '
       + 'style="font-size:0.75rem;padding:4px 14px">⚙ Transcribe now</button>';
@@ -1295,7 +1295,7 @@ async function yoshiTranscribeNow() {
     if (!sessionId) throw new Error('No pending session');
     await Orchestrator.transcribeSession(sessionId);
     const bar = document.getElementById('yoshiTranscribeBar');
-    if (bar) bar.innerHTML = '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--teal)">✓ Transcription complete</span>';
+    if (bar) bar.innerHTML = '<span style="font-family:var(--ui);font-size:inherit;color:var(--teal)">✓ Transcription complete</span>';
     await Orchestrator.loadSessions();
     lessonNotesRenderPanel();
   } catch(e) {
@@ -1554,8 +1554,8 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
     const safeText = msg.text.replace(/'/g, "\\'");
     uRight.innerHTML =
       '<span style="color:var(--ink-light);flex-shrink:0;font-size:0.68rem;min-width:44px;padding-top:2px">' + esc(msg.time) + '</span>' +
-      '<span style="color:var(--ink-light);line-height:1.6;font-size:0.92rem;flex:1;font-style:italic">' + esc(msg.text) + '</span>' +
-      '<button onclick="event.stopPropagation();lnTtsAndPause(\'' + safeText + '\')" style="background:none;border:none;cursor:pointer;font-size:0.85rem;flex-shrink:0;padding:0 2px">🔊</button>';
+      '<span style="color:var(--ink-light);line-height:1.6;font-size:inherit;flex:1;font-style:italic">' + esc(msg.text) + '</span>' +
+      '<button onclick="event.stopPropagation();lnTtsAndPause(\'' + safeText + '\')" style="background:none;border:none;cursor:pointer;font-size:inherit;flex-shrink:0;padding:0 2px">🔊</button>';
     uRow.appendChild(uLeft);
     uRow.appendChild(uRight);
     elFresh.appendChild(uRow);
@@ -1578,7 +1578,7 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
     left.onclick = (function(sec){ return function(){ lnSeekToTime(sec); }; })(ts);
     left.innerHTML =
       '<span title="' + offsetStr + '" style="color:var(--teal);flex-shrink:0;font-size:0.68rem;font-variant-numeric:tabular-nums;min-width:44px;padding-top:2px;opacity:0.7">' + timeStr + '</span>' +
-      '<span style="color:var(--ink);line-height:1.6;font-size:0.92rem">' + esc(t.text||'') + '</span>';
+      '<span style="color:var(--ink);line-height:1.6;font-size:inherit">' + esc(t.text||'') + '</span>';
     const right = document.createElement('div');
     right.style.cssText = 'display:flex;flex-direction:column;padding:5px 4px 5px 10px';
     if (yoshiForRow.length) {
@@ -1590,8 +1590,8 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
         const safeText = msg.text.replace(/'/g, "\\'");
         msgEl.innerHTML =
           '<span style="color:var(--gold);flex-shrink:0;font-size:0.68rem;min-width:44px;padding-top:2px;font-variant-numeric:tabular-nums;opacity:0.7">' + esc(msg.time) + '</span>' +
-          '<span style="color:var(--ink);line-height:1.6;font-size:0.92rem;flex:1">' + esc(msg.text) + '</span>' +
-          '<button onclick="event.stopPropagation();lnTtsAndPause(\'' + safeText + '\')" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:0.85rem;flex-shrink:0;padding:0 2px;opacity:0.6">🔊</button>';
+          '<span style="color:var(--ink);line-height:1.6;font-size:inherit;flex:1">' + esc(msg.text) + '</span>' +
+          '<button onclick="event.stopPropagation();lnTtsAndPause(\'' + safeText + '\')" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:inherit;flex-shrink:0;padding:0 2px;opacity:0.6">🔊</button>';
         right.appendChild(msgEl);
       });
       row.style.background = 'rgba(255,214,10,0.03)';
@@ -1628,7 +1628,7 @@ async function renderRecordingsBrowser() {
   const recs = (window._lessonRecordingSessions || []).slice(); // newest first
 
   if (!recs.length) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px">No recordings yet.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px">No recordings yet.</div>';
     return;
   }
 
@@ -1657,7 +1657,7 @@ async function renderRecordingsBrowser() {
     html += `<div style="border-bottom:1px solid var(--border);padding:12px 4px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <div style="flex:1">
-          <div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink);font-weight:600">${esc(dt)}</div>
+          <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);font-weight:600">${esc(dt)}</div>
           <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:2px">
             ${dur} &nbsp;·&nbsp; <span style="color:${transcribedColor}">${transcribed}</span>
           </div>

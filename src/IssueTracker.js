@@ -220,7 +220,7 @@ function issueTrackerRender() {
   );
 
   if (!filtered.length) {
-    el.innerHTML = `<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0;text-align:center">
+    el.innerHTML = `<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0;text-align:center">
       ${issues.length ? 'No issues match the current filter.' : 'No issues logged yet. Add one above.'}
     </div>`;
     _itRenderGroupBar();
@@ -239,7 +239,7 @@ function issueTrackerRender() {
         <input type="checkbox" ${checked} onchange="itToggleSelect(${issue.id}, this.checked)"
           style="flex-shrink:0;width:15px;height:15px;cursor:pointer;accent-color:var(--teal)">
         <span style="flex-shrink:0;font-size:1rem;cursor:pointer" onclick="itToggleExpand(${issue.id})">${t.emoji}</span>
-        <span style="flex:1;font-family:var(--ui);font-size:0.82rem;color:var(--ink);font-weight:500;cursor:pointer" onclick="itToggleExpand(${issue.id})">${_itEsc(issue.title)}</span>
+        <span style="flex:1;font-family:var(--ui);font-size:inherit;color:var(--ink);font-weight:500;cursor:pointer" onclick="itToggleExpand(${issue.id})">${_itEsc(issue.title)}</span>
         <span style="font-family:var(--ui);font-size:0.68rem;color:${p.color};flex-shrink:0">${p.label}</span>
         <span style="font-family:var(--ui);font-size:0.68rem;color:${s.color};flex-shrink:0;min-width:64px;text-align:right">${s.label}</span>
         <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);flex-shrink:0">${date}</span>
@@ -278,7 +278,7 @@ function _itRenderGroupBar() {
     return;
   }
   bar.style.display = 'flex';
-  bar.innerHTML = `<span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">${n} issues selected</span>
+  bar.innerHTML = `<span style="font-family:var(--ui);font-size:inherit;color:var(--ink)">${n} issues selected</span>
     <button class="btn-action btn-sm" style="margin-left:auto" onclick="itCopyGroupPrompt()">Copy group prompt</button>
     <button class="btn-action btn-sm" style="color:var(--ink-light)" onclick="itClearSelection()">✕ Clear</button>`;
 }
@@ -292,7 +292,7 @@ function issueTrackerRenderFull() {
 
   container.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-      <div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">${open} open · ${total} total</div>
+      <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${open} open · ${total} total</div>
       <div style="display:flex;gap:8px;align-items:center">
         <select id="itFilterType" onchange="issueTrackerRender()" style="padding:4px 8px;font-family:var(--ui);font-size:0.75rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:4px">
           <option value="all">All types</option>
@@ -313,18 +313,18 @@ function issueTrackerRenderFull() {
     <div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:16px">
       <div style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:12px">NEW ISSUE</div>
       <input id="itNewTitle" type="text" placeholder="Title — one clear sentence"
-        style="width:100%;padding:8px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);box-sizing:border-box;margin-bottom:8px;outline:none">
+        style="width:100%;padding:8px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box;margin-bottom:8px;outline:none">
       <textarea id="itNewDesc" rows="3" placeholder="Steps to reproduce / what you expected / what happened instead"
-        style="width:100%;padding:8px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);box-sizing:border-box;resize:vertical;margin-bottom:8px;outline:none"></textarea>
+        style="width:100%;padding:8px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box;resize:vertical;margin-bottom:8px;outline:none"></textarea>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <select id="itNewType" style="padding:6px 10px;font-family:var(--ui);font-size:0.78rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:5px">
+        <select id="itNewType" style="padding:6px 10px;font-family:var(--ui);font-size:inherit;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:5px">
           ${Object.entries(IssueTracker.TYPES).map(([k,v]) => `<option value="${k}">${v.emoji} ${v.label}</option>`).join('')}
         </select>
-        <select id="itNewPriority" style="padding:6px 10px;font-family:var(--ui);font-size:0.78rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:5px">
+        <select id="itNewPriority" style="padding:6px 10px;font-family:var(--ui);font-size:inherit;background:var(--field);border:1px solid var(--field-border);color:var(--ink);border-radius:5px">
           ${Object.entries(IssueTracker.PRIORITIES).map(([k,v]) => `<option value="${k}"${k==='medium'?' selected':''}>${v.label}</option>`).join('')}
         </select>
         <input id="itNewPanel" type="text" placeholder="Panel (optional: e.g. voice, anki)"
-          style="flex:1;min-width:120px;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);outline:none">
+          style="flex:1;min-width:120px;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:inherit;color:var(--ink);outline:none">
         <button class="btn-action" onclick="itAdd()">+ Add</button>
       </div>
     </div>

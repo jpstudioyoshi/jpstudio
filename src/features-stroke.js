@@ -197,7 +197,7 @@ function strokeSelectChar(idx) {
   const magnifyBtn = document.createElement('button');
   magnifyBtn.textContent = '⤢';
   magnifyBtn.title = 'Magnify';
-  magnifyBtn.style.cssText = 'background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.9rem;padding:0 2px;line-height:1;opacity:0.6;transition:opacity 0.15s';
+  magnifyBtn.style.cssText = 'background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:inherit;padding:0 2px;line-height:1;opacity:0.6;transition:opacity 0.15s';
   magnifyBtn.onmouseover = () => magnifyBtn.style.opacity = '1';
   magnifyBtn.onmouseout  = () => magnifyBtn.style.opacity = '0.6';
   magnifyBtn.onclick = () => strokeMagnify(ch);
@@ -286,7 +286,7 @@ function strokeSelectChar(idx) {
     
     // RTK keyword display
     const rtkKeywordEl = document.createElement('span');
-    rtkKeywordEl.style.cssText = 'font-family:var(--ui);font-size:0.78rem;color:var(--ink);font-style:italic;margin-left:auto';
+    rtkKeywordEl.style.cssText = 'font-family:var(--ui);font-size:inherit;color:var(--ink);font-style:italic;margin-left:auto';
     
     // Look up keyword from RTK_KANJI array
     const rtkEntry = RTK_KANJI.find(e => e.k === ch);
@@ -309,7 +309,7 @@ function strokeSelectChar(idx) {
     koohiiLblRow.appendChild(rtkKeywordEl);
     
     const koohiiContent = document.createElement('div');
-    koohiiContent.style.cssText = 'background:#111;padding:14px;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;line-height:1.7;min-height:' + SZ + 'px;max-height:' + SZ + 'px;overflow-y:auto;display:none;word-wrap:break-word';
+    koohiiContent.style.cssText = 'background:#111;padding:14px;border:1px solid var(--border);border-radius:6px;font-size:inherit;line-height:1.7;min-height:' + SZ + 'px;max-height:' + SZ + 'px;overflow-y:auto;display:none;word-wrap:break-word';
     koohiiContent.innerHTML = '<span style="color:var(--ink-light)">Loading...</span>';
     
     showBtn.onclick = () => {
@@ -442,7 +442,7 @@ async function strokeFetchKoohii(ch, container) {
     } else {
       const storiesHtml = stories.map((s, i) => `
         <div style="margin-bottom:${i < stories.length - 1 ? '12px' : '0'};padding-bottom:${i < stories.length - 1 ? '12px' : '0'};border-bottom:${i < stories.length - 1 ? '1px solid var(--border)' : 'none'}">
-          <div style="font-size:0.82rem;line-height:1.6">${s.text}</div>
+          <div style="font-size:inherit;line-height:1.6">${s.text}</div>
           <div style="font-size:0.68rem;color:var(--ink-light);margin-top:6px">— ${s.author} (${s.votes} votes)</div>
         </div>
       `).join('');

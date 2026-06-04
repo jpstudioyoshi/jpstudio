@@ -21,6 +21,10 @@
     --jp: 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', sans-serif;
     --panel: #2c2c2e;
     --panel: #2c2c2e;
+    --fs-1: 0.72rem;
+    --fs-2: 0.85rem;
+    --fs-3: 1.0rem;
+    --fs-4: 1.4rem;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 17px; }
@@ -2833,3 +2837,14 @@
    ============================================================ */
   #drillProgress { display: none !important; }
   #drillProgress { display: none !important; }
+
+  /* ── Font size scales ── */
+  .fs-1 { font-size: var(--fs-1); }
+  .fs-2 { font-size: var(--fs-2); }
+  .fs-3 { font-size: var(--fs-3); }
+  .fs-1 * { font-size: var(--fs-1); }
+  .fs-2 * { font-size: var(--fs-2); }
+  .fs-3 * { font-size: var(--fs-3); }
+  .fs-4 { font-size: var(--fs-4); }
+  .fs-4 * { font-size: var(--fs-4); }
+  #agentClaudeThread { font-size: var(--fs-4); }

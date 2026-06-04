@@ -415,7 +415,7 @@ function qtHistoryUpdate() {
       else if (cached.text) preview = cached.text;
     }
     if (preview.length > 30) preview = preview.slice(0, 30) + '…';
-    return `<div onclick="selectQTHistory('${w.replace(/'/g, "\\'")}')" style="padding:6px 12px;cursor:pointer;font-family:var(--jp);font-size:0.82rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:8px" onmouseover="this.style.background='var(--field)'" onmouseout="this.style.background='none'">
+    return `<div onclick="selectQTHistory('${w.replace(/'/g, "\\'")}')" style="padding:6px 12px;cursor:pointer;font-family:var(--jp);font-size:inherit;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:8px" onmouseover="this.style.background='var(--field)'" onmouseout="this.style.background='none'">
       <span style="color:var(--teal)">${w}</span>
       <span style="color:var(--ink-light);font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${preview}</span>
     </div>`;
@@ -797,8 +797,8 @@ function renderLookupsTable() {
 
     return `<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:7px 10px;font-family:var(--jp);font-size:1rem;color:var(--teal)">${escHtml(kanjiDisplay)}</td>
-      <td style="padding:7px 10px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light)">${escHtml(kanaDisplay)}</td>
-      <td style="padding:7px 10px;font-size:0.85rem;color:var(--ink)">${enDisplay}</td>
+      <td style="padding:7px 10px;font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(kanaDisplay)}</td>
+      <td style="padding:7px 10px;font-size:inherit;color:var(--ink)">${enDisplay}</td>
       <td style="padding:7px 6px;text-align:center;font-family:var(--ui);font-size:0.75rem;color:${cntColor};font-weight:${cnt>=3?700:400}">${cnt > 1 ? cnt : ''}</td>
       <td style="padding:7px 4px;text-align:center">
         <button class="btn-icon" onclick="lookupDelete(this.dataset.word)"
@@ -1785,6 +1785,30 @@ function showPanel(id) {
     _panelLastInteract  = Date.now();
   }
 }
+
+// ── Simple markdown renderer for Claude responses ──────────────────────────
+function renderMarkdown(text) {
+  if (!text) return '';
+  let html = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    // Headers
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:inherit;font-weight:600;margin:12px 0 4px;color:var(--ink)">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:1.1em;font-weight:600;margin:14px 0 6px;color:var(--ink)">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:1.2em;font-weight:700;margin:16px 0 8px;color:var(--ink)">$1</h1>')
+    // Dividers
+    .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:12px 0">')
+    // Bold and italic
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Blockquotes
+    .replace(/^&gt; (.+)$/gm, '<div style="border-left:3px solid var(--teal);padding-left:10px;color:var(--ink-light);margin:6px 0">$1</div>')
+    // Line breaks
+    .replace(/\n\n/g, '</p><p style="margin-top:10px">')
+    .replace(/\n/g, '<br>');
+  return '<p style="margin:0">' + html + '</p>';
+}
+window.renderMarkdown = renderMarkdown;
+
 window.showPanel = showPanel;
 
 // ── Settings tab switcher ─────────────────────────────────────────────────────
@@ -1870,12 +1894,12 @@ async function stRenderGrammarOverride() {
   if (!el) return;
 
   if (typeof GrammarModel === 'undefined') {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">GrammarModel not loaded.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">GrammarModel not loaded.</div>';
     return;
   }
 
   if (!GrammarModel.loaded) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">Loading…</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">Loading…</div>';
     await GrammarModel.load();
   }
 
@@ -1934,7 +1958,7 @@ async function stRenderGrammarOverride() {
           + opt.label + '</button>';
       }
       html += '</div>';
-      html += '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">' + node.label + '</div>';
+      html += '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink)">' + node.label + '</div>';
       html += '</div>';
     }
 

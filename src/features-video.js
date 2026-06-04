@@ -1150,7 +1150,7 @@ async function vtShowBreakdown() {
   
   popup.style.display = 'block';
   lineEl.innerHTML = text;
-  contentEl.innerHTML = '<span style="color:var(--ink-light);font-size:0.85rem">Loading breakdown…</span>';
+  contentEl.innerHTML = '<span style="color:var(--ink-light);font-size:inherit">Loading breakdown…</span>';
   
   // Pause video
   const video = document.getElementById('vtVideo');
@@ -1824,7 +1824,7 @@ function resourcesEdit(idx) {
     <div style="display:flex;flex-direction:column;gap:8px">
       <div style="display:flex;gap:8px;align-items:center">
         <input type="text" id="res-edit-icon-${idx}" value="${r.icon || '🔗'}" style="width:40px;padding:6px;text-align:center;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-size:1.1rem">
-        <input type="text" id="res-edit-name-${idx}" value="${r.name}" placeholder="Name" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:0.85rem">
+        <input type="text" id="res-edit-name-${idx}" value="${r.name}" placeholder="Name" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:inherit">
       </div>
       <input type="text" id="res-edit-url-${idx}" value="${r.url}" placeholder="URL" style="padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:0.8rem">
       <textarea id="res-edit-desc-${idx}" placeholder="Description" style="padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:0.8rem;resize:vertical;min-height:50px">${r.desc || ''}</textarea>
@@ -2044,7 +2044,7 @@ function vtTranslateWord(word, event) {
   popup.style.left = x + 'px';
   popup.style.top  = y + 'px';
   popup.innerHTML = `<div style="font-size:1.1rem;color:var(--ink);margin-bottom:6px">${word}</div>
-    <div id="vtWordResult" style="font-size:0.82rem;color:var(--ink-light)">Translating…</div>
+    <div id="vtWordResult" style="font-size:inherit;color:var(--ink-light)">Translating…</div>
     <button class="btn-icon" onclick="document.getElementById('vtWordPopup').remove()">✕</button>`;
   document.body.appendChild(popup);
   document.addEventListener('click', function dismiss(e) {
@@ -2377,7 +2377,7 @@ function vtTranslateWord(word, event) {
   popup.style.left = x + 'px';
   popup.style.top  = y + 'px';
   popup.innerHTML = `<div style="font-size:1.1rem;color:var(--ink);margin-bottom:6px">${word}</div>
-    <div id="vtWordResult" style="font-size:0.82rem;color:var(--ink-light)">Translating…</div>
+    <div id="vtWordResult" style="font-size:inherit;color:var(--ink-light)">Translating…</div>
     <button class="btn-icon" onclick="document.getElementById('vtWordPopup').remove()">✕</button>`;
   document.body.appendChild(popup);
   document.addEventListener('click', function dismiss(e) {
@@ -2706,7 +2706,7 @@ async function epubLoadChapter(idx) {
   if (info) info.textContent = `${idx+1} / ${EpubState.spine.length}`;
 
   const content = document.getElementById('epubContent');
-  content.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem;padding:20px">Loading…</div>';
+  content.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:inherit;padding:20px">Loading…</div>';
 
   try {
     const chap = EpubState.spine[idx];
@@ -2754,7 +2754,7 @@ async function epubLoadChapter(idx) {
     content.scrollTop = 0;
 
   } catch(e) {
-    content.innerHTML = `<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Error loading chapter: ${e.message}</div>`;
+    content.innerHTML = `<div style="color:var(--ink-light);font-family:var(--ui);font-size:inherit">Error loading chapter: ${e.message}</div>`;
   }
 }
 
@@ -2950,7 +2950,7 @@ function vtClearTranslation() {
   const enEl = document.getElementById('vtLineEn');
   const breakdownArea = document.getElementById('vtBreakdownArea');
   if (jpEl) jpEl.textContent = '';
-  if (enEl) enEl.innerHTML = '<span style="color:var(--ink-light);font-size:0.78rem">Click Translate to translate current line</span>';
+  if (enEl) enEl.innerHTML = '<span style="color:var(--ink-light);font-size:inherit">Click Translate to translate current line</span>';
   if (breakdownArea) breakdownArea.style.display = 'none';
 }
 
@@ -3206,9 +3206,9 @@ function vtRenderVocabList(vocab) {
       <tbody>
         ${vocab.map((v, i) => `
           <tr style="border-bottom:1px solid var(--border)" data-idx="${i}">
-            <td style="padding:5px 8px;font-family:var(--jp);font-size:0.88rem;color:var(--ink);cursor:pointer" onclick="vtJumpToTime('${v.time}')" title="Jump to ${v.time}">${v.word}</td>
-            <td style="padding:5px 8px;font-family:var(--jp);font-size:0.78rem;color:var(--ink-light)">${v.reading || ''}</td>
-            <td style="padding:5px 8px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">${v.meaning}</td>
+            <td style="padding:5px 8px;font-family:var(--jp);font-size:inherit;color:var(--ink);cursor:pointer" onclick="vtJumpToTime('${v.time}')" title="Jump to ${v.time}">${v.word}</td>
+            <td style="padding:5px 8px;font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${v.reading || ''}</td>
+            <td style="padding:5px 8px;font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${v.meaning}</td>
             <td style="padding:5px 8px;text-align:right;font-family:var(--ui);font-size:0.72rem;color:var(--teal);cursor:pointer" onclick="vtJumpToTime('${v.time}')">${v.time}</td>
             <td style="padding:5px 4px;text-align:center"><button class="btn-icon" onclick="vtDeleteVocabWord(${i})" title="Remove from list">✕</button></td>
           </tr>

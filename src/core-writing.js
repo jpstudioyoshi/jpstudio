@@ -503,14 +503,14 @@ function renderFeedback(entry) {
       ${!isOk ? `<div class="fe-row"><span class="fe-label">Corrected</span>
         <span style="font-family:var(--jp);font-size:1.05rem;color:var(--ink);line-height:1.7">${highlightCorrectedParticles(entry.original||'', entry.corrected||'')}</span></div>` : ''}
       ${translation ? `<div class="fe-row"><span class="fe-label">Meaning</span>
-        <span style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);font-style:italic">${translation}</span></div>` : ''}
+        <span style="font-family:var(--ui);font-size:inherit;color:var(--ink);font-style:italic">${translation}</span></div>` : ''}
       ${note ? `<div class="fe-row"><span class="fe-label">Note</span>
-        <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);line-height:1.6">${note}</span></div>` : ''}
+        <span style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">${note}</span></div>` : ''}
       ${detail ? `<div class="fe-row" style="cursor:pointer" onclick="toggleDetail('${detailId}',this.querySelector('.fe-more-btn'))" >
         <span class="fe-label">Detail</span>
         <div style="flex:1">
           <button class="fe-more-btn">more ↓</button>
-          <div id="${detailId}" style="display:none;margin-top:6px;font-family:var(--ui);font-size:0.82rem;color:var(--ink);line-height:1.7">${detail}</div>
+          <div id="${detailId}" style="display:none;margin-top:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.7">${detail}</div>
         </div></div>` : ''}
     </div>
   `;
@@ -584,7 +584,7 @@ function renderSavedTexts() {
           <button class="btn-icon btn-icon-del" onclick="deleteSavedText(${i})" title="Delete">✕</button>
         </div>
       </div>
-      <div class="sti-preview" style="font-family:var(--jp);font-size:0.88rem;line-height:1.8;color:var(--ink);white-space:pre-wrap;user-select:text;cursor:text">${t.text}</div>
+      <div class="sti-preview" style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap;user-select:text;cursor:text">${t.text}</div>
     </div>
   `).join('');
 }

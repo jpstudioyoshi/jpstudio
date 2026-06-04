@@ -101,7 +101,7 @@ async function yoshiRunPreflight() {
   const panelEl  = document.getElementById('yoshiPreflightPanel');
   const statusEl = document.getElementById('yoshiRecordStatus');
 
-  if (panelEl)  panelEl.innerHTML  = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:12px 0">⏳ Sampling audio (4 seconds)…</div>';
+  if (panelEl)  panelEl.innerHTML  = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:12px 0">⏳ Sampling audio (4 seconds)…</div>';
   if (statusEl) statusEl.textContent = 'Running preflight…';
 
   let report;
@@ -111,7 +111,7 @@ async function yoshiRunPreflight() {
     report = await _pf2.run();
   } catch (e) {
     const msg = 'Preflight error: ' + e.message;
-    if (panelEl)  panelEl.innerHTML  = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--red,#e05050);padding:12px 0">✗ ' + msg + '</div>';
+    if (panelEl)  panelEl.innerHTML  = '<div style="font-family:var(--ui);font-size:inherit;color:var(--red,#e05050);padding:12px 0">✗ ' + msg + '</div>';
     if (statusEl) statusEl.textContent = msg;
     return;
   }
@@ -144,7 +144,7 @@ function _preflightReportHtml(report) {
                 : isWarn     ? 'var(--gold)'
                 :              'var(--red,#e05050)';
     return '<div style="display:flex;gap:10px;align-items:baseline;padding:3px 0">'
-         + '<span style="font-family:var(--ui);font-size:0.78rem;color:' + color + ';flex-shrink:0;width:16px">' + icon + '</span>'
+         + '<span style="font-family:var(--ui);font-size:inherit;color:' + color + ';flex-shrink:0;width:16px">' + icon + '</span>'
          + '<span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);flex-shrink:0;width:120px">' + label + '</span>'
          + '<span style="font-family:var(--ui);font-size:0.75rem;color:var(--ink)">' + (detail || '') + '</span>'
          + '</div>';
@@ -177,7 +177,7 @@ function _preflightReportHtml(report) {
     html += '</div>';
   }
 
-  html += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-family:var(--ui);font-size:0.78rem;color:' + statusColor + '">' + statusText + '</div>';
+  html += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-family:var(--ui);font-size:inherit;color:' + statusColor + '">' + statusText + '</div>';
   html += '</div>';
   return html;
 }
@@ -629,12 +629,12 @@ function buildChatHistoryList() {
   const list = document.getElementById('chatHistoryList');
   if (!list) return;
   const msgs = document.querySelectorAll('#chatMessages .chat-msg.user');
-  if (!msgs.length) { list.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:8px">No questions yet.</div>'; return; }
+  if (!msgs.length) { list.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:8px">No questions yet.</div>'; return; }
   list.innerHTML = '';
   msgs.forEach((msg, i) => {
     const text = msg.textContent.trim().slice(0, 80) + (msg.textContent.length > 80 ? '…' : '');
     const row = document.createElement('div');
-    row.style.cssText = 'padding:6px 8px;font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);cursor:pointer;border-radius:4px;transition:background 0.1s';
+    row.style.cssText = 'padding:6px 8px;font-family:var(--ui);font-size:inherit;color:var(--ink-light);cursor:pointer;border-radius:4px;transition:background 0.1s';
     row.textContent = (i + 1) + '. ' + text;
     row.classList.add('row-hover');
     row.onclick = () => {

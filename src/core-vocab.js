@@ -441,8 +441,8 @@ function renderVocabList() {
       onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()"
       class="row-hover">
       <span style="font-family:var(--ui);font-size:0.72rem;color:${dotColor};text-align:center">${dot}</span>
-      <span style="font-family:var(--jp);font-size:0.95rem">${escHtml(c.jp)}</span>
-      <span style="font-family:var(--jp);font-size:0.82rem;color:var(--ink-light)">${escHtml(c.kana||c.reading||'')}</span>
+      <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.jp)}</span>
+      <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.kana||c.reading||'')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.en)}</span>
       <button class="btn-action" onclick="event.stopPropagation();deleteVocabCard(${i})" title="Delete">✕</button>
     </div>`;
@@ -530,8 +530,8 @@ Reply ONLY with a JSON array, no markdown:
         '<label style="display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--border);cursor:pointer">' +
           '<input type="checkbox" class="vc-fetch-check" data-idx="' + i + '" style="accent-color:var(--teal);flex-shrink:0" checked>' +
           '<span style="font-family:var(--jp);font-size:1.1rem;min-width:60px">' + w.jp + '</span>' +
-          '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);min-width:80px">' + w.kana + '</span>' +
-          '<span style="font-family:var(--ui);font-size:0.85rem;flex:1">' + w.en + '</span>' +
+          '<span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);min-width:80px">' + w.kana + '</span>' +
+          '<span style="font-family:var(--ui);font-size:inherit;flex:1">' + w.en + '</span>' +
           '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--teal)">' + (w.pos || '') + '</span>' +
         '</label>'
       ).join('') +
@@ -692,7 +692,7 @@ function updateChatMsg(id, text) {
       const rows = match.trim().split('\n').filter(r => r.trim());
       if (rows.length < 2) return match;
       
-      let html = '<table style="border-collapse:collapse;margin:12px 0;font-size:0.9rem;width:100%">';
+      let html = '<table style="border-collapse:collapse;margin:12px 0;font-size:inherit;width:100%">';
       
       // Header row
       const headerCells = rows[0].split('|').filter(c => c.trim());
@@ -875,7 +875,7 @@ function kanjiCorpusRender() {
   if (count) count.textContent = entries.length + ' kanji';
 
   if (!entries.length) {
-    grid.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.83rem;padding:20px 0">'
+    grid.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:inherit;padding:20px 0">'
       + (KanjiCorpusState.filter === 'all' ? 'No kanji recorded yet. Use the 訳 bar to translate Japanese words.' : 'No kanji match this filter.')
       + '</div>';
     if (detail) detail.style.display = 'none';
@@ -901,7 +901,7 @@ function kanjiCorpusRender() {
         : '';
       return `<tr style="border-bottom:1px solid var(--border);cursor:pointer" onclick="kanjiCorpusShowDetail('${e.char}')">
         <td style="padding:7px 8px;font-family:var(--jp);font-size:1.2rem;width:36px">${e.char}</td>
-        <td style="padding:7px 8px;font-family:var(--ui);font-size:0.78rem;color:var(--ink)">${meaning}</td>
+        <td style="padding:7px 8px;font-family:var(--ui);font-size:inherit;color:var(--ink)">${meaning}</td>
         <td style="padding:7px 8px;font-family:var(--ui);font-size:0.72rem;color:${levelColor};width:30px">${level}</td>
         <td style="padding:7px 8px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);white-space:nowrap">${e.lookupCount}✕ looked up${srcWord}</td>
         <td style="padding:7px 4px;font-family:var(--ui);font-size:0.75rem">${producedStr}</td>
@@ -985,12 +985,12 @@ function kanjiCorpusShowDetail(char) {
     <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
       <div style="font-family:var(--jp);font-size:3rem;line-height:1">${char}</div>
       <div style="flex:1;min-width:180px">
-        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);margin-bottom:4px">
+        <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:4px">
           ${meaning} <span style="color:${levelColor};margin-left:8px">${level}</span>
         </div>
         ${e.translateMeaning && e.translateMeaning !== char
           ? `<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">
-               From word: <span style="font-family:var(--jp);font-size:0.95rem;color:var(--teal)">${escHtml(e.translateMeaning)}</span>
+               From word: <span style="font-family:var(--jp);font-size:inherit;color:var(--teal)">${escHtml(e.translateMeaning)}</span>
              </div>`
           : ''}
         <div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:2px">
@@ -1382,7 +1382,7 @@ function vcRender() {
   tbody.innerHTML = entries.map(e => `
     <tr style="border-bottom:1px solid var(--border);cursor:pointer" onclick="vcShowDetail('${e.w.replace(/'/g,"\'")}')">
       <td style="padding:6px 10px;font-family:var(--jp);font-size:1rem;color:var(--teal)">${escHtml(e.w)}</td>
-      <td style="padding:6px 8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light)">${escHtml(e.r)}</td>
+      <td style="padding:6px 8px;font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(e.r)}</td>
       <td style="padding:6px 8px;font-size:0.8rem;color:var(--ink)">${escHtml(e.m)}</td>
       <td style="padding:6px 6px;text-align:center;font-family:var(--ui);font-size:0.7rem;color:${levelColor(e.l)}">${e.l}</td>
       <td style="padding:6px 6px;text-align:center;font-family:var(--ui);font-size:0.75rem">${cntCell(e.lookupCount,'var(--ink)')}</td>
@@ -1438,7 +1438,7 @@ function vcShowDetail(word) {
         <div style="font-family:var(--jp);font-size:1rem;color:var(--ink-light);margin-top:2px">${escHtml(e.r)}</div>
       </div>
       <div style="flex:1;min-width:200px">
-        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);margin-bottom:6px">
+        <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:6px">
           ${escHtml(e.m)} <span style="color:${levelColor};margin-left:8px">${e.l}</span>${e.f ? ` <span style="color:var(--ink-light);font-size:0.75rem;margin-left:8px">freq #${e.f}</span>` : ''}
         </div>
         <table style="border-collapse:collapse;font-family:var(--ui);font-size:0.75rem;width:100%">

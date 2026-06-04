@@ -276,7 +276,7 @@ function ctrRefRenderGrid() {
     return /ぼ|ば|び|ぶ|べ/.test(reading);
   }
 
-  let html = '<table style="border-collapse:collapse;font-size:0.82rem;width:100%">';
+  let html = '<table style="border-collapse:collapse;font-size:inherit;width:100%">';
   
   // Header row
   html += '<thead><tr>';
@@ -303,7 +303,7 @@ function ctrRefRenderGrid() {
       const bg = contracted ? 'rgba(255,200,60,0.15)' : '';
       const color = contracted ? 'var(--gold)' : 'var(--ink)';
       html += `<td style="padding:7px 8px;text-align:center;background:${bg};border-radius:4px">
-        <span style="font-family:var(--jp);font-size:0.9rem;color:${color};cursor:pointer"
+        <span style="font-family:var(--jp);font-size:inherit;color:${color};cursor:pointer"
           onclick="ctrRefSetCompare('${key}')"
           title="Click to compare ${c.name}">${r}</span>
       </td>`;
@@ -407,9 +407,9 @@ function ctrRenderCompare() {
     const numColor = n === 1 || n === 6 || n === 8 || n === 10 ? 'var(--gold)' : 'var(--ink-light)';
 
     html += `<tr style="background:${rowBg};border-bottom:1px solid var(--border)">
-      <td style="padding:7px 8px;text-align:center;font-family:var(--jp);font-size:0.95rem;color:${colorA}">${ra}</td>
-      <td style="padding:7px 4px;text-align:center;font-family:var(--ui);font-size:0.78rem;font-weight:700;color:${numColor}">${n}</td>
-      <td style="padding:7px 8px;text-align:center;font-family:var(--jp);font-size:0.95rem;color:${colorB}">${rb}</td>
+      <td style="padding:7px 8px;text-align:center;font-family:var(--jp);font-size:inherit;color:${colorA}">${ra}</td>
+      <td style="padding:7px 4px;text-align:center;font-family:var(--ui);font-size:inherit;font-weight:700;color:${numColor}">${n}</td>
+      <td style="padding:7px 8px;text-align:center;font-family:var(--jp);font-size:inherit;color:${colorB}">${rb}</td>
     </tr>`;
   }
 

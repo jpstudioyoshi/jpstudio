@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-03 (session 21 — strand balance chart, Yoshi wiring, weights UI, Phase 3 complete)
+Last updated: 2026-06-03 (session 21/22 — Phase 4 pipeline wired, DrillSRS rationalized, grammar_mastery table)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -13,8 +13,7 @@ Last updated: 2026-06-03 (session 21 — strand balance chart, Yoshi wiring, wei
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
-- **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors, anything where "trace this call chain" is needed
-- Cost: Code uses more input tokens (reads full files). Chat is cheaper for small edits.
+- **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors
 - Code saves ~45-60 min vs chat for complex render path fixes.
 - Code tends to over-reach — give tight focused briefs, verify diff before committing.
 
@@ -36,131 +35,134 @@ Last updated: 2026-06-03 (session 21 — strand balance chart, Yoshi wiring, wei
 - Launch: jp && claude --model claude-opus-4-8
 - Start each session: "Read context-static.md and context-session.md only. Do not read any other files yet."
 - Cost: uses Anthropic API credits. Best for multi-file tasks. Single-file edits cheaper in chat.
-- Token tip: give tight focused briefs, one panel/file at a time.
 - Guide: claude-code-guide.md in project root
-- Switch to Opus 4.8 for hard debugging: claude config set model claude-opus-4-8
 
 ## Current Mode
-ARCHITECTURE — inter-panel communication, intelligent hub, Nation four strands framework.
-Phase 3 complete. Moving into Phase 4: Yoshi-driven learning.
+ARCHITECTURE — Phase 4 (Yoshi-driven learning) now active.
 See ARCHITECTURE_HUB.md in project Knowledge for full design.
 
 ## Thread Structure
-- **Architecture thread** — design decisions, cross-cutting concerns, doc updates (this thread)
-- **StudentModel thread** — all wiring into and out of StudentModel
+- **Architecture thread** — design decisions, audits, doc updates only (this thread)
+- **StudentModel thread** — StudentModel wiring
+- **Delegate implementation** to feature threads once decisions are made here
 - Other threads for their respective panels/features
 
 ## HTML Element Map
-`html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
+`html-map.md` in project Knowledge — check before touching any panel element.
 
 **Session 21 additions:**
-- `strandBalanceChart` — strand balance chart container, above drillRecencyGraphic in progress panel
+- `strandBalanceChart` — strand balance chart, above drillRecencyGraphic in progress panel
 - `strandWeightsGrid` — strand weights input grid in settings panel
 - `strandWeightsMsg` — "Saved" confirmation span in settings panel
 
 ## Terminal Workflow
-All edits are done via terminal — no file upload/download.
-
-**Shell aliases (in ~/.zshrc):**
-- jp — cd ~/Documents/jpStudio
-- jpstart — kill app, restart, cd to project
-- git ship — git add -A && git commit -m "update" && git push (jpsat repo)
+**Shell aliases:** jp, jpstart
 
 **Standard patterns:**
-- python3 - << 'PYEOF' for multi-line edits (most reliable — note the dash)
-- Always prefix with jp && to avoid directory drift
+- python3 - << 'PYEOF' for multi-line edits (note the dash)
+- Always prefix with jp &&
 - sed -n X,Yp file | pbcopy — read a block
-- grep -n "pattern" file | pbcopy — locate lines only
-- Update style.css?v= version string after CSS changes to bust Electron cache
-- Use date +%s for guaranteed cache bust on JS files
+- grep -n "pattern" file | pbcopy — locate lines
+- Never paste code blocks directly into terminal — always use python3 heredoc scripts
 
 **Critical lessons:**
-- python3 string matching fails silently on whitespace/encoding — use repr() to inspect before retrying
-- Template literal backticks in heredocs need careful escaping — use python3 - << 'PYEOF' with raw strings
-- Blank lines in match strings cause MATCH FAILED — always use repr() to inspect first
-- Cache buster regex was \?v=\d+ — now fixed to \?v=[^"]+ to catch letter suffixes
-- pbcopy swallows terminal output — never use it for sed -n reads, only for grep locating
-- Always use jp && prefix — never assume current directory
-- Never paste code blocks directly into terminal — always use python3 heredoc scripts
-- git stash pop restores Code session changes if accidentally stashed
+- python3 string matching — use repr() to inspect before retrying
+- Blank lines in match strings cause MATCH FAILED
+- Cache buster regex fixed: \?v=[^"]+ catches letter suffixes
+- pbcopy swallows terminal output — never for sed -n reads
+- Always jp && prefix
 
 ## Known Issues / Pre-existing
-- **DB startup errors** — `rows is not iterable` in features-progress.js. Root cause: sql.js or IPC handler. Needs investigation.
 - `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
-- Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
-- Read panel listen layout — still buggy
+
 - `countShowMastery is not defined` — core-counters.js line 926
 - `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, remove it
 
-## Session 21 — Completed Work
+## Session 21/22 — Completed Work
 
-### Cache buster fix
-- `check-syntax.js` regex fixed: `\?v=\d+` → `\?v=[^"]+`
-- Was silently skipping files with letter suffixes — likely cause of weeks of stale cache issues
+### Phase 3 complete
+- Strand balance chart live with stacked bars (Yoshi in teal)
+- Strand weights UI in settings (14 activities, auto-saves)
+- AppEvents fully wired — all panels emit, StudentModel receives
+- Voice panel time from recording events only (not panel timer)
+- Yoshi session time from SESSION_SAVED event
+- Sentence building instrumentation
+- FLUENCY tiles corrected
 
-### StudentModel fully wired
-- `invalidate()` → all 7 drill completion points
-- `snapshotAsync()` → progress panel open
-- AppEvents subscription → 7 event types
-- `AppEvents.emit()` → all 8 panel emission points
-- `SESSION_SAVED` → writes Yoshi sessions to `panel_sessions` with `panel='yoshi'`
-- `RECORDING_STARTED`/`STOPPED` → writes voice recording time to `panel_sessions`
-- Voice panel removed from `_STRAND_MAP` — timer was counting dev discussion time
+### Phase 4 — Yoshi-driven learning pipeline (complete)
 
-### Strand balance chart
-- Live in progress panel, stacked bars
-- Yoshi portion shown in teal, other activity in strand colour
-- Bar length = weighted contribution (not raw minutes)
-- Amber < 20%, red at zero
-- Re-renders on weight save (with cache invalidation)
-- Tile snippet text removed — was noise
+**grammar_mastery table created** — fixes the `rows is not iterable` startup error permanently.
+GrammarModel now loads correctly. `_loadWeightOverrides` kvAPI read bug fixed.
 
-### Strand weights UI
-- 14 activities in settings, S1-S4 inputs, auto-saves to `STRAND_WEIGHTS` kvAPI key
-- `sentences` (Sentence Building) added: S1:0, S2:100, S3:50, S4:0
-- Fluency tiles fixed: removed conjugation and vocab, added writing
+**AnalysisService wired into Orchestrator pipeline:**
+- `analyzeLesson()` now called after merge, before save
+- Returns: summary, topics, studentErrors, keyVocab, grammarPoints, grammarNodeIds, teacherNotes
+- Emits `ANALYSIS_COMPLETE` with session + analysis object
+- Prompt extended with 55 grammar node IDs — Claude returns matching node IDs directly
 
-### Sentence building instrumentation
-- `GramSentState.startedAt` added at session init
-- Completion hook writes to `panel_sessions` (`panel='sentences'`) and `learning_events`
+**Two vocabulary sources — kept separate by design:**
+- `lesson_phrases` — WhatsApp/doc-paste path (truth, curated)
+- `transcript_vocab` — audio analysis path (softer signal)
 
-### FLUENCY tiles corrected
-- Removed: Conjugation, Vocabulary
-- Added: Writing
+**StudentModel subscribes to ANALYSIS_COMPLETE:**
+- `keyVocab` → `transcript_vocab` table
+- `grammarNodeIds` → `grammar_mastery` as `encountered` evidence (weight 0.2)
+- Falls back to fuzzy matching if no node IDs returned
+
+**Genki grid — teal dot for recently encountered grammar:**
+- `encountered` evidence type added to GrammarModel (weight 0.2)
+- `getCoverageMap()` now returns `encounterCount` and `lastEncountered`
+- Teal dot on node if encountered in Yoshi session within 30 days
+
+**Storage rationalization — DrillSRS:**
+- SQL is now sole persistent store (was dual-writing to localStorage)
+- `record()` writes single item directly (was serializing entire object)
+- localStorage kept as read-only migration fallback in `hydrate()` only
+- `reset()` localStorage clear removed
+
+**Storage rationalization principle established:**
+- kvAPI: config, preferences, small UI state
+- DB: anything that needs querying, joining, or grows over time
+
+**New DB tables:**
+- `grammar_mastery` — node_id, evidence_type, score, override, last_seen, notes, UNIQUE(node_id, evidence_type)
+- `transcript_vocab` — session_id, word, reading, meaning, created_at
+
+**Kana panel:**
+- Kana drill and kanji reference moved into words panel as subtabs
+- Kana nav button removed
 
 ## Pending Work — Priority Order
 
-### Phase 4 — Yoshi-driven learning (next major work)
-Both features require **AnalysisService audit first** (Claude Code session):
-1. **Vocabulary: less arbitrary** — SRS deck driven by Yoshi session vocab + N5 core
-   - AnalysisService currently extracts vocab — need to know format and reliability
-   - Connect: Yoshi transcript vocab → SRS deck on SESSION_SAVED
-2. **Grammar → Genki integration** — grammar forms from Yoshi sessions light up Genki sections
-   - Initially: prompt to read the relevant chapter
-   - Later: auto-generate sentence drill sentences targeting that form
-   - Requires: AnalysisService grammar tagging audit + Genki taxonomy audit
+### Phase 4 next steps (delegate to feature threads)
+1. **transcript_vocab → words SRS deck** ✅ — complete (commit cdddb81)
+   - ANALYSIS_COMPLETE handler in StudentModel adds keyVocab words to srs_items
+   - Only words existing in words table, no duplicates, interval=0 so appears next session
+   - Verify: sqlite3 ~/Library/Application\ Support/jpStudio/jpstudio.db "SELECT * FROM srs_items WHERE drill_type='words' ORDER BY rowid DESC LIMIT 10;"
+2. **Grammar dismiss/override** ✅ — complete (commit 2b1c8b4)
+   - Teal dot is clickable — calls `grammarDismissEncounter(nodeId)` → `GrammarModel.setOverride`
+   - Dot disappears after dismiss; override nodes not shown
+   - Part 2 (lesson notes prefilter) deferred — lesson notes grammar is free text, no node ID mapping
+   - **Prerequisite for Part 2:** lesson notes grammar LLM call needs to return `grammarNodeIds`
+3. **4/3/2 separate panel_sessions entry** — currently inside voice panel time
+4. **Strand imbalance notification** — outbound StudentModel signal when strand < 20%
 
-### Phase 3 remaining
-1. **Strand imbalance notification** — outbound StudentModel signal when strand < 20%
-2. **4/3/2 separation** — currently inside voice panel time, needs own `panel_sessions` entry for separate bar colour
-
-### Pending audits
-1. **AnalysisService** — what does it extract, how reliable, what format
-2. **Genki taxonomy** — what grammar points, structure, currently wired to anything
-3. **Data audit** — run typical session, verify DB writes
+### Pending audits (architecture thread)
+- None blocking — all required audits complete for Phase 4
 
 ### Known instrumentation gaps
-- Voice drill answers (needs thought)
-- Anki reviews (needs thought)
-- Lesson session saves (Yoshi grammar tags)
+- Voice drill answers
+- Anki reviews
 - `_conjRecordGrammarEvidence` — unclear where it writes
 - Read-aloud — listen thread
 - Round trip — session duration only when built
 
 ### Medium term
-- DrillSRS migration from kvAPI to `srs_items` DB table
+- `notes_text` blob in lesson_sessions — messy catch-all, rationalize later
+- Two grammar models (N5_GRAPH 38 nodes vs GrammarModel 55 nodes) — converge eventually
+- `LessonNotesState.grammar` — in memory only, never persists
 - REVIEW.md at project root
 - Progress panel header — briefing refresh + About me controls
 - Stale root core-foundation.js — delete safely
@@ -173,15 +175,14 @@ Both features require **AnalysisService audit first** (Claude Code session):
 - Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
 
 ## SQLite Schema (current)
-Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab
 pitch_data: 124,137 entries
 
-## kvAPI keys (session 21 additions)
-- `STRAND_WEIGHTS` — strand weight settings, 14 activity keys, s1/s2/s3/s4 per key
+## kvAPI — rationalized usage
+**Keep in kvAPI:** STRAND_WEIGHTS, goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache, gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
+**Migrated to DB:** DrillSRS (all drill types now in srs_items)
+**Still on localStorage:** voice profile, voice pause data, video watch time, resources, learned words
 
-## Storage Migration Status
-### Migrated to kvAPI
-gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS, STRAND_WEIGHTS ✓
-
-### Still on localStorage
-voice profile, voice pause data, video watch time, resources, learned words
+## Storage rationalization principle
+- kvAPI: config, preferences, small UI state that doesn't need querying
+- DB: anything that grows over time, needs querying, or joins with other data

@@ -166,7 +166,7 @@ function renderGramEntries(tab) {
   if (!container) return;
   const entries = getGramEntries(tab);
   if (!entries.length) {
-    container.innerHTML = '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',sans-serif;font-size:0.78rem;color:var(--ink-light);padding:16px 0;font-style:italic">No entries yet.</div>';
+    container.innerHTML = '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',sans-serif;font-size:inherit;color:var(--ink-light);padding:16px 0;font-style:italic">No entries yet.</div>';
     return;
   }
   container.innerHTML = entries.map((entry, i) => `

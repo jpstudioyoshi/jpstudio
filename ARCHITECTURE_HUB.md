@@ -249,3 +249,37 @@ CREATE TABLE IF NOT EXISTS transcript_vocab (
 - Should strand imbalance warning be a toast, a persistent indicator, or both?
 - Pitch accent — fits strand 3 (deliberate study), not yet instrumented
 - DrillSRS migration — still on kvAPI, not in `srs_items` DB table
+
+---
+
+## Storage Rationalization
+
+### Principle
+- **kvAPI** — config, preferences, small UI state that doesn't need querying
+- **DB tables** — anything that grows over time, needs querying, or joins with other data
+
+### DrillSRS — migrated ✅
+- Was: dual-writing to kvAPI (localStorage-backed) + srs_items DB
+- Now: SQL-only writes; single item per answer (not full object); localStorage read-only fallback
+- `record()` writes directly to `srs_items` — no more full serialization on every answer
+
+### Remaining kvAPI items — assessed
+| Key | Decision |
+|---|---|
+| STRAND_WEIGHTS | Stay — user preference |
+| GRAM_SENT_SESSIONS | Stay for now — could migrate later |
+| ROUND_TRIPS | Stay for now |
+| WRITING_ERRORS_ALT | Stay for now |
+| Everything else | Stay — config/preferences/small state |
+
+### notes_text blob in lesson_sessions
+- Contains: startTime, transcript (dup), messages, analysis — stuffed into one column
+- `analysis: {}` persists uselessly on every save (analyzeLesson now populates it)
+- Medium-term: add proper columns, deprecate blob
+
+### Two grammar models — coexisting by design for now
+- **N5_GRAPH** (38 nodes, features-progress.js) — prerequisite graph, drives briefing signals
+- **GrammarModel** (55 nodes, grammar_nodes.json) — Genki chapter map, mastery tracking
+- They overlap conceptually but serve different purposes
+- Phase 4 writes to GrammarModel only
+- Convergence deferred — not blocking anything

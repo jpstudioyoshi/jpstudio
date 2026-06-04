@@ -89,14 +89,14 @@ function cdRenderList() {
   const el = document.getElementById('cd-doc-list');
   if (!el) return;
   if (!CDState.docs.length) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0;text-align:center">No drill sets yet — tap + New to create one</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0;text-align:center">No drill sets yet — tap + New to create one</div>';
     return;
   }
   el.innerHTML = CDState.docs.map(doc => `
     <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;background:var(--paper)"
          onclick="cdOpenDoc('${doc.id}')">
       <div style="flex:1">
-        <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);margin-bottom:2px">${doc.name || 'Untitled'}</div>
+        <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:2px">${doc.name || 'Untitled'}</div>
         <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">${doc.pairs?.length || 0} sentences · ${doc.mode === 'hear-repeat' ? 'Hear then repeat' : 'English to speak'} · ${doc.modified || ''}</div>
       </div>
       <button class="btn-action btn-xs" style="background:var(--gold);border-color:var(--gold);color:#000"
@@ -156,11 +156,11 @@ function cdRenderTable() {
     </div>
     <div style="border-bottom:1px solid var(--border);border-left:1px solid var(--border);background:var(--paper-dark)"></div>
     <input id="cd-jp-${i}" type="text" value="${_cdEsc(pair.jp)}" placeholder="Japanese..."
-      style="padding:8px 10px;border:none;border-bottom:1px solid var(--border);background:var(--field);color:var(--ink);font-family:'Noto Sans JP',var(--ui);font-size:0.9rem;outline:none;width:100%"
+      style="padding:8px 10px;border:none;border-bottom:1px solid var(--border);background:var(--field);color:var(--ink);font-family:'Noto Sans JP',var(--ui);font-size:inherit;outline:none;width:100%"
       onblur="cdJpBlur(${i}, this.value)"
       oninput="cdJpInput(${i}, this.value)"/>
     <input id="cd-en-${i}" type="text" value="${_cdEsc(pair.en)}" placeholder="English..."
-      style="padding:8px 10px;border:none;border-bottom:1px solid var(--border);border-left:1px solid var(--border);background:var(--field);color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none;width:100%"
+      style="padding:8px 10px;border:none;border-bottom:1px solid var(--border);border-left:1px solid var(--border);background:var(--field);color:var(--ink);font-family:var(--ui);font-size:inherit;outline:none;width:100%"
       oninput="cdEnInput(${i}, this.value)"/>
   `).join('');
 

@@ -631,11 +631,11 @@ function strandWeightsRender() {
   const el = document.getElementById('strandWeightsGrid');
   if (!el) return;
   const current = strandWeightsLoad();
-  const inputStyle = 'width:52px;padding:3px 4px;font-family:var(--ui);font-size:0.78rem;background:var(--paper-dark);border:1px solid var(--border);border-radius:3px;color:var(--ink);text-align:center';
+  const inputStyle = 'width:52px;padding:3px 4px;font-family:var(--ui);font-size:inherit;background:var(--paper-dark);border:1px solid var(--border);border-radius:3px;color:var(--ink);text-align:center';
   const rows = Object.entries(STRAND_WEIGHTS_DEFAULTS).map(([key, def]) => {
     const val = current[key] || def;
     return `<div style="display:grid;grid-template-columns:1fr 60px 60px 60px 60px;gap:6px;align-items:center;margin-bottom:5px">
-      <div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">${def.label}</div>
+      <div style="font-family:var(--ui);font-size:inherit;color:var(--ink)">${def.label}</div>
       <input type="number" id="sw_${key}_s1" min="0" max="100" value="${val.s1}" oninput="strandWeightsSave()" style="${inputStyle}">
       <input type="number" id="sw_${key}_s2" min="0" max="100" value="${val.s2}" oninput="strandWeightsSave()" style="${inputStyle}">
       <input type="number" id="sw_${key}_s3" min="0" max="100" value="${val.s3}" oninput="strandWeightsSave()" style="${inputStyle}">
@@ -723,7 +723,7 @@ function renderConjMastery() {
   }
 
   if (!Object.keys(aggregated).length) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6;padding:8px 0">No conjugation data yet.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6;padding:8px 0">No conjugation data yet.</div>';
     return;
   }
 
@@ -756,7 +756,7 @@ function renderConjMastery() {
 
   if (!Object.keys(byForm).length) {
     const periodLabel = _masteryView === 'last' ? 'today' : _masteryView === 'week' ? 'this week' : 'last week';
-    el.innerHTML = `<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6;padding:8px 0">No conjugation drilled ${periodLabel}.</div>`;
+    el.innerHTML = `<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6;padding:8px 0">No conjugation drilled ${periodLabel}.</div>`;
     return;
   }
 
@@ -817,7 +817,7 @@ function renderConjMastery() {
         }).join('');
       html += `<div style="margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
-          <div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink);min-width:80px">${CLASS_LABELS[cls]}</div>
+          <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);min-width:80px">${CLASS_LABELS[cls]}</div>
           <div style="flex:1;height:8px;background:var(--paper);border-radius:4px;overflow:hidden">
             <div style="width:${acc}%;height:100%;background:${barColor};border-radius:4px;transition:width 0.4s"></div>
           </div>
@@ -914,7 +914,7 @@ function renderAdjMastery() {
   }
 
   if (!Object.keys(byClass).length) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6;padding:8px 0">No adjective drill data yet.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6;padding:8px 0">No adjective drill data yet.</div>';
     return;
   }
 
@@ -967,7 +967,7 @@ function renderCounterMastery() {
     ? COUNTER_DATA : null;
 
   if (!_COUNTER_DATA) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6">No counter data loaded.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6">No counter data loaded.</div>';
     return;
   }
 
@@ -983,7 +983,7 @@ function renderCounterMastery() {
   );
 
   if (!attempted.length) {
-    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6;padding:8px 0">No counter drill data yet — complete a session to see mastery.</div>';
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6;padding:8px 0">No counter drill data yet — complete a session to see mastery.</div>';
     return;
   }
 
@@ -1039,7 +1039,7 @@ function renderCounterMastery() {
 
     html += `<tr>
       <td style="padding:3px 8px 3px 0;white-space:nowrap">
-        <span style="font-size:0.9rem;margin-right:3px">${emoji}</span>
+        <span style="font-size:inherit;margin-right:3px">${emoji}</span>
         <span style="color:var(--ink)" title="${Object.values(counter?.readings || {}).slice(0,3).join(' · ')}...">〜${label}</span>
       </td>
       ${cells.join('')}
@@ -1210,7 +1210,7 @@ function grammarNodeClick(nodeId) {
   panel.style.display = 'block';
   panel.innerHTML = `
     <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px">
-      <div style="font-family:var(--ui);font-size:0.9rem;font-weight:600;color:var(--ink)">${node.label}</div>
+      <div style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink)">${node.label}</div>
       <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Ch ${node.genki}</div>
       <div style="font-family:var(--ui);font-size:0.72rem;color:${statusCol};margin-left:auto">
         ${m.status === 'override' ? 'override' : m.status} · ${m.score}%
@@ -1290,9 +1290,9 @@ function _renderErrorPie(chartEl, listEl, sorted, total, colors, labels) {
     const lbl = labels[key] || key;
     const pct = Math.round(count / total * 100);
     return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
-      + '<span style="font-family:var(--ui);font-size:0.82rem;color:var(--teal);font-weight:700;flex-shrink:0;min-width:32px;text-align:right">' + pct + '%</span>'
+      + '<span style="font-family:var(--ui);font-size:inherit;color:var(--teal);font-weight:700;flex-shrink:0;min-width:32px;text-align:right">' + pct + '%</span>'
       + '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + col + ';flex-shrink:0"></span>'
-      + '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + lbl + '">' + lbl + '</span>'
+      + '<span style="font-family:var(--ui);font-size:inherit;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + lbl + '">' + lbl + '</span>'
       + '</div>';
   }).join('');
   // Pie centred on top, legend below
@@ -1360,8 +1360,8 @@ function renderErrorList(listEl, items) {
         + 'style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;'
         + 'padding:4px 6px;border-radius:4px;width:100%;text-align:left" '
         + 'onmouseout="this.style.background=\'none\'">'
-        + '<span style="font-size:0.82rem;font-weight:700;color:' + col + ';flex-shrink:0;min-width:20px;text-align:right">' + count + '</span>'
-        + '<span style="font-size:0.78rem;color:var(--ink);font-weight:600;flex:1;text-align:left;word-break:break-word">' + display + '</span>'
+        + '<span style="font-size:inherit;font-weight:700;color:' + col + ';flex-shrink:0;min-width:20px;text-align:right">' + count + '</span>'
+        + '<span style="font-size:inherit;color:var(--ink);font-weight:600;flex:1;text-align:left;word-break:break-word">' + display + '</span>'
         + '<span style="font-size:0.65rem;color:var(--ink-light)">›</span>'
         + '</button>';
     }).join('') + '</div>';
@@ -1393,11 +1393,11 @@ function errorShowPopup(key) {
 
   popup.innerHTML =
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-    + '<span style="font-family:var(--ui);font-size:0.82rem;font-weight:700;color:' + col + '">' + key + '</span>'
+    + '<span style="font-family:var(--ui);font-size:inherit;font-weight:700;color:' + col + '">' + key + '</span>'
     + '<button onclick="document.getElementById(\'errorPopup\').remove()" '
     + 'style="background:none;border:none;cursor:pointer;color:var(--ink-light);font-size:1.1rem;padding:0 4px">✕</button>'
     + '</div>'
-    + (rows || '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">No examples yet</div>');
+    + (rows || '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No examples yet</div>');
 
   document.body.appendChild(popup);
   setTimeout(() => {
@@ -1544,7 +1544,7 @@ function particleBreakdownRender() {
   const chart = document.getElementById('particleBreakdownChart');
   if (!chart) return;
   const errors = window._particleErrors || [];
-  if (!errors.length) { chart.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">No particle errors recorded.</div>'; return; }
+  if (!errors.length) { chart.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No particle errors recorded.</div>'; return; }
 
   // Sort by count desc
   const sorted = [...errors].sort((a, b) => b.count - a.count);
@@ -1642,8 +1642,8 @@ async function weightsRender() {
     const val = currentWeights[key] !== undefined ? currentWeights[key] : 0.5;
     html += '<div style="margin-bottom:16px;padding:14px;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px">';
     html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">';
-    html += '<span style="font-family:var(--ui);font-size:0.82rem;color:var(--ink);font-weight:600">' + info.label + '</span>';
-    html += '<span id="wt-val-' + key + '" style="font-family:var(--ui);font-size:0.82rem;color:var(--teal);min-width:36px;text-align:right">' + val.toFixed(2) + '</span>';
+    html += '<span style="font-family:var(--ui);font-size:inherit;color:var(--ink);font-weight:600">' + info.label + '</span>';
+    html += '<span id="wt-val-' + key + '" style="font-family:var(--ui);font-size:inherit;color:var(--teal);min-width:36px;text-align:right">' + val.toFixed(2) + '</span>';
     html += '</div>';
     html += '<input type="range" id="wt-' + key + '" min="0" max="2" step="0.05" value="' + val + '"';
     html += ' oninput="document.getElementById(&quot;wt-val-' + key + '&quot;).textContent=parseFloat(this.value).toFixed(2)"';
@@ -1668,8 +1668,8 @@ async function weightsRender() {
     const barPct = Math.round((factor.max / totalMax) * 100);
     html += '<div style="padding:12px 14px;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px">';
     html += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">';
-    html += '<span style="font-family:var(--ui);font-size:0.82rem;color:var(--ink);font-weight:600">' + factor.label + '</span>';
-    html += '<span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">max ' + factor.max + 'pts</span>';
+    html += '<span style="font-family:var(--ui);font-size:inherit;color:var(--ink);font-weight:600">' + factor.label + '</span>';
+    html += '<span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">max ' + factor.max + 'pts</span>';
     html += '</div>';
     html += '<div style="height:4px;background:var(--border);border-radius:2px;margin-bottom:8px">';
     html += '<div style="height:100%;width:' + barPct + '%;background:var(--gold);border-radius:2px"></div></div>';
@@ -1726,7 +1726,7 @@ function renderGramSentHeatmap() {
   const el   = document.getElementById('gramSentHeatmap');
   if (!el) return;
   const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
-  if (!sessions.length) { if (el) el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);opacity:0.6">No data yet — complete a sentence building session to see your heatmap.</div>'; return; }
+  if (!sessions.length) { if (el) el.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);opacity:0.6">No data yet — complete a sentence building session to see your heatmap.</div>'; return; }
   if (wrap) wrap.style.display = '';
 
   // Build week buckets — last 8 weeks

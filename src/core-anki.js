@@ -394,7 +394,7 @@ async function ankiAnswer(ease) {
           // Show a brief consolidation badge on the card area
           const badge = document.createElement('div');
           badge.textContent = '⭐ Consolidated!';
-          badge.style.cssText = 'text-align:center;font-family:var(--ui);font-size:0.82rem;color:var(--teal);margin-bottom:8px;animation:fadeIn 0.4s';
+          badge.style.cssText = 'text-align:center;font-family:var(--ui);font-size:inherit;color:var(--teal);margin-bottom:8px;animation:fadeIn 0.4s';
           const cardArea = document.getElementById('ankiReviewCard');
           if (cardArea) { cardArea.prepend(badge); setTimeout(() => badge.remove(), 2000); }
         }

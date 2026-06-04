@@ -242,7 +242,7 @@ async function agentRefresh(force) {
   } catch(e) {}
 
   // Cache stale or forced — show loading state then fetch
-  if (cards) cards.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px;text-align:center;border:1px solid var(--border);border-radius:8px">Loading…</div>';
+  if (cards) cards.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px;text-align:center;border:1px solid var(--border);border-radius:8px">Loading…</div>';
   if (btn) { btn.textContent = '…'; btn.disabled = true; }
 
   const signals = agentCollectSignals();
@@ -283,7 +283,7 @@ function agentRenderCards(cards) {
     }
     return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:var(--paper-dark)">'
       + '<span style="font-size:1.1rem;flex-shrink:0">' + (card.icon || '\u25c8') + '</span>'
-      + '<span style="flex:1;font-family:var(--ui);font-size:0.82rem;color:var(--ink);line-height:1.5">' + card.text + '</span>'
+      + '<span style="flex:1;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.5">' + card.text + '</span>'
       + btn
       + '</div>';
   }).join('');
@@ -339,7 +339,7 @@ function agentRenderThread() {
     const color = isUser ? 'var(--ink-light)' : 'var(--teal)';
     return '<div style="margin-bottom:14px">'
       + '<div style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.1em;color:' + color + ';margin-bottom:4px">' + label + '</div>'
-      + '<div style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + (m.content || '') + '</div>'
+      + '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.7">' + renderMarkdown(m.content || '') + '</div>'
       + '</div>';
   }).join('');
   thread.scrollTop = thread.scrollHeight;
@@ -372,12 +372,12 @@ async function agentClaudeBriefing(force) {
   const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
     respDiv.style.display = 'block';
-    thread.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">No API key set — add one in Settings.</div>';
+    thread.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:inherit">No API key set — add one in Settings.</div>';
     return;
   }
   if (typeof StudentModel === 'undefined') {
     respDiv.style.display = 'block';
-    thread.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">StudentModel not loaded.</div>';
+    thread.innerHTML = '<div style="color:var(--ink-light);font-family:var(--ui);font-size:inherit">StudentModel not loaded.</div>';
     return;
   }
 
@@ -386,7 +386,7 @@ async function agentClaudeBriefing(force) {
     const cached = briefingLoadCache();
     if (cached) {
       respDiv.style.display = 'block';
-      thread.innerHTML = '<div style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap">' + cached + '</div>';
+      thread.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.7">' + renderMarkdown(cached) + '</div>';
       _agentConversation = [{ role: 'assistant', content: cached }];
       const followUp = document.getElementById('agentFollowUpRow');
       if (followUp) followUp.style.display = 'flex';
@@ -411,7 +411,7 @@ async function agentClaudeBriefing(force) {
 
     _agentConversation = [{ role: 'user', content: firstMsg, _hidden: true }];
 
-    thread.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">Thinking\u2026</div>';
+    thread.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">Thinking\u2026</div>';
 
     const reply = await _agentStream(systemPrompt, _agentConversation, thread, false);
     _agentConversation.push({ role: 'assistant', content: reply });
@@ -422,7 +422,7 @@ async function agentClaudeBriefing(force) {
     if (followUp) followUp.style.display = 'flex';
 
   } catch(e) {
-    thread.innerHTML = '<div style="color:var(--red);font-family:var(--ui);font-size:0.85rem">Error: ' + e.message + '</div>';
+    thread.innerHTML = '<div style="color:var(--red);font-family:var(--ui);font-size:inherit">Error: ' + e.message + '</div>';
     console.error('[agentClaudeBriefing]', e);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '↺ Refresh'; }
@@ -491,7 +491,7 @@ async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
 
   const replyId = 'agent-reply-' + Date.now();
   const replyHTML = '<div style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.1em;color:var(--teal);margin-bottom:4px">CLAUDE</div>'
-    + '<div id="' + replyId + '-text" style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.7;white-space:pre-wrap"></div>';
+    + '<div id="' + replyId + '-text" style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.7"></div>';
 
   if (appendOnly) {
     const block = document.createElement('div');
@@ -523,6 +523,7 @@ async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
       } catch(e) {}
     }
   }
+  if (textEl) textEl.innerHTML = renderMarkdown(full);
   return full;
 }
 
@@ -987,49 +988,49 @@ function voiceOpenProfile() {
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Your name (optional)</label>
         <input type="text" id="voiceProfileName" value="${(profile.name || '').replace(/"/g, '&quot;')}" placeholder="How should Claude address you?"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Location / Where you live</label>
         <input type="text" id="voiceProfileLocation" value="${(profile.location || '').replace(/"/g, '&quot;')}" placeholder="e.g., Berlin, Tokyo, California"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Occupation / What you do</label>
         <input type="text" id="voiceProfileOccupation" value="${(profile.occupation || '').replace(/"/g, '&quot;')}" placeholder="e.g., software engineer, student, teacher"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Hobbies & Interests</label>
         <input type="text" id="voiceProfileHobbies" value="${(profile.hobbies || '').replace(/"/g, '&quot;')}" placeholder="e.g., hiking, anime, cooking, music"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Why you're learning Japanese</label>
         <input type="text" id="voiceProfileGoal" value="${(profile.goal || '').replace(/"/g, '&quot;')}" placeholder="e.g., planning to live in Japan, love Japanese media, work"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Connection to Japan</label>
         <input type="text" id="voiceProfileJapanConnection" value="${(profile.japanConnection || '').replace(/"/g, '&quot;')}" placeholder="e.g., visited Tokyo last year, spouse is Japanese, never been"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Family / Pets (for conversation topics)</label>
         <input type="text" id="voiceProfileFamily" value="${(profile.family || '').replace(/"/g, '&quot;')}" placeholder="e.g., married with 2 kids, have a cat named Mochi"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:20px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Other details Claude should know</label>
         <textarea id="voiceProfileOther" rows="3" placeholder="Any other details that would help make conversations more personal and interesting..."
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);resize:vertical;box-sizing:border-box">${profile.other || ''}</textarea>
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);resize:vertical;box-sizing:border-box">${profile.other || ''}</textarea>
       </div>
       
       <div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap">
@@ -1037,7 +1038,7 @@ function voiceOpenProfile() {
         <div style="display:flex;gap:10px">
           <button class="btn-action" onclick="document.getElementById('voiceProfileModal').remove()">Cancel</button>
           <button onclick="voiceSaveProfileFromModal()" 
-            style="padding:10px 20px;background:var(--gold);border:none;border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:#1c1c1e;cursor:pointer">Save Profile</button>
+            style="padding:10px 20px;background:var(--gold);border:none;border-radius:6px;font-family:var(--ui);font-size:inherit;color:#1c1c1e;cursor:pointer">Save Profile</button>
         </div>
       </div>
     </div>
@@ -1336,9 +1337,9 @@ function voiceSaveConversation() {
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999';
   modal.innerHTML = `
     <div style="background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:24px;width:90%;max-width:320px">
-      <div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);margin-bottom:12px">Name this conversation:</div>
+      <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:12px">Name this conversation:</div>
       <input type="text" id="voiceSaveNameInput" placeholder="e.g., Story about weekend" 
-        style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box;margin-bottom:16px">
+        style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box;margin-bottom:16px">
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button class="btn-action" onclick="document.getElementById('voiceSaveModal').remove()">Cancel</button>
         <button class="btn-action" onclick="voiceDoSave()">Save</button>
@@ -1438,7 +1439,7 @@ function voiceNewChat() {
   const history = document.getElementById('voiceChatHistory');
   if (history) {
     history.innerHTML = `
-      <div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem;padding:40px 20px">
+      <div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit;padding:40px 20px">
         <div style="font-size:2rem;margin-bottom:12px">🎙️</div>
         <div style="margin-bottom:8px">Press the microphone button and speak in Japanese</div>
         <div style="font-size:0.75rem;color:var(--ink-light)">Claude will respond and you can have a conversation</div>
@@ -1730,7 +1731,7 @@ async function rtStartRound2() {
   // Show loading state
   const history = document.getElementById('voiceChatHistory');
   if (history) history.innerHTML = `
-    <div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem;padding:40px 20px">
+    <div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit;padding:40px 20px">
       <div style="font-size:2rem;margin-bottom:12px">⏳</div>
       <div>Reviewing Round 1…</div>
     </div>`;
@@ -1781,8 +1782,8 @@ async function rtStartRound2() {
     nudgeEl.style.cssText = 'max-width:480px;margin:0 auto;padding:24px 20px';
     nudgeEl.innerHTML =
       '<div style="text-align:center;font-size:2rem;margin-bottom:16px">🔄</div>' +
-      '<div style="font-family:var(--ui);font-size:0.88rem;font-weight:600;color:var(--ink);margin-bottom:10px">Round 2 — ' + (VoiceState.rtTopic || 'same topic') + '</div>' +
-      '<div style="font-family:var(--ui);font-size:0.83rem;line-height:1.65;color:var(--teal);background:rgba(48,213,200,0.07);border:1px solid rgba(48,213,200,0.2);border-radius:8px;padding:12px 14px;margin-bottom:14px">' + nudge + '</div>' +
+      '<div style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink);margin-bottom:10px">Round 2 — ' + (VoiceState.rtTopic || 'same topic') + '</div>' +
+      '<div style="font-family:var(--ui);font-size:inherit;line-height:1.65;color:var(--teal);background:rgba(48,213,200,0.07);border:1px solid rgba(48,213,200,0.2);border-radius:8px;padding:12px 14px;margin-bottom:14px">' + nudge + '</div>' +
       '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light)">Start speaking when ready.</div>';
     history.innerHTML = '';
     history.appendChild(nudgeEl);
@@ -1909,13 +1910,13 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
     popup.style.left = Math.min(rect.left, window.innerWidth - 360) + 'px';
     popup.innerHTML =
       '<div style="font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:8px">FROM THE CONVERSATION</div>' +
-      '<div style="color:var(--teal);font-family:var(--jp);margin-bottom:8px;font-size:0.85rem">' + quoteText + '</div>' +
+      '<div style="color:var(--teal);font-family:var(--jp);margin-bottom:8px;font-size:inherit">' + quoteText + '</div>' +
       (ctx
-        ? '<div style="color:var(--ink);line-height:1.6;white-space:pre-wrap;font-size:0.78rem;border-top:1px solid var(--border);padding-top:8px">' + ctx + '</div>'
-        : '<div style="color:var(--ink-light);font-size:0.78rem">Could not locate exact exchange.</div>');
+        ? '<div style="color:var(--ink);line-height:1.6;white-space:pre-wrap;font-size:inherit;border-top:1px solid var(--border);padding-top:8px">' + ctx + '</div>'
+        : '<div style="color:var(--ink-light);font-size:inherit">Could not locate exact exchange.</div>');
     const dismissBtn = document.createElement('button');
     dismissBtn.textContent = '✕';
-    dismissBtn.style.cssText = 'position:absolute;top:6px;right:8px;background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.85rem';
+    dismissBtn.style.cssText = 'position:absolute;top:6px;right:8px;background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:inherit';
     dismissBtn.onclick = () => popup.remove();
     popup.appendChild(dismissBtn);
     document.body.appendChild(popup);
@@ -1967,7 +1968,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
     qaWrap.appendChild(qaLabel);
 
     const qaAnswers = document.createElement('div');
-    qaAnswers.style.cssText = 'font-family:var(--ui);font-size:0.83rem;line-height:1.65;color:var(--ink);margin-bottom:8px;max-height:160px;overflow-y:auto';
+    qaAnswers.style.cssText = 'font-family:var(--ui);font-size:inherit;line-height:1.65;color:var(--ink);margin-bottom:8px;max-height:160px;overflow-y:auto';
 
     // Restore previous Q&A if reopening
     if (prevQA && prevQA.length) {
@@ -1989,7 +1990,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
     const qaInput = document.createElement('input');
     qaInput.type = 'text';
     qaInput.placeholder = 'e.g. How do I use ～たら naturally?';
-    qaInput.style.cssText = 'flex:1;padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.82rem';
+    qaInput.style.cssText = 'flex:1;padding:7px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:inherit';
 
     const qaBtn = document.createElement('button');
     qaBtn.textContent = 'Ask';
@@ -2037,7 +2038,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
         (App.questionRecordGrammarEvidence || window.questionRecordGrammarEvidence)?.(q, answer);
       } catch (err) {
         const errEl = document.createElement('div');
-        errEl.style.cssText = 'color:var(--red);margin-bottom:8px;font-size:0.78rem';
+        errEl.style.cssText = 'color:var(--red);margin-bottom:8px;font-size:inherit';
         errEl.textContent = 'Error: ' + err.message;
         qaAnswers.appendChild(errEl);
       } finally {
@@ -2075,7 +2076,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
   const header = document.createElement('div');
   header.style.cssText = 'padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0';
   header.innerHTML = '<div><div style="font-family:var(--ui);font-size:0.7rem;letter-spacing:0.08em;color:var(--ink-light)">ROUND TRIP DEBRIEF</div>' +
-    '<div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);margin-top:2px">' + topic +
+    '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-top:2px">' + topic +
     ' <span style="color:var(--ink-light);font-size:0.75rem">· ' + dateStr + '</span></div></div>';
   const closeBtn = document.createElement('button');
   closeBtn.textContent = '✕';
@@ -2085,7 +2086,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
 
   // Body (debrief text)
   const body = document.createElement('div');
-  body.style.cssText = 'padding:20px;overflow-y:auto;flex:1;font-family:var(--ui);font-size:0.87rem;line-height:1.75;color:var(--ink)';
+  body.style.cssText = 'padding:20px;overflow-y:auto;flex:1;font-family:var(--ui);font-size:inherit;line-height:1.75;color:var(--ink)';
   renderDebriefBody(body);
 
   if (quotes.length > 0) {
@@ -2155,7 +2156,7 @@ function rtShowHistory() {
   list.style.cssText = 'overflow-y:auto;flex:1;padding:8px 0';
 
   if (!sessions.length) {
-    list.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">No session reports yet.<br><span style="font-size:0.75rem">Complete a round-trip conversation and click ⚡ Compare to generate one.</span></div>';
+    list.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">No session reports yet.<br><span style="font-size:0.75rem">Complete a round-trip conversation and click ⚡ Compare to generate one.</span></div>';
   } else {
     sessions.forEach((s, idx) => {
       const row = document.createElement('div');
@@ -2167,7 +2168,7 @@ function rtShowHistory() {
 
       row.innerHTML =
         '<div style="flex:1;min-width:0">' +
-          '<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (s.topic || 'Free conversation') + '</div>' +
+          '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (s.topic || 'Free conversation') + '</div>' +
           '<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:2px">' + date + ' · ' + (s.level||'N5') + (hasR2 ? ' · 2 rounds' : ' · 1 round') + '</div>' +
         '</div>' +
         '<div style="font-family:var(--ui);font-size:0.72rem;color:var(--teal);flex-shrink:0">Open →</div>';
@@ -2267,21 +2268,21 @@ Keep issues to 2-3 max. Keep actions to 2-3 max. Be concise.`;
     const issuesHtml = (review.issues || []).map(issue => `
       <div style="margin-bottom:12px;padding:10px;background:rgba(255,100,100,0.1);border-left:3px solid var(--coral);border-radius:0 6px 6px 0">
         <div style="font-weight:600;color:var(--ink);margin-bottom:4px">${issue.point}</div>
-        <div style="font-size:0.85rem;color:var(--ink-light);margin-bottom:6px">${issue.explanation}</div>
-        <div style="font-family:var(--jp);font-size:0.9rem;color:var(--teal)">${issue.example || ''}</div>
+        <div style="font-size:inherit;color:var(--ink-light);margin-bottom:6px">${issue.explanation}</div>
+        <div style="font-family:var(--jp);font-size:inherit;color:var(--teal)">${issue.example || ''}</div>
       </div>
     `).join('');
     
     const actionsHtml = (review.actions || []).map((action, i) => `
       <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px">
         <span style="background:var(--teal);color:#1c1c1e;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0">${i + 1}</span>
-        <span style="font-size:0.9rem;color:var(--ink)">${action}</span>
+        <span style="font-size:inherit;color:var(--ink)">${action}</span>
       </div>
     `).join('');
     
     const praiseHtml = review.praise ? `
       <div style="margin-top:16px;padding:10px;background:rgba(52,199,89,0.1);border-left:3px solid var(--green);border-radius:0 6px 6px 0">
-        <div style="font-size:0.85rem;color:var(--green)">✓ ${review.praise}</div>
+        <div style="font-size:inherit;color:var(--green)">✓ ${review.praise}</div>
       </div>
     ` : '';
     
@@ -2294,7 +2295,7 @@ Keep issues to 2-3 max. Keep actions to 2-3 max. Be concise.`;
           </div>
           
           <div style="padding:20px">
-            <div style="font-size:0.95rem;color:var(--ink);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">${review.summary || ''}</div>
+            <div style="font-size:inherit;color:var(--ink);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">${review.summary || ''}</div>
             
             ${issuesHtml ? `
               <div style="margin-bottom:20px">
@@ -2357,7 +2358,7 @@ function voiceRenderMessages() {
       return `
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px;margin-top:-8px">
           <div style="max-width:85%;padding:10px 14px;border-radius:8px;background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3)">
-            <div style="font-family:var(--ui);font-size:0.9rem;color:#ffb3b3;line-height:1.6">${msg.content}</div>
+            <div style="font-family:var(--ui);font-size:inherit;color:#ffb3b3;line-height:1.6">${msg.content}</div>
           </div>
         </div>
       `;

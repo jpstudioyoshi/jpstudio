@@ -173,7 +173,7 @@ function lessonNotesGetFullPanelHTML() {
   // Extraction warning banner
   if (LessonNotesState.extractionWarning && LessonNotesState.extractionWarning.length) {
     html += `<div style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.4);border-radius:6px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
-      <span style="font-family:var(--ui);font-size:0.78rem;color:var(--gold)">⚠ Extraction incomplete: ${LessonNotesState.extractionWarning.join(', ')} came back empty. Check your API key or retry.</span>
+      <span style="font-family:var(--ui);font-size:inherit;color:var(--gold)">⚠ Extraction incomplete: ${LessonNotesState.extractionWarning.join(', ')} came back empty. Check your API key or retry.</span>
       <button class="btn-action btn-xs" style="flex-shrink:0" onclick="LessonNotesState.extractionWarning=null;lessonNotesAutoExtractAll()">🔄 Retry</button>
     </div>`;
   }
@@ -184,7 +184,7 @@ function lessonNotesGetFullPanelHTML() {
       <div style="text-align:center;padding:60px 20px">
         <div style="font-size:2rem;margin-bottom:16px">⏳</div>
         <div style="font-family:var(--ui);font-size:1rem;color:var(--teal);margin-bottom:8px">Extracting content...</div>
-        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">Analyzing vocab, stories, phrases, and grammar</div>
+        <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">Analyzing vocab, stories, phrases, and grammar</div>
       </div>
     `;
     return html;
@@ -207,7 +207,7 @@ function lessonNotesGetFullPanelHTML() {
         <div style="font-family:var(--ui);font-size:0.8rem;color:var(--ink-light);margin-bottom:16px">Supports .docx, .txt, or click here and paste text (⌘V)</div>
         <label style="cursor:pointer">
           <input type="file" accept=".docx,.txt,.md" style="display:none" onchange="lessonNotesPanelHandleFile(this.files)">
-          <span style="padding:10px 24px;background:var(--teal);color:#1c1c1e;border-radius:6px;font-family:var(--ui);font-size:0.85rem;display:inline-block">Browse files</span>
+          <span style="padding:10px 24px;background:var(--teal);color:#1c1c1e;border-radius:6px;font-family:var(--ui);font-size:inherit;display:inline-block">Browse files</span>
         </label>
       </div>
     `;
@@ -420,7 +420,7 @@ function lnShowLinkPicker() {
 
   const header = document.createElement('div');
   header.style.cssText = 'padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center';
-  header.innerHTML = '<span style="font-family:var(--ui);font-size:0.82rem;font-weight:600;color:var(--ink)">Link a recording</span>';
+  header.innerHTML = '<span style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink)">Link a recording</span>';
   const closeBtn = document.createElement('button');
   closeBtn.textContent = '✕';
   closeBtn.style.cssText = 'background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:1.1rem';
@@ -437,7 +437,7 @@ function lnShowLinkPicker() {
     const dur = (r.audio_duration_s > 0) ? Math.floor(r.audio_duration_s/60) + 'm ' + (r.audio_duration_s%60) + 's' : '';
     const done = r.processed_at ? ' ✓' : '';
     const row = document.createElement('div');
-    row.style.cssText = 'padding:8px 14px;border-bottom:1px solid var(--border);font-family:var(--ui);font-size:0.82rem;color:var(--ink);display:flex;align-items:center;gap:8px';
+    row.style.cssText = 'padding:8px 14px;border-bottom:1px solid var(--border);font-family:var(--ui);font-size:inherit;color:var(--ink);display:flex;align-items:center;gap:8px';
     const info = document.createElement('div');
     info.style.cssText = 'flex:1;cursor:pointer';
     info.innerHTML = '<span style="color:var(--teal)">' + dt + '</span>' + (dur ? ' · ' + dur : '') + done;
@@ -445,7 +445,7 @@ function lnShowLinkPicker() {
     info.onclick = function() { lnLinkRecording(r.id); };
     const delBtn = document.createElement('button');
     delBtn.textContent = '🗑';
-    delBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--ink-light);font-size:0.85rem;padding:2px 4px;flex-shrink:0';
+    delBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--ink-light);font-size:inherit;padding:2px 4px;flex-shrink:0';
     delBtn.title = 'Delete recording and audio files';
     delBtn.onclick = function(e) {
       e.stopPropagation();
@@ -487,11 +487,11 @@ async function lnTranscribeLinked() {
 }
 
 function lnRenderLinkedRecording(session) {
-  if (!session) return '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:20px">No lesson selected.</div>';
+  if (!session) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px">No lesson selected.</div>';
   const recId = session.linked_recording_id;
   if (!recId) {
     return '<div style="padding:20px;text-align:center">' +
-      '<div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);margin-bottom:12px">No recording linked to this lesson yet.</div>' +
+      '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:12px">No recording linked to this lesson yet.</div>' +
       '<button class="btn-action" onclick="lnShowLinkPicker()">\u{1F517} Link a recording</button>' +
     '</div>';
   }
@@ -499,7 +499,7 @@ function lnRenderLinkedRecording(session) {
   const recs = window._lessonRecordingSessions || [];
   const rec = recs.find(function(r) { return r.id === recId; });
   if (!rec) {
-    return '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:20px">Linked recording not found.</div>';
+    return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px">Linked recording not found.</div>';
   }
 
   const startMatch2 = rec.audio_path ? rec.audio_path.match(/_(\d{13})\.webm/) : null;
@@ -524,7 +524,7 @@ function lnRenderLinkedRecording(session) {
   html += '</div></div>';
 
   if (!rec.processed_at) {
-    html += '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:8px 0">Not yet transcribed. Click \u2699 Transcribe in the tab bar.</div>';
+    html += '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:8px 0">Not yet transcribed. Click \u2699 Transcribe in the tab bar.</div>';
   } else {
     // Transcript toggle bar
     const _tm = LessonNotesState.transcriptMode || 'timeline';
@@ -559,16 +559,16 @@ function lnRenderLinkedRecording(session) {
   if (_lnRaw && _lnParseWA) {
     const _lnMsgs = _lnParseWA(_lnRaw);
     _lnDocHtml = _lnMsgs.length ? _lnSourceNotesHtml(_lnMsgs)
-      : '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">No messages found</div>';
+      : '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No messages found</div>';
   } else {
-    _lnDocHtml = '<pre style="font-family:var(--jp);font-size:0.88rem;line-height:1.7;white-space:pre-wrap">' + _lnEsc(_lnRaw) + '</pre>';
+    _lnDocHtml = '<pre style="font-family:var(--jp);font-size:inherit;line-height:1.7;white-space:pre-wrap">' + _lnEsc(_lnRaw) + '</pre>';
   }
   html += '<div style="padding-top:12px;border-top:1px solid var(--border)">';
   html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
   html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">SOURCE NOTES</span>';
   html += '<input type="text" id="lnFullDocSearch" placeholder="Search\u2026" oninput="lnFullDocDoSearch(this.value)" '
     + 'style="flex:1;padding:4px 8px;background:var(--field);border:1px solid var(--field-border);'
-    + 'border-radius:4px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);max-width:200px">';
+    + 'border-radius:4px;font-family:var(--ui);font-size:inherit;color:var(--ink);max-width:200px">';
   html += '</div>';
   html += '<div id="lnFullDocContent" style="max-height:250px;overflow-y:auto">' + _lnDocHtml + '</div>';
   html += '</div>';
@@ -583,7 +583,7 @@ function _lnSourceNotesHtml(messages) {
     const isYoshi = !(/paulandres|paul/i.test(m.sender));
     return '<div style="display:flex;gap:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">'
       + '<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);flex-shrink:0;min-width:44px;padding-top:3px">' + esc(m.time) + '</span>'
-      + '<span style="font-family:var(--jp);font-size:0.88rem;line-height:1.7;color:' + (isYoshi ? 'var(--teal)' : 'var(--ink)') + '">' + esc(m.text) + '</span>'
+      + '<span style="font-family:var(--jp);font-size:inherit;line-height:1.7;color:' + (isYoshi ? 'var(--teal)' : 'var(--ink)') + '">' + esc(m.text) + '</span>'
       + '</div>';
   }).join('');
 }
@@ -605,7 +605,7 @@ function lnFullDocDoSearch(term) {
     const highlighted = esc(m.text).replace(regex,'<mark style="background:var(--gold);color:#1c1c1e;padding:0 2px">$1</mark>');
     return '<div style="display:flex;gap:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">'
       + '<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);flex-shrink:0;min-width:44px;padding-top:3px">' + esc(m.time) + '</span>'
-      + '<span style="font-family:var(--jp);font-size:0.88rem;line-height:1.7;color:' + (isYoshi ? 'var(--teal)' : 'var(--ink)') + '">' + highlighted + '</span>'
+      + '<span style="font-family:var(--jp);font-size:inherit;line-height:1.7;color:' + (isYoshi ? 'var(--teal)' : 'var(--ink)') + '">' + highlighted + '</span>'
       + '</div>';
   }).join('') || '<span style="color:var(--ink-light)">No matches</span>';
 }
@@ -761,7 +761,7 @@ async function lnLoadTimeline(recId, _elParam, turns, startMs) {
       row.innerHTML =
         '<span style="color:var(--gold);flex-shrink:0;font-size:0.72rem;min-width:44px;font-variant-numeric:tabular-nums">' + entry.waTime + '</span>' +
         '<span style="flex-shrink:0;font-size:0.8rem">🧑‍🏫</span>' +
-        '<span style="color:var(--ink);line-height:1.6;font-size:0.88rem">' + (App.escHtml || window.escHtml || function(s){return s;})(entry.text) + '</span>';
+        '<span style="color:var(--ink);line-height:1.6;font-size:inherit">' + (App.escHtml || window.escHtml || function(s){return s;})(entry.text) + '</span>';
     }
     el.appendChild(row);
   }
@@ -817,7 +817,7 @@ function lessonNotesGetHTML() {
         return '<tr style="border-bottom:1px solid var(--border)">'
           + '<td style="padding:6px 10px;color:var(--ink);font-family:var(--jp)">' + (v.word||'') + '</td>'
           + '<td style="padding:6px 10px;color:var(--ink-light);font-family:var(--jp)">' + (v.reading||'—') + '</td>'
-          + '<td style="padding:6px 10px;color:var(--ink-light);font-size:0.82rem;font-family:var(--ui)">' + (v.meaning||v.en||'—') + '</td>'
+          + '<td style="padding:6px 10px;color:var(--ink-light);font-size:inherit;font-family:var(--ui)">' + (v.meaning||v.en||'—') + '</td>'
           + '<td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak(\'' + _w + '\')">🔊</button></td>'
           + '</tr>';
       }).join('');
@@ -826,7 +826,7 @@ function lessonNotesGetHTML() {
         + '<th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">READING</th>'
         + '<th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">MEANING</th>'
         + '<th style="width:40px"></th></tr></thead>';
-      return '<table style="width:100%;border-collapse:collapse;font-size:0.88rem">' + _hdr + '<tbody>' + _rows + '</tbody></table>';
+      return '<table style="width:100%;border-collapse:collapse;font-size:inherit">' + _hdr + '<tbody>' + _rows + '</tbody></table>';
     }
     return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'
       + '<div style="overflow-y:auto;border:1px solid var(--border);border-radius:6px">' + _makeTable(_vocab.slice(0, _half)) + '</div>'
@@ -868,7 +868,7 @@ function lessonNotesGetHTML() {
 
     <!-- Vocab table (hideable) -->
     <div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;margin-bottom:22vh;${LessonNotesState.tableHidden?'display:none':''}">
-      <table style="width:100%;border-collapse:collapse;font-family:var(--jp);font-size:0.88rem">
+      <table style="width:100%;border-collapse:collapse;font-family:var(--jp);font-size:inherit">
         <thead style="position:sticky;top:0;background:var(--paper-dark)">
           <tr style="border-bottom:1px solid var(--border)">
             <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">WORD</th>
@@ -882,7 +882,7 @@ function lessonNotesGetHTML() {
             <tr style="border-bottom:1px solid var(--border);${i===LessonNotesState.drillIdx?'background:rgba(48,213,200,0.1)':''}">
               <td style="padding:6px 10px;color:var(--ink)">${v.word || ''}</td>
               <td style="padding:6px 10px;color:var(--ink-light)">${v.reading || '—'}</td>
-              <td style="padding:6px 10px;color:var(--ink-light);font-size:0.82rem">${v.meaning || v.en || '—'}</td>
+              <td style="padding:6px 10px;color:var(--ink-light);font-size:inherit">${v.meaning || v.en || '—'}</td>
               <td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak('${(v.word||'').replace(/'/g,"\\'")}')">🔊</button></td>
             </tr>
           `).join('')}
@@ -929,7 +929,7 @@ function lessonNotesGetHTML() {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <input type="text" id="lessonNotesTitle" placeholder="Lesson title (e.g., 2024-03-22 Yoshi-sensei)" 
           value="${currentSession?.title || ''}"
-          style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;border-radius:6px;outline:none">
+          style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:inherit;border-radius:6px;outline:none">
         <label style="padding:6px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);cursor:pointer">
           📄 Browse
           <input type="file" accept=".docx,.txt" onchange="lessonNotesHandleFile(this.files[0])" style="display:none">
@@ -943,14 +943,14 @@ Examples of what it extracts:
 • 病気　びょうき (word + reading)
 • 歴史　れきし　history (word + reading + meaning)
 • Sentences with （readings） or 【brackets】"
-        style="width:100%;min-height:100px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.9rem;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>
+        style="width:100%;min-height:100px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:inherit;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>
       
       <div style="text-align:center;padding:8px 0 0;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">
         Drop .docx file here or paste text above
       </div>
     </div>
     
-    <div style="text-align:center;padding:30px;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">
+    <div style="text-align:center;padding:30px;color:var(--ink-light);font-family:var(--ui);font-size:inherit">
       ${sessions.length > 0 ? 'Select a lesson from the dropdown or import new notes above' : 'Import lesson notes above and click "Extract & Save" to get started'}
     </div>
   `;
@@ -1058,7 +1058,7 @@ function lessonNotesRenderErrors() {
               <span style="font-family:var(--jp);font-size:1.1rem;color:var(--teal)">${err.correct}</span>
               <button class="btn-icon" onclick="jpSpeak('${(err.correct||'').replace(/'/g,"\\'")}')">🔊</button>
             </div>
-            <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);line-height:1.5;padding-left:4px;border-left:2px solid var(--border)">${err.note || ''}</div>
+            <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);line-height:1.5;padding-left:4px;border-left:2px solid var(--border)">${err.note || ''}</div>
           </div>
         `).join('')}
       </div>
@@ -1099,8 +1099,8 @@ function lessonNotesRenderKeyPhrases() {
                     <span style="font-family:var(--jp);font-size:1.15rem;color:var(--ink)">${kp.phrase}</span>
                     <button class="btn-icon" onclick="jpSpeak('${(kp.phrase||'').replace(/'/g,"\'")}')">🔊</button>
                   </div>
-                  <div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink-light)">${kp.meaning||''}</div>
-                  ${kp.example ? `<div style="font-family:var(--jp);font-size:0.9rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">${kp.example}</div>` : ''}
+                  <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${kp.meaning||''}</div>
+                  ${kp.example ? `<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">${kp.example}</div>` : ''}
                 </div>
               `).join('')}
             </div>
@@ -1128,7 +1128,7 @@ function lessonNotesRenderGrammar() {
     ` : `
       ${hiddenCount > 0 ? `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:8px 12px;background:var(--paper-dark);border-radius:6px">
-          <span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">${hiddenCount} hidden</span>
+          <span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${hiddenCount} hidden</span>
           <button onclick="lessonNotesToggleShowHidden()" class="yoshi-read-btn">${LessonNotesState.showHiddenGrammar ? '👁 Hide' : '👁 Show'} hidden</button>
         </div>
       ` : ''}
@@ -1155,10 +1155,10 @@ function lessonNotesRenderGrammar() {
               <button class="btn-action" class="btn-action btn-xs" onclick="event.stopPropagation();(App.gramSentPracticePattern||window.gramSentPracticePattern)?.(LessonNotesState.grammar[${g._idx}]?.pattern)" title="Practice in Grammar Drill">Practice →</button>
 
             </div>
-            <div onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);line-height:1.5;cursor:pointer">${g.explanation || ''}</div>
+            <div onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.5;cursor:pointer">${g.explanation || ''}</div>
             ${g.example ? `
               <div onclick="lessonNotesOpenGrammarDetail(${g._idx})" style="margin-top:10px;padding:10px;background:var(--paper-dark);border-radius:4px;border-left:3px solid var(--teal);cursor:pointer">
-                <div style="font-family:var(--jp);font-size:0.95rem;color:var(--ink)">${g.example}</div>
+                <div style="font-family:var(--jp);font-size:inherit;color:var(--ink)">${g.example}</div>
                 ${g.exampleMeaning ? `<div style="font-family:var(--ui);font-size:0.8rem;color:var(--ink-light);margin-top:4px">${g.exampleMeaning}</div>` : ''}
               </div>
             ` : ''}
@@ -1213,19 +1213,19 @@ function lessonNotesEditGrammar(idx) {
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Explanation</label>
         <textarea id="grammarEditExplanation" rows="3"
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);resize:vertical;box-sizing:border-box">${g.explanation || ''}</textarea>
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);resize:vertical;box-sizing:border-box">${g.explanation || ''}</textarea>
       </div>
       
       <div style="margin-bottom:14px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Example</label>
         <input type="text" id="grammarEditExample" value="${(g.example || '').replace(/"/g, '&quot;')}" 
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:'Noto Sans JP',var(--ui);font-size:0.95rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:'Noto Sans JP',var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="margin-bottom:20px">
         <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:4px">Example Meaning</label>
         <input type="text" id="grammarEditExampleMeaning" value="${(g.exampleMeaning || '').replace(/"/g, '&quot;')}" 
-          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);box-sizing:border-box">
+          style="width:100%;padding:10px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box">
       </div>
       
       <div style="display:flex;gap:10px;justify-content:flex-end">
@@ -1487,10 +1487,10 @@ async function lessonNotesAutoExtractAll() {
   
   // Update all views
   const area = document.querySelector('#lessonNotesView, #lessonNotesViewMain');
-  if (area) area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-light)"><div style="font-size:1.5rem;margin-bottom:8px">⏳</div>Extracting content...<br><span style="font-size:0.85rem">(vocab, stories, phrases, grammar)</span></div>';
+  if (area) area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-light)"><div style="font-size:1.5rem;margin-bottom:8px">⏳</div>Extracting content...<br><span style="font-size:inherit">(vocab, stories, phrases, grammar)</span></div>';
   
   const panelContent = document.getElementById('lessonNotesPanelContent');
-  if (panelContent) panelContent.innerHTML = '<div style="text-align:center;padding:60px 20px"><div style="font-size:2rem;margin-bottom:16px">⏳</div><div style="font-family:var(--ui);font-size:1rem;color:var(--teal);margin-bottom:8px">Extracting content...</div><div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">Analyzing vocab, stories, phrases, and grammar</div></div>';
+  if (panelContent) panelContent.innerHTML = '<div style="text-align:center;padding:60px 20px"><div style="font-size:2rem;margin-bottom:16px">⏳</div><div style="font-family:var(--ui);font-size:1rem;color:var(--teal);margin-bottom:8px">Extracting content...</div><div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">Analyzing vocab, stories, phrases, and grammar</div></div>';
   
   // Extract all in parallel
   const promises = [];
@@ -1999,7 +1999,7 @@ function lessonNotesRenderGrammarDetail() {
         ${LessonNotesState.grammarDrillFeedback ? `
           <div style="margin-top:10px;padding:12px;background:rgba(255,193,59,0.1);border:1px solid var(--gold);border-radius:6px">
             <div style="font-family:var(--ui);font-size:0.72rem;color:var(--gold);margin-bottom:6px">💬 FEEDBACK</div>
-            <div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);line-height:1.5;white-space:pre-wrap">${LessonNotesState.grammarDrillFeedback}</div>
+            <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.5;white-space:pre-wrap">${LessonNotesState.grammarDrillFeedback}</div>
           </div>
         ` : ''}
         ${LessonNotesState.grammarDrillRevealed ? `
@@ -2028,7 +2028,7 @@ function lessonNotesRenderGrammarDetail() {
   let qaHtml = LessonNotesState.grammarQA.map(msg => `
     <div style="margin-bottom:10px;padding:10px;background:${msg.role === 'user' ? 'rgba(48,213,200,0.1)' : 'var(--paper-dark)'};border-radius:8px;${msg.role === 'user' ? 'margin-left:20px' : 'margin-right:20px'}">
       <div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);margin-bottom:4px">${msg.role === 'user' ? 'You' : 'Answer'}</div>
-      <div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);white-space:pre-wrap">${msg.content}</div>
+      <div style="font-family:var(--ui);font-size:inherit;color:var(--ink);white-space:pre-wrap">${msg.content}</div>
     </div>
   `).join('');
   
@@ -2045,7 +2045,7 @@ function lessonNotesRenderGrammarDetail() {
       ${!hasDrill && grammar.example ? `
         <div style="margin-top:12px;padding:12px;background:var(--paper);border-radius:6px">
           <div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink)">${grammar.example}</div>
-          ${grammar.exampleMeaning ? `<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-top:4px">→ ${grammar.exampleMeaning}</div>` : ''}
+          ${grammar.exampleMeaning ? `<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);margin-top:4px">→ ${grammar.exampleMeaning}</div>` : ''}
           <button class="btn-action" onclick="jpSpeak('${grammar.example.replace(/'/g, "\\'")}', 0.9)">🔊 Listen</button>
         </div>
       ` : ''}
@@ -2129,7 +2129,7 @@ function lessonNotesRenderFullDoc() {
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
       <input type="text" id="lessonNotesFullDocSearchInput" placeholder="Search document..." 
         value="${searchTerm}" 
-        style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none"
+        style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:inherit;color:var(--ink);outline:none"
         onkeydown="if(event.key==='Enter')lessonNotesFullDocDoSearch()"
         oninput="if(!this.value)lessonNotesFullDocClearSearch()">
       <button class="btn-action" onclick="lessonNotesFullDocDoSearch()">Search</button>
@@ -2254,21 +2254,21 @@ function lessonNotesRenderStoryVocab(story) {
   const text = story.text || '';
   const matched = all.filter(v => v.word && text.includes(v.word));
   if (!matched.length) {
-    return `<div class="qr-reader-box"><div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);padding:20px 0">No session vocab found in this story.</div></div>`;
+    return `<div class="qr-reader-box"><div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No session vocab found in this story.</div></div>`;
   }
   const rows = matched.map(v => {
     const word = (v.word || '').replace(/'/g, "\\'");
     return `<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:6px 10px;color:var(--ink);font-family:var(--jp)">${v.word || ''}</td>
       <td style="padding:6px 10px;color:var(--ink-light);font-family:var(--jp)">${v.reading || '\u2014'}</td>
-      <td style="padding:6px 10px;color:var(--ink-light);font-size:0.82rem;font-family:var(--ui)">${v.meaning || v.en || '\u2014'}</td>
+      <td style="padding:6px 10px;color:var(--ink-light);font-size:inherit;font-family:var(--ui)">${v.meaning || v.en || '\u2014'}</td>
       <td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak('${word}')">\uD83D\uDD0A</button></td>
     </tr>`;
   }).join('');
   return `
     <div class="qr-reader-box">
       <div style="border:1px solid var(--border);border-radius:6px;overflow-y:auto;max-height:60vh">
-        <table style="width:100%;border-collapse:collapse;font-size:0.88rem">
+        <table style="width:100%;border-collapse:collapse;font-size:inherit">
           <thead style="position:sticky;top:0;background:var(--paper-dark)">
             <tr style="border-bottom:1px solid var(--border)">
               <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">WORD</th>
@@ -2291,7 +2291,7 @@ function lessonNotesRenderStoryNotes(story) {
     <div class="qr-reader-box">
       <textarea id="lnStoryNotes" placeholder="Notes for this story\u2026"
         onblur="lessonNotesSaveStoryNotes(this.value)"
-        style="width:100%;min-height:300px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;line-height:1.6;border-radius:6px;outline:none;resize:vertical">${esc(story.notes)}</textarea>
+        style="width:100%;min-height:300px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:inherit;line-height:1.6;border-radius:6px;outline:none;resize:vertical">${esc(story.notes)}</textarea>
       <div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-top:6px">Saved automatically when you click away</div>
     </div>
   `;
@@ -2317,10 +2317,10 @@ function lessonNotesRenderStoryEdit(story) {
     <div class="qr-reader-box">
       <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">Title</label>
       <input id="lnStoryEditTitle" type="text" value="${esc(story.title)}"
-        style="width:100%;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.9rem;border-radius:6px;outline:none;margin-bottom:12px">
+        style="width:100%;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:inherit;border-radius:6px;outline:none;margin-bottom:12px">
       <label style="display:block;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">Text</label>
       <textarea id="lnStoryEditText"
-        style="width:100%;min-height:260px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:0.95rem;line-height:1.8;border-radius:6px;outline:none;resize:vertical">${esc(story.text)}</textarea>
+        style="width:100%;min-height:260px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:inherit;line-height:1.8;border-radius:6px;outline:none;resize:vertical">${esc(story.text)}</textarea>
       <div style="margin-top:12px;display:flex;gap:8px">
         <button class="btn-action btn-sm" onclick="lessonNotesSaveStoryEdit()">Save</button>
         <button class="btn-nav btn-sm" onclick="lessonNotesSetStoryTab('read')">Cancel</button>
@@ -2390,13 +2390,13 @@ function lessonNotesRenderReading() {
   return tabBar + `
     <div class="qr-reader-box">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-        <button class="qr-btn-sec ${LessonNotesState.lnFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
+        <button class="qr-btn-sec ${LessonNotesState.lnFuriOn?'active':''}" onclick="lessonNotesToggleFuri()" style="padding:5px 12px;font-size:inherit;${LessonNotesState.lnFuriOn?'color:var(--teal);border-color:var(--teal)':''}">ふり仮名</button>
         <button id="lnSpeakBtn" class="qr-btn-sec" onclick="lessonNotesToggleSpeak()" title="Read aloud / Stop">🔊 Read</button>
         <button class="qr-btn-sec btn-copy" onclick="lessonNotesCopyStory()" title="Copy text without furigana">Copy</button>
       </div>
       ${LessonNotesState.lnRecordMode === 'sentence' ? '' : `
       <div id="lnStoryReader">
-        <span style="color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Parsing...</span>
+        <span style="color:var(--ink-light);font-family:var(--ui);font-size:inherit">Parsing...</span>
       </div>
       `}
       
@@ -2412,7 +2412,7 @@ function lessonNotesRenderReading() {
         ${LessonNotesState.lnRecordMode === 'full' ? `
           <!-- Full story mode -->
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <button id="lnRecordBtn" class="qr-btn-sec" onclick="lessonNotesToggleRecording()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnIsRecording?'background:var(--red);color:white;border-color:var(--red)':''}">
+            <button id="lnRecordBtn" class="qr-btn-sec" onclick="lessonNotesToggleRecording()" style="padding:5px 12px;font-size:inherit;${LessonNotesState.lnIsRecording?'background:var(--red);color:white;border-color:var(--red)':''}">
               ${LessonNotesState.lnIsRecording ? '⏹ Stop' : '🎤 Record'}
             </button>
             ${hasRecording ? `
@@ -2433,14 +2433,14 @@ function lessonNotesRenderReading() {
             <!-- Current sentence display with furigana -->
             <div style="background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:12px">
               <div id="lnSentenceDisplay" style="font-family:var(--jp);font-size:1.2rem;line-height:2.2;color:var(--ink)">
-                <span style="color:var(--ink-light);font-size:0.85rem">Loading...</span>
+                <span style="color:var(--ink-light);font-size:inherit">Loading...</span>
               </div>
             </div>
             
             <!-- Sentence controls -->
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
               <button class="qr-btn-sec" onclick="lnPrevSentence()" ${LessonNotesState.lnCurrentSentence === 0 ? 'disabled' : ''}>← Prev</button>
-              <button class="qr-btn-sec" onclick="lnRecordSentence()" style="padding:5px 12px;font-size:0.78rem;${LessonNotesState.lnIsRecording?'background:var(--red);color:white;border-color:var(--red)':''}">
+              <button class="qr-btn-sec" onclick="lnRecordSentence()" style="padding:5px 12px;font-size:inherit;${LessonNotesState.lnIsRecording?'background:var(--red);color:white;border-color:var(--red)':''}">
                 ${LessonNotesState.lnIsRecording ? '⏹ Stop' : '🎤 Record'}
               </button>
               ${sentenceRecordings[LessonNotesState.lnCurrentSentence] ? `
@@ -2862,7 +2862,7 @@ function lnSwitchTab(tab) {
 
 function lnRenderVocab(cur) {
   var vocab = cur.vocab || [];
-  if (!vocab.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No vocabulary extracted yet.</div>';
+  if (!vocab.length) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No vocabulary extracted yet.</div>';
   if (!window._lnDrillIdx) window._lnDrillIdx = 0;
   if (!window._lnDrillMode) window._lnDrillMode = 'jp2reading';
   if (!window._lnDrillRevealed) window._lnDrillRevealed = false;
@@ -2883,7 +2883,7 @@ function lnRenderVocab(cur) {
     h.push('<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:8px">' + (v.en||v.meaning||'') + '</div>');
     if (window._lnDrillRevealed) {
       h.push('<div style="font-family:var(--jp);font-size:1.5rem;color:var(--teal);margin-bottom:4px">' + (v.jp||v.word||'') + '</div>');
-      h.push('<div style="font-family:var(--ui);font-size:0.88rem;color:var(--ink-light)">' + (v.reading||v.kana||'') + '</div>');
+      h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">' + (v.reading||v.kana||'') + '</div>');
     }
   } else {
     h.push('<div style="font-family:var(--jp);font-size:1.8rem;color:var(--ink);margin-bottom:8px">' + (v.jp||v.word||'') + '</div>');
@@ -2903,7 +2903,7 @@ function lnRenderVocab(cur) {
     h.push('<button class="btn-action" onclick="lnDrillNext()">Next &#8594;</button>');
   }
   h.push('</div>');
-  h.push('<div style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:6px"><table style="width:100%;border-collapse:collapse;font-family:var(--ui);font-size:0.78rem">');
+  h.push('<div style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:6px"><table style="width:100%;border-collapse:collapse;font-family:var(--ui);font-size:inherit">');
   vocab.forEach(function(w, i) {
     var bg = i === window._lnDrillIdx ? 'background:rgba(48,213,200,0.1);' : '';
     h.push('<tr style="border-bottom:1px solid var(--border);' + bg + 'cursor:pointer" onclick="lnDrillJump(' + i + ')">');
@@ -2931,12 +2931,12 @@ function lnRefreshTab(tab) {
 
 function lnRenderStories(cur) {
   var stories = cur.stories || [];
-  if (!stories.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No stories or passages extracted.</div>';
+  if (!stories.length) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No stories or passages extracted.</div>';
   var h = ['<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">'];
   stories.forEach(function(s, i) {
     h.push('<div onclick="lnOpenStory(' + i + ')" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer">');
-    h.push('<div style="font-family:var(--jp);font-size:0.95rem;color:var(--ink);margin-bottom:6px">' + (s.title||'Text '+(i+1)) + '</div>');
-    h.push('<div style="font-family:var(--jp);font-size:0.78rem;color:var(--ink-light);line-height:1.4">' + (s.text||'').slice(0,60) + '&#8230;</div>');
+    h.push('<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);margin-bottom:6px">' + (s.title||'Text '+(i+1)) + '</div>');
+    h.push('<div style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);line-height:1.4">' + (s.text||'').slice(0,60) + '&#8230;</div>');
     h.push('</div>');
   });
   h.push('</div>');
@@ -2952,16 +2952,16 @@ function lnOpenStory(i) {
   content.innerHTML = '<div>'
     + '<button class="btn-action btn-sm" style="margin-bottom:12px" onclick="lnSwitchTab(\'stories\')">&#8592; Back</button>'
     + '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--teal);margin-bottom:10px">' + (s.title||'') + '</div>'
-    + '<div style="font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.8;white-space:pre-wrap">' + (s.text||'') + '</div>'
+    + '<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);line-height:1.8;white-space:pre-wrap">' + (s.text||'') + '</div>'
     + '</div>';
 }
 
 function lnRenderKeyPhrases(cur) {
   var kp = cur.keyPhrases || [];
-  if (!kp.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No key phrases extracted.</div>';
+  if (!kp.length) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No key phrases extracted.</div>';
   var mode = window._lnPhraseMode || 'browse';
   var btnStyle = function(m) {
-    return 'padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;cursor:pointer;background:' + (mode===m ? 'var(--teal)' : 'var(--paper-dark)') + ';color:' + (mode===m ? '#fff' : 'var(--ink)');
+    return 'padding:4px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:inherit;cursor:pointer;background:' + (mode===m ? 'var(--teal)' : 'var(--paper-dark)') + ';color:' + (mode===m ? '#fff' : 'var(--ink)');
   };
   var h = [];
   h.push('<div style="display:flex;gap:6px;margin-bottom:14px">');
@@ -2978,8 +2978,8 @@ function lnRenderKeyPhrases(cur) {
       h.push('<span style="font-family:var(--jp);font-size:1.1rem;color:var(--ink)">' + (p.phrase||'') + '</span>');
       h.push('<button class="btn-action btn-xs" onclick="jpSpeak(\'' + phrase + '\')">&#128266;</button>');
       h.push('</div>');
-      if (p.meaning) h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">' + p.meaning + '</div>');
-      if (p.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">' + p.example + '</div>');
+      if (p.meaning) h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">' + p.meaning + '</div>');
+      if (p.example) h.push('<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px">' + p.example + '</div>');
       h.push('</div>');
     });
     h.push('</div>');
@@ -3017,11 +3017,11 @@ function lnStartPhraseDrill() {
 }
 function lnRenderCorrections(cur) {
   var corrections = cur.corrections || [];
-  if (!corrections.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No corrections recorded.</div>';
+  if (!corrections.length) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No corrections recorded.</div>';
   var h = ['<div style="display:flex;flex-direction:column;gap:8px">'];
   corrections.forEach(function(c) {
     h.push('<div style="padding:8px;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;font-family:var(--ui)">');
-    h.push('<div style="font-size:0.82rem;margin-bottom:4px"><span style="color:#e05050">' + (c.original || '') + '</span> → <span style="color:var(--teal)">' + (c.corrected || '') + '</span></div>');
+    h.push('<div style="font-size:inherit;margin-bottom:4px"><span style="color:#e05050">' + (c.original || '') + '</span> → <span style="color:var(--teal)">' + (c.corrected || '') + '</span></div>');
     if (c.note) h.push('<div style="font-size:0.72rem;color:var(--ink-light)">' + c.note + '</div>');
     h.push('</div>');
   });
@@ -3031,7 +3031,7 @@ function lnRenderCorrections(cur) {
 
 function lnRenderGrammar(cur) {
   var grammar = cur.grammar || [];
-  if (!grammar.length) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No grammar points extracted.</div>';
+  if (!grammar.length) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No grammar points extracted.</div>';
   if (!window._lnGrammarHidden) window._lnGrammarHidden = new Set();
   if (!window._lnShowHidden) window._lnShowHidden = false;
   var hidden = window._lnGrammarHidden;
@@ -3054,8 +3054,8 @@ function lnRenderGrammar(cur) {
     h.push('<span style="font-family:var(--jp);font-size:1.05rem;color:var(--teal);flex:1">' + (g.pattern||g.point||'') + '</span>');
     h.push('<button class="btn-action" class="btn-action btn-xs" onclick="lnToggleGrammarHide(' + i + ')" title="' + (isHidden ? 'Show' : 'Hide') + '">' + (isHidden ? '&#128065;' : '&#128584;') + '</button>');
     h.push('</div>');
-    if (g.explanation) h.push('<div style="font-family:var(--ui);font-size:0.80rem;color:var(--ink-light);line-height:1.5">' + g.explanation + '</div>');
-    if (g.example) h.push('<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px;border-left:3px solid var(--teal)">' + g.example + '</div>');
+    if (g.explanation) h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);line-height:1.5">' + g.explanation + '</div>');
+    if (g.example) h.push('<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);margin-top:8px;padding:8px;background:var(--paper-dark);border-radius:4px;border-left:3px solid var(--teal)">' + g.example + '</div>');
     h.push('</div>');
   });
   h.push('</div>');
@@ -3077,11 +3077,11 @@ function lnRenderTopics(cur) {
   var topics = cur.topics || [];
   var summary = cur.summary || '';
   var h = [];
-  if (summary) h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink);margin-bottom:12px;font-style:italic">' + summary + '</div>');
-  if (!topics.length) { h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light)">No topics extracted.</div>'); return h.join(''); }
+  if (summary) h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:12px;font-style:italic">' + summary + '</div>');
+  if (!topics.length) { h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No topics extracted.</div>'); return h.join(''); }
   h.push('<div style="display:flex;flex-wrap:wrap;gap:6px">');
   topics.forEach(function(t) {
-    h.push('<span style="font-family:var(--ui);font-size:0.78rem;background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:4px 10px;color:var(--ink)">' + t + '</span>');
+    h.push('<span style="font-family:var(--ui);font-size:inherit;background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:4px 10px;color:var(--ink)">' + t + '</span>');
   });
   h.push('</div>');
   return h.join('');
@@ -3089,8 +3089,8 @@ function lnRenderTopics(cur) {
 
 function lnRenderFullDoc(cur) {
   var raw = cur.rawText || '';
-  if (!raw) return '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0">No source document.</div>';
-  return '<div style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);line-height:1.8;white-space:pre-wrap;max-height:60vh;overflow-y:auto;padding:8px">' + raw.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+  if (!raw) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0">No source document.</div>';
+  return '<div style="font-family:var(--jp);font-size:inherit;color:var(--ink);line-height:1.8;white-space:pre-wrap;max-height:60vh;overflow-y:auto;padding:8px">' + raw.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
 }
 
 function lnRenderRecording(cur) {
@@ -3114,7 +3114,7 @@ function lnRenderRecording(cur) {
   var matched = recordings.find(function(s) { return normDate(s.date || (s.created_at||'').slice(0,10)) === sessionDate; });
   var h = [];
   if (!matched) {
-    h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:12px 0">');
+    h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:12px 0">');
     h.push('No recording for ' + sessionDate + '.');
     if (recordings.length) h.push(' Available: ' + recordings.map(function(s){ return s.date || (s.created_at||'').slice(0,10); }).join(', '));
     h.push('</div>');
@@ -3134,7 +3134,7 @@ function lnRenderRecording(cur) {
     try {
       var turns = JSON.parse(matched.transcript_json);
       if (turns.length) {
-        h.push('<input placeholder="Search transcript…" oninput="lnFilterTranscript(this.value)" style="width:100%;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:0.78rem;color:var(--ink);box-sizing:border-box;margin-bottom:6px">');
+        h.push('<input placeholder="Search transcript…" oninput="lnFilterTranscript(this.value)" style="width:100%;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);border-radius:5px;font-family:var(--ui);font-size:inherit;color:var(--ink);box-sizing:border-box;margin-bottom:6px">');
         h.push('<div id="lnTranscriptList" style="max-height:50vh;overflow-y:auto">');
         turns.forEach(function(t) {
           var ts = Math.round(t.start || 0);
@@ -3143,7 +3143,7 @@ function lnRenderRecording(cur) {
           h.push('<div class="lesson-transcript-row" data-text="' + (t.text||'').replace(/"/g,'&quot;').toLowerCase() + '" style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)">');
           h.push('<span style="font-family:var(--ui);font-size:0.65rem;color:var(--teal);flex-shrink:0;width:32px">' + m + ':' + String(s).padStart(2,'0') + '</span>');
           h.push('<span style="flex-shrink:0">' + (isTeacher ? '🧑‍🏫' : '🙋') + '</span>');
-          h.push('<span style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);flex:1">' + (t.text||'') + '</span>');
+          h.push('<span style="font-family:var(--jp);font-size:inherit;color:var(--ink);flex:1">' + (t.text||'') + '</span>');
           h.push('</div>');
         });
         h.push('</div>');

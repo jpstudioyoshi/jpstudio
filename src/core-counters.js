@@ -298,7 +298,7 @@ function countRenderRefGrid2() {
       <input type="checkbox" id="countOpt2-${c.key}" ${c.on ? 'checked' : ''}
         onchange="countUpdateOptions2()"
         style="width:12px;height:12px;accent-color:var(--teal);cursor:pointer;margin:0">
-      <span style="font-family:var(--jp);font-size:0.9rem;color:var(--teal)">${c.name}</span>
+      <span style="font-family:var(--jp);font-size:inherit;color:var(--teal)">${c.name}</span>
       <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">${c.desc}</span>
     </label>
   `).join('');
@@ -442,7 +442,7 @@ function countResumeSession2(saved) {
 
   // Show resume notice briefly
   document.getElementById('countFeedbackText2').innerHTML =
-    '<span style="color:var(--gold);font-family:var(--ui);font-size:0.78rem">↩ Resuming today\'s session (' + CounterDrillState.idx + '/' + CounterDrillState.queue.length + ' done)</span>';
+    '<span style="color:var(--gold);font-family:var(--ui);font-size:inherit">↩ Resuming today\'s session (' + CounterDrillState.idx + '/' + CounterDrillState.queue.length + ' done)</span>';
 
   countUpdateUI2();
   setTimeout(countShowQuestion2, 800);
@@ -578,8 +578,8 @@ function countShowQuestion2() {
 
       document.getElementById('countPromptText2').innerHTML =
         '<span style="font-family:var(--jp);font-size:1.3rem">' + obj.word + '</span>'
-        + ' <span style="font-family:var(--jp);font-size:0.9rem;color:var(--ink-light)">（' + obj.reading + '）</span>'
-        + '<br><span style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)">' + obj.meaning + '</span>'
+        + ' <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">（' + obj.reading + '）</span>'
+        + '<br><span style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">' + obj.meaning + '</span>'
         + '<br><span style="font-family:var(--ui);font-size:0.72rem;color:var(--gold);margin-top:4px;display:block">' + promptQ + '</span>';
 
       CounterDrillState._categoryMode = categoryMode;
@@ -695,7 +695,7 @@ function countEndRun2() {
     countShowSummary2();
   } else {
     // ── Section 1: run score ─────────────────────────────────────
-    let html = '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink);margin-bottom:10px">'
+    let html = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink);margin-bottom:10px">'
       + 'Run ' + CounterDrillState.run + '/' + COUNT_SESSION_RUNS + ' &nbsp;·&nbsp; '
       + CounterDrillState.correct + '/' + CounterDrillState.queue.length
       + (runErrors.length === 0 ? ' &nbsp;·&nbsp; <span style="color:var(--teal)">clean</span>' : '')
@@ -714,7 +714,7 @@ function countEndRun2() {
           + grp.toUpperCase() + '</div>';
         html += '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">';
         for (const e of items) {
-          html += '<span style="font-family:var(--jp);font-size:0.88rem;color:var(--ink);border:1px solid var(--border);border-radius:4px;padding:3px 9px">'
+          html += '<span style="font-family:var(--jp);font-size:inherit;color:var(--ink);border:1px solid var(--border);border-radius:4px;padding:3px 9px">'
             + e.label + ' = ' + e.reading + '</span>';
         }
         html += '</div>';
@@ -733,7 +733,7 @@ function countEndRun2() {
         html += '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);letter-spacing:0.06em;margin-bottom:4px">RECURRING</div>';
         html += '<div style="display:flex;flex-wrap:wrap;gap:5px">';
         for (const e of top3) {
-          html += '<span style="font-family:var(--jp);font-size:0.88rem;color:var(--coral);border:1px solid var(--coral);border-radius:4px;padding:3px 9px">'
+          html += '<span style="font-family:var(--jp);font-size:inherit;color:var(--coral);border:1px solid var(--coral);border-radius:4px;padding:3px 9px">'
             + e.label + ' = ' + e.reading + ' <span style="font-family:var(--ui);font-size:0.7rem;opacity:0.7">×' + e.count + '</span></span>';
         }
         html += '</div>';
@@ -784,7 +784,7 @@ function countShowSummary2() {
       const isRed   = wrongCount >= 3;
       const color   = isRed ? 'var(--red)' : 'var(--gold)';
       const bg      = isRed ? 'rgba(255,107,107,0.12)' : 'rgba(255,200,60,0.1)';
-      summary += `<span style="background:${bg};border:1px solid ${color};padding:4px 10px;border-radius:4px;font-family:var(--jp);font-size:0.88rem;color:${color}">${num}${kanji} = ${reading}</span>`;
+      summary += `<span style="background:${bg};border:1px solid ${color};padding:4px 10px;border-radius:4px;font-family:var(--jp);font-size:inherit;color:${color}">${num}${kanji} = ${reading}</span>`;
     }
     summary += '</div>';
   }
@@ -900,7 +900,7 @@ function countShowLookup2() {
       <button class="btn-icon" onclick="this.closest('.count-lookup-overlay').remove()" style="position:absolute;top:10px;right:10px">✕</button>
       <div style="text-align:center;margin-bottom:16px">
         <div style="font-family:var(--jp);font-size:2rem;color:var(--teal)">${counter.name}</div>
-        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">${counter.desc}</div>
+        <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">${counter.desc}</div>
       </div>
       <table style="width:100%;border-collapse:collapse">
         <thead>
@@ -999,8 +999,8 @@ function daysOfMonthInit() {
     const cell = (d, r) => {
       if (!r) return '<div style="background:var(--paper);padding:5px 8px"></div><div style="background:var(--paper);padding:5px 8px"></div><div style="background:var(--paper);padding:5px 8px"></div>';
       const irr = IREG.has(d);
-      return `<div style="background:var(--paper);padding:5px 8px;font-family:var(--ui);font-size:0.82rem;color:${irr ? 'var(--gold)' : 'var(--ink-light)'}">${d}</div>`
-        + `<div style="background:var(--paper);padding:5px 8px;font-family:var(--jp);font-size:0.88rem;color:var(--ink)">${r}</div>`
+      return `<div style="background:var(--paper);padding:5px 8px;font-family:var(--ui);font-size:inherit;color:${irr ? 'var(--gold)' : 'var(--ink-light)'}">${d}</div>`
+        + `<div style="background:var(--paper);padding:5px 8px;font-family:var(--jp);font-size:inherit;color:var(--ink)">${r}</div>`
         + `<div style="background:var(--paper);padding:4px 6px"><button class="btn-action btn-xs" onclick="jpSpeak('${r}')">🔊</button></div>`;
     };
     html += cell(d1, r1) + cell(d2, readings[d2]);

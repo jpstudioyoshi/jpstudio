@@ -1991,147 +1991,154 @@
     "type": "function",
     "name": "ctrRefInit",
     "file": "src/core-srs.js",
-    "line": 243,
+    "line": 259,
     "desc": "ctrRefRenderGrid();"
   },
   {
     "type": "function",
     "name": "ctrRefRenderGrid",
     "file": "src/core-srs.js",
-    "line": 248,
+    "line": 264,
     "desc": "const el = document.getElementById('ctrRefGrid');"
   },
   {
     "type": "function",
     "name": "ctrRefSetCompare",
     "file": "src/core-srs.js",
-    "line": 313,
+    "line": 329,
     "desc": "Track which counter was last clicked for quick compare"
   },
   {
     "type": "function",
     "name": "ctrRefPopulateSelects",
     "file": "src/core-srs.js",
-    "line": 328,
+    "line": 344,
     "desc": "const selA = document.getElementById('ctrCompareA');"
   },
   {
     "type": "function",
     "name": "ctrRenderCompare",
     "file": "src/core-srs.js",
-    "line": 339,
+    "line": 355,
     "desc": "const keyA = document.getElementById('ctrCompareA')?.value;"
   },
   {
     "type": "function",
     "name": "kanjiCorpusGet",
     "file": "src/core-srs.js",
-    "line": 419,
+    "line": 435,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "kanjiCorpusSave",
     "file": "src/core-srs.js",
-    "line": 422,
+    "line": 438,
     "desc": "(App.Storage || window.Storage).setJSON(STORAGE_KEYS.KANJI_CORPUS, data);"
   },
   {
     "type": "function",
     "name": "_corpusEntriesUpsert",
     "file": "src/core-srs.js",
-    "line": 427,
+    "line": 443,
     "desc": "if (typeof window === 'undefined' || !window.db) return;"
   },
   {
     "type": "function",
     "name": "kanjiExtract",
     "file": "src/core-srs.js",
-    "line": 454,
+    "line": 470,
     "desc": "return [...(str || '')].filter(ch => {"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRecordLookup",
     "file": "src/core-srs.js",
-    "line": 462,
+    "line": 478,
     "desc": "const kanji = kanjiExtract(word);"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRecordChatProduction",
     "file": "src/core-srs.js",
-    "line": 494,
+    "line": 510,
     "desc": "const kanji = kanjiExtract(text);"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRecordProduction",
     "file": "src/core-srs.js",
-    "line": 528,
+    "line": 544,
     "desc": "const kanji = kanjiExtract(text);"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 98,
+    "line": 97,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-srs.js",
+    "line": 163,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "src/core-srs.js",
-    "line": 230,
+    "line": 246,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 429,
+    "line": 445,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 486,
+    "line": 502,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 487,
+    "line": 503,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 519,
+    "line": 535,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 521,
+    "line": 537,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 553,
+    "line": 569,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-srs.js",
-    "line": 555,
+    "line": 571,
     "desc": "db.run"
   },
   {
@@ -6385,114 +6392,121 @@
   },
   {
     "type": "function",
+    "name": "grammarDismissEncounter",
+    "file": "src/features-progress.js",
+    "line": 1228,
+    "desc": "const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;"
+  },
+  {
+    "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1232,
+    "line": 1241,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1257,
+    "line": 1266,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1299,
+    "line": 1308,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1344,
+    "line": 1353,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1361,
+    "line": 1370,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1401,
+    "line": 1410,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1409,
+    "line": 1418,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1480,
+    "line": 1489,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1524,
+    "line": 1533,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1534,
+    "line": 1543,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1563,
+    "line": 1572,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1620,
+    "line": 1629,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1675,
+    "line": 1684,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1689,
+    "line": 1698,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1701,
+    "line": 1710,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };"
   },
   {
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1715,
+    "line": 1724,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');"
   },
   {
@@ -9055,6 +9069,13 @@
     "name": "INSERT",
     "file": "src/StudentModel.js",
     "line": 650,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/StudentModel.js",
+    "line": 671,
     "desc": "db.run"
   },
   {

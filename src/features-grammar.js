@@ -93,7 +93,7 @@ Reply ONLY with a JSON array, no markdown:
     if (btn2) { btn2.disabled = false; btn2.textContent = 'Generate Drill →'; }
 
   } catch(e) {
-    area.innerHTML = '<div class="gd-idle"><div style="color:var(--red);font-size:0.9rem;padding:20px">Error: ' + e.message + '</div></div>';
+    area.innerHTML = '<div class="gd-idle"><div style="color:var(--red);font-size:inherit;padding:20px">Error: ' + e.message + '</div></div>';
     const btn = document.getElementById('gdGenerateBtn');
     if (btn) { btn.disabled = false; btn.textContent = 'Generate Drill →'; }
   }
@@ -503,12 +503,12 @@ async function gramSentGenerate() {
   if (!area) return;
   const target = document.getElementById('gramSentInput')?.value?.trim();
   if (!target) {
-    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:0.85rem">⚠ Enter a grammar point first.</div>';
+    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:inherit">⚠ Enter a grammar point first.</div>';
     return;
   }
   const apiKey = getApiKey();
   if (!apiKey) {
-    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:0.85rem">⚠ No API key — open ⚙ Settings and save your Anthropic key.</div>';
+    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:inherit">⚠ No API key — open ⚙ Settings and save your Anthropic key.</div>';
     return;
   }
   const level = document.getElementById('gramSentLevel')?.value || 'N4';
@@ -518,7 +518,7 @@ async function gramSentGenerate() {
 
 
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
-  area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating…</div>';
+  area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Generating…</div>';
   try {
     const s1 = await _gramSentGenerateOne(target, level, theme, _gramSentAvoidList());
     if (!s1 || !s1.jp) throw new Error('No sentence returned');
@@ -536,7 +536,7 @@ async function gramSentGenerate() {
     gramSentRenderCard();
 
   } catch (e) {
-    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:0.85rem">Error: ' + e.message + '</div>';
+    area.innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--ui);font-size:inherit">Error: ' + e.message + '</div>';
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Create'; }
   }
@@ -695,7 +695,7 @@ async function gramSentAdvance() {
     } else {
       // Not ready yet — show loading and wait
       const area = document.getElementById('gramSentDrillArea');
-      if (area) area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:0.85rem">Generating next sentence…</div>';
+      if (area) area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Generating next sentence…</div>';
       while (GramSentState.generating) await new Promise(r => setTimeout(r, 200));
       if (GramSentState.nextSentence) {
         GramSentState.sentences.push(GramSentState.nextSentence);
@@ -950,9 +950,9 @@ function unclassifiedRender() {
     return '<div style="padding:10px 0;border-bottom:1px solid var(--border)">'
       + '<div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);margin-bottom:4px">'
       + fmtDate(item.t) + '</div>'
-      + '<div style="font-family:var(--ui);font-size:0.82rem;color:var(--teal);margin-bottom:4px">Q: '
+      + '<div style="font-family:var(--ui);font-size:inherit;color:var(--teal);margin-bottom:4px">Q: '
       + esc(item.q) + '</div>'
-      + '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);line-height:1.5">'
+      + '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);line-height:1.5">'
       + esc(item.a) + '</div>'
       + '</div>';
   }).join('');
@@ -1451,7 +1451,7 @@ function conjResumeSession(saved) {
   const area = document.getElementById('conjDrillAreaG');
   if (area) {
     const fb = document.getElementById('conjFeedbackG');
-    if (fb) fb.innerHTML = '<span style="color:var(--gold);font-family:var(--ui);font-size:0.78rem">↩ Resuming today\'s session (' + conjIdx + '/' + conjQueue.length + ' done)</span>';
+    if (fb) fb.innerHTML = '<span style="color:var(--gold);font-family:var(--ui);font-size:inherit">↩ Resuming today\'s session (' + conjIdx + '/' + conjQueue.length + ' done)</span>';
   }
 
   renderConjDrillG();
@@ -1602,7 +1602,7 @@ function renderConjDrillG() {
       if (runErrors.length > 0) {
         html += '<div style="margin:12px 0;text-align:left">';
         html += '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);letter-spacing:0.06em;margin-bottom:8px">ERRORS THIS RUN</div>';
-        html += '<table style="width:100%;border-collapse:collapse;font-size:0.82rem">';
+        html += '<table style="width:100%;border-collapse:collapse;font-size:inherit">';
         html += '<thead><tr>'
           + '<th style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);font-weight:normal;text-align:left;padding:4px 8px 6px">verb</th>'
           + '<th style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);font-weight:normal;text-align:left;padding:4px 8px 6px">form</th>'
@@ -1611,15 +1611,15 @@ function renderConjDrillG() {
           + '</tr></thead><tbody>';
         for (const { item: err, typed } of runErrors) {
           html += '<tr style="border-top:1px solid var(--border)">'
-            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem">' + err.word.dict + '</td>'
+            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:inherit">' + err.word.dict + '</td>'
             + '<td style="padding:6px 8px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">' + err.badge + '</td>'
-            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem;color:var(--coral)">' + (typed?.val || '—') + '</td>'
-            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:0.9rem;color:var(--teal)">' + err.answer + '</td>'
+            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:inherit;color:var(--coral)">' + (typed?.val || '—') + '</td>'
+            + '<td style="padding:6px 8px;font-family:var(--jp);font-size:inherit;color:var(--teal)">' + err.answer + '</td>'
             + '</tr>';
         }
         html += '</tbody></table></div>';
       }
-      html += '<div style="margin-bottom:12px"><button class="btn-action" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button> <span style="color:var(--ink-light);font-family:var(--ui);font-size:0.78rem;margin-left:8px">Next run focuses on problem items</span></div>';
+      html += '<div style="margin-bottom:12px"><button class="btn-action" onclick="conjNextRun()">Run ' + (conjRun+1) + ' →</button> <span style="color:var(--ink-light);font-family:var(--ui);font-size:inherit;margin-left:8px">Next run focuses on problem items</span></div>';
       area.innerHTML = html;
     }
     return;
@@ -1993,7 +1993,7 @@ async function particleDrillStart() {
     console.error('[particleDrill]', e);
     _pdLoading = false;
     const area = document.getElementById('particleDrillArea');
-    if (area) area.innerHTML = '<div style="font-family:var(--ui);font-size:0.82rem;color:#e05050;padding:12px">Generation failed: ' + e.message + '<br><button class="btn-action btn-sm" style="margin-top:8px" onclick="particleDrillStart()">Try again</button></div>';
+    if (area) area.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:#e05050;padding:12px">Generation failed: ' + e.message + '<br><button class="btn-action btn-sm" style="margin-top:8px" onclick="particleDrillStart()">Try again</button></div>';
     return;
   }
   _pdLoading = false;
@@ -2007,13 +2007,13 @@ function particleDrillRender() {
   const h = [];
 
   if (_pdLoading) {
-    h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px;text-align:center">⏳ Generating exercises…</div>');
+    h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px;text-align:center">⏳ Generating exercises…</div>');
     area.innerHTML = h.join('');
     return;
   }
 
   if (!_pdExercises.length) {
-    h.push('<div style="font-family:var(--ui);font-size:0.82rem;color:var(--ink-light);padding:20px 0;text-align:center">Select a particle pair and press Start.</div>');
+    h.push('<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px 0;text-align:center">Select a particle pair and press Start.</div>');
     area.innerHTML = h.join('');
     return;
   }
@@ -2043,7 +2043,7 @@ function particleDrillRender() {
       const leftBg = wasClickedLeft ? (leftCorrect ? 'rgba(0,184,148,0.15)' : 'rgba(224,80,80,0.12)') : isSelectedLeft ? 'rgba(74,158,255,0.15)' : 'var(--paper)';
       const leftBorder = wasClickedLeft ? (leftCorrect ? '#00b894' : '#e05050') : isSelectedLeft ? '#4a9eff' : 'var(--border)';
       h.push('<div onclick="pdSelectLeft(' + i + ',\'' + k + '\')" '
-        + 'style="padding:8px 10px;background:' + leftBg + ';border:1px solid ' + leftBorder + ';border-radius:6px;cursor:' + cursor + ';font-family:var(--jp);font-size:0.95rem;color:var(--ink)">');
+        + 'style="padding:8px 10px;background:' + leftBg + ';border:1px solid ' + leftBorder + ';border-radius:6px;cursor:' + cursor + ';font-family:var(--jp);font-size:inherit;color:var(--ink)">');
       h.push(jp);
       h.push('</div>');
     });
@@ -2063,7 +2063,7 @@ function particleDrillRender() {
       const rightBg = wasClickedRight ? (rightCorrect ? 'rgba(0,184,148,0.15)' : 'rgba(224,80,80,0.12)') : isSelectedRight ? 'rgba(74,158,255,0.15)' : 'var(--paper)';
       const rightBorder = wasClickedRight ? (rightCorrect ? '#00b894' : '#e05050') : isSelectedRight ? '#4a9eff' : 'var(--border)';
       h.push('<div onclick="pdSelectRight(' + i + ',\'' + k + '\')" '
-        + 'style="padding:8px 10px;background:' + rightBg + ';border:1px solid ' + rightBorder + ';border-radius:6px;cursor:' + cursor + ';font-family:var(--ui);font-size:0.80rem;color:var(--ink);line-height:1.4">');
+        + 'style="padding:8px 10px;background:' + rightBg + ';border:1px solid ' + rightBorder + ';border-radius:6px;cursor:' + cursor + ';font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.4">');
       h.push(en);
       h.push('</div>');
     });
@@ -2163,7 +2163,7 @@ function showConjLookupG() {
   const verbTableHTML = verbRows.map(r =>
     `<tr style="${r.hi?'background:rgba(48,213,200,0.14)':''}">
       <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);white-space:nowrap">${r.badge}</td>
-      <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:0.95rem">${r.answer}</td>
+      <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:inherit">${r.answer}</td>
       <td style="padding:5px 6px;border-bottom:1px solid rgba(255,255,255,0.06)"><button class="btn-action btn-xs" onclick="jpSpeak('${r.answer}')">🔊</button></td>
     </tr>`
   ).join('');
@@ -2199,8 +2199,8 @@ function showConjLookupG() {
         const hi = form===currentForm && pol===currentPol && reg===currentReg;
         gramRows += `<tr style="${hi?'background:rgba(48,213,200,0.14)':''}">
           <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);white-space:nowrap">${badge}</td>
-          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:0.9rem;color:var(--teal)">${gAns}</td>
-          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:0.9rem;color:var(--gold)">${iAns}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:inherit;color:var(--teal)">${gAns}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--jp);font-size:inherit;color:var(--gold)">${iAns}</td>
         </tr>`;
       }
     }
@@ -2220,7 +2220,7 @@ function showConjLookupG() {
 
       <div style="margin-bottom:14px">
         <span style="font-family:var(--jp);font-size:1.5rem;color:var(--teal)">${word.dict}</span>
-        <span style="font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);margin-left:10px">${word.read} · ${word.en}</span>
+        <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);margin-left:10px">${word.read} · ${word.en}</span>
       </div>
 
       <!-- Two columns side by side -->

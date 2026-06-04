@@ -476,9 +476,9 @@ function renderListenSession() {
   if (!list) return;
   
   list.innerHTML = ListenState.sessionLookups.map((item, i) => `
-    <div style="display:flex;gap:8px;align-items:center;padding:6px 8px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-bottom:4px;font-size:0.82rem">
+    <div style="display:flex;gap:8px;align-items:center;padding:6px 8px;background:var(--paper);border:1px solid var(--border);border-radius:4px;margin-bottom:4px;font-size:inherit">
       <span style="font-family:var(--jp);color:var(--ink);min-width:60px">${escBdHtml(item.word)}</span>
-      ${item.dictForm ? `<span style="font-family:var(--jp);color:var(--teal);font-size:0.78rem">(${escBdHtml(item.dictForm)})</span>` : ''}
+      ${item.dictForm ? `<span style="font-family:var(--jp);color:var(--teal);font-size:inherit">(${escBdHtml(item.dictForm)})</span>` : ''}
       <span style="flex:1;color:var(--ink-light);font-family:var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escBdHtml(item.translation)}</span>
       <button class="btn-icon" onclick="listenSessionDelete(${i})">✕</button>
       <button class="btn-icon" onclick="jpSpeak('${item.word.replace(/'/g,"\\'")}',0.85)">🔊</button>
@@ -1104,7 +1104,7 @@ function showDictReveal() {
   const rev = document.getElementById('dictReveal');
   rev.style.display = 'block';
   rev.innerHTML = '<span style="color:var(--ink-light);font-size:0.65rem;font-family:monospace;letter-spacing:0.08em;text-transform:uppercase">Correct answer</span><br>' +
-    dictSentence.jp + '<br><span style="font-size:0.78rem;color:var(--ink-light)">' + dictSentence.read + '</span>';
+    dictSentence.jp + '<br><span style="font-size:inherit;color:var(--ink-light)">' + dictSentence.read + '</span>';
 }
 
 // ── Audio-file dictation (original behaviour) ─────────────
@@ -2068,7 +2068,7 @@ const SRS = {
     const all    = this._getAll();
     const tracks = typeof listenTracks !== 'undefined' ? listenTracks : [];
     if (!tracks.length) {
-      el.innerHTML = '<div style="color:var(--ink-light);font-size:0.82rem;padding:8px 0">Load audio tracks to see progress.</div>';
+      el.innerHTML = '<div style="color:var(--ink-light);font-size:inherit;padding:8px 0">Load audio tracks to see progress.</div>';
       return;
     }
     const now  = new Date();
@@ -2104,11 +2104,11 @@ const SRS = {
       const rColor    = lastR ? ratingColors[lastR] : 'var(--ink-light)';
       const rLabel    = lastR ? ratingLabels[lastR]  : '—';
       return `<tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:7px 10px 7px 0"><div style="font-family:var(--jp);font-size:0.85rem;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name}</div></td>
-        <td style="padding:7px 8px;font-size:0.78rem;color:var(--ink-light);text-align:center">${sessions}</td>
-        <td style="padding:7px 8px;font-size:0.78rem;color:${rColor};text-align:center">${rLabel}</td>
-        <td style="padding:7px 8px;font-size:0.78rem;color:var(--ink-light);text-align:center">${ease}</td>
-        <td style="padding:7px 0 7px 8px;font-size:0.78rem;text-align:right">${dueStr}</td>
+        <td style="padding:7px 10px 7px 0"><div style="font-family:var(--jp);font-size:inherit;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name}</div></td>
+        <td style="padding:7px 8px;font-size:inherit;color:var(--ink-light);text-align:center">${sessions}</td>
+        <td style="padding:7px 8px;font-size:inherit;color:${rColor};text-align:center">${rLabel}</td>
+        <td style="padding:7px 8px;font-size:inherit;color:var(--ink-light);text-align:center">${ease}</td>
+        <td style="padding:7px 0 7px 8px;font-size:inherit;text-align:right">${dueStr}</td>
       </tr>`;
     }).join('');
 
@@ -2118,7 +2118,7 @@ const SRS = {
 
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <span style="font-size:0.78rem;color:var(--ink-light)">${heard}/${total} rated${due > 0 ? ` · <span style="color:var(--gold)">${due} due</span>` : ''}</span>
+        <span style="font-size:inherit;color:var(--ink-light)">${heard}/${total} rated${due > 0 ? ` · <span style="color:var(--gold)">${due} due</span>` : ''}</span>
         <button class="btn-icon" onclick="SRS.toggleProgress()">Close ✕</button>
       </div>
       <div style="overflow-x:auto">
