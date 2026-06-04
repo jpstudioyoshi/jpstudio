@@ -1329,50 +1329,11 @@
       <div id="readPasteArea" style="width:100%;flex:1;display:flex;flex-direction:column;min-height:0">
         <textarea class="qr-textarea" id="qrInput" placeholder="Paste Japanese text here…" oninput="qrOnInput()" style="flex:1;min-height:60vh;margin-bottom:12px"></textarea>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="qr-btn" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
-          <button class="btn-action" id="qrRawSpeakBtn" onclick="qrSpeakRaw()" title="Read text aloud without analysing" disabled>Listen</button>
-          <button class="btn-action" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" title="Download TTS audio (VoiceVox only)" disabled>Audio</button>
           <span class="qr-status" id="qrStatus"></span>
-          <button class="btn-action" onclick="qrClear()">Clear</button>
         </div>
       </div>
-      <div id="qrReaderWrap" style="display:none">
-
-        <div class="qr-reader-box">
-        
-        <!-- Sentence listening panel (hidden by default) -->
-        <div id="qrListenContainer" style="display:none;position:fixed;top:154px;left:52px;right:0;z-index:47;background:var(--paper-dark);border-bottom:1px solid var(--border)">
-        <div id="qrListenPanel" style="padding:12px 24px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-            <span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)" id="qrSentenceCounter">1 / 1</span>
-            <div style="flex:1;height:4px;background:var(--paper-dark);border-radius:2px;overflow:hidden">
-              <div id="qrSentenceProgress" style="height:100%;background:var(--teal);width:0%;transition:width 0.2s"></div>
-            </div>
-          </div>
-          
-          <!-- Current sentence display -->
-          <div id="qrCurrentSentence" style="font-family:var(--jp);font-size:1.3rem;line-height:1.8;color:var(--ink);text-align:center;padding:20px;background:var(--paper-dark);border-radius:8px;margin-bottom:14px;min-height:80px;display:flex;align-items:center;justify-content:center"></div>
-          
-          <!-- Controls -->
-          <div style="display:flex;justify-content:center;gap:12px;align-items:center">
-            <button class="btn-nav" onclick="qrListenPrev()" id="qrListenPrevBtn">Prev</button>
-            <button class="btn-action" onclick="qrListenPlay()" id="qrListenPlayBtn">▶</button>
-            <button class="btn-nav" onclick="qrListenNext()" id="qrListenNextBtn">Next</button>
-          </div>
-          
-          <!-- Speed control -->
-          <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;align-items:center">
-            <span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light)">Speed:</span>
-            <button onclick="qrSetSpeed(0.6)" class="qr-speed-btn btn-toggle" data-speed="0.6">0.6×</button>
-            <button onclick="qrSetSpeed(0.8)" class="qr-speed-btn btn-toggle" data-speed="0.8">0.8×</button>
-            <button onclick="qrSetSpeed(1.0)" class="qr-speed-btn active btn-toggle" data-speed="1">1×</button>
-            <button onclick="qrSetSpeed(1.2)" class="qr-speed-btn btn-toggle" data-speed="1.2">1.2×</button>
-          </div>
-        </div>
-        </div><!-- end qrListenContainer -->
-        
-        <div id="qrReader" style="max-height:55vh;overflow-y:auto;scroll-behavior:smooth;padding-right:4px"></div>
-        </div>
+      <div id="qrReaderWrap" style="display:none;flex:1;min-height:0;flex-direction:column">
+        <div id="qrReader" style="overflow-y:auto;max-height:calc(100vh - 350px);scroll-behavior:smooth;padding-right:4px;background:#141416;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:8px"></div>
       </div>
     </div>
 
@@ -1439,14 +1400,17 @@
     </div>
 
     <div class="footer-upper" id="qrFooterUpper" style="display:none">
-      <div id="qrFooterBtns" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
-        <button class="btn-action" id="qrSeparateBtn" onclick="qrToggleSeparateSentences()">Lines</button>
-        <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Listen</button>
-        <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
-        <button class="btn-action" onclick="qrSendToWrite()">Write</button>
-        <button class="btn-action" onclick="qrPrintPage()">Print</button>
-        <button class="btn-action" onclick="qrClear()">Clear</button>
+      <div id="qrFooterBtns" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn-action" id="qrListenModeBtn" onclick="qrToggleListenMode()">Start</button>
+        <button class="btn-nav" onclick="qrListenPrev()" id="qrListenPrevBtn">Prev</button>
+        <button class="btn-action" onclick="qrListenPlay()" id="qrListenPlayBtn">▶</button>
+        <button class="btn-nav" onclick="qrListenNext()" id="qrListenNextBtn">Next</button>
+        <span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-left:8px">Speed:</span>
+        <button onclick="qrSetSpeed(0.6)" class="qr-speed-btn btn-toggle" data-speed="0.6">0.6×</button>
+        <button onclick="qrSetSpeed(0.8)" class="qr-speed-btn btn-toggle" data-speed="0.8">0.8×</button>
+        <button onclick="qrSetSpeed(1.0)" class="qr-speed-btn active btn-toggle" data-speed="1">1×</button>
+        <button onclick="qrSetSpeed(1.2)" class="qr-speed-btn btn-toggle" data-speed="1.2">1.2×</button>
+        <button class="btn-action" id="qrDownloadTTSBtn" onclick="qrDownloadTTS()" disabled>Audio</button>
       </div>
       <div id="qrRecordSection" style="display:none;width:100%">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -1463,7 +1427,15 @@
         <canvas id="qrWaveform" style="display:none;width:100%;height:40px;margin-top:6px;background:var(--paper-dark);border-radius:4px"></canvas>
       </div>
     </div>
-    <div class="footer-lower"></div>
+    <div class="footer-lower">
+      <div class="footer-lower-row">
+        <button class="btn-action" id="qrSegmentBtn" onclick="qrSegment()" disabled>Analyse</button>
+        <button class="btn-action" id="qrFuriBtn" onclick="qrToggleFuri()">ふり仮名</button>
+        <button class="btn-action" id="qrBackBtn" onclick="qrShowPaste()">Edit</button>
+        <button class="btn-action" onclick="qrPrintPage()">Print</button>
+        <button class="btn-action" onclick="qrClear()">Clear</button>
+      </div>
+    </div>
   </div>
 
   <!-- LISTENING -->

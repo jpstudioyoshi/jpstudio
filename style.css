@@ -353,7 +353,6 @@
   #panel-writing { padding-top: 158px; padding-bottom: 20vh; }
   #panel-listening { padding-top: 158px; padding-bottom: 20vh; }
   #panel-voice { padding-top: 98px; padding-bottom: 20vh; }
-  #panel-read { padding-top: 158px; padding-bottom: 20vh; }
   #panel-read,
   #panel-listening,
   #panel-progress,
@@ -554,8 +553,8 @@
   .ln-drill-card { width: 380px; height: clamp(200px, calc(100vh - 440px), 280px); background: var(--paper-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 24px; }
 
   .vocab-controls { display: flex; gap: 12px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
-  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: none; height: 10vh; position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; }
-  .footer-lower { background: var(--paper-dark); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; }
+  .footer-upper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 12px; background: none; height: 10vh; position: fixed; bottom: 10vh; left: 52px; right: 0; z-index: 50; flex-shrink: 0; }
+  .footer-lower { background: var(--paper-dark); height: 10vh; display: flex; flex-direction: column; justify-content: center; position: fixed; bottom: 0; left: 52px; right: 0; z-index: 50; flex-shrink: 0; }
   .footer-lower-row { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 4px 12px; border-top: 0.5px solid rgba(255,255,255,0.04); }
   .footer-lower-row:first-child { border-top: none; }
   .filter-footer { border-top: 1px solid var(--border); background: var(--paper-dark); margin-top: 16px; padding: 4px 0; }
@@ -707,7 +706,7 @@
   .qr-btn-sec:hover { border-color:var(--teal);color:var(--teal); }
   .qr-status { font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);font-style:italic;flex:1; }
   .qr-reader { padding:28px 24px 20px;flex:1;overflow-y:auto; }
-  .qr-reader-box { background:#141416;border:1px solid var(--border);border-radius:10px;padding:22px 26px 30px;margin-top:16px; }
+  .qr-reader-box { background:#141416;border:1px solid var(--border);border-radius:10px;padding:22px 26px 30px;margin-top:8px;min-height:0;flex:1;display:flex;flex-direction:column; }
   .qr-text { font-family:"Noto Sans JP",sans-serif;font-size:1.25rem;line-height:3.2;color:var(--ink); }
   .qr-word { display:inline;cursor:pointer;border-radius:3px;transition:background 0.1s;border-bottom:1px solid transparent; }
   .qr-word:hover { background:rgba(48,213,200,0.18); }

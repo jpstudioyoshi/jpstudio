@@ -283,7 +283,7 @@ Text: ${textForAI}` }],
     const rw = document.getElementById('qrReaderWrap');
   const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
-    if (rw) rw.style.display = 'block';
+    if (rw) rw.style.display = 'flex';
     if (pa) pa.style.display = 'none';
     document.getElementById('qrFuriBtn').style.display = '';
     document.getElementById('qrStatus').textContent = '';
@@ -647,7 +647,7 @@ async function qrLoadHistory(indexStr) {
     const rw = document.getElementById('qrReaderWrap');
   const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
-    if (rw) rw.style.display = 'block';
+    if (rw) rw.style.display = 'flex';
     if (pa) pa.style.display = 'none';
     document.getElementById('qrStatus').textContent = '';
   } else {
@@ -1375,7 +1375,7 @@ function qrRestoreSession() {
     const rw = document.getElementById('qrReaderWrap');
   const qrf = document.getElementById('qrFooterUpper'); if (qrf) qrf.style.display = 'flex';
     const pa = document.getElementById('readPasteArea');
-    if (rw) rw.style.display = 'block';
+    if (rw) rw.style.display = 'flex';
     if (pa) pa.style.display = 'none';
 
     const furiBtn = document.getElementById('qrFuriBtn');
