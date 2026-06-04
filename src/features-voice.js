@@ -1976,7 +1976,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
     qaWrap.appendChild(qaLabel);
 
     const qaAnswers = document.createElement('div');
-    qaAnswers.style.cssText = 'font-family:var(--ui);font-size:inherit;line-height:1.65;color:var(--ink);margin-bottom:8px;max-height:160px;overflow-y:auto';
+    qaAnswers.style.cssText = 'font-family:var(--ui);font-size:inherit;line-height:1.65;color:var(--ink);margin-bottom:8px;';
 
     // Restore previous Q&A if reopening
     if (prevQA && prevQA.length) {
@@ -2007,16 +2007,16 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
     async function submitQuestion() {
       const q = qaInput.value.trim();
       if (!q) return;
+      console.log('before clear - children:', qaAnswers.childNodes.length, 'parent:', qaAnswers.parentNode?.className); qaAnswers.replaceChildren(); console.log('after clear - children:', qaAnswers.childNodes.length);
+      if (VoiceState.rtLastDebrief) VoiceState.rtLastDebrief.qa = [];
       qaBtn.disabled = true; qaBtn.textContent = '…';
       qaInput.value = '';
 
-      // Show question
       const qEl = document.createElement('div');
       qEl.style.cssText = 'margin-bottom:4px;color:var(--ink-light)';
       qEl.textContent = 'Q: ' + q;
       qaAnswers.appendChild(qEl);
-      if (!qaAnswers.parentNode) qaWrap.insertBefore(qaAnswers, qaRow);
-      box.scrollTop = box.scrollHeight;
+      qaInput.scrollIntoView({ block: 'nearest' });
 
       try {
         const level = document.getElementById('voiceLevel')?.value || 'N5';
@@ -2051,7 +2051,7 @@ function rtShowDebrief(topic, debrief, t1, t2, prevQA) {
         qaAnswers.appendChild(errEl);
       } finally {
         qaBtn.disabled = false; qaBtn.textContent = 'Ask';
-        qaAnswers.scrollTop = qaAnswers.scrollHeight;
+        qaInput.scrollIntoView({ block: 'nearest' });
       }
     }
 
