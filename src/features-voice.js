@@ -1565,7 +1565,7 @@ async function fttAnalyse(topic) {
 Transcript:
 ${transcript}
 
-Give brief feedback (3-4 sentences) in English:
+Detect the language the learner spoke in and give brief feedback (3-4 sentences) in that same language:
 - What they communicated well
 - One specific grammar or vocabulary point to notice
 - One thing to try in the next round
@@ -1573,7 +1573,7 @@ Do not score. Do not be prescriptive. Be observational.`;
   try {
     const data = await (App.claudeAPI || window.claudeAPI)({
       max_tokens: 300,
-      system: 'You are observing a Japanese speaking fluency drill. Give brief, practical feedback.',
+      system: 'You are observing a Japanese speaking fluency drill. Detect the language the learner used and respond in that same language. Give brief, practical feedback.',
       messages: [{ role: 'user', content: prompt }],
       track: 'speaking'
     });
