@@ -34,63 +34,115 @@
 | `--jp` | Japanese text — Hiragino Sans, Yu Gothic |
 | `--serif` | Serif text — reading panel, prose |
 
+### Font Size Scale
+| Token | Value | Class | Usage |
+|-------|-------|-------|-------|
+| `--fs-1` | 0.72rem | `.fs-1` | Small labels — timestamps, tags, counters |
+| `--fs-2` | 0.85rem | `.fs-2` | Secondary text — hints, subtitles |
+| `--fs-3` | 1.0rem | `.fs-3` | Standard body text |
+| `--fs-body` | 1.1rem | `.fs-body` | Readable body — Claude responses, Q&A answers |
+| `--fs-4` | 1.4rem | `.fs-4` | Large display — headings, featured text |
+
+Apply to a container div — children inherit via `.fs-N *` wildcard rule:
+```html
+<div class="fs-body">Claude's answer renders here at readable size.</div>
+```
+Base font: `html { font-size: 17px; }`
+
 ---
 
 ## Button Classes
 
-### `.btn-primary`
-Solid teal background. Use for the main action in a panel.
+### The Real System — What's Actually Used
+
+> **Note:** The codebase uses `btn-action` as the standard button throughout `index.html`.
+> `btn-primary`, `btn-ghost` etc. are the intended system and should be used in new work.
+> Migration from `btn-action` is gradual — both coexist.
+
+---
+
+### `.btn-action` ← de facto standard (used throughout index.html)
+Ghost style with teal fill on hover. Equivalent to `btn-ghost` + teal hover.
 ```html
-<button class="btn-primary" onclick="...">Generate</button>
+<button class="btn-action" onclick="...">Check</button>
 ```
+Modifiers: add `.btn-sm` or `.btn-xs` for smaller sizes.
+
+### `.btn-primary` ← use for new Send / main CTA buttons
+Solid teal background. Use for the primary action in a context (Send, Submit, Generate).
+```html
+<button class="btn-primary" onclick="...">Send</button>
+```
+Hover: 0.85 opacity. Disabled: 0.4 opacity.
 
 ### `.btn-ghost`
-Bordered, transparent background. Default button for most actions.
+Bordered, transparent. Secondary actions. Teal border/text on hover.
 ```html
 <button class="btn-ghost" onclick="...">Check</button>
 ```
-Hover: ink colour. Disabled: 0.4 opacity.
+Add `.btn-ghost-teal` for explicit teal hover variant.
 
-### `.btn-ghost-teal`
-Add alongside `.btn-ghost` for teal hover variant.
-```html
-<button class="btn-ghost btn-ghost-teal" onclick="...">Copy</button>
-```
-
-### `.btn-danger`
-Red bordered button. Use for destructive actions.
+### `.btn-danger` / `.btn-destructive`
+Red bordered. Use for destructive actions (delete, reset, clear).
 ```html
 <button class="btn-danger" onclick="...">Delete</button>
 ```
+`btn-destructive` is the inline variant — red fill on hover.
 
 ### `.btn-subtle`
-No border, ink-light text. Use for low-priority actions.
+No border, `--ink-light` text. Low-priority or contextual actions.
 ```html
 <button class="btn-subtle" onclick="...">Details</button>
 ```
-Hover: ink colour.
+Hover: `--ink`.
 
 ### `.btn-icon`
-Circular icon button, 0.5 opacity at rest. Use for ✎ edit and ✕ delete icons.
+Minimal icon button, 0.85 opacity at rest. Use for ✎ edit and ✕ delete inline.
 ```html
 <button class="btn-icon" onclick="...">✕</button>
 ```
-Hover: opacity 1.
+Add `.btn-icon-teal` for teal on hover (edit). Add `.btn-icon-del` for red on hover (delete).
 
-### `.btn-icon-teal`
-Add alongside `.btn-icon` for edit buttons — teal on hover.
+### `.btn-toggle`
+Wraps a checkbox or radio input — visually a button, semantically a toggle.
 ```html
-<button class="btn-icon btn-icon-teal" title="Edit">✎</button>
+<button class="btn-toggle" onclick="...">Loop</button>
 ```
+Active state: add `.toggle-on` or checked input triggers `.btn-toggle:has(input:checked)`.
 
-### `.btn-icon-del`
-Add alongside `.btn-icon` for delete buttons — red on hover.
+### `.btn-group`
+Segmented group button — one of several mutually exclusive options.
 ```html
-<button class="btn-icon btn-icon-del" title="Delete">✕</button>
+<button class="btn-group btn-active" onclick="...">JP→EN</button>
 ```
+Active state: `.btn-active` (teal) or `.btn-active-gold` (gold).
+
+### `.btn-nav`
+Navigation step button — Next, Back, Skip. Ghost style, no hover fill.
+```html
+<button class="btn-nav" onclick="...">Next →</button>
+```
+Disabled: 0.3 opacity.
 
 ### `.btn-kana`
-Kana mode selector button base class.
+Kana mode selector: A / ひ / カ. Used across kana inputs.
+```html
+<button class="btn-kana btn-active" onclick="...">ひ</button>
+```
+
+### `.btn-rating` / `.btn-rating-teal` / `.btn-rating-red`
+SRS review rating buttons. Colour signals the rating outcome.
+```html
+<button class="btn-rating btn-rating-teal" onclick="...">Know</button>
+<button class="btn-rating btn-rating-red" onclick="...">Again</button>
+```
+
+### Size Modifiers
+Add to any button class:
+| Class | Effect |
+|-------|--------|
+| `.btn-sm` | `font-size: 0.75rem`, `padding: 3px 8px` |
+| `.btn-xs` | `font-size: 0.65rem`, `padding: 1px 6px` |
 
 ---
 
@@ -139,16 +191,30 @@ Circular upload button for voice panel. Gold border on hover.
 ### `.fe-del`
 Inline delete button. Red on hover (via `.fe-del:hover`).
 
+### `.select-std`
+Minimal select — no background, bottom border only.
+```html
+<select class="select-std">...</select>
+```
+
+### `.select-field`
+Full field-style select with background and border.
+```html
+<select class="select-field">...</select>
+```
+
 ---
 
 ## Rules for New Features
 
 1. **Never write inline hover handlers** — use a CSS class instead
-2. **Button hierarchy:** primary → ghost → subtle → icon. Pick the lowest weight that works.
-3. **Colour meaning is fixed:** teal = correct/active, gold = partial/secondary, red = wrong/danger
-4. **New utility classes** go at the bottom of style.css in the utility block (after line 2734)
-5. **JS-controlled visibility** (show/hide) stays as inline style — immune to CSS scope issues
-6. **Cross-file calls** use `(App.fn || window.fn)?.()`— never bare globals
+2. **Button hierarchy for new work:** `btn-primary` → `btn-action` → `btn-subtle` → `btn-icon`
+3. **Send buttons are always `btn-primary`**
+4. **Colour meaning is fixed:** teal = correct/active, gold = partial/secondary, red = wrong/danger
+5. **New utility classes** go at the bottom of style.css in the utility block
+6. **JS-controlled visibility** (show/hide) stays as inline style — immune to CSS scope issues
+7. **Cross-file calls** use `(App.fn || window.fn)?.()`— never bare globals
+8. **Font sizes:** use `--fs-N` tokens and `.fs-N` classes on containers — do not write inline font-size for body text
 
 ---
 

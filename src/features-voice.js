@@ -519,7 +519,7 @@ async function _agentStream(systemPrompt, messages, threadEl, appendOnly) {
       if (data === '[DONE]') break;
       try {
         const delta = JSON.parse(data).delta?.text || '';
-        if (delta && textEl) { full += delta; textEl.textContent = full; threadEl.scrollTop = threadEl.scrollHeight; }
+        if (delta && textEl) { full += delta; textEl.innerHTML = renderMarkdown(full); threadEl.scrollTop = threadEl.scrollHeight; }
       } catch(e) {}
     }
   }

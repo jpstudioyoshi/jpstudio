@@ -1149,51 +1149,58 @@
   },
   {
     "type": "function",
+    "name": "renderMarkdown",
+    "file": "src/core-foundation.js",
+    "line": 1790,
+    "desc": "if (!text) return '';"
+  },
+  {
+    "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1791,
+    "line": 1815,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1813,
+    "line": 1837,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1849,
+    "line": 1873,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1857,
+    "line": 1881,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1868,
+    "line": 1892,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1947,
+    "line": 1971,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1969,
+    "line": 1993,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
@@ -6759,7 +6766,7 @@
     "name": "lnRenderLinkedRecording",
     "file": "src/features-lesson-notes.js",
     "line": 489,
-    "desc": "if (!session) return '<div style=\"font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);pad"
+    "desc": "if (!session) return '<div style=\"font-family:var(--ui);font-size:inherit;color:var(--ink-light);pad"
   },
   {
     "type": "function",
@@ -8137,455 +8144,455 @@
     "type": "function",
     "name": "agentContextUpdateBtn",
     "file": "src/features-voice.js",
-    "line": 530,
+    "line": 531,
     "desc": "const btn = document.getElementById('agentContextBtn');"
   },
   {
     "type": "function",
     "name": "agentToggleContext",
     "file": "src/features-voice.js",
-    "line": 539,
+    "line": 540,
     "desc": "const panel = document.getElementById('agentContextPanel');"
   },
   {
     "type": "function",
     "name": "agentContextPopulateFields",
     "file": "src/features-voice.js",
-    "line": 547,
+    "line": 548,
     "desc": "const p = agentContextLoad();"
   },
   {
     "type": "function",
     "name": "agentContextSaveFromFields",
     "file": "src/features-voice.js",
-    "line": 556,
+    "line": 557,
     "desc": "const fields = ['nativeLang','otherLangs','currentLevel','targetLevel','aims','dailyTime','lessons',"
   },
   {
     "type": "function",
     "name": "agentUpdatePresence",
     "file": "src/features-voice.js",
-    "line": 578,
+    "line": 579,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openGramNote",
     "file": "src/features-voice.js",
-    "line": 656,
+    "line": 657,
     "desc": "(App.showPanel || window.showPanel)?.('gramnotes');"
   },
   {
     "type": "function",
     "name": "pauseDataGet",
     "file": "src/features-voice.js",
-    "line": 688,
+    "line": 689,
     "desc": "try { return JSON.parse(localStorage.getItem(PAUSE_DATA_KEY) || '[]'); } catch { return []; }"
   },
   {
     "type": "function",
     "name": "pauseDataAdd",
     "file": "src/features-voice.js",
-    "line": 692,
+    "line": 693,
     "desc": "if (!pauses || !pauses.length) return;"
   },
   {
     "type": "function",
     "name": "pauseDataClear",
     "file": "src/features-voice.js",
-    "line": 703,
+    "line": 704,
     "desc": "localStorage.removeItem(PAUSE_DATA_KEY);"
   },
   {
     "type": "function",
     "name": "pauseAnalyse",
     "file": "src/features-voice.js",
-    "line": 709,
+    "line": 710,
     "desc": "Extract intra-sentence pauses from Whisper verbose_json segments"
   },
   {
     "type": "function",
     "name": "spokenErrorsGet",
     "file": "src/features-voice.js",
-    "line": 735,
+    "line": 736,
     "desc": ""
   },
   {
     "type": "function",
     "name": "spokenErrorsSave",
     "file": "src/features-voice.js",
-    "line": 741,
+    "line": 742,
     "desc": "(App.Storage || window.Storage).setJSON(STORAGE_KEYS.SPOKEN_ERRORS_DATA, errors);"
   },
   {
     "type": "function",
     "name": "spokenErrorsAdd",
     "file": "src/features-voice.js",
-    "line": 744,
+    "line": 745,
     "desc": "if (!correction) return;"
   },
   {
     "type": "function",
     "name": "_spokenErrorRecordGrammarEvidence",
     "file": "src/features-voice.js",
-    "line": 804,
+    "line": 805,
     "desc": ""
   },
   {
     "type": "function",
     "name": "spokenErrorsClear",
     "file": "src/features-voice.js",
-    "line": 826,
+    "line": 827,
     "desc": "if (!confirm('Clear all spoken error data? This cannot be undone.')) return;"
   },
   {
     "type": "function",
     "name": "spokenErrorShowPopup",
     "file": "src/features-voice.js",
-    "line": 835,
+    "line": 836,
     "desc": "window._errorExamples = window._spokenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "renderSpokenErrorsProgress",
     "file": "src/features-voice.js",
-    "line": 846,
+    "line": 847,
     "desc": "const chartEl = document.getElementById('progress-spoken-chart');"
   },
   {
     "type": "function",
     "name": "voiceGetProfile",
     "file": "src/features-voice.js",
-    "line": 966,
+    "line": 967,
     "desc": ""
   },
   {
     "type": "function",
     "name": "voiceSaveProfile",
     "file": "src/features-voice.js",
-    "line": 972,
+    "line": 973,
     "desc": "localStorage.setItem(VOICE_PROFILE_KEY, JSON.stringify(profile));"
   },
   {
     "type": "function",
     "name": "voiceOpenProfile",
     "file": "src/features-voice.js",
-    "line": 976,
+    "line": 977,
     "desc": "const profile = voiceGetProfile();"
   },
   {
     "type": "function",
     "name": "voiceSaveProfileFromModal",
     "file": "src/features-voice.js",
-    "line": 1053,
+    "line": 1054,
     "desc": "const profile = {"
   },
   {
     "type": "function",
     "name": "voiceGetProfilePrompt",
     "file": "src/features-voice.js",
-    "line": 1071,
+    "line": 1072,
     "desc": "const p = voiceGetProfile();"
   },
   {
     "type": "function",
     "name": "voiceStartProfileInterview",
     "file": "src/features-voice.js",
-    "line": 1099,
+    "line": 1100,
     "desc": "VoiceState.interview* — see declaration above"
   },
   {
     "type": "function",
     "name": "voiceInterviewAsk",
     "file": "src/features-voice.js",
-    "line": 1115,
+    "line": 1116,
     "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "voiceInterviewProcessAnswer",
     "file": "src/features-voice.js",
-    "line": 1216,
+    "line": 1217,
     "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "voiceCheckKeys",
     "file": "src/features-voice.js",
-    "line": 1275,
+    "line": 1276,
     "desc": "const hasOpenAI = !!getOpenAIKey();"
   },
   {
     "type": "function",
     "name": "voiceUpdateStatus",
     "file": "src/features-voice.js",
-    "line": 1285,
+    "line": 1286,
     "desc": "const el = document.getElementById('voiceStatus');"
   },
   {
     "type": "function",
     "name": "voiceGetSavedConversations",
     "file": "src/features-voice.js",
-    "line": 1290,
+    "line": 1291,
     "desc": ""
   },
   {
     "type": "function",
     "name": "voiceSaveConversations",
     "file": "src/features-voice.js",
-    "line": 1296,
+    "line": 1297,
     "desc": "(App.Storage || window.Storage).set(STORAGE_KEYS.VOICE_CONVOS_ALT, JSON.stringify(convos));"
   },
   {
     "type": "function",
     "name": "voiceUpdateConvoDropdown",
     "file": "src/features-voice.js",
-    "line": 1300,
+    "line": 1301,
     "desc": "const select = document.getElementById('voiceConvoSelect');"
   },
   {
     "type": "function",
     "name": "voiceSaveConversation",
     "file": "src/features-voice.js",
-    "line": 1311,
+    "line": 1312,
     "desc": "if (VoiceState.messages.length === 0) {"
   },
   {
     "type": "function",
     "name": "voiceDoSave",
     "file": "src/features-voice.js",
-    "line": 1362,
+    "line": 1363,
     "desc": "const input = document.getElementById('voiceSaveNameInput');"
   },
   {
     "type": "function",
     "name": "voiceLoadConversation",
     "file": "src/features-voice.js",
-    "line": 1388,
+    "line": 1389,
     "desc": "if (!name) {"
   },
   {
     "type": "function",
     "name": "voiceDeleteConversation",
     "file": "src/features-voice.js",
-    "line": 1416,
+    "line": 1417,
     "desc": "if (!VoiceState.currentConvoName) {"
   },
   {
     "type": "function",
     "name": "voiceNewChat",
     "file": "src/features-voice.js",
-    "line": 1433,
+    "line": 1434,
     "desc": "VoiceState.messages = [];"
   },
   {
     "type": "function",
     "name": "voiceTopicChanged",
     "file": "src/features-voice.js",
-    "line": 1451,
+    "line": 1452,
     "desc": "if (val === 'four-three-two') { fttInit(); return; }"
   },
   {
     "type": "function",
     "name": "fttInit",
     "file": "src/features-voice.js",
-    "line": 1497,
+    "line": 1498,
     "desc": "Legacy — kept in case anything calls it"
   },
   {
     "type": "function",
     "name": "fttStartRound",
     "file": "src/features-voice.js",
-    "line": 1521,
+    "line": 1522,
     "desc": "const topicInput = document.getElementById('rtTopicInput');"
   },
   {
     "type": "function",
     "name": "fttAnalyse",
     "file": "src/features-voice.js",
-    "line": 1550,
+    "line": 1551,
     "desc": "const transcript = VoiceState.ftt_transcript.trim();"
   },
   {
     "type": "function",
     "name": "fttShowNextRoundBtn",
     "file": "src/features-voice.js",
-    "line": 1591,
+    "line": 1592,
     "desc": "const mins = [4, 3, 2][VoiceState.ftt_round] || 2;"
   },
   {
     "type": "function",
     "name": "fttShowFinal",
     "file": "src/features-voice.js",
-    "line": 1597,
+    "line": 1598,
     "desc": "voiceUpdateStatus('Drill complete — all 3 rounds done');"
   },
   {
     "type": "function",
     "name": "rtSetStatus",
     "file": "src/features-voice.js",
-    "line": 1627,
+    "line": 1628,
     "desc": "const el = document.getElementById('rtStatus');"
   },
   {
     "type": "function",
     "name": "rtStartConversation",
     "file": "src/features-voice.js",
-    "line": 1634,
+    "line": 1635,
     "desc": "const topicInput = document.getElementById('rtTopicInput');"
   },
   {
     "type": "function",
     "name": "rtCheckProgress",
     "file": "src/features-voice.js",
-    "line": 1703,
+    "line": 1704,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtStartRound2",
     "file": "src/features-voice.js",
-    "line": 1719,
+    "line": 1720,
     "desc": "if (!VoiceState.rtActive || VoiceState.rtRound !== 1) return;"
   },
   {
     "type": "function",
     "name": "rtCompare",
     "file": "src/features-voice.js",
-    "line": 1793,
+    "line": 1794,
     "desc": "VoiceState.rtMessages2 = [...VoiceState.messages];"
   },
   {
     "type": "function",
     "name": "rtShowDebrief",
     "file": "src/features-voice.js",
-    "line": 1875,
+    "line": 1876,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtNewSession",
     "file": "src/features-voice.js",
-    "line": 2120,
+    "line": 2121,
     "desc": "document.getElementById('rtDebriefPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtShowHistory",
     "file": "src/features-voice.js",
-    "line": 2131,
+    "line": 2132,
     "desc": "document.getElementById('rtHistoryPanel')?.remove();"
   },
   {
     "type": "function",
     "name": "rtReopenDebrief",
     "file": "src/features-voice.js",
-    "line": 2189,
+    "line": 2190,
     "desc": "if (!VoiceState.rtLastDebrief) return;"
   },
   {
     "type": "function",
     "name": "voiceReviewErrors",
     "file": "src/features-voice.js",
-    "line": 2201,
+    "line": 2202,
     "desc": "const userMessages = VoiceState.messages.filter(m => m.role === 'user').map(m => m.content);"
   },
   {
     "type": "function",
     "name": "voiceClearChat",
     "file": "src/features-voice.js",
-    "line": 2332,
+    "line": 2333,
     "desc": "voiceNewChat();"
   },
   {
     "type": "function",
     "name": "voiceRenderMessages",
     "file": "src/features-voice.js",
-    "line": 2336,
+    "line": 2337,
     "desc": "const history = document.getElementById('voiceChatHistory');"
   },
   {
     "type": "function",
     "name": "voicePlayLastRecording",
     "file": "src/features-voice.js",
-    "line": 2400,
+    "line": 2401,
     "desc": "if (!VoiceState.lastRecordingUrl) {"
   },
   {
     "type": "function",
     "name": "voicePlaySentenceBySentence",
     "file": "src/features-voice.js",
-    "line": 2411,
+    "line": 2412,
     "desc": "VoiceState.sentence* — see declaration above"
   },
   {
     "type": "function",
     "name": "voicePlayCurrentSentence",
     "file": "src/features-voice.js",
-    "line": 2431,
+    "line": 2432,
     "desc": "if (!VoiceState.sentencePlaying || VoiceState.sentenceIdx >= VoiceState.sentenceQueue.length) {"
   },
   {
     "type": "function",
     "name": "voiceSentenceTap",
     "file": "src/features-voice.js",
-    "line": 2468,
+    "line": 2469,
     "desc": "if (!VoiceState.sentencePlaying) return;"
   },
   {
     "type": "function",
     "name": "voiceStopSentences",
     "file": "src/features-voice.js",
-    "line": 2489,
+    "line": 2490,
     "desc": "if (VoiceState.sentencePlaying && (VoiceState.sentenceWaiting || speechSynthesis.speaking)) {"
   },
   {
     "type": "function",
     "name": "voiceToggleRecord",
     "file": "src/features-voice.js",
-    "line": 2506,
+    "line": 2507,
     "desc": "const btn = document.getElementById('voiceRecordBtn');"
   },
   {
     "type": "function",
     "name": "voiceProcessAudio",
     "file": "src/features-voice.js",
-    "line": 2564,
+    "line": 2565,
     "desc": "const openaiKey = getOpenAIKey();"
   },
   {
     "type": "function",
     "name": "voiceSendToClaude",
     "file": "src/features-voice.js",
-    "line": 2635,
+    "line": 2636,
     "desc": "if (VoiceState.interviewMode) {"
   },
   {
     "type": "function",
     "name": "voiceSendText",
     "file": "src/features-voice.js",
-    "line": 2833,
+    "line": 2834,
     "desc": "const input = document.getElementById('voiceTextInput');"
   },
   {
     "type": "function",
     "name": "voiceUploadAudio",
     "file": "src/features-voice.js",
-    "line": 2866,
+    "line": 2867,
     "desc": "Export functions"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-voice.js",
-    "line": 1615,
+    "line": 1616,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-voice.js",
-    "line": 1619,
+    "line": 1620,
     "desc": "db.run"
   },
   {
@@ -8599,28 +8606,28 @@
     "type": "prompt",
     "name": "systemPrompt",
     "file": "src/features-voice.js",
-    "line": 1161,
+    "line": 1162,
     "desc": "You are conducting a friendly get-to-know-you interview in Japanese with a langu"
   },
   {
     "type": "prompt",
     "name": "systemPrompt",
     "file": "src/features-voice.js",
-    "line": 1225,
+    "line": 1226,
     "desc": "The user answered an interview question in Japanese. Extract any personal inform"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-voice.js",
-    "line": 1560,
+    "line": 1561,
     "desc": "The learner is practising a 4/3/2 fluency drill. They spoke freely on the topic "
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-voice.js",
-    "line": 2212,
+    "line": 2213,
     "desc": "Review my Japanese from this conversation. Here are my messages: ${…}. ${…}`).jo"
   },
   {
