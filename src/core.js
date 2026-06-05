@@ -519,6 +519,9 @@ document.addEventListener('storageReady', function() {
       console.log('[LN] lesson word set loaded:', window._lessonWordSet.size, 'words');
     }).catch(e => console.warn('[LN] lesson word set load failed:', e.message));
   }
+  // Migrate lessonNotesLearnedWords localStorage → vocab_items (one-time)
+  if (App.migrateLearnedWordsToVocabItems) App.migrateLearnedWordsToVocabItems();
+
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {
     window.pitchAPI.import().then(res => {

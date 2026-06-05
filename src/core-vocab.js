@@ -1484,7 +1484,36 @@ function vcShowDetail(word) {
 
 // GRAMMAR NOTES
 
-// ── App registry — core-vocab.js exports ───────────────────────────
+// ── localStorage → vocab_items one-time migration ───────────────────
+async function migrateLearnedWordsToVocabItems() {
+  try {
+    const flag = await window.kvAPI.get('VOCAB_MIGRATION_V1');
+    if (flag) return; // already done
+    const raw = localStorage.getItem('lessonNotesLearnedWords');
+    if (!raw) { await window.kvAPI.set('VOCAB_MIGRATION_V1', '1'); return; }
+    const words = JSON.parse(raw);
+    if (!Array.isArray(words) || words.length === 0) {
+      await window.kvAPI.set('VOCAB_MIGRATION_V1', '1');
+      return;
+    }
+    const now = new Date().toISOString();
+    const due = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+    for (const word of words) {
+      if (!word || typeof word !== 'string') continue;
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+         VALUES (?, 'yoshi', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?)`,
+        [word, now, due, now]
+      );
+    }
+    await window.kvAPI.set('VOCAB_MIGRATION_V1', '1');
+    console.log('[vocab] migrated ' + words.length + ' learned words to vocab_items');
+  } catch (e) {
+    console.warn('[vocab] migration error', e);
+  }
+}
+
+// ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems,
 });

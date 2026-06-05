@@ -311,6 +311,23 @@ function createSchema() {
       meaning     TEXT,
       created_at  TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS vocab_items (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      word          TEXT NOT NULL,
+      reading       TEXT,
+      meaning       TEXT,
+      example       TEXT,
+      source        TEXT NOT NULL,
+      source_ref    TEXT,
+      encounter_at  TEXT,
+      entry_weight  REAL DEFAULT 1.0,
+      srs_interval  INTEGER DEFAULT 1,
+      srs_ease      REAL DEFAULT 2.5,
+      srs_due       TEXT,
+      last_reviewed TEXT,
+      created_at    TEXT NOT NULL,
+      UNIQUE(word, source)
+    );
     CREATE TABLE IF NOT EXISTS grammar_mastery (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       node_id       TEXT NOT NULL,
