@@ -1663,6 +1663,8 @@ function showPanel(id) {
   }
   
   document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+  // Lock body scroll for dashboard (Q&A panel), allow for others
+  document.body.style.overflow = (id === 'dashboard') ? 'hidden' : '';
   document.querySelectorAll('nav button, .sidebar button').forEach(b => b.classList.remove('active'));
   const panelId = id === 'words' ? 'panel-words' : 'panel-' + id;
   const panel = document.getElementById(panelId);
