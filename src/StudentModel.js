@@ -392,7 +392,7 @@ const StudentModel = (() => {
         const dur = r.duration_s || 0;
         const wKey = PANEL_TO_WEIGHT[r.panel];
         const w = weights && wKey ? weights[wKey] : null;
-        const isYoshi = r.panel === 'yoshi';
+        const isYoshi = r.panel === 'yoshi' || r.panel === 'lessonnotes';
         if (w) {
           if (w.s1 > 0) { strands[1] += dur * (w.s1 / 100); sessions[1]++; if (isYoshi) yoshiMins[1] += dur * (w.s1 / 100); }
           if (w.s2 > 0) { strands[2] += dur * (w.s2 / 100); sessions[2]++; if (isYoshi) yoshiMins[2] += dur * (w.s2 / 100); }
