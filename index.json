@@ -3619,6 +3619,13 @@
     "desc": ""
   },
   {
+    "type": "function",
+    "name": "backfillLookupsToVocabItems",
+    "file": "src/core-vocab.js",
+    "line": 1540,
+    "desc": ""
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
@@ -3655,6 +3662,20 @@
   },
   {
     "type": "storage",
+    "name": "VOCAB_LOOKUPS_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1551,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_LOOKUPS_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1562,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 205,
@@ -3679,6 +3700,13 @@
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 1526,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1556,
     "desc": "db.run"
   },
   {

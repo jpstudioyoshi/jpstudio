@@ -1536,7 +1536,37 @@ async function backfillLessonPhrasesToVocabItems() {
   }
 }
 
+// ── corpus_lookups backfill → vocab_items (one-time) ────────────────
+async function backfillLookupsToVocabItems() {
+  try {
+    const flag = await window.kvAPI.get('VOCAB_LOOKUPS_BACKFILL_V1');
+    if (flag) return;
+    const rows = await window.db.query(
+      `SELECT word, MIN(looked_up_at) as first_seen, COUNT(*) as lookup_count
+       FROM corpus_lookups
+       WHERE LENGTH(word) > 1
+       GROUP BY word
+       HAVING lookup_count >= 2`
+    );
+    if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1'); return; }
+    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString();
+    for (const row of rows) {
+      const weight = Math.min(0.6 + (row.lookup_count - 2) * 0.05, 1.0);
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+         VALUES (?, 'lookup', ?, ?, ?, 1, 2.5, ?, ?)`,
+        [row.word, 'corpus_lookups', row.first_seen || now, weight, today, now]
+      );
+    }
+    await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1');
+    console.log('[vocab] backfilled ' + rows.length + ' lookup words into vocab_items');
+  } catch (e) {
+    console.warn('[vocab] lookups backfill error', e);
+  }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems,
 });
