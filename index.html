@@ -464,44 +464,32 @@
   </div>
 
   <!-- HOME (was Dashboard) -->
-  <div id="panel-dashboard" class="panel active">
+  <div id="panel-dashboard" class="panel active" style="overflow:hidden">
   <div class="panel-header-lower" id="dashboardPanelHeader" style="display:block">
     <div class="panel-section-title">
       <span class="panel-section-title-jp">質問</span>
       <span class="panel-section-title-en">Questions</span>
     </div>
   </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <button class="btn-action" id="chatHistoryToggle" onclick="toggleChatHistory()">
-        HISTORY
-      </button>
-    </div>
-
-    <div id="chatHistoryDrawer" style="display:none;max-height:220px;overflow-y:auto;margin-bottom:12px;border:1px solid var(--border);border-radius:8px;background:var(--paper-dark)">
-      <div id="chatHistoryList" style="padding:8px"></div>
-    </div>
-    
-    <!-- Agent presence strip -->
-    <div id="agentStrip" style="display:none;margin-bottom:12px"></div>
-
+        <!-- Agent presence strip -->
+    <div id="agentStrip" style="display:none;margin-bottom:8px"></div>
     <!-- Input at top -->
-    <div style="margin-bottom:16px">
-      <div style="display:flex;gap:6px;margin-bottom:6px">
+    <div style="margin-bottom:10px">
+      <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
         <span data-kana-for="chatInput"></span>
+        <button class="btn-action" onclick="sendChat()" style="margin-left:8px">Send</button>
+        <button class="btn-action" id="chatHistoryToggle" onclick="toggleChatHistory()" style="margin-left:auto">History</button>
+      </div>
+      <div id="chatHistoryDrawer" style="display:none;max-height:180px;overflow-y:auto;margin-bottom:8px;border:1px solid var(--border);border-radius:8px;background:var(--paper-dark)">
+        <div id="chatHistoryList" style="padding:8px"></div>
       </div>
       <textarea class="chat-textarea" id="chatInput" placeholder="Ask anything about Japanese…" rows="2"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}else if(event.key==='Enter'&&event.shiftKey){event.preventDefault();this.value=(this.value.trim()+' break it down').trim();sendChat()}"
-        style="width:100%;padding:12px 16px;font-family:'Noto Sans JP',var(--ui);font-size:1rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);outline:none;resize:none;line-height:1.6;border-radius:8px;box-sizing:border-box"></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">
-        <button class="btn-action" onclick="sendChat()">Send</button>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-        </div>
-        <span style="font-size:0.65rem;color:var(--ink-light);font-family:var(--ui);margin-left:auto">Enter to send · Shift+Enter adds "break it down"</span>
-      </div>
+        style="width:100%;padding:10px 14px;font-family:'Noto Sans JP',var(--ui);font-size:1rem;background:var(--field);border:1px solid var(--field-border);color:var(--ink);outline:none;resize:none;line-height:1.6;border-radius:8px;box-sizing:border-box"></textarea>
     </div>
     
     <!-- Messages below -->
-    <div class="chat-messages" id="chatMessages" style="flex:1;overflow-y:auto;min-height:300px;max-height:calc(100vh - 320px)"></div>
+    <div class="chat-messages" id="chatMessages" style="flex:1;overflow-y:auto;min-height:0"></div>
   </div>
 
 

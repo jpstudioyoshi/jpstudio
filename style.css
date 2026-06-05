@@ -36,6 +36,7 @@
     font-family: var(--ui);
     line-height: 1.6;
     height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     -webkit-font-smoothing: antialiased;
@@ -347,7 +348,7 @@
   #panel-yoshi,
   #panel-resources { max-width: 1200px; margin: 0 auto; }
   /* Full width panels */
-  #panel-dashboard { padding-top: 158px; }
+  #panel-dashboard { padding-top: 162px; overflow: hidden; height: 100vh; box-sizing: border-box; }
   #panel-read { padding-top: 158px; padding-bottom: 20vh; }
   #panel-grammar2 { padding-top: 110px; overflow: hidden; }
   #panel-writing { padding-top: 158px; padding-bottom: 20vh; }

@@ -753,6 +753,9 @@ async function sendChat() {
   }
   input.value = '';
   input.style.height = 'auto';
+  // Clear previous exchange — history is preserved in chatHistory
+  const _chatContainer = document.getElementById('chatMessages');
+  if (_chatContainer) _chatContainer.innerHTML = '';
   lastUserQuestion = text;
   chatHistory.push({role: 'user', content: text});
   kanjiCorpusRecordChatProduction(text);
