@@ -923,7 +923,6 @@ window['countCheck2'] = countCheck2;
 
 
 
-window['countShowMastery'] = countShowMastery;
 // ── App registry ─────────────────────────────────────────
 try {
   Object.assign(App, {

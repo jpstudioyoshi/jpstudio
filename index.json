@@ -1851,112 +1851,112 @@
     "type": "function",
     "name": "daysToggleTable",
     "file": "src/core-counters.js",
-    "line": 956,
+    "line": 955,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');"
   },
   {
     "type": "function",
     "name": "daysStop",
     "file": "src/core-counters.js",
-    "line": 965,
+    "line": 964,
     "desc": "const drillEl = document.getElementById('daysDrillArea');"
   },
   {
     "type": "function",
     "name": "daysOfMonthInit",
     "file": "src/core-counters.js",
-    "line": 973,
+    "line": 972,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');"
   },
   {
     "type": "function",
     "name": "daysOfMonthDrill",
     "file": "src/core-counters.js",
-    "line": 1011,
+    "line": 1010,
     "desc": "const drillEl = document.getElementById('daysDrillArea');"
   },
   {
     "type": "function",
     "name": "daysNext",
     "file": "src/core-counters.js",
-    "line": 1029,
+    "line": 1028,
     "desc": "function daysCheck() {}"
   },
   {
     "type": "function",
     "name": "daysCheck",
     "file": "src/core-counters.js",
-    "line": 1030,
+    "line": 1029,
     "desc": "let _daysChecked = false;"
   },
   {
     "type": "function",
     "name": "conjugate",
     "file": "src/core-counters.js",
-    "line": 1042,
+    "line": 1041,
     "desc": "CONJUGATION DRILL"
   },
   {
     "type": "function",
     "name": "goalsLoad",
     "file": "src/core-counters.js",
-    "line": 1164,
+    "line": 1163,
     "desc": ""
   },
   {
     "type": "function",
     "name": "goalsSave",
     "file": "src/core-counters.js",
-    "line": 1171,
+    "line": 1170,
     "desc": "const g = {"
   },
   {
     "type": "function",
     "name": "goalsRestoreUI",
     "file": "src/core-counters.js",
-    "line": 1186,
+    "line": 1185,
     "desc": "const g = goalsLoad();"
   },
   {
     "type": "function",
     "name": "getConjOptions",
     "file": "src/core-counters.js",
-    "line": 1205,
+    "line": 1204,
     "desc": "const verbTypes = [];"
   },
   {
     "type": "function",
     "name": "startConjDrill",
     "file": "src/core-counters.js",
-    "line": 1229,
+    "line": 1228,
     "desc": "const {verbTypes, forms, polarities, registers} = getConjOptions();"
   },
   {
     "type": "function",
     "name": "renderConjDrill",
     "file": "src/core-counters.js",
-    "line": 1252,
+    "line": 1251,
     "desc": "const area = document.getElementById('conjDrillArea');"
   },
   {
     "type": "function",
     "name": "handleConjKey",
     "file": "src/core-counters.js",
-    "line": 1301,
+    "line": 1300,
     "desc": "if (e.key === 'Enter') {"
   },
   {
     "type": "function",
     "name": "conjAutoConvert",
     "file": "src/core-counters.js",
-    "line": 1311,
+    "line": 1310,
     "desc": "if (!conjCurrentAnswer) return;"
   },
   {
     "type": "function",
     "name": "liveCheckConj",
     "file": "src/core-counters.js",
-    "line": 1335,
+    "line": 1334,
     "desc": "conjAutoConvert();"
   },
   {
@@ -1977,7 +1977,7 @@
     "type": "storage",
     "name": "GOALS",
     "file": "src/core-counters.js",
-    "line": 1180,
+    "line": 1179,
     "desc": "Storage.set"
   },
   {
