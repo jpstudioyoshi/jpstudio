@@ -520,6 +520,7 @@ document.addEventListener('storageReady', function() {
     }).catch(e => console.warn('[LN] lesson word set load failed:', e.message));
   }
   // Migrate lessonNotesLearnedWords localStorage → vocab_items (one-time)
+  console.log('[vocab] backfill check:', typeof App.migrateLearnedWordsToVocabItems, typeof App.backfillLessonPhrasesToVocabItems);
   if (App.migrateLearnedWordsToVocabItems) App.migrateLearnedWordsToVocabItems();
   // Backfill lesson_phrases → vocab_items (one-time)
   if (App.backfillLessonPhrasesToVocabItems) App.backfillLessonPhrasesToVocabItems();
