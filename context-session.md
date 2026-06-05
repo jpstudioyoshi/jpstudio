@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-05 (session 23 — GrammarPrereqModel extraction, stabilization planning)
+Last updated: 2026-06-05 (session 23 — stabilization sprint complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -65,7 +65,7 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 - sed -n X,Yp file | pbcopy — read a block
 - grep -n "pattern" file | pbcopy — locate lines
 - Never paste code blocks directly into terminal — always use python3 heredoc scripts
-- For new files: use cat > filename << 'ENDOFFILE' heredoc (python3 path not accessible from terminal)
+- For new files: use cat > filename << 'ENDOFFILE' heredoc (/mnt/user-data/outputs/ not accessible from terminal)
 
 **Critical lessons:**
 - python3 string matching — use repr() to inspect before retrying
@@ -78,44 +78,39 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 ## Known Issues / Pre-existing
 - `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
-- Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
-- `countShowMastery is not defined` — core-counters.js line 926
-- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, remove it
 
-## Session 23 — Completed Work
+## Session 23 — Completed Work (stabilization sprint)
 
-### Stabilization: GrammarPrereqModel extraction ✅ (commit 2807d1d)
-- `src/GrammarPrereqModel.js` created — N5_GRAPH data + agentGrammarRootSignal + agentGrammarUnlockSignal
-- Both functions removed from `features-progress.js` (~196 lines removed)
-- Loaded in index.html after GrammarModel.js, before features-progress.js
-- `features-progress.js.bak` deleted
-- 43 files, 0 syntax errors
+### GrammarPrereqModel extraction ✅ (commit 2807d1d)
+- `src/GrammarPrereqModel.js` created — N5_GRAPH + agentGrammarRootSignal + agentGrammarUnlockSignal
+- Removed from `features-progress.js` (~196 lines)
+- Loaded in index.html after GrammarModel.js
+
+### Dead code removed ✅
+- `countShowMastery` button removed from counters panel (commit)
+- `countShowMastery` dead export removed from core-counters.js
+- `lessonNotesClozeRevealAll` dead registry entry removed from features-ln-p2.js (commit 469c801)
+- Stale root `core-foundation.js` deleted — 1919 lines gone (commit 268448e)
+
+### `_conjRecordGrammarEvidence` — audited ✅
+- Not broken — writes to grammar_mastery via GrammarModel.recordEvidence()
+- Maps conjugation drill answers to GrammarModel node IDs
+- Nudges mastery score ±0.05/0.08 per answer
+- Lives in core-stt.js, called from features-grammar.js
+
+### Two grammar models — clarified ✅
+- **GrammarPrereqModel** (38 nodes) — prerequisite/unlock signals, feeds briefing
+- **GrammarModel** (55 nodes) — Genki mastery tracking, UI grid, teal dots
+- Different purposes, no convergence needed
 
 ## Session 21/22 — Completed Work
-
-### Phase 3 complete
-- Strand balance chart live with stacked bars (Yoshi in teal)
-- Strand weights UI in settings (14 activities, auto-saves)
-- AppEvents fully wired — all panels emit, StudentModel receives
-- Voice panel time from recording events only (not panel timer)
-- Yoshi session time from SESSION_SAVED event
-- Sentence building instrumentation
-- FLUENCY tiles corrected
-
-### Phase 4 — Yoshi-driven learning pipeline (complete)
-- grammar_mastery table created
-- AnalysisService wired into Orchestrator pipeline
-- transcript_vocab → words SRS deck ✅ (commit cdddb81)
-- Grammar dismiss/override ✅ (commit 2b1c8b4)
-- DrillSRS migrated to SQL-only
+- Phase 3 complete — strand balance chart, strand weights UI, AppEvents wired
+- Phase 4 complete — AnalysisService wired, transcript_vocab, grammar_mastery, DrillSRS migrated
 
 ## Pending Work — Priority Order
 
-### Stabilization tasks (architectural debt)
-1. `countShowMastery is not defined` — core-counters.js line 926 — fix or remove
-2. `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344 — remove call
-3. Stale root core-foundation.js — delete safely
-4. `_conjRecordGrammarEvidence` — audit where it writes, document or fix
+### Stabilization (remaining)
+- `yoshiInitUI not defined` — pre-existing, investigate when touching voice panel
 
 ### Phase 3 remaining
 - Strand imbalance notification — outbound StudentModel signal when strand < 20%
@@ -125,18 +120,17 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 - Lesson notes grammar Part 2 — requires LLM call to return grammarNodeIds
 
 ### Medium term
-- `notes_text` blob in lesson_sessions — messy catch-all, rationalize later
-- Two grammar models boundary — N5_GRAPH now GrammarPrereqModel (prereq/unlock), GrammarModel (mastery/Genki) — document clearly, converge not required
+- `notes_text` blob in lesson_sessions — rationalize later
 - `LessonNotesState.grammar` — in memory only, never persists
 - Progress panel header — briefing refresh + About me controls
 
 ### Future
+- Thread coordination system + site manager pattern
 - Dropbox recordings redirect
 - Video → Audio pipeline (ffmpeg)
 - Pitch accent wiring
 - Lesson Mode Architecture
 - Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
-- Thread coordination system + site manager pattern
 
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab
