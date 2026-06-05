@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-05 (session 23 — stabilization sprint, strand balance complete)
+Last updated: 2026-06-05 (session 24 — vocab system planning + Layer 2 complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -38,11 +38,12 @@ Last updated: 2026-06-05 (session 23 — stabilization sprint, strand balance co
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-STABILIZATION complete — ready for Phase 5.
-See ARCHITECTURE_HUB.md for full design.
+STABILIZATION complete — Vocab system Layer 2 complete, Layer 3 next.
+See ARCHITECTURE_HUB.md for full design. See context-vocab.md for vocab system design.
 
 ## Thread Structure
 - **Architecture thread** — design decisions, audits, doc updates only (this thread)
+- **Vocab thread** — vocab system implementation (this thread, session 24+)
 - **StudentModel thread** — StudentModel wiring
 - **Delegate implementation** to feature threads once decisions are made here
 - Other threads for their respective panels/features
@@ -71,9 +72,9 @@ See ARCHITECTURE_HUB.md for full design.
 
 **Critical lessons:**
 - python3 string matching — use repr() to inspect before retrying
-- Blank lines in match strings cause MATCH FAILED
+- Blank lines in match strings cause MATCH FAILED — always use repr() to check first
 - Cache buster now auto-bumped on every commit via pre-commit hook — no manual bumping needed
-- pbcopy swallows terminal output — never for sed -n reads
+- pbcopy swallows terminal output — never use for sed -n reads
 - Always jp && prefix
 - /mnt/user-data/outputs/ is Claude-side only — not accessible from terminal
 - SQLite DB is at ~/Library/Application Support/japanese-studio/jpstudio.db (not jpStudio)
@@ -82,6 +83,37 @@ See ARCHITECTURE_HUB.md for full design.
 - `yoshiInitUI not defined` — harmless, pre-existing
 - PDF print line breaks — pre-existing
 - `yoshi.s1` strand weight was corrupt (1000) — fixed directly in DB. If settings reset, re-save strand weights to normalize.
+
+## Session 24 — Completed Work
+
+### Vocab system — design + Layer 2 ✅ (commit b5d4918)
+
+**Design decisions (see context-vocab.md for full rationale):**
+- Three vocab sources: Yoshi/lesson_phrases (highest), free writing/corpus_productions, dictionary lookups/corpus_lookups
+- N5 as background horizon fill only (lowest weight)
+- Transcription excluded (noise), reading excluded, Anki no further investment
+- Open/closed class distinction maintained — counters/dates/conjugation stay in own drills
+- Writing signal: produced N times without lookup = known = fast weight decay
+- Lookup threshold: N lookups before word promoted to deck (default 2, configurable)
+- Unified SRS pool in vocab_items, source-tagged
+- Weight stack is difficulty controller for grammar drill sentence generation
+- API cost not a constraint — optimise for learning quality
+
+**Data audit findings (see vocab-audit-2026-06-05.md):**
+- lesson_phrases: 93 rows, example sentence on every row, reading column empty (not a blocker)
+- corpus_productions: 1392 tokens, 265 types — ALL single kanji, no compounds (extraction broken)
+- corpus_lookups: 1180 tokens, 579 types — 277 multi-char types usable, rest single-kanji noise
+- transcript_vocab: 0 rows (pipeline still not wired — Phase 4 item, not part of vocab system)
+- lessonNotesLearnedWords: real user data in localStorage, migrated to vocab_items on first launch
+- jpLearnedWords (jpLearnedWords key): dead key, never read/written, ignore
+- vocabBookmarks: empty
+
+**Layer 2 complete:**
+- `vocab_items` table added to main.js schema
+- `migrateLearnedWordsToVocabItems()` written in core-vocab.js — reads lessonNotesLearnedWords localStorage, inserts as source='yoshi', entry_weight=0.1, srs_interval=30
+- Migration wired into storageReady block in core.js
+- Guarded by VOCAB_MIGRATION_V1 kvAPI flag — runs once only
+- Added to App registry
 
 ## Session 23 — Completed Work
 
@@ -122,6 +154,28 @@ See ARCHITECTURE_HUB.md for full design.
 
 ## Pending Work — Priority Order
 
+### Vocab system — Layer 3 (pipelines) — next
+1. lesson_phrases → vocab_items pipeline (clean, ready now)
+2. corpus_lookups → vocab_items pipeline (multi-char filter: LENGTH(word) > 1)
+3. N5 background load — one-time, lowest priority
+4. corpus_productions — fix extraction first (currently single-kanji only), then wire
+
+### Vocab system — Layer 4 (SRS UI)
+- Rewrite words-sub-vocab to pull from vocab_items
+- Card: word, reading, meaning, source tag, weight indicator
+- SM-2 review writes back to vocab_items
+- Delete words-sub-game (HTML, JS, subtab entry)
+
+### Vocab system — Layer 5 (settings levers)
+- Per-source weight inputs (VOCAB_WEIGHTS in kvAPI)
+- Lookup threshold input (VOCAB_THRESHOLDS in kvAPI)
+- Production decay threshold input
+
+### Vocab system — Layer 6 (downstream)
+- Grammar drill sentence generation uses vocab_items weight profile
+- Sentence construction activity same budget logic
+- Cost tag: source='vocab_drill' / 'vocab_sentence_gen'
+
 ### Phase 5 — next frontier
 - Step 1: rule-based monitor — fire on session end, check strand balance thresholds
 - Step 2: LLM recommendation via claudeSummary() → agent_decisions table
@@ -146,14 +200,14 @@ See ARCHITECTURE_HUB.md for full design.
 - Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
 
 ## SQLite Schema (current)
-Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
 pitch_data: 124,137 entries
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ## kvAPI — rationalized usage
-**Keep in kvAPI:** STRAND_WEIGHTS, goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache, gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
+**Keep in kvAPI:** STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_MIGRATION_V1, goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache, gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
 **Migrated to DB:** DrillSRS (all drill types now in srs_items)
-**Still on localStorage:** voice profile, voice pause data, video watch time, resources, learned words
+**Still on localStorage:** voice profile, voice pause data, video watch time, resources, learned words (lessonNotesLearnedWords — migrated to vocab_items on first launch)
 
 ## Storage rationalization principle
 - kvAPI: config, preferences, small UI state that doesn't need querying

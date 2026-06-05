@@ -521,6 +521,8 @@ document.addEventListener('storageReady', function() {
   }
   // Migrate lessonNotesLearnedWords localStorage → vocab_items (one-time)
   if (App.migrateLearnedWordsToVocabItems) App.migrateLearnedWordsToVocabItems();
+  // Backfill lesson_phrases → vocab_items (one-time)
+  if (App.backfillLessonPhrasesToVocabItems) App.backfillLessonPhrasesToVocabItems();
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {

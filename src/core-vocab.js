@@ -1513,7 +1513,30 @@ async function migrateLearnedWordsToVocabItems() {
   }
 }
 
+// ── lesson_phrases backfill → vocab_items (one-time) ────────────────
+async function backfillLessonPhrasesToVocabItems() {
+  try {
+    const flag = await window.kvAPI.get('VOCAB_LESSON_BACKFILL_V1');
+    if (flag) return;
+    const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, created_at FROM lesson_phrases');
+    if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1'); return; }
+    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString();
+    for (const row of rows) {
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+         VALUES (?, ?, ?, ?, 'yoshi', ?, ?, 1.0, 1, 2.5, ?, ?)`,
+        [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.created_at || now, today, now]
+      );
+    }
+    await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1');
+    console.log('[vocab] backfilled ' + rows.length + ' lesson_phrases into vocab_items');
+  } catch (e) {
+    console.warn('[vocab] lesson backfill error', e);
+  }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems,
 });

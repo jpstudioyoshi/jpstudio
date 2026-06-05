@@ -3612,6 +3612,13 @@
     "desc": "GRAMMAR NOTES"
   },
   {
+    "type": "function",
+    "name": "backfillLessonPhrasesToVocabItems",
+    "file": "src/core-vocab.js",
+    "line": 1517,
+    "desc": ""
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
@@ -3634,6 +3641,20 @@
   },
   {
     "type": "storage",
+    "name": "VOCAB_LESSON_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1522,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_LESSON_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1532,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 205,
@@ -3651,6 +3672,13 @@
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 1503,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1526,
     "desc": "db.run"
   },
   {
