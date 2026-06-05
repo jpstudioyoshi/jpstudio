@@ -1458,7 +1458,7 @@ async function backfillLessonPhrasesToVocabItems() {
   try {
     const flag = await window.kvAPI.get('VOCAB_LESSON_BACKFILL_V1');
     if (flag) return;
-    const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, created_at FROM lesson_phrases');
+    const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, created_at FROM lesson_phrases', []);
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1'); return; }
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
@@ -1486,7 +1486,7 @@ async function backfillLookupsToVocabItems() {
        FROM corpus_lookups
        WHERE LENGTH(word) > 1
        GROUP BY word
-       HAVING lookup_count >= 2`
+       HAVING lookup_count >= 2`, []
     );
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1'); return; }
     const today = new Date().toISOString().split('T')[0];
@@ -1511,7 +1511,7 @@ async function backfillN5ToVocabItems() {
   try {
     const flag = await window.kvAPI.get('VOCAB_N5_BACKFILL_V1');
     if (flag) return;
-    const rows = await window.db.query('SELECT word, reading, meaning FROM words');
+    const rows = await window.db.query('SELECT word, reading, meaning FROM words', []);
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1'); return; }
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
