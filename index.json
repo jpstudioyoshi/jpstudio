@@ -7815,42 +7815,42 @@
     "type": "function",
     "name": "lnAlignTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1363,
+    "line": 1362,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "lnLoadTwoColumnTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1469,
+    "line": 1468,
     "desc": "to wall-clock positioning."
   },
   {
     "type": "function",
     "name": "lnTtsAndPause",
     "file": "src/features-ln-p2.js",
-    "line": 1606,
+    "line": 1605,
     "desc": "const student = document.getElementById('lnAudioStudent');"
   },
   {
     "type": "function",
     "name": "renderRecordingsBrowser",
     "file": "src/features-ln-p2.js",
-    "line": 1622,
+    "line": 1621,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "recBrowserTranscribe",
     "file": "src/features-ln-p2.js",
-    "line": 1689,
+    "line": 1688,
     "desc": "const btn = event.target;"
   },
   {
     "type": "function",
     "name": "recBrowserDelete",
     "file": "src/features-ln-p2.js",
-    "line": 1702,
+    "line": 1701,
     "desc": "if (!confirm('Delete this recording and audio files from disk?')) return;"
   },
   {
@@ -7864,7 +7864,7 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-ln-p2.js",
-    "line": 1409,
+    "line": 1408,
     "desc": "You are aligning Yoshi\\'s WhatsApp messages to a Japanese lesson audio transcrip"
   },
   {

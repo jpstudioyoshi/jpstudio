@@ -1341,7 +1341,6 @@ try {
     lessonNotesExtractKeyPhrases,
     lessonNotesOpenStory,
     lessonNotesSetStoryTab,
-    lessonNotesClozeRevealAll,
     lessonNotesSaveStoryNotes,
     lessonNotesSaveStoryEdit,
     lessonNotesSetMode,
