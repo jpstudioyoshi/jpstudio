@@ -45,108 +45,41 @@ function vcTogglePitch() {
   if (el) el.style.display = vcPitchVisible ? 'block' : 'none';
   if (btn) btn.classList.toggle('btn-active', vcPitchVisible);
 }
+// ── Load due cards from vocab_items into state.vocabItems ───────────────────
+async function loadVocabItemsDeck() {
+  if (!window.db) return;
+  try {
+    const rows = await window.db.query(
+      "SELECT * FROM vocab_items WHERE srs_due <= date('now') OR srs_due IS NULL ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50"
+    );
+    state.vocabItems = rows || [];
+    _dataLoaded = true;
+    renderVocab();
+  } catch (e) {
+    console.warn('[vocab] loadVocabItemsDeck error', e);
+    state.vocabItems = [];
+    _dataLoaded = true;
+  }
+}
+
 function startNewSession() {
-  // Don't run before data is loaded — renderVocab will call us again once ready
-  if (!_dataLoaded || !state.vocab.length) return;
+  if (!_dataLoaded || !state.vocabItems || !state.vocabItems.length) return;
   if (!state.vocabKnownSessions) state.vocabKnownSessions = {};
   const sizeRadio = document.querySelector('input[name="vocabSize"]:checked');
   const sizeVal = sizeRadio ? sizeRadio.value : '20';
-  const size    = sizeVal === 'all' ? 9999 : parseInt(sizeVal);
+  const size    = sizeVal === 'all' ? state.vocabItems.length : parseInt(sizeVal);
 
-  // Level filter (existing UI checkboxes)
-  const levelEls    = document.querySelectorAll('.vocab-level-filter:checked');
-  const _rawLevels  = levelEls.length ? [...levelEls].map(el => el.value) : null;
-  const _expandLevel = v => v === 'N5+N4' ? ['N5','N4'] : v === 'all' ? ['N5','N4','N3'] : [v];
-  const activeLevels = _rawLevels ? new Set(_rawLevels.flatMap(_expandLevel)) : null;
-
-  // POS filter (new checkboxes — null means all)
-  const posEls    = document.querySelectorAll('.vocab-pos-filter:checked');
-  const activePOS = posEls.length ? new Set([...posEls].map(el => el.value)) : null;
-
-  // ── Priority-driven selection ────────────────────────────────────────────
-  // Build a priority-sorted list from the live word data, then map back to
-  // indices in state.vocab so the rest of the session machinery is unchanged.
-  try {
-    const now       = Date.now();
-    const priorityList = vcBuildPriorityList(); // sorted high→low priority
-
-    // Build a lookup: word → index in state.vocab
-    const wordToIdx = {};
-    state.vocab.forEach((card, i) => { wordToIdx[card.jp] = i; });
-
-    // Apply filters and collect indices in priority order
-    const seen   = new Set();
-    const pool   = [];
-
-    // Pass 1: SRS overdue words — always include these first
-    for (const entry of priorityList) {
-      if (pool.length >= size) break;
-      const i = wordToIdx[entry.w];
-      if (i === undefined || seen.has(i)) continue;
-      if (isWordMastered(i)) continue;
-      if (activeLevels && !activeLevels.has(entry.l)) continue;
-      if (activePOS && !activePOS.has(entry.pos)) continue;
-      if (entry.srsDue && entry.srsDue <= now && entry.srsInterval > 0) {
-        pool.push(i);
-        seen.add(i);
-      }
-    }
-
-    // Pass 2: remaining words in priority order (no SRS filter)
-    for (const entry of priorityList) {
-      if (pool.length >= size) break;
-      const i = wordToIdx[entry.w];
-      if (i === undefined || seen.has(i)) continue;
-      if (isWordMastered(i)) continue;
-      if (activeLevels && !activeLevels.has(entry.l)) continue;
-      if (activePOS && !activePOS.has(entry.pos)) continue;
-      pool.push(i);
-      seen.add(i);
-    }
-
-    // Pass 3: fallback — any eligible word not yet included (covers words
-    // not in JLPT_WORDS, custom-added vocab, etc.)
-    if (pool.length < size) {
-      state.vocab.forEach((card, i) => {
-        if (pool.length >= size || seen.has(i)) return;
-        if (isWordMastered(i)) return;
-        if (activeLevels && card.l && !activeLevels.has(card.l)) return;
-        if (activePOS && card.pos && !activePOS.has(card.pos)) return;
-        pool.push(i);
-        seen.add(i);
-      });
-    }
-
-    vocabSession    = pool;
-    vocabSessionPos = 0;
-    vocabIdx        = vocabSession[0] ?? 0;
-
-    const statusEl = document.getElementById('sessionStatus');
-    if (statusEl) statusEl.textContent = pool.length
-      ? `Session: ${pool.length} words (priority order)`
-      : 'All words mastered!';
-    renderVocab();
-    return;
-
-  } catch(e) {
-    console.warn('[startNewSession] priority selection failed, falling back:', e.message);
-  }
-
-  // ── Fallback: original random shuffle ───────────────────────────────────
-  const eligible = state.vocab.map((_,i) => i).filter(i => {
-    if (isWordMastered(i)) return false;
-    if (activeLevels && state.vocab[i].l && !activeLevels.has(state.vocab[i].l)) return false;
-    if (activePOS && state.vocab[i].pos && !activePOS.has(state.vocab[i].pos)) return false;
-    return true;
-  });
-  const shuffled = [...eligible].sort(() => Math.random() - 0.5);
-  vocabSession    = sizeVal === 'all' ? eligible : shuffled.slice(0, size);
+  // state.vocabItems is already ordered by entry_weight DESC, encounter_at DESC
+  // and pre-filtered to due/new rows by the SQL query — take the top N.
+  const pool = state.vocabItems.slice(0, size).map((_, i) => i);
+  vocabSession    = pool;
   vocabSessionPos = 0;
   vocabIdx        = vocabSession[0] ?? 0;
-  const statusEl  = document.getElementById('sessionStatus');
-  if (statusEl) statusEl.textContent = vocabSession.length
-    ? `Session: ${vocabSession.length} words`
-    : 'All words mastered!';
+
+  const statusEl = document.getElementById('sessionStatus');
+  if (statusEl) statusEl.textContent = pool.length
+    ? `Session: ${pool.length} words`
+    : 'No words due — come back tomorrow';
   renderVocab();
 }
 
@@ -158,36 +91,33 @@ const _sessionKnown = {};  // tracks which cards were marked known THIS session
 
 function markVocab(v) {
   if (!vocabSession.length) return;
-  const card   = state.vocab[vocabIdx];
-  const srsKey = card?.jp || card?.kana || String(vocabIdx); // kanji form — fixes homophone bug
+  const card   = state.vocabItems?.[vocabIdx];
+  if (!card) return;
+  const id     = card.id;
+  const word   = card.word || '';
+  const srsKey = id != null ? String(id) : word;
 
   if (v === 'know') {
     _sessionKnown[vocabIdx] = true;
-
-    // Feed SRS — full correct answer, interval grows normally
-    // Mastery is now SRS interval >= 14 days (no more 3-session rule)
-    try { DrillSRS.record(STORAGE_KEYS.DRILL_SRS_WORDS, srsKey, true); } catch(e) {}
+    if (window.db && id != null) {
+      window.db.run(
+        "UPDATE vocab_items SET srs_interval = srs_interval * srs_ease, srs_due = date('now', '+' || CAST(srs_interval * srs_ease AS INTEGER) || ' days'), last_reviewed = datetime('now') WHERE id = ?",
+        [id]
+      ).catch(() => {});
+    }
 
   } else if (v === 'gotit') {
-    // Knew it on reveal — remove from this session (no need to show again today)
-    // but cap SRS interval at 1 day so it comes back tomorrow
+    // Knew it on reveal — cap interval at 1 day so it returns tomorrow
     _sessionKnown[vocabIdx] = true;
-
-    // Feed SRS — record as correct but then cap interval to 1 day
-    try {
-      DrillSRS.record(STORAGE_KEYS.DRILL_SRS_WORDS, srsKey, true);
-      // Override the interval the SM-2 just set — max 1 day for "needed the reveal"
-      const all  = DrillSRS.getAll(STORAGE_KEYS.DRILL_SRS_WORDS);
-      const item = all[srsKey];
-      if (item && item.interval > 1) {
-        item.interval = 1;
-        item.due      = Date.now() + 86400000;
-        DrillSRS.saveAll(STORAGE_KEYS.DRILL_SRS_WORDS, all);
-      }
-    } catch(e) {}
+    if (window.db && id != null) {
+      window.db.run(
+        "UPDATE vocab_items SET srs_interval = 1, srs_due = date('now', '+1 days'), last_reviewed = datetime('now') WHERE id = ?",
+        [id]
+      ).catch(() => {});
+    }
 
   } else {
-    // 'again' — move card to back of session
+    // 'again' — move card to back of session, reset SRS
     delete _sessionKnown[vocabIdx];
     state.vocabProgress[vocabIdx] = 'again';
     const sessionPos = vocabSession.indexOf(vocabIdx);
@@ -195,9 +125,12 @@ function markVocab(v) {
       vocabSession.splice(sessionPos, 1);
       vocabSession.push(vocabIdx);
     }
-
-    // Feed SRS — incorrect answer
-    try { DrillSRS.record(STORAGE_KEYS.DRILL_SRS_WORDS, srsKey, false); } catch(e) {}
+    if (window.db && id != null) {
+      window.db.run(
+        "UPDATE vocab_items SET srs_interval = 1, srs_due = date('now', '+1 days'), last_reviewed = datetime('now') WHERE id = ?",
+        [id]
+      ).catch(() => {});
+    }
   }
   if (typeof window !== 'undefined' && window.db) {
     const _ts = new Date().toISOString();
@@ -208,10 +141,10 @@ function markVocab(v) {
     ).catch(() => {});
     window.db.run(
       'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
-      [_ts, 'words', 'drill:answer', JSON.stringify({ key: srsKey, word: card?.jp || srsKey, reading: card?.kana || '', result: _result })]
+      [_ts, 'words', 'drill:answer', JSON.stringify({ key: srsKey, word: word, reading: card.reading || '', result: _result })]
     ).catch(() => {});
   try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
-  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'words', key: srsKey, word: card?.jp || srsKey, result: _result }); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.DRILL_ANSWER, { panel: 'words', key: srsKey, word: word, result: _result }); } catch(e) {}
   }
 
   saveState();
@@ -237,7 +170,6 @@ function markVocab(v) {
 
 
 function renderVocab() {
-  // Grab all elements up front — bail if the panel isn't in the DOM yet
   const vocabCardEl   = document.getElementById('vocabCard');
   const vocabCounterEl= document.getElementById('vocabCounter');
   const deckStatusEl  = document.getElementById('vocabDeckStatus');
@@ -245,26 +177,26 @@ function renderVocab() {
   const statusEl      = document.getElementById('sessionStatus');
   if (!vocabCardEl || !vocabCounterEl || !deckStatusEl || !resetBtnEl) return;
 
-  const cards = state.vocab;
+  const cards = state.vocabItems || [];
 
   if (!cards.length) {
     const vcJp = document.getElementById('vcJp');
     const vcEn = document.getElementById('vcEn');
-    if (vcJp) vcJp.textContent = 'No cards yet';
-    if (vcEn) vcEn.textContent = 'Add some below';
-    vocabCounterEl.textContent = 'No cards yet — add some below!';
+    const vcPs = document.getElementById('vcPos');
+    if (vcJp) vcJp.textContent = _dataLoaded ? 'No words due' : 'Loading…';
+    if (vcEn) vcEn.textContent = _dataLoaded ? 'Come back tomorrow' : '';
+    if (vcPs) vcPs.textContent = '';
+    vocabCounterEl.textContent = _dataLoaded ? 'No words due' : '';
     deckStatusEl.textContent = '';
     resetBtnEl.style.display = 'none';
     renderVocabList();
     return;
   }
 
-  // Auto-start session if none active
   if (!vocabSession.length) {
-    if (!_dataLoaded) return; // data not ready yet — will be called again after load
+    if (!_dataLoaded) return;
     const hasSession = Object.keys(_sessionKnown).length > 0;
     if (hasSession) {
-      // Session complete
       const vcJp = document.getElementById('vcJp');
       const vcRd = document.getElementById('vcReading');
       const vcEn = document.getElementById('vcEn');
@@ -320,33 +252,45 @@ function renderVocab() {
   const vcPos    = document.getElementById('vcPos');
   const _vcBR    = document.getElementById('vcBackReading');
 
-  const enJp = vcDirection === 'en-jp';
-  if (hintEl)    hintEl.textContent = enJp ? (card.kana || card.reading || '') : (card.kana || card.reading || '');
-  if (vcJp)    { vcJp.textContent   = enJp ? card.en : card.jp;
-                 vcJp.style.color   = enJp ? 'var(--ink)' : '';
-                 vcJp.style.fontSize = enJp ? '1.4rem' : ''; }
-  if (readingEl) {
-    readingEl.textContent  = enJp ? '' : (card.kana || card.reading || '');
-    readingEl.style.display = (!enJp && vcReadingVisible) ? 'block' : 'none';
+  const word    = card.word || '';
+  const reading = card.reading || '';
+  const meaning = card.meaning || '';
+  const example = card.example || '';
+  const source  = card.source || '';
+  const encDate = (card.encounter_at || '').split('T')[0] || '';
+  const sourceTag = source ? (encDate ? source + ' · ' + encDate : source) : '';
+
+  if (hintEl) hintEl.textContent = reading;
+  if (vcJp) {
+    vcJp.textContent = word;
+    vcJp.style.color = '';
+    vcJp.style.fontSize = '';
   }
-  if (vcEn)  vcEn.textContent  = enJp ? (card.jp + (card.kana && card.kana !== card.jp ? '　' + card.kana : '')) : card.en;
-  if (_vcBR) _vcBR.textContent = enJp ? '' : (card.kana || card.reading || '');
-  if (vcPos) vcPos.textContent = card.pos || '';
+  if (readingEl) {
+    readingEl.textContent = reading;
+    readingEl.style.display = (reading && vcReadingVisible) ? 'block' : 'none';
+  }
+  if (vcEn) {
+    vcEn.innerHTML = escHtml(meaning) +
+      (example
+        ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>'
+        : '');
+  }
+  if (_vcBR) _vcBR.textContent = reading;
+  if (vcPos) vcPos.textContent = sourceTag;
+
   const vcPitchEl = document.getElementById('vcPitch');
   if (vcPitchEl) {
-    const kana = card.kana || card.reading || '';
-    const _pitchWord = card.jp || kana;
-    function _wrapPitch(svg) {
-      if (!svg) return '';
-      const word = _pitchWord.replace(/'/g, "\\'");
-      return '<div title="Hover to hear" style="cursor:pointer;display:block;margin:0 auto" onmouseenter="this._t=setTimeout(()=>jpSpeak(\'' + word + '\',0.85),600)" onmouseleave="clearTimeout(this._t)">' + svg + '</div>';
-    }
-    if (card.pitch != null) {
-      vcPitchEl.innerHTML = _wrapPitch(renderPitchCurve(kana, card.pitch));
-    } else if (window.pitchAPI && kana) {
+    if (window.pitchAPI && reading) {
       vcPitchEl.innerHTML = '';
-      window.pitchAPI.lookup(card.jp, kana).then(function(pitchStr) {
-        if (pitchStr != null) vcPitchEl.innerHTML = _wrapPitch(renderPitchCurve(kana, pitchStr));
+      const safeWord = word.replace(/'/g, "\\'");
+      window.pitchAPI.lookup(word, reading).then(function(pitchStr) {
+        if (pitchStr != null) {
+          vcPitchEl.innerHTML =
+            '<div title="Hover to hear" style="cursor:pointer;display:block;margin:0 auto" ' +
+            'onmouseenter="this._t=setTimeout(()=>jpSpeak(\'' + safeWord + '\',0.85),600)" ' +
+            'onmouseleave="clearTimeout(this._t)">' + renderPitchCurve(reading, pitchStr) + '</div>';
+        }
       });
     } else {
       vcPitchEl.innerHTML = '';
@@ -356,13 +300,9 @@ function renderVocab() {
   vocabCardEl.classList.remove('flipped');
 
   const pos = deck.indexOf(vocabIdx);
-  const masterCount = state.vocab.filter((_,i) => isWordMastered(i)).length;
-  const masteredStr = masterCount > 0 ? ` · ${masterCount} mastered` : '';
-  const sessions = (state.vocabKnownSessions || {})[vocabIdx] || [];
-  const sessionStr = sessions.length > 0 ? ` · ✓×${sessions.length}/3` : '';
-  vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session${masteredStr}${sessionStr}`;
+  vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session`;
   deckStatusEl.textContent = '';
-  resetBtnEl.style.display = masterCount > 0 ? 'inline-block' : 'none';
+  resetBtnEl.style.display = 'none';
 
   if (statusEl) statusEl.textContent = `Session: ${deck.length} left of ${vocabSession.length}`;
   renderVocabList();
@@ -400,7 +340,7 @@ function resetVocabDeck() {
   saveState();
   vocabSession = [];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
-  startNewSession();
+  loadVocabItemsDeck();
 }
 
 function toggleVocabList() {
@@ -1641,5 +1581,5 @@ function initWritingVocabListener() {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, loadVocabItemsDeck,
 });

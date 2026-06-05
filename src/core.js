@@ -529,6 +529,8 @@ document.addEventListener('storageReady', function() {
   if (App.backfillN5ToVocabItems) App.backfillN5ToVocabItems();
   // Wire writing vocab extraction listener
   if (App.initWritingVocabListener) App.initWritingVocabListener();
+  // Load due vocab_items into the drill deck
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {
