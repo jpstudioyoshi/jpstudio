@@ -391,8 +391,9 @@ async function renderStrandBalance() {
       const dispMins = _strandShowYoshi ? mins : Math.max(0, mins - yMins);
       const dispPct  = _strandShowYoshi ? pct : Math.round(dispMins / totalNoYoshi * 100);
       const color = dispMins === 0 ? 'var(--error, #e05)' : dispPct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
+      const yoshiColor = '#4a9eff';
       const barHtml = (_strandShowYoshi && yPct > 0)
-        ? `<div style="width:${yPct}%;height:100%;background:var(--teal);border-radius:3px 0 0 3px;display:inline-block"></div><div style="width:${oPct}%;height:100%;background:${color};display:inline-block"></div>`
+        ? `<div style="width:${yPct}%;height:100%;background:${yoshiColor};border-radius:3px 0 0 3px;display:inline-block;vertical-align:top"></div><div style="width:${oPct}%;height:100%;background:${color};display:inline-block;vertical-align:top"></div>`
         : `<div style="width:${dispPct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>`;
       return `<div style="margin-bottom:7px">
         <div style="font-family:var(--ui);font-size:0.72rem;margin-bottom:2px;color:var(--ink)">${n} — ${LABELS[n]}</div>
