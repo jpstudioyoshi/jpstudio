@@ -3633,6 +3633,20 @@
     "desc": ""
   },
   {
+    "type": "function",
+    "name": "extractWritingVocabToItems",
+    "file": "src/core-vocab.js",
+    "line": 1595,
+    "desc": "if (!text || text.length < 2) return;"
+  },
+  {
+    "type": "function",
+    "name": "initWritingVocabListener",
+    "file": "src/core-vocab.js",
+    "line": 1631,
+    "desc": ""
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
@@ -3735,6 +3749,13 @@
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 1580,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1619,
     "desc": "db.run"
   },
   {

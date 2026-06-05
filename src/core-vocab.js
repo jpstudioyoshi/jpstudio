@@ -1591,7 +1591,55 @@ async function backfillN5ToVocabItems() {
   }
 }
 
+// ── Writing vocab extraction → vocab_items (live, per submission) ───
+async function extractWritingVocabToItems(text) {
+  if (!text || text.length < 2) return;
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'You are a Japanese vocabulary extractor. Return ONLY a JSON array, no markdown, no preamble. Each item: {"word":"","reading":"","meaning":""}. Extract only content words (nouns, verbs, adjectives, adverbs). Exclude particles, conjunctions, auxiliary verbs.',
+        messages: [{ role: 'user', content: 'Extract vocabulary from this Japanese text: ' + text }]
+      })
+    });
+    const data = await response.json();
+    const raw = (data.content || []).map(b => b.text || '').join('');
+    let words;
+    try { words = JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch(e) {
+      console.warn('[vocab] writing extraction parse error', e); return;
+    }
+    if (!Array.isArray(words) || words.length === 0) return;
+    const now = new Date().toISOString();
+    const today = now.split('T')[0];
+    for (const w of words) {
+      if (!w.word || typeof w.word !== 'string') continue;
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+         VALUES (?, ?, ?, 'writing', 'writing_session', ?, 0.9, 1, 2.5, ?, ?)`,
+        [w.word, w.reading || null, w.meaning || null, now, today, now]
+      );
+    }
+    console.log('[vocab] writing extraction: ' + words.length + ' words from submission');
+  } catch (e) {
+    console.warn('[vocab] writing extraction error', e);
+  }
+}
+
+function initWritingVocabListener() {
+  try {
+    (App.AppEvents || window.AppEvents)?.on(AppEvents.WRITING_SUBMITTED, (payload) => {
+      const text = payload?.full_text;
+      if (text) extractWritingVocabToItems(text);
+    });
+  } catch(e) {
+    console.warn('[vocab] writing listener init error', e);
+  }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener,
 });

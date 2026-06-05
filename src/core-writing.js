@@ -303,7 +303,7 @@ async function submitWritingSentence() {
       [_ts, 'writing', 'writing:submitted', JSON.stringify({ first_attempt: _first.slice(0,80), final_text: text.slice(0,80), check_count: _attempts })]
     ).catch(() => {});
   try { (App.StudentModel || window.StudentModel)?.invalidate(); } catch(e) {}
-  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.WRITING_SUBMITTED, { first_attempt: _first?.slice(0,80), final_text: text?.slice(0,80), check_count: _attempts }); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.WRITING_SUBMITTED, { first_attempt: _first?.slice(0,80), final_text: text?.slice(0,80), check_count: _attempts, full_text: text }); } catch(e) {}
   }
   _writingFirstAttempt = null;
   _writingCheckCount   = 0;
