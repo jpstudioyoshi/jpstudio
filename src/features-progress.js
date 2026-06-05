@@ -387,10 +387,13 @@ async function renderStrandBalance() {
       const yMins = (sb.yoshiMins || {})[n] || 0;
       const yPct  = total > 0 ? Math.round(yMins / total * 100) : 0;
       const oPct  = Math.max(0, pct - yPct);
-      const color = mins === 0 ? 'var(--error, #e05)' : pct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
-      const barHtml = yPct > 0
+      const totalNoYoshi = Math.max(1, total - Object.values(sb.yoshiMins || {}).reduce((a,b) => a+b, 0));
+      const dispMins = _strandShowYoshi ? mins : Math.max(0, mins - yMins);
+      const dispPct  = _strandShowYoshi ? pct : Math.round(dispMins / totalNoYoshi * 100);
+      const color = dispMins === 0 ? 'var(--error, #e05)' : dispPct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
+      const barHtml = (_strandShowYoshi && yPct > 0)
         ? `<div style="width:${yPct}%;height:100%;background:var(--teal);border-radius:3px 0 0 3px;display:inline-block"></div><div style="width:${oPct}%;height:100%;background:${color};display:inline-block"></div>`
-        : `<div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>`;
+        : `<div style="width:${dispPct}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s"></div>`;
       return `<div style="margin-bottom:7px">
         <div style="font-family:var(--ui);font-size:0.72rem;margin-bottom:2px;color:var(--ink)">${n} — ${LABELS[n]}</div>
         <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">${barHtml}</div>
@@ -400,6 +403,18 @@ async function renderStrandBalance() {
   } catch(e) { console.warn('[renderStrandBalance]', e); el.innerHTML = ''; }
 }
 
+
+// ── Strand Yoshi Toggle ──────────────────────────────────────────────────────
+let _strandShowYoshi = false;
+function strandToggleYoshi() {
+  _strandShowYoshi = !_strandShowYoshi;
+  const btn = document.getElementById('strandYoshiToggle');
+  if (btn) {
+    btn.style.borderColor = _strandShowYoshi ? 'var(--teal)' : '';
+    btn.style.color = _strandShowYoshi ? 'var(--teal)' : '';
+  }
+  renderStrandBalance();
+}
 
 // ── Strand Weights ────────────────────────────────────────────────────────────
 const STRAND_WEIGHTS_KEY = 'STRAND_WEIGHTS';
@@ -1602,7 +1617,7 @@ function renderGramSentHeatmap() {
 
 // ── App registry — features-progress.js exports ───────────────────────────
 Object.assign(App, {
-  renderStrandBalance, strandWeightsRender, strandWeightsSave, strandWeightsLoad, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
+  renderStrandBalance, strandToggleYoshi, strandWeightsRender, strandWeightsSave, strandWeightsLoad, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
   weightsRender, weightsSave, weightsReset,
   renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage,
   grammarNodeClick, drillLastCompletedWrite,
