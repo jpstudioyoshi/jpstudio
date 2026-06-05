@@ -496,7 +496,11 @@ const TTS = {
     const _Storage = App.Storage || window.Storage;
     if (_Storage) {
       this._vvEnabled   = !!_Storage.getJSON('tts_voicevox_enabled');
-      this._vvSpeakerId = _Storage.getJSON('tts_voicevox_speaker') || this.VOICEVOX_FEMALE;
+      this._vvSpeakerId = _Storage.getJSON('tts_voicevox_speaker') || this.VOICEVOX_MALE;
+    }
+    // Auto-enable VoiceVox on first run if it is available
+    if (_Storage && _Storage.getJSON('tts_voicevox_enabled') === null) {
+      this.vvCheck().then(ok => { if (ok) { this.vvSetEnabled(true); } });
     }
     if (!window.speechSynthesis) return;
     speechSynthesis.onvoiceschanged = () => this.loadVoice();
