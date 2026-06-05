@@ -650,18 +650,6 @@ function buildChatHistoryList() {
 }
 
 
-function qrClear() {
-  const inp = document.getElementById('qrInput');
-  if (inp) inp.value = '';
-  qrShowPaste();
-  const seg = document.getElementById('qrSegmentBtn');
-  if (seg) seg.disabled = true;
-  const status = document.getElementById('qrStatus');
-  if (status) status.textContent = '';
-  const reader = document.getElementById('qrReader');
-  if (reader) reader.innerHTML = '';
-}
-
 function qrPrintPage() {
   const reader = document.getElementById('qrReader');
   if (!reader || !QuickReadState.segments.length) return;
