@@ -349,6 +349,7 @@ const TTS = {
   VOICEVOX_FEMALE:  2,   // 四国めたん ノーマル
   VOICEVOX_MALE:    13,  // 青山龍星 ノーマル
   _vvSpeakerId:     2,   // default female
+  _vvParams:        { speedScale:1.0, pitchScale:0.0, intonationScale:1.0, volumeScale:1.0, pauseLengthScale:1.0 },
   _vvEnabled:       false,
   _vvAudio:         null, // current HTMLAudioElement
 
@@ -367,8 +368,12 @@ const TTS = {
       if (!qResp.ok) throw new Error('VoiceVox query failed: ' + qResp.status);
       const query = await qResp.json();
 
-      // Apply speed — VoiceVox uses speedScale (1.0 = normal)
-      query.speedScale = rate;
+      // Apply speed and voice params
+      query.speedScale      = this._vvParams.speedScale;
+      query.pitchScale      = this._vvParams.pitchScale;
+      query.intonationScale = this._vvParams.intonationScale;
+      query.volumeScale     = this._vvParams.volumeScale;
+      if (this._vvParams.pauseLengthScale !== 1.0) query.pauseLengthScale = this._vvParams.pauseLengthScale;
 
       // Step 2: synthesis
       const sResp = await fetch(
@@ -426,12 +431,30 @@ const TTS = {
     (App.Storage || window.Storage).setJSON('tts_voicevox_speaker', this._vvSpeakerId);
     this._updateVvUI();
   },
+  vvSetParam(key, value) {
+    this._vvParams[key] = value;
+  },
+  vvSaveParams() {
+    (App.Storage || window.Storage).setJSON('tts_vv_params', this._vvParams);
+    const s = document.getElementById('vvSaveStatus');
+    if (s) { s.textContent = '✓ Saved'; setTimeout(() => s.textContent = '', 2000); }
+  },
 
   _updateVvUI() {
     const toggle = document.getElementById('vvToggle');
     const sel    = document.getElementById('vvSpeakerSel');
     if (toggle) toggle.checked = this._vvEnabled;
     if (sel)    sel.value      = String(this._vvSpeakerId);
+    // Restore slider values
+    const p = this._vvParams;
+    const setSlider = (id, valId, v) => {
+      const el = document.getElementById(id); if (el) el.value = v;
+      const vl = document.getElementById(valId); if (vl) vl.textContent = parseFloat(v).toFixed(2);
+    };
+    setSlider('vvSpeed',      'vvSpeedVal',      p.speedScale);
+    setSlider('vvPitch',      'vvPitchVal',      p.pitchScale);
+    setSlider('vvIntonation', 'vvIntonationVal', p.intonationScale);
+    setSlider('vvPause',      'vvPauseVal',      p.pauseLengthScale);
   },
 
   // ── Web Speech API ────────────────────────────────────
@@ -497,6 +520,8 @@ const TTS = {
     if (_Storage) {
       this._vvEnabled   = !!_Storage.getJSON('tts_voicevox_enabled');
       this._vvSpeakerId = _Storage.getJSON('tts_voicevox_speaker') || this.VOICEVOX_MALE;
+      const _savedParams = _Storage.getJSON('tts_vv_params');
+      if (_savedParams) Object.assign(this._vvParams, _savedParams);
     }
     // Auto-enable VoiceVox on first run if it is available
     if (_Storage && _Storage.getJSON('tts_voicevox_enabled') === null) {
@@ -511,7 +536,14 @@ const TTS = {
       if (++polls > 20) clearInterval(poll);
     }, 500);
     // Update VoiceVox UI once DOM is ready
-    setTimeout(() => this._updateVvUI(), 800);
+    setTimeout(() => {
+      const _St = App.Storage || window.Storage;
+      if (_St) {
+        const _p = _St.getJSON('tts_vv_params');
+        if (_p) Object.assign(this._vvParams, _p);
+      }
+      this._updateVvUI();
+    }, 800);
   },
 };
 

@@ -712,11 +712,11 @@
   .qr-word:hover { background:rgba(48,213,200,0.18); }
   .qr-word.qr-boundary { border-bottom:1px dotted rgba(120,120,140,0.35); }
   .qr-word.qr-active { background:rgba(48,213,200,0.45); }
-  .qr-word.qr-sentence-active { background:rgba(255,193,59,0.25);border-bottom-color:var(--gold); }
+  .qr-word.qr-sentence-active { background:none;border-bottom-color:transparent;text-decoration:underline;text-decoration-color:var(--teal);text-decoration-thickness:2px;text-underline-offset:3px; }
   .qr-ruby { cursor:pointer;border-radius:3px;transition:background 0.1s;border-bottom:1px dotted rgba(120,120,140,0.35); }
   .qr-ruby:hover { background:rgba(48,213,200,0.18); }
   .qr-ruby.qr-active { background:rgba(48,213,200,0.45); }
-  .qr-ruby.qr-sentence-active { background:rgba(255,193,59,0.25);border-bottom-color:var(--gold); }
+  .qr-ruby.qr-sentence-active { background:none;border-bottom-color:transparent;text-decoration:underline;text-decoration-color:var(--teal);text-decoration-thickness:2px;text-underline-offset:3px; }
   .qr-space { display:inline; }
   .qr-punct { display:inline;color:var(--ink-light); }
 

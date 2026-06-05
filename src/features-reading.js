@@ -22,6 +22,8 @@ const QuickReadState = {
   sentenceIdx:       0,
   listenSpeed:       1.0,
   listenModeOpen:    false,
+  playAllActive:     false,
+  playAllPaused:     false,
   // Recording
   segmentRecordings: [],
   recording:         false,
@@ -136,8 +138,9 @@ function qrShowPaste() {
 }
 
 function qrClear() {
-  // Clear input
+  // Capture current text before clearing (needed for history removal)
   const inp = document.getElementById('qrInput');
+  const _textBeforeClear = inp ? inp.value.trim() : '';
   if (inp) inp.value = '';
   // Clear segments and recordings
   QuickReadState.segments = [];
@@ -164,6 +167,9 @@ function qrClear() {
   // Clear the reader
   const reader = document.getElementById('qrReader');
   if (reader) reader.innerHTML = '';
+  // Reset dropdown to default label
+  const _sel = document.getElementById('qrHistorySelect');
+  if (_sel) _sel.selectedIndex = 0;
 }
 
 // QuickReadState.plainOn — see declaration above
@@ -606,6 +612,13 @@ function qrSaveToHistory(text, recordings, segments) {
 
 async function qrLoadHistory(indexStr) {
   if (!indexStr && indexStr !== 0) return;
+  // Stop any active listen mode or TTS
+  if (QuickReadState.listenModeOpen) {
+    const lBtn = document.getElementById('qrListenModeBtn');
+    if (lBtn) lBtn.click();
+  }
+  try { (App.TTS || window.TTS)?.stop(); } catch(e) {}
+  try { window.speechSynthesis?.cancel(); } catch(e) {}
   
   const history = qrLoadHistoryList();
   const idx = parseInt(indexStr);
@@ -745,12 +758,11 @@ function qrToggleListenMode() {
     const reader = document.getElementById('qrReader');
     if (!reader) return;
     
-    const clone = reader.cloneNode(true);
-    clone.querySelectorAll('rt, rp').forEach(el => el.remove());
-    const fullText = clone.innerText || clone.textContent || '';
+    // Build full text directly from segments
+    const fullText = QuickReadState.segments.map(s => s.word || '').join('');
     
     // Split on Japanese sentence endings and newlines
-    QuickReadState.sentences = fullText.split(/(?<=[。！？\n])/g)
+    QuickReadState.sentences = fullText.split(/(?<=[。！？\n])(?!」)/g)
       .map(s => s.trim())
       .filter(s => s.length > 0);
     
@@ -762,6 +774,7 @@ function qrToggleListenMode() {
     QuickReadState.listenModeOpen = true;
     
     qrUpdateSentenceDisplay();
+    qrHighlightSentence(0);
   }
 }
 
@@ -796,10 +809,11 @@ function qrListenPlay() {
   
   // Highlight current sentence in the main text
   qrHighlightSentence(QuickReadState.sentenceIdx);
-  
+
+  console.log('[qrListen] speaking:', sentence);
   TTS.speak(sentence, QuickReadState.listenSpeed, {
-    onend:   () => { btn.textContent = '▶'; qrClearSentenceHighlight(); },
-    onerror: () => { btn.textContent = '▶'; qrClearSentenceHighlight(); },
+    onend:   () => { btn.textContent = '▶'; },
+    onerror: () => { btn.textContent = '▶'; },
   });
 }
 
@@ -859,11 +873,82 @@ function qrClearSentenceHighlight() {
   });
 }
 
+function qrPauseAll() {
+  const btn = document.getElementById('qrPauseAllBtn');
+  if (!QuickReadState.playAllActive) return;
+  if (QuickReadState.playAllPaused) {
+    QuickReadState.playAllPaused = false;
+    if (btn) btn.textContent = 'Pause';
+    // Resume from next sentence
+    QuickReadState.sentenceIdx++;
+    qrPlayAllNext();
+  } else {
+    QuickReadState.playAllPaused = true;
+    if (btn) btn.textContent = 'Resume';
+    (App.TTS || window.TTS)?.stop();
+    try { window.speechSynthesis?.cancel(); } catch(e) {}
+  }
+}
+
+function qrPlayAll() {
+  const btn = document.getElementById('qrPlayAllBtn2');
+  if (QuickReadState.playAllActive) {
+    QuickReadState.playAllActive = false;
+    if (btn) btn.textContent = 'Play All';
+    (App.TTS || window.TTS)?.stop();
+    try { window.speechSynthesis?.cancel(); } catch(e) {}
+    return;
+  }
+  if (!QuickReadState.listenModeOpen) {
+    const lBtn = document.getElementById('qrListenModeBtn');
+    if (lBtn) lBtn.click();
+  }
+  QuickReadState.playAllActive = true;
+  QuickReadState.playAllPaused = false;
+  if (btn) btn.textContent = '⏹ Stop';
+  const pauseBtn = document.getElementById('qrPauseAllBtn');
+  if (pauseBtn) { pauseBtn.style.display = ''; pauseBtn.textContent = 'Pause'; }
+  QuickReadState.sentenceIdx = 0;
+  qrUpdateSentenceDisplay();
+  qrHighlightSentence(0);
+  qrPlayAllNext();
+}
+
+function qrPlayAllNext() {
+  if (!QuickReadState.playAllActive || QuickReadState.playAllPaused) return;
+  if (QuickReadState.sentenceIdx >= QuickReadState.sentences.length) {
+    QuickReadState.playAllActive = false;
+    const btn = document.getElementById('qrPlayAllBtn2');
+    const pauseBtn = document.getElementById('qrPauseAllBtn');
+    if (btn) btn.textContent = 'Play All';
+    if (pauseBtn) pauseBtn.style.display = 'none';
+    return;
+  }
+  const sentence = QuickReadState.sentences[QuickReadState.sentenceIdx];
+  if (!sentence) return;
+  qrHighlightSentence(QuickReadState.sentenceIdx);
+  qrUpdateSentenceDisplay();
+  const _TTS = App.TTS || window.TTS;
+  _TTS.speak(sentence, QuickReadState.listenSpeed, {
+    onend: () => {
+      if (!QuickReadState.playAllActive || QuickReadState.playAllPaused) return;
+      QuickReadState.sentenceIdx++;
+      qrPlayAllNext();
+    },
+    onerror: () => {
+      QuickReadState.playAllActive = false;
+      const btn = document.getElementById('qrPlayAllBtn2');
+      if (btn) btn.textContent = 'Play All';
+    }
+  });
+}
+
 function qrListenPrev() {
   if (QuickReadState.sentenceIdx > 0) {
     speechSynthesis.cancel();
     QuickReadState.sentenceIdx--;
     qrUpdateSentenceDisplay();
+    qrHighlightSentence(QuickReadState.sentenceIdx);
     document.getElementById('qrListenPlayBtn').textContent = '▶';
   }
 }
@@ -873,6 +958,7 @@ function qrListenNext() {
     speechSynthesis.cancel();
     QuickReadState.sentenceIdx++;
     qrUpdateSentenceDisplay();
+    qrHighlightSentence(QuickReadState.sentenceIdx);
     document.getElementById('qrListenPlayBtn').textContent = '▶';
   }
 }
@@ -1359,8 +1445,9 @@ function qrSaveSession() {
 
 function qrRestoreSession() {
   try {
-    const saved = Storage.getJSON(QR_SESSION_KEY, null);
-    if (!saved || !saved.segments?.length) return;
+    // Don't restore session on restart — start clean
+    Storage.setJSON(QR_SESSION_KEY, null);
+    return;
 
     // Restore input text
     const inp = document.getElementById('qrInput');
@@ -1398,6 +1485,9 @@ try {
     qrToggleSeparateSentences,
     qrToggleListenMode,
     qrListenPlay,
+    qrPlayAll,
+    qrPauseAll,
+    qrPlayAllNext,
     qrListenPrev,
     qrListenNext,
     qrSetSpeed,

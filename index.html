@@ -20,7 +20,7 @@
     #qrReaderWrap               { display: block !important; }
     #qrReader                   { display: block !important; }
     #qrReader                   { max-height: 65vh; overflow-y: auto; scroll-behavior: smooth; padding-right: 4px; }
-    .qr-sentence-active         { background: rgba(48,213,200,0.18); border-radius: 3px; outline: 1px solid rgba(48,213,200,0.4); }
+    .qr-sentence-active         { border-bottom: 2px solid var(--teal) !important; border-radius: 0; }
     #qrTextBody                 { color: black !important; background: white !important; font-size: 14pt !important; line-height: 2.2 !important; }
     /* Make ruby text black */
     ruby, rt                    { color: black !important; }
@@ -237,6 +237,24 @@
               <option value="13">青山龍星 (male)</option>
             </select>
             <button class="btn-action" onclick="TTS._vvSpeak('こんにちは、日本語のテストです。', 0.9)" style="font-size:0.75rem;padding:3px 8px">Test</button>
+          </div>
+          <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px">
+            <label style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">Speed <span id="vvSpeedVal">1.0</span>
+              <input type="range" id="vvSpeed" min="0.5" max="2.0" step="0.05" value="1.0" style="width:100%;margin-top:3px" oninput="document.getElementById('vvSpeedVal').textContent=parseFloat(this.value).toFixed(2);TTS.vvSetParam('speedScale',parseFloat(this.value))">
+            </label>
+            <label style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">Pitch <span id="vvPitchVal">0.00</span>
+              <input type="range" id="vvPitch" min="-0.15" max="0.15" step="0.01" value="0.0" style="width:100%;margin-top:3px" oninput="document.getElementById('vvPitchVal').textContent=parseFloat(this.value).toFixed(2);TTS.vvSetParam('pitchScale',parseFloat(this.value))">
+            </label>
+            <label style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">Intonation <span id="vvIntonationVal">1.0</span>
+              <input type="range" id="vvIntonation" min="0.0" max="2.0" step="0.05" value="1.0" style="width:100%;margin-top:3px" oninput="document.getElementById('vvIntonationVal').textContent=parseFloat(this.value).toFixed(2);TTS.vvSetParam('intonationScale',parseFloat(this.value))">
+            </label>
+            <label style="font-family:var(--ui);font-size:0.78rem;color:var(--ink)">Pause <span id="vvPauseVal">1.0</span>
+              <input type="range" id="vvPause" min="0.0" max="2.0" step="0.05" value="1.0" style="width:100%;margin-top:3px" oninput="document.getElementById('vvPauseVal').textContent=parseFloat(this.value).toFixed(2);TTS.vvSetParam('pauseLengthScale',parseFloat(this.value))">
+            </label>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+            <button class="btn-action" style="font-size:0.75rem;padding:3px 10px" onclick="TTS.vvSaveParams()">Save voice settings</button>
+            <span id="vvSaveStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--teal)"></span>
           </div>
           <div style="font-size:0.7rem;color:var(--ink-light);margin-top:6px">VoiceVox must be running at localhost:50021. When enabled, all Japanese speech uses VoiceVox.</div>
         </div>
@@ -1406,6 +1424,8 @@
         <button class="btn-nav" onclick="qrListenPrev()" id="qrListenPrevBtn">Prev</button>
         <button class="btn-action" onclick="qrListenPlay()" id="qrListenPlayBtn">▶</button>
         <button class="btn-nav" onclick="qrListenNext()" id="qrListenNextBtn">Next</button>
+        <button class="btn-action" id="qrPlayAllBtn2" onclick="qrPlayAll()">Play All</button>
+        <button class="btn-nav" id="qrPauseAllBtn" onclick="qrPauseAll()" style="display:none">Pause</button>
         <span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-left:8px">Speed:</span>
         <button onclick="qrSetSpeed(0.6)" class="qr-speed-btn btn-toggle" data-speed="0.6">0.6×</button>
         <button onclick="qrSetSpeed(0.8)" class="qr-speed-btn btn-toggle" data-speed="0.8">0.8×</button>
