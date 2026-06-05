@@ -112,6 +112,7 @@ const ERROR_TYPE_LABELS = {
   formality: '敬語 Formality'
 };
 
+const DRILL_LAST_COMPLETED_KEY = 'drillLastCompleted';
 function drillLastCompletedWrite(drillKey, label) {
   try {
     const rec = Storage.getJSON(DRILL_LAST_COMPLETED_KEY, {});
@@ -363,7 +364,15 @@ async function renderStrandBalance() {
   try {
     const SM = App.StudentModel || window.StudentModel;
     if (!SM) { el.innerHTML = ''; return; }
-    const s = await SM.snapshotAsync();
+    const rangeEl = document.querySelector('input[name="progressRange"]:checked');
+    const range = rangeEl ? rangeEl.value : 'week';
+    const DAY = 86400000;
+    let since;
+    if (range === 'today')     since = new Date(Date.now() - 1 * DAY).toISOString();
+    else if (range === 'week') since = new Date(Date.now() - 7 * DAY).toISOString();
+    else if (range === 'prev') since = new Date(Date.now() - 14 * DAY).toISOString();
+    else                       since = new Date(Date.now() - 365 * DAY).toISOString();
+    const s = await SM.snapshotAsync(since);
     const sb = s.strandBalance;
     if (!sb || !sb.hasData) {
       el.innerHTML = '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);opacity:0.6;padding:6px 0">No session data yet — spend time in panels to see balance.</div>';
@@ -1515,6 +1524,7 @@ function progRangeSet(val) {
   // Update mastery view
   (App.masteryViewSet || window.masteryViewSet)?.(masteryMap[val]);
   renderFourStrandRecency();
+  (App.renderStrandBalance || window.renderStrandBalance)?.();
 }
 
 // ── Sentence Building heatmap ─────────────────────────────────────────────

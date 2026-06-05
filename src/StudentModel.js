@@ -365,10 +365,10 @@ const StudentModel = (() => {
     } catch(e) { return { turns: [] }; }
   }
 
-  async function collectStrandBalance() {
+  async function collectStrandBalance(since) {
     try {
       if (!window.db) return { strands: {}, totalMins: 0, hasData: false };
-      const since = new Date(Date.now() - 7 * 86400000).toISOString();
+      if (!since) since = new Date(Date.now() - 7 * 86400000).toISOString();
       const rows = await window.db.query(
         'SELECT panel, duration_s FROM panel_sessions WHERE started_at >= ?',
         [since]
@@ -449,13 +449,13 @@ const StudentModel = (() => {
    * snapshotAsync() — full snapshot including SQLite lesson data.
    * Use for Claude briefings where completeness matters more than speed.
    */
-  async function snapshotAsync() {
+  async function snapshotAsync(since) {
     const base = snapshot();
     try {
       const [lessonSessions, transcriptSample, strandBalance] = await Promise.all([
         collectLessonSessions(),
         collectRecentTranscriptSample(),
-        collectStrandBalance(),
+        collectStrandBalance(since),
       ]);
       const full = {
         ...base,
