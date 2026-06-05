@@ -3626,6 +3626,13 @@
     "desc": ""
   },
   {
+    "type": "function",
+    "name": "backfillN5ToVocabItems",
+    "file": "src/core-vocab.js",
+    "line": 1570,
+    "desc": ""
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
@@ -3676,6 +3683,20 @@
   },
   {
     "type": "storage",
+    "name": "VOCAB_N5_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1575,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_N5_BACKFILL_V1",
+    "file": "src/core-vocab.js",
+    "line": 1587,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 205,
@@ -3707,6 +3728,13 @@
     "name": "INSERT",
     "file": "src/core-vocab.js",
     "line": 1556,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1580,
     "desc": "db.run"
   },
   {

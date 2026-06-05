@@ -525,6 +525,8 @@ document.addEventListener('storageReady', function() {
   if (App.backfillLessonPhrasesToVocabItems) App.backfillLessonPhrasesToVocabItems();
   // Backfill corpus_lookups → vocab_items (one-time)
   if (App.backfillLookupsToVocabItems) App.backfillLookupsToVocabItems();
+  // Backfill N5 words → vocab_items (one-time, background fill)
+  if (App.backfillN5ToVocabItems) App.backfillN5ToVocabItems();
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {

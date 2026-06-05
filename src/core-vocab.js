@@ -1566,7 +1566,32 @@ async function backfillLookupsToVocabItems() {
   }
 }
 
+// ── N5 words backfill → vocab_items (one-time, background fill) ─────
+async function backfillN5ToVocabItems() {
+  try {
+    const flag = await window.kvAPI.get('VOCAB_N5_BACKFILL_V1');
+    if (flag) return;
+    const rows = await window.db.query('SELECT word, reading, meaning FROM words');
+    if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1'); return; }
+    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString();
+    let inserted = 0;
+    for (const row of rows) {
+      const result = await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+         VALUES (?, ?, ?, 'n5', 'words', ?, 0.3, 1, 2.5, ?, ?)`,
+        [row.word, row.reading || null, row.meaning || null, now, today, now]
+      );
+      if (result && result.changes) inserted++;
+    }
+    await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1');
+    console.log('[vocab] N5 backfill: ' + inserted + ' new words added (of ' + rows.length + ' total)');
+  } catch (e) {
+    console.warn('[vocab] N5 backfill error', e);
+  }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems,
 });
