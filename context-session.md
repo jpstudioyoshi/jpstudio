@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-05 (session 23 — stabilization sprint complete)
+Last updated: 2026-06-05 (session 23 — stabilization sprint, strand balance complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -25,7 +25,7 @@ Last updated: 2026-06-05 (session 23 — stabilization sprint complete)
 - Repo: https://github.com/jpstudioyoshi/jpstudio (private)
 - Token stored in remote URL — no password prompt needed.
 - Standard push: jp && git add -A && git commit -m "message" && git push
-- Pre-commit hook runs check-syntax.js automatically — always check output
+- Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
 - **Token scope for jpStudio:** `repo` scope
 - **Token scope for Satellite Gist sync:** `gist` scope only — stored in phone localStorage, never in source
 
@@ -38,9 +38,8 @@ Last updated: 2026-06-05 (session 23 — stabilization sprint complete)
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-STABILIZATION — architectural debt reduction before Phase 5.
-Criteria for selection: "would not exist if planned from scratch."
-See ARCHITECTURE_HUB.md for full design and stabilization task list.
+STABILIZATION complete — ready for Phase 5.
+See ARCHITECTURE_HUB.md for full design.
 
 ## Thread Structure
 - **Architecture thread** — design decisions, audits, doc updates only (this thread)
@@ -56,6 +55,9 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 - `strandWeightsGrid` — strand weights input grid in settings panel
 - `strandWeightsMsg` — "Saved" confirmation span in settings panel
 
+**Session 23 additions:**
+- `strandYoshiToggle` — Show Yoshi button next to FOUR STRANDS header
+
 ## Terminal Workflow
 **Shell aliases:** jp, jpstart
 
@@ -70,38 +72,49 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 **Critical lessons:**
 - python3 string matching — use repr() to inspect before retrying
 - Blank lines in match strings cause MATCH FAILED
-- Cache buster regex fixed: \?v=[^"]+ catches letter suffixes
+- Cache buster now auto-bumped on every commit via pre-commit hook — no manual bumping needed
 - pbcopy swallows terminal output — never for sed -n reads
 - Always jp && prefix
 - /mnt/user-data/outputs/ is Claude-side only — not accessible from terminal
+- SQLite DB is at ~/Library/Application Support/japanese-studio/jpstudio.db (not jpStudio)
 
 ## Known Issues / Pre-existing
-- `yoshiInitUI not defined` on startup — pre-existing, not blocking
+- `yoshiInitUI not defined` — harmless, pre-existing
 - PDF print line breaks — pre-existing
+- `yoshi.s1` strand weight was corrupt (1000) — fixed directly in DB. If settings reset, re-save strand weights to normalize.
 
-## Session 23 — Completed Work (stabilization sprint)
+## Session 23 — Completed Work
 
-### GrammarPrereqModel extraction ✅ (commit 2807d1d)
-- `src/GrammarPrereqModel.js` created — N5_GRAPH + agentGrammarRootSignal + agentGrammarUnlockSignal
-- Removed from `features-progress.js` (~196 lines)
-- Loaded in index.html after GrammarModel.js
-
-### Dead code removed ✅
-- `countShowMastery` button removed from counters panel (commit)
-- `countShowMastery` dead export removed from core-counters.js
-- `lessonNotesClozeRevealAll` dead registry entry removed from features-ln-p2.js (commit 469c801)
-- Stale root `core-foundation.js` deleted — 1919 lines gone (commit 268448e)
-
-### `_conjRecordGrammarEvidence` — audited ✅
-- Not broken — writes to grammar_mastery via GrammarModel.recordEvidence()
-- Maps conjugation drill answers to GrammarModel node IDs
-- Nudges mastery score ±0.05/0.08 per answer
-- Lives in core-stt.js, called from features-grammar.js
+### Stabilization sprint ✅
+- `src/GrammarPrereqModel.js` created — N5_GRAPH + agentGrammarRootSignal + agentGrammarUnlockSignal extracted from features-progress.js
+- `countShowMastery` — dead button + export removed
+- `lessonNotesClozeRevealAll` — dead registry entry removed
+- Stale root `core-foundation.js` deleted (1919 lines)
+- `_conjRecordGrammarEvidence` — audited, working, writes to grammar_mastery via GrammarModel.recordEvidence()
+- Auto cache-buster added to pre-commit hook (timestamp format)
 
 ### Two grammar models — clarified ✅
 - **GrammarPrereqModel** (38 nodes) — prerequisite/unlock signals, feeds briefing
 - **GrammarModel** (55 nodes) — Genki mastery tracking, UI grid, teal dots
 - Different purposes, no convergence needed
+
+### Strand balance chart — complete ✅
+- Time range buttons (today/week/last week/all) now wire to strand balance bars
+- `collectStrandBalance(since)` accepts date parameter, passed through `snapshotAsync(since)`
+- Show Yoshi toggle — blue (#4a9eff) Yoshi portion, recalculates pct without lessons when off
+- `isYoshi` fix — `lessonnotes` correctly identified as Yoshi panel (was checking for `'yoshi'`)
+- `DRILL_LAST_COMPLETED_KEY` restored after accidental removal during N5_GRAPH extraction
+
+## Earlier Session 23 work (separate thread)
+
+### VoiceVox — default enabled + settings panel ✅ (commits a9e68be, 6bb44d2)
+- VoiceVox auto-enables on first run with male default speaker
+- Settings panel added with sliders: Speed, Pitch, Intonation, Pause
+- Params persist across sessions
+- Play All with pause/stop controls
+- Teal underline highlight on active word
+- Clear resets dropdown; restart comes up clean
+- New element IDs: vvSpeed, vvSpeedVal, vvPitch, vvPitchVal, vvIntonation, vvIntonationVal, vvPause, vvPauseVal, vvSaveStatus, qrPlayAllBtn2, qrPauseAllBtn
 
 ## Session 21/22 — Completed Work
 - Phase 3 complete — strand balance chart, strand weights UI, AppEvents wired
@@ -109,11 +122,10 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 
 ## Pending Work — Priority Order
 
-### Stabilization (remaining)
-- `yoshiInitUI not defined` — pre-existing, investigate when touching voice panel
-
-### Phase 3 remaining
-- Strand imbalance notification — outbound StudentModel signal when strand < 20%
+### Phase 5 — next frontier
+- Step 1: rule-based monitor — fire on session end, check strand balance thresholds
+- Step 2: LLM recommendation via claudeSummary() → agent_decisions table
+- Step 3: drill suggestion with action link in UI
 
 ### Phase 4 remaining
 - 4/3/2 separate panel_sessions entry — currently inside voice panel time
@@ -123,6 +135,7 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 - `notes_text` blob in lesson_sessions — rationalize later
 - `LessonNotesState.grammar` — in memory only, never persists
 - Progress panel header — briefing refresh + About me controls
+- jpSat Clear button bug — investigation interrupted
 
 ### Future
 - Thread coordination system + site manager pattern
@@ -135,6 +148,7 @@ See ARCHITECTURE_HUB.md for full design and stabilization task list.
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab
 pitch_data: 124,137 entries
+DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ## kvAPI — rationalized usage
 **Keep in kvAPI:** STRAND_WEIGHTS, goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache, gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
