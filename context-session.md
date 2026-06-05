@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-03 (session 21/22 — Phase 4 pipeline wired, DrillSRS rationalized, grammar_mastery table)
+Last updated: 2026-06-05 (session 23 — GrammarPrereqModel extraction, stabilization planning)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -38,8 +38,9 @@ Last updated: 2026-06-03 (session 21/22 — Phase 4 pipeline wired, DrillSRS rat
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-ARCHITECTURE — Phase 4 (Yoshi-driven learning) now active.
-See ARCHITECTURE_HUB.md in project Knowledge for full design.
+STABILIZATION — architectural debt reduction before Phase 5.
+Criteria for selection: "would not exist if planned from scratch."
+See ARCHITECTURE_HUB.md for full design and stabilization task list.
 
 ## Thread Structure
 - **Architecture thread** — design decisions, audits, doc updates only (this thread)
@@ -64,6 +65,7 @@ See ARCHITECTURE_HUB.md in project Knowledge for full design.
 - sed -n X,Yp file | pbcopy — read a block
 - grep -n "pattern" file | pbcopy — locate lines
 - Never paste code blocks directly into terminal — always use python3 heredoc scripts
+- For new files: use cat > filename << 'ENDOFFILE' heredoc (python3 path not accessible from terminal)
 
 **Critical lessons:**
 - python3 string matching — use repr() to inspect before retrying
@@ -71,14 +73,23 @@ See ARCHITECTURE_HUB.md in project Knowledge for full design.
 - Cache buster regex fixed: \?v=[^"]+ catches letter suffixes
 - pbcopy swallows terminal output — never for sed -n reads
 - Always jp && prefix
+- /mnt/user-data/outputs/ is Claude-side only — not accessible from terminal
 
 ## Known Issues / Pre-existing
 - `yoshiInitUI not defined` on startup — pre-existing, not blocking
 - PDF print line breaks — pre-existing
 - Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
-
 - `countShowMastery is not defined` — core-counters.js line 926
 - `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, remove it
+
+## Session 23 — Completed Work
+
+### Stabilization: GrammarPrereqModel extraction ✅ (commit 2807d1d)
+- `src/GrammarPrereqModel.js` created — N5_GRAPH data + agentGrammarRootSignal + agentGrammarUnlockSignal
+- Both functions removed from `features-progress.js` (~196 lines removed)
+- Loaded in index.html after GrammarModel.js, before features-progress.js
+- `features-progress.js.bak` deleted
+- 43 files, 0 syntax errors
 
 ## Session 21/22 — Completed Work
 
@@ -92,80 +103,32 @@ See ARCHITECTURE_HUB.md in project Knowledge for full design.
 - FLUENCY tiles corrected
 
 ### Phase 4 — Yoshi-driven learning pipeline (complete)
-
-**grammar_mastery table created** — fixes the `rows is not iterable` startup error permanently.
-GrammarModel now loads correctly. `_loadWeightOverrides` kvAPI read bug fixed.
-
-**AnalysisService wired into Orchestrator pipeline:**
-- `analyzeLesson()` now called after merge, before save
-- Returns: summary, topics, studentErrors, keyVocab, grammarPoints, grammarNodeIds, teacherNotes
-- Emits `ANALYSIS_COMPLETE` with session + analysis object
-- Prompt extended with 55 grammar node IDs — Claude returns matching node IDs directly
-
-**Two vocabulary sources — kept separate by design:**
-- `lesson_phrases` — WhatsApp/doc-paste path (truth, curated)
-- `transcript_vocab` — audio analysis path (softer signal)
-
-**StudentModel subscribes to ANALYSIS_COMPLETE:**
-- `keyVocab` → `transcript_vocab` table
-- `grammarNodeIds` → `grammar_mastery` as `encountered` evidence (weight 0.2)
-- Falls back to fuzzy matching if no node IDs returned
-
-**Genki grid — teal dot for recently encountered grammar:**
-- `encountered` evidence type added to GrammarModel (weight 0.2)
-- `getCoverageMap()` now returns `encounterCount` and `lastEncountered`
-- Teal dot on node if encountered in Yoshi session within 30 days
-
-**Storage rationalization — DrillSRS:**
-- SQL is now sole persistent store (was dual-writing to localStorage)
-- `record()` writes single item directly (was serializing entire object)
-- localStorage kept as read-only migration fallback in `hydrate()` only
-- `reset()` localStorage clear removed
-
-**Storage rationalization principle established:**
-- kvAPI: config, preferences, small UI state
-- DB: anything that needs querying, joining, or grows over time
-
-**New DB tables:**
-- `grammar_mastery` — node_id, evidence_type, score, override, last_seen, notes, UNIQUE(node_id, evidence_type)
-- `transcript_vocab` — session_id, word, reading, meaning, created_at
-
-**Kana panel:**
-- Kana drill and kanji reference moved into words panel as subtabs
-- Kana nav button removed
+- grammar_mastery table created
+- AnalysisService wired into Orchestrator pipeline
+- transcript_vocab → words SRS deck ✅ (commit cdddb81)
+- Grammar dismiss/override ✅ (commit 2b1c8b4)
+- DrillSRS migrated to SQL-only
 
 ## Pending Work — Priority Order
 
-### Phase 4 next steps (delegate to feature threads)
-1. **transcript_vocab → words SRS deck** ✅ — complete (commit cdddb81)
-   - ANALYSIS_COMPLETE handler in StudentModel adds keyVocab words to srs_items
-   - Only words existing in words table, no duplicates, interval=0 so appears next session
-   - Verify: sqlite3 ~/Library/Application\ Support/jpStudio/jpstudio.db "SELECT * FROM srs_items WHERE drill_type='words' ORDER BY rowid DESC LIMIT 10;"
-2. **Grammar dismiss/override** ✅ — complete (commit 2b1c8b4)
-   - Teal dot is clickable — calls `grammarDismissEncounter(nodeId)` → `GrammarModel.setOverride`
-   - Dot disappears after dismiss; override nodes not shown
-   - Part 2 (lesson notes prefilter) deferred — lesson notes grammar is free text, no node ID mapping
-   - **Prerequisite for Part 2:** lesson notes grammar LLM call needs to return `grammarNodeIds`
-3. **4/3/2 separate panel_sessions entry** — currently inside voice panel time
-4. **Strand imbalance notification** — outbound StudentModel signal when strand < 20%
+### Stabilization tasks (architectural debt)
+1. `countShowMastery is not defined` — core-counters.js line 926 — fix or remove
+2. `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344 — remove call
+3. Stale root core-foundation.js — delete safely
+4. `_conjRecordGrammarEvidence` — audit where it writes, document or fix
 
-### Pending audits (architecture thread)
-- None blocking — all required audits complete for Phase 4
+### Phase 3 remaining
+- Strand imbalance notification — outbound StudentModel signal when strand < 20%
 
-### Known instrumentation gaps
-- Voice drill answers
-- Anki reviews
-- `_conjRecordGrammarEvidence` — unclear where it writes
-- Read-aloud — listen thread
-- Round trip — session duration only when built
+### Phase 4 remaining
+- 4/3/2 separate panel_sessions entry — currently inside voice panel time
+- Lesson notes grammar Part 2 — requires LLM call to return grammarNodeIds
 
 ### Medium term
 - `notes_text` blob in lesson_sessions — messy catch-all, rationalize later
-- Two grammar models (N5_GRAPH 38 nodes vs GrammarModel 55 nodes) — converge eventually
+- Two grammar models boundary — N5_GRAPH now GrammarPrereqModel (prereq/unlock), GrammarModel (mastery/Genki) — document clearly, converge not required
 - `LessonNotesState.grammar` — in memory only, never persists
-- REVIEW.md at project root
 - Progress panel header — briefing refresh + About me controls
-- Stale root core-foundation.js — delete safely
 
 ### Future
 - Dropbox recordings redirect
@@ -173,6 +136,7 @@ GrammarModel now loads correctly. `_loadWeightOverrides` kvAPI read bug fixed.
 - Pitch accent wiring
 - Lesson Mode Architecture
 - Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
+- Thread coordination system + site manager pattern
 
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab
