@@ -50,7 +50,7 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
     const rows = await window.db.query(
-      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
+      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR type != 'grammar') ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
       [direction]
     );
     state.vocabItems = rows || [];
