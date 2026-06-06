@@ -8142,107 +8142,23 @@
   },
   {
     "type": "function",
-    "name": "mgSelectCat",
-    "file": "src/features-tools.js",
-    "line": 395,
-    "desc": "═══════════════════════════════════════════════════════"
-  },
-  {
-    "type": "function",
-    "name": "mgSetPairs",
-    "file": "src/features-tools.js",
-    "line": 400,
-    "desc": "MatchingPairsState.pairs = n;"
-  },
-  {
-    "type": "function",
-    "name": "mgSetTimer",
-    "file": "src/features-tools.js",
-    "line": 405,
-    "desc": "MatchingPairsState.timer = n;"
-  },
-  {
-    "type": "function",
-    "name": "mgSetReading",
-    "file": "src/features-tools.js",
-    "line": 410,
-    "desc": "MatchingPairsState.reading = v;"
-  },
-  {
-    "type": "function",
-    "name": "mgShowSetup",
-    "file": "src/features-tools.js",
-    "line": 416,
-    "desc": "document.getElementById('mg-setup').style.display = '';"
-  },
-  {
-    "type": "function",
-    "name": "mgStart",
-    "file": "src/features-tools.js",
-    "line": 423,
-    "desc": "const cat = VG_CATEGORIES[MatchingPairsState.cat];"
-  },
-  {
-    "type": "function",
-    "name": "mgUpdateTimer",
-    "file": "src/features-tools.js",
-    "line": 482,
-    "desc": "const el = document.getElementById('mg-timer');"
-  },
-  {
-    "type": "function",
-    "name": "mgClickKanji",
-    "file": "src/features-tools.js",
-    "line": 491,
-    "desc": "if (document.querySelector('.mg-kanji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
-  },
-  {
-    "type": "function",
-    "name": "mgClickEmoji",
-    "file": "src/features-tools.js",
-    "line": 500,
-    "desc": "if (document.querySelector('.mg-emoji-tile[data-id=\"' + id + '\"]')?.classList.contains('mg-matched')"
-  },
-  {
-    "type": "function",
-    "name": "mgCheckMatch",
-    "file": "src/features-tools.js",
-    "line": 508,
-    "desc": "if (MatchingPairsState.kanjiSel === null || MatchingPairsState.emojiSel === null) return;"
-  },
-  {
-    "type": "function",
-    "name": "mgFinish",
-    "file": "src/features-tools.js",
-    "line": 532,
-    "desc": "clearInterval(MatchingPairsState.timerInt);"
-  },
-  {
-    "type": "function",
-    "name": "mgEnd",
-    "file": "src/features-tools.js",
-    "line": 546,
-    "desc": "mgFinish(false); }"
-  },
-  {
-    "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 618,
+    "line": 437,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 628,
+    "line": 447,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 653,
+    "line": 472,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {
