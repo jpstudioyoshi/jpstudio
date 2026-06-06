@@ -69,6 +69,9 @@ function vtCollapseLoadBar() {
   document.getElementById('vtDropZone').style.display = 'none';
   document.getElementById('vtLoadedBar').style.display = 'flex';
   document.getElementById('vtMainLayout').style.display = 'grid';
+  document.getElementById('vtVideo').style.display = 'block';
+  const noVid = document.getElementById('vtNoVideo');
+  if (noVid) noVid.style.display = 'none';
   document.getElementById('vtTranscriptWrap').style.display = 'block';
   document.getElementById('vtControls').style.display = 'block';
 }
@@ -107,6 +110,7 @@ function vtLoadFile(file) {
   const video = document.getElementById('vtVideo');
   const url = URL.createObjectURL(file);
   video.src = url;
+  video.load();
   const waveMsg = document.getElementById('vtWaveMsg');
   if (waveMsg) {
     waveMsg.style.display = 'block';
