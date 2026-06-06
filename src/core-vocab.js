@@ -375,52 +375,33 @@ function toggleVocabList() {
 function renderVocabList() {
   const container = document.getElementById('vocabList');
   if (!container || container.style.display === 'none') return;
-  const cards = state.vocab;
-  if (!cards.length) {
+  const items = (state.vocabItems || [])
+    .map((c, i) => ({ c, i }))
+    .filter(({ c }) => c.direction === 'jp_en');
+  if (!items.length) {
     container.innerHTML = '<div style="padding:12px 14px;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',sans-serif;font-size:0.75rem;color:var(--ink-light);font-style:italic">No words yet.</div>';
     return;
   }
-  const knownSessions = state.vocabKnownSessions || {};
-  container.innerHTML = cards.map((c, i) => {
-    const perm = isWordMastered(i);
-    const sessions = knownSessions[i] || [];
-    const inSession = vocabSession.includes(i);
-    const sessionKnown = !!_sessionKnown[i];
-    let dot, dotColor;
-    if (perm) { dot = '★'; dotColor = 'var(--teal)'; }
-    else if (sessions.length >= 2) { dot = `✓×${sessions.length}`; dotColor = 'var(--gold)'; }
-    else if (sessions.length === 1) { dot = '✓×1'; dotColor = 'var(--ink-light)'; }
-    else if (sessionKnown) { dot = '✓'; dotColor = 'var(--teal)'; }
-    else if (inSession) { dot = '·'; dotColor = 'var(--ink)'; }
-    else { dot = ''; dotColor = 'var(--border)'; }
-    return `<div style="display:grid;grid-template-columns:32px 1fr 1fr 1fr auto;gap:4px 10px;
+  const today = new Date().toISOString().slice(0, 10);
+  container.innerHTML = items.map(({ c, i }) => {
+    const due = (c.srs_due || '').slice(0, 10);
+    let dueColor, dueLabel;
+    if (!due) { dueColor = 'var(--ink-light)'; dueLabel = 'new'; }
+    else if (due < today) { dueColor = 'var(--red)'; dueLabel = due; }
+    else if (due === today) { dueColor = 'var(--teal)'; dueLabel = 'today'; }
+    else { dueColor = 'var(--ink-light)'; dueLabel = due; }
+    return `<div style="display:grid;grid-template-columns:1fr 1fr 1.2fr auto auto;gap:4px 10px;
       padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;
-      cursor:pointer;transition:background 0.1s${inSession && !sessionKnown ? ';background:var(--paper-dark)' : ''}"
+      cursor:pointer;transition:background 0.1s"
       onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()"
       class="row-hover">
-      <span style="font-family:var(--ui);font-size:0.72rem;color:${dotColor};text-align:center">${dot}</span>
-      <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.jp)}</span>
-      <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.kana||c.reading||'')}</span>
-      <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.en)}</span>
-      <button class="btn-action" onclick="event.stopPropagation();deleteVocabCard(${i})" title="Delete">✕</button>
+      <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.word || '')}</span>
+      <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.reading || '')}</span>
+      <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.meaning || '')}</span>
+      <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml(c.source || '')}</span>
+      <span style="font-family:var(--ui);font-size:0.7rem;color:${dueColor};white-space:nowrap">${escHtml(dueLabel)}</span>
     </div>`;
   }).join('');
-}
-
-function deleteVocabCard(idx) {
-  state.vocab.splice(idx, 1);
-  delete state.vocabProgress[idx];
-  // Rebuild progress keys
-  const newProg = {};
-  Object.keys(state.vocabProgress).forEach(k => {
-    const n = parseInt(k);
-    if (n < idx) newProg[n] = state.vocabProgress[n];
-    else if (n > idx) newProg[n-1] = state.vocabProgress[n];
-  });
-  state.vocabProgress = newProg;
-  if (vocabIdx >= state.vocab.length) vocabIdx = Math.max(0, state.vocab.length - 1);
-  saveState();
-  renderVocab();
 }
 
 function printVocabList() {
