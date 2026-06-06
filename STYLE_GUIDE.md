@@ -226,3 +226,20 @@ Full field-style select with background and border.
 - Canvas/waveform drawing colours
 - `core-listen.js` solid-fill active states
 - `features-stroke.js` cssText elements
+
+---
+
+## Dev Tools
+
+### Right-click element inspector
+A script at the bottom of `index.html` adds a right-click handler to every element.
+Right-clicking any element copies its reference to clipboard and shows a teal toast:
+- If element has an `id` → copies `#id`
+- Otherwise → copies `tag.class1.class2`
+
+Use the copied reference directly in:
+- `grep -n "#id"` or `grep -n "\.classname"` to find in index.html
+- CSS rules in style.css
+- Python patch scripts
+
+Toggle: currently always-on. If it interferes with a panel's native context menu, add a keyboard shortcut toggle.
