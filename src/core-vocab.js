@@ -1444,7 +1444,7 @@ async function migrateLearnedWordsToVocabItems() {
       for (const dir of ['jp_en', 'en_jp', 'speaking']) {
         await window.db.run(
           `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, 'yoshi', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?, ?)`,
+           VALUES (?, 'yoshi_vocab', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?, ?)`,
           [word, now, due, dir, now]
         );
       }
@@ -1469,7 +1469,7 @@ async function backfillLessonPhrasesToVocabItems() {
       for (const dir of ['jp_en', 'en_jp', 'speaking']) {
         await window.db.run(
           `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, ?, ?, ?, 'yoshi', ?, ?, 1.0, 1, 2.5, ?, ?, ?)`,
+           VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, 1.0, 1, 2.5, ?, ?, ?)`,
           [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.created_at || now, today, dir, now]
         );
       }
