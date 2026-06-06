@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260606142236">
+<link rel="stylesheet" href="style.css?v=20260606142517">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260606142236"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260606142236"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260606142236"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260606142517"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260606142517"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260606142517"></script>
 </head>
 <body>
 
@@ -188,7 +188,7 @@
           <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">Anthropic API Key (Claude)</label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="password" id="apikeyInput" placeholder="sk-ant-..." autocomplete="off"
-              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:var(--fs-body);color:var(--ink);outline:none">
+              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
             <button class="btn-action" id="apikeyBtn" onclick="(App.saveApiKey||window.saveApiKey)()">Save</button>
             <span id="apikeyStatus" style="font-size:0.75rem"></span>
           </div>
@@ -199,7 +199,7 @@
           <label style="display:block;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">OpenAI API Key (Whisper)</label>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="password" id="openaiKeyInput" placeholder="sk-..." autocomplete="off"
-              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:var(--fs-body);color:var(--ink);outline:none">
+              style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
             <button class="btn-action" id="openaiKeyBtn" onclick="(App.saveOpenAIKey||window.saveOpenAIKey)()">Save</button>
             <span id="openaiKeyStatus" style="font-size:0.75rem"></span>
           </div>
@@ -2142,6 +2142,38 @@
     </div><!-- end vtMainLayout -->
 
     <!-- Shadow mode panel - click header to toggle -->
+    <div id="vtShadowPanel" style="display:none;flex-direction:column;gap:10px">
+
+      <!-- Target waveform + play - click to activate/toggle shadow mode -->
+      <div id="vtShadowHeader" onclick="vtToggleShadow()" style="background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color 0.15s" title="Click to toggle shadow mode">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--red)">🎙 SHADOW TARGET</span>
+          <button id="vtShTargetPlayBtn" class="btn-action" onclick="event.stopPropagation();vtShPlayTarget()">▶</button>
+          <span id="vtShTargetTime" style="font-family:monospace;font-size:0.75rem;color:var(--ink-light)">0:00</span>
+          <span id="vtShadowTarget" style="flex:1;font-family:var(--jp);font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</span>
+        </div>
+        <canvas id="vtShTargetWave" style="width:100%;height:40px;display:block;border-radius:4px;cursor:pointer" onclick="event.stopPropagation();vtShSeekTarget(event)"></canvas>
+      </div>
+
+      <!-- Shadow waveform + record/play -->
+      <div style="background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+          <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--ink-light)">YOU</span>
+          <button id="vtShRecordBtn" onclick="vtShRecord()"
+            style="padding:4px 14px;background:var(--red);color:#fff;border:none;border-radius:5px;font-family:var(--ui);font-size:0.78rem;font-weight:600;cursor:pointer">⏺</button>
+          <button id="vtShPlaybackBtn" class="btn-action" onclick="vtShPlayback()" disabled style="opacity:0.4">▶</button>
+          <select class="select-std" id="vtMicSelect" onclick="vtRequestMicAccess()" onchange="vtSetMic(this.value)">
+            <option value="">🎤 Click to select mic</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;margin-left:auto">
+            <input type="checkbox" id="vtShRepeat" style="accent-color:var(--teal)"> Auto
+          </label>
+          <span id="vtShStatus" style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)"></span>
+        </div>
+        <canvas id="vtShShadowWave" style="width:100%;height:40px;display:block;border-radius:4px;background:#0a0a0c"></canvas>
+      </div>
+
+    </div><!-- end vtShadowPanel -->
     <!-- Timeline + controls (hidden until video loaded) -->
     <div id="vtControls" style="display:none">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">
@@ -2157,6 +2189,10 @@
           Waveform
         </button>
       </div>
+      <div style="position:relative;margin-bottom:8px">
+        <canvas id="vtWaveform" style="width:100%;height:44px;border-radius:6px;cursor:pointer;display:block"
+          onclick="vtWaveClick(event)" title="Click to seek"></canvas>
+        <div id="vtWaveMsg" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);pointer-events:none">Decoding…</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button id="vtPlayBtn" class="btn-toggle" onclick="vtTogglePlay()" style="min-width:70px">
@@ -2356,7 +2392,7 @@
         <div id="agentFollowUpRow" style="display:none;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
           <input type="text" id="agentFollowUpInput" placeholder="Ask a follow-up…"
             onkeydown="if(event.key==='Enter')agentClaudeFollowUp()"
-            style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:var(--fs-body);color:var(--ink);outline:none">
+            style="flex:1;padding:5px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--ui);font-size:0.85rem;color:var(--ink);outline:none">
           <button class="btn-primary" id="agentFollowUpBtn" onclick="agentClaudeFollowUp()" style="font-size:0.82rem">Send</button>
         </div>
       </div>
@@ -2688,17 +2724,17 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260606142236"></script>
-<script src="src/core-anki.js?v=20260606142236"></script>
-<script src="src/core-kana-drill.js?v=20260606142236"></script>
-<script src="src/core-kana.js?v=20260606142236"></script>
-<script src="src/core-counters.js?v=20260606142236"></script>
-<script src="src/core-srs.js?v=20260606142236"></script>
-<script src="src/core-stt.js?v=20260606142236"></script>
-<script src="src/core-writing.js?v=20260606142236"></script>
-<script src="src/core-listen.js?v=20260606142236"></script>
-<script src="src/core-vocab.js?v=20260606142236"></script>
-<script src="src/core.js?v=20260606142236"></script>
+<script src="src/core-foundation.js?v=20260606142517"></script>
+<script src="src/core-anki.js?v=20260606142517"></script>
+<script src="src/core-kana-drill.js?v=20260606142517"></script>
+<script src="src/core-kana.js?v=20260606142517"></script>
+<script src="src/core-counters.js?v=20260606142517"></script>
+<script src="src/core-srs.js?v=20260606142517"></script>
+<script src="src/core-stt.js?v=20260606142517"></script>
+<script src="src/core-writing.js?v=20260606142517"></script>
+<script src="src/core-listen.js?v=20260606142517"></script>
+<script src="src/core-vocab.js?v=20260606142517"></script>
+<script src="src/core.js?v=20260606142517"></script>
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- TIMES DRILL MODAL                                      -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -2827,26 +2863,26 @@
 
   </div>
 
-<script src="src/features-core.js?v=20260606142236"></script>
-<script src="src/features-kana.js?v=20260606142236"></script>
-<script src="src/features-times.js?v=20260606142236"></script>
-<script src="src/briefing-prompt.js?v=20260606142236"></script>
-<script src="src/GrammarModel.js?v=20260606142236"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260606142236"></script>
-<script src="src/AppEvents.js?v=20260606142236"></script>
-<script src="src/features-lesson-notes.js?v=20260606142236"></script>
-  <script src="src/features-ln-p2.js?v=20260606142236"></script>
-<script src="src/features-grammar.js?v=20260606142236"></script>
-<script src="src/features-reading.js?v=20260606142236"></script>
-<script src="src/features-video.js?v=20260606142236"></script>
-<script src="src/features-pictures.js?v=20260606142236"></script>
-<script src="src/features-progress.js?v=20260606142236"></script>
-  <script src="src/features-listen-log.js?v=20260606142236"></script>
-<script src="src/features-stroke.js?v=20260606142236"></script>
-<script src="src/features-tools.js?v=20260606142236"></script>
-<script src="src/features-voice.js?v=20260606142236"></script>
-<script src="src/features-voice-drill.js?v=20260606142236"></script>
-<script src="src/features-custom-drill.js?v=20260606142236"></script>
+<script src="src/features-core.js?v=20260606142517"></script>
+<script src="src/features-kana.js?v=20260606142517"></script>
+<script src="src/features-times.js?v=20260606142517"></script>
+<script src="src/briefing-prompt.js?v=20260606142517"></script>
+<script src="src/GrammarModel.js?v=20260606142517"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260606142517"></script>
+<script src="src/AppEvents.js?v=20260606142517"></script>
+<script src="src/features-lesson-notes.js?v=20260606142517"></script>
+  <script src="src/features-ln-p2.js?v=20260606142517"></script>
+<script src="src/features-grammar.js?v=20260606142517"></script>
+<script src="src/features-reading.js?v=20260606142517"></script>
+<script src="src/features-video.js?v=20260606142517"></script>
+<script src="src/features-pictures.js?v=20260606142517"></script>
+<script src="src/features-progress.js?v=20260606142517"></script>
+  <script src="src/features-listen-log.js?v=20260606142517"></script>
+<script src="src/features-stroke.js?v=20260606142517"></script>
+<script src="src/features-tools.js?v=20260606142517"></script>
+<script src="src/features-voice.js?v=20260606142517"></script>
+<script src="src/features-voice-drill.js?v=20260606142517"></script>
+<script src="src/features-custom-drill.js?v=20260606142517"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2857,20 +2893,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260606142236"></script>
-<script src="src/IssueTracker.js?v=20260606142236"></script>
-<script src="src/services/LessonSession.js?v=20260606142236"></script>
-<script src="src/services/AudioService.js?v=20260606142236"></script>
-<script src="src/services/PreflightService.js?v=20260606142236"></script>
-<script src="src/services/TranscriptionService.js?v=20260606142236"></script>
-<script src="src/services/AnalysisService.js?v=20260606142236"></script>
-<script src="src/services/StorageService.js?v=20260606142236"></script>
-<script src="src/Orchestrator.js?v=20260606142236"></script>
-<script src="src/ui/DrillCard.js?v=20260606142236"></script>
-<script src="src/ui/TextEntry.js?v=20260606142236"></script>
-<script src="src/ui/YoshiUI.js?v=20260606142236"></script>
+<script src="src/StudentModel.js?v=20260606142517"></script>
+<script src="src/IssueTracker.js?v=20260606142517"></script>
+<script src="src/services/LessonSession.js?v=20260606142517"></script>
+<script src="src/services/AudioService.js?v=20260606142517"></script>
+<script src="src/services/PreflightService.js?v=20260606142517"></script>
+<script src="src/services/TranscriptionService.js?v=20260606142517"></script>
+<script src="src/services/AnalysisService.js?v=20260606142517"></script>
+<script src="src/services/StorageService.js?v=20260606142517"></script>
+<script src="src/Orchestrator.js?v=20260606142517"></script>
+<script src="src/ui/DrillCard.js?v=20260606142517"></script>
+<script src="src/ui/TextEntry.js?v=20260606142517"></script>
+<script src="src/ui/YoshiUI.js?v=20260606142517"></script>
 
-<script src="src/design-overlay.js?v=20260606142236"></script>
+<script src="src/design-overlay.js?v=20260606142517"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 
