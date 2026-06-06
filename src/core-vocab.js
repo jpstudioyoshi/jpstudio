@@ -24,7 +24,7 @@ function isWordMastered(cardIdx) {
 let vocabIdx = 0;
 let vocabFlipped = false;
 let vcReadingVisible = false;
-let vcDirection = 'jp-en'; // 'jp-en' or 'en-jp'
+let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
 
@@ -330,10 +330,12 @@ function flipVocab() {
 }
 
 function toggleVcDirection() {
-  vcDirection = vcDirection === 'jp-en' ? 'en-jp' : 'jp-en';
+  const cycle = { jp_en: 'en_jp', en_jp: 'speaking', speaking: 'jp_en' };
+  const labels = { jp_en: 'JP → EN', en_jp: 'EN → JP', speaking: 'Speaking' };
+  vcDirection = cycle[vcDirection] || 'jp_en';
   const btn = document.getElementById('vcDirectionBtn');
-  if (btn) btn.textContent = vcDirection === 'jp-en' ? 'JP → EN' : 'EN → JP';
-  renderVocab();
+  if (btn) btn.textContent = labels[vcDirection];
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 function resetVocabDeck() {
   state.vocabProgress = {};
