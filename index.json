@@ -3654,6 +3654,20 @@
     "desc": ""
   },
   {
+    "type": "function",
+    "name": "vocabSettingsLoad",
+    "file": "src/core-vocab.js",
+    "line": 1594,
+    "desc": ""
+  },
+  {
+    "type": "function",
+    "name": "vocabSettingsSave",
+    "file": "src/core-vocab.js",
+    "line": 1624,
+    "desc": ""
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
@@ -3714,6 +3728,27 @@
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
     "line": 1536,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_WEIGHTS",
+    "file": "src/core-vocab.js",
+    "line": 1645,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_THRESHOLDS",
+    "file": "src/core-vocab.js",
+    "line": 1646,
+    "desc": "kvAPI.set"
+  },
+  {
+    "type": "storage",
+    "name": "VOCAB_INTERVALS",
+    "file": "src/core-vocab.js",
+    "line": 1647,
     "desc": "kvAPI.set"
   },
   {

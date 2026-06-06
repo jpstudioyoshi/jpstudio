@@ -532,6 +532,8 @@ document.addEventListener('storageReady', function() {
   if (App.initWritingVocabListener) App.initWritingVocabListener();
   // Load due vocab_items into the drill deck
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
+  // Load vocab settings into UI
+  if (App.vocabSettingsLoad) App.vocabSettingsLoad();
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {

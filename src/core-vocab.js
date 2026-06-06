@@ -1590,7 +1590,68 @@ function initWritingVocabListener() {
   }
 }
 
+// ── Vocab settings save/load ─────────────────────────────────────────
+async function vocabSettingsLoad() {
+  try {
+    const w = await window.kvAPI.get('VOCAB_WEIGHTS');
+    const t = await window.kvAPI.get('VOCAB_THRESHOLDS');
+    const i = await window.kvAPI.get('VOCAB_INTERVALS');
+    if (w) {
+      const wt = JSON.parse(w);
+      if (document.getElementById('vocabWtYoshiPhrases')) document.getElementById('vocabWtYoshiPhrases').value = wt.yoshi_phrases ?? 1.0;
+      if (document.getElementById('vocabWtYoshiVocab')) document.getElementById('vocabWtYoshiVocab').value = wt.yoshi_vocab ?? 1.0;
+      if (document.getElementById('vocabWtWriting')) document.getElementById('vocabWtWriting').value = wt.writing ?? 0.9;
+      if (document.getElementById('vocabWtLookup')) document.getElementById('vocabWtLookup').value = wt.lookup ?? 0.6;
+      if (document.getElementById('vocabWtN5')) document.getElementById('vocabWtN5').value = wt.n5 ?? 0.3;
+    }
+    if (t) {
+      const th = JSON.parse(t);
+      if (document.getElementById('vocabThreshLookup')) document.getElementById('vocabThreshLookup').value = th.lookup_promote ?? 2;
+      if (document.getElementById('vocabThreshDecay')) document.getElementById('vocabThreshDecay').value = th.production_decay ?? 5;
+      if (document.getElementById('vocabSessionSize')) document.getElementById('vocabSessionSize').value = th.session_size ?? 20;
+    }
+    if (i) {
+      const iv = JSON.parse(i);
+      if (document.getElementById('vocabIntYoshiPhrases')) document.getElementById('vocabIntYoshiPhrases').value = iv.yoshi_phrases ?? 3;
+      if (document.getElementById('vocabIntYoshiVocab')) document.getElementById('vocabIntYoshiVocab').value = iv.yoshi_vocab ?? 3;
+      if (document.getElementById('vocabIntWriting')) document.getElementById('vocabIntWriting').value = iv.writing ?? 1;
+      if (document.getElementById('vocabIntLookup')) document.getElementById('vocabIntLookup').value = iv.lookup ?? 1;
+      if (document.getElementById('vocabIntN5')) document.getElementById('vocabIntN5').value = iv.n5 ?? 0;
+    }
+  } catch(e) { console.warn('[vocab] settings load error', e); }
+}
+
+async function vocabSettingsSave() {
+  try {
+    const weights = {
+      yoshi_phrases: parseFloat(document.getElementById('vocabWtYoshiPhrases').value),
+      yoshi_vocab:   parseFloat(document.getElementById('vocabWtYoshiVocab').value),
+      writing:       parseFloat(document.getElementById('vocabWtWriting').value),
+      lookup:        parseFloat(document.getElementById('vocabWtLookup').value),
+      n5:            parseFloat(document.getElementById('vocabWtN5').value),
+    };
+    const thresholds = {
+      lookup_promote:   parseInt(document.getElementById('vocabThreshLookup').value),
+      production_decay: parseInt(document.getElementById('vocabThreshDecay').value),
+      session_size:     parseInt(document.getElementById('vocabSessionSize').value),
+    };
+    const intervals = {
+      yoshi_phrases: parseInt(document.getElementById('vocabIntYoshiPhrases').value),
+      yoshi_vocab:   parseInt(document.getElementById('vocabIntYoshiVocab').value),
+      writing:       parseInt(document.getElementById('vocabIntWriting').value),
+      lookup:        parseInt(document.getElementById('vocabIntLookup').value),
+      n5:            parseInt(document.getElementById('vocabIntN5').value),
+    };
+    await window.kvAPI.set('VOCAB_WEIGHTS', JSON.stringify(weights));
+    await window.kvAPI.set('VOCAB_THRESHOLDS', JSON.stringify(thresholds));
+    await window.kvAPI.set('VOCAB_INTERVALS', JSON.stringify(intervals));
+    const msg = document.getElementById('vocabWeightsMsg');
+    if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+    console.log('[vocab] settings saved');
+  } catch(e) { console.warn('[vocab] settings save error', e); }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, loadVocabItemsDeck,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
