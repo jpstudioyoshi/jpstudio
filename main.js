@@ -320,6 +320,7 @@ function createSchema() {
       source        TEXT NOT NULL,
       source_ref    TEXT,
       direction     TEXT NOT NULL DEFAULT 'jp_en',
+      type          TEXT DEFAULT 'phrase',
       encounter_at  TEXT,
       entry_weight  REAL DEFAULT 1.0,
       srs_interval  INTEGER DEFAULT 1,
@@ -540,6 +541,7 @@ function createSchema() {
       reading    TEXT,
       meaning    TEXT NOT NULL,
       example    TEXT,
+      type       TEXT DEFAULT 'phrase',
       created_at TEXT DEFAULT (datetime('now'))
     )`);
     db.run('UPDATE schema_version SET version = 8');

@@ -1658,7 +1658,8 @@ async function lessonNotesExtractKeyPhrasesSilent(docContent, apiKey) {
       max_tokens: 6000,
       messages: [{ role: 'user', content: `Extract key phrases and expressions from these Japanese lesson notes. Focus on useful conversational phrases, set expressions, and idiomatic patterns.
 Assign each phrase a group from: Greetings & Openers, Classroom Language, Time & Sequence, Describing & Explaining, Expressing Feelings & Opinions, Questions & Requests, Grammar Connectors, Other
-Return JSON array: [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","sourceText":"the exact line from the notes where this phrase appeared","group":"group name"}]
+Return JSON array: [{"phrase":"Japanese phrase","meaning":"English meaning","example":"optional example sentence","sourceText":"the exact line from the notes where this phrase appeared","group":"group name","type":"phrase"}]
+type must be one of: "word" (single vocabulary item), "phrase" (conversational expression or set phrase), "grammar" (grammatical pattern, often contains 〜 or describes a verb/sentence structure)
 Content: ${docContent.slice(0, 6000)}` }]
     ,
       track: 'lesson'
@@ -1674,8 +1675,8 @@ Content: ${docContent.slice(0, 6000)}` }]
         for (const p of LessonNotesState.keyPhrases) {
           if (!p.phrase || !p.meaning) continue;
           await window.db.run(
-            'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example) VALUES (?,?,?,?)',
-            [_lessonId, p.phrase, p.meaning, p.example || null]
+            'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example, type) VALUES (?,?,?,?,?)',
+            [_lessonId, p.phrase, p.meaning, p.example || null, p.type || 'phrase']
           );
         }
         console.log('[LN] phrases written to SQL:', LessonNotesState.keyPhrases.length);
@@ -1716,6 +1717,18 @@ ${docContent.slice(0, 10000)}` }]
     const text = _fy_claudeText(data) || '[]';
     LessonNotesState.grammar = _lnParseJsonArray(text);
     console.log('[LN] grammar extracted:', LessonNotesState.grammar.length, 'patterns', LessonNotesState.grammar.slice(0,3).map(g=>g.pattern||'?'));
+    // Write grammar patterns to lesson_phrases with type='grammar'
+    try {
+      const _lessonId = LessonNotesState.currentLessonId || null;
+      for (const g of LessonNotesState.grammar) {
+        if (!g.pattern || !g.explanation) continue;
+        await window.db.run(
+          'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example, type) VALUES (?,?,?,?,?)',
+          [_lessonId, g.pattern, g.explanation, g.example || null, 'grammar']
+        );
+      }
+      console.log('[LN] grammar patterns written to lesson_phrases:', LessonNotesState.grammar.length);
+    } catch(e) { console.warn('[LN] grammar SQL write failed:', e.message); }
   } catch (e) { console.error('Grammar extraction error:', e); }
 }
 

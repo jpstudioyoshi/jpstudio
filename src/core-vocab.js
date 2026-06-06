@@ -1459,16 +1459,16 @@ async function backfillLessonPhrasesToVocabItems() {
   try {
     const flag = await window.kvAPI.get('VOCAB_LESSON_BACKFILL_V1');
     if (flag) return;
-    const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, created_at FROM lesson_phrases', []);
+    const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, type, created_at FROM lesson_phrases', []);
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1'); return; }
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     for (const row of rows) {
       for (const dir of ['jp_en', 'en_jp', 'speaking']) {
         await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, 1.0, 1, 2.5, ?, ?, ?)`,
-          [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.created_at || now, today, dir, now]
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+           VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, ?, 1.0, 1, 2.5, ?, ?)`,
+          [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), dir, row.type || 'phrase', row.created_at || now, today, now]
         );
       }
     }
