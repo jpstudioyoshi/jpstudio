@@ -46,11 +46,12 @@ function vcTogglePitch() {
   if (btn) btn.classList.toggle('btn-active', vcPitchVisible);
 }
 // ── Load due cards from vocab_items into state.vocabItems ───────────────────
-async function loadVocabItemsDeck() {
+async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
     const rows = await window.db.query(
-      "SELECT * FROM vocab_items WHERE srs_due <= date('now') OR srs_due IS NULL ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50"
+      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
+      [direction]
     );
     state.vocabItems = rows || [];
     _dataLoaded = true;
@@ -1440,11 +1441,13 @@ async function migrateLearnedWordsToVocabItems() {
     const due = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
     for (const word of words) {
       if (!word || typeof word !== 'string') continue;
-      await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-         VALUES (?, 'yoshi', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?)`,
-        [word, now, due, now]
-      );
+      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, 'yoshi', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?, ?)`,
+          [word, now, due, dir, now]
+        );
+      }
     }
     await window.kvAPI.set('VOCAB_MIGRATION_V1', '1');
     console.log('[vocab] migrated ' + words.length + ' learned words to vocab_items');
@@ -1463,11 +1466,13 @@ async function backfillLessonPhrasesToVocabItems() {
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     for (const row of rows) {
-      await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-         VALUES (?, ?, ?, ?, 'yoshi', ?, ?, 1.0, 1, 2.5, ?, ?)`,
-        [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.created_at || now, today, now]
-      );
+      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, ?, ?, ?, 'yoshi', ?, ?, 1.0, 1, 2.5, ?, ?, ?)`,
+          [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.created_at || now, today, dir, now]
+        );
+      }
     }
     await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1');
     console.log('[vocab] backfilled ' + rows.length + ' lesson_phrases into vocab_items');
@@ -1493,11 +1498,13 @@ async function backfillLookupsToVocabItems() {
     const now = new Date().toISOString();
     for (const row of rows) {
       const weight = Math.min(0.6 + (row.lookup_count - 2) * 0.05, 1.0);
-      await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-         VALUES (?, 'lookup', ?, ?, ?, 1, 2.5, ?, ?)`,
-        [row.word, 'corpus_lookups', row.first_seen || now, weight, today, now]
-      );
+      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, 'lookup', ?, ?, ?, 1, 2.5, ?, ?, ?)`,
+          [row.word, 'corpus_lookups', row.first_seen || now, weight, today, dir, now]
+        );
+      }
     }
     await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1');
     console.log('[vocab] backfilled ' + rows.length + ' lookup words into vocab_items');
@@ -1517,12 +1524,14 @@ async function backfillN5ToVocabItems() {
     const now = new Date().toISOString();
     let inserted = 0;
     for (const row of rows) {
-      const result = await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-         VALUES (?, ?, ?, 'n5', 'words', ?, 0.3, 1, 2.5, ?, ?)`,
-        [row.word, row.reading || null, row.meaning || null, now, today, now]
-      );
-      if (result && result.changes) inserted++;
+      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+        const result = await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, ?, ?, 'n5', 'words', ?, 0.3, 1, 2.5, ?, ?, ?)`,
+          [row.word, row.reading || null, row.meaning || null, now, today, dir, now]
+        );
+        if (result && result.changes) inserted++;
+      }
     }
     await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1');
     console.log('[vocab] N5 backfill: ' + inserted + ' new words added (of ' + rows.length + ' total)');
@@ -1556,11 +1565,13 @@ async function extractWritingVocabToItems(text) {
     const today = now.split('T')[0];
     for (const w of words) {
       if (!w.word || typeof w.word !== 'string') continue;
-      await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-         VALUES (?, ?, ?, 'writing', 'writing_session', ?, 0.9, 1, 2.5, ?, ?)`,
-        [w.word, w.reading || null, w.meaning || null, now, today, now]
-      );
+      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, ?, ?, 'writing', 'writing_session', ?, 0.9, 1, 2.5, ?, ?, ?)`,
+          [w.word, w.reading || null, w.meaning || null, now, today, dir, now]
+        );
+      }
     }
     console.log('[vocab] writing extraction: ' + words.length + ' words from submission');
   } catch (e) {

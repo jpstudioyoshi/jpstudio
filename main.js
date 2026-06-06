@@ -319,6 +319,7 @@ function createSchema() {
       example       TEXT,
       source        TEXT NOT NULL,
       source_ref    TEXT,
+      direction     TEXT NOT NULL DEFAULT 'jp_en',
       encounter_at  TEXT,
       entry_weight  REAL DEFAULT 1.0,
       srs_interval  INTEGER DEFAULT 1,
@@ -326,7 +327,7 @@ function createSchema() {
       srs_due       TEXT,
       last_reviewed TEXT,
       created_at    TEXT NOT NULL,
-      UNIQUE(word, source)
+      UNIQUE(word, source, direction)
     );
     CREATE TABLE IF NOT EXISTS grammar_mastery (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
