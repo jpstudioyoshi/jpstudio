@@ -9500,6 +9500,20 @@
   },
   {
     "type": "function",
+    "name": "_devUpdatePanelBadge",
+    "file": "index.html",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "function",
+    "name": "devToast",
+    "file": "index.html",
+    "line": 0,
+    "desc": ""
+  },
+  {
+    "type": "function",
     "name": "_setRecState",
     "file": "lesson-overlay.html",
     "line": 0,

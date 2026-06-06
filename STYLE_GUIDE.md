@@ -243,3 +243,17 @@ Use the copied reference directly in:
 - Python patch scripts
 
 Toggle: currently always-on. If it interferes with a panel's native context menu, add a keyboard shortcut toggle.
+
+### Dimensions in right-click copy
+Right-clicking any element now copies `ref [widthxheight]` to clipboard.
+Example: `#gramSentFeedback [640x320]`
+Use the dimensions to diagnose sizing issues without opening devtools.
+
+### Panel indicator
+A tiny gold label sits at the bottom of the sidebar showing the current active panel name (e.g. `grammar2`, `dashboard`).
+Updated automatically via MutationObserver on panel class changes.
+
+### Class highlighter
+`Ctrl+Shift+F` — prompts for a class name, outlines all matching elements in red.
+Useful for auditing which elements share a class before editing it.
+Clear by pressing `Ctrl+Shift+F` and cancelling.
