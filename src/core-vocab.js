@@ -50,7 +50,7 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
     const rows = await window.db.query(
-      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
+      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
       [direction]
     );
     state.vocabItems = rows || [];
@@ -262,22 +262,31 @@ function renderVocab() {
   const sourceTag = source ? (encDate ? source + ' · ' + encDate : source) : '';
 
   if (hintEl) hintEl.textContent = reading;
+  // Direction-aware card rendering
+  const isReverse = (vcDirection === 'en_jp');
   if (vcJp) {
-    vcJp.textContent = word;
-    vcJp.style.color = '';
-    vcJp.style.fontSize = '';
+    const frontText = isReverse ? meaning : word;
+    vcJp.textContent = frontText;
+    vcJp.style.color = isReverse ? 'var(--ink)' : '';
+    // Scale font size based on character count to prevent overflow
+    const len = frontText.length;
+    vcJp.style.fontSize = len <= 6 ? '2.5rem' : len <= 10 ? '2rem' : len <= 16 ? '1.5rem' : '1.1rem';
   }
   if (readingEl) {
     readingEl.textContent = reading;
-    readingEl.style.display = (reading && vcReadingVisible) ? 'block' : 'none';
+    readingEl.style.display = (!isReverse && reading && vcReadingVisible) ? 'block' : 'none';
   }
   if (vcEn) {
-    vcEn.innerHTML = escHtml(meaning) +
-      (example
-        ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>'
-        : '');
+    if (isReverse) {
+      vcEn.innerHTML = escHtml(word) +
+        (reading ? '<div style="margin-top:4px;font-family:var(--jp);font-size:1rem;color:var(--teal)">' + escHtml(reading) + '</div>' : '') +
+        (example ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>' : '');
+    } else {
+      vcEn.innerHTML = escHtml(meaning) +
+        (example ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>' : '');
+    }
   }
-  if (_vcBR) _vcBR.textContent = reading;
+  if (_vcBR) _vcBR.textContent = isReverse ? '' : reading;
   if (vcPos) vcPos.textContent = sourceTag;
 
   const vcPitchEl = document.getElementById('vcPitch');
@@ -299,6 +308,12 @@ function renderVocab() {
   }
 
   vocabCardEl.classList.remove('flipped');
+  // Auto-play TTS in speaking mode
+  if (vcDirection === 'speaking' && word) {
+    setTimeout(() => {
+      if (typeof jpSpeak === 'function') jpSpeak(word, 0.85);
+    }, 400);
+  }
 
   const pos = deck.indexOf(vocabIdx);
   vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session`;
