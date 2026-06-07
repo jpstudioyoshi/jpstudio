@@ -532,6 +532,10 @@ document.addEventListener('storageReady', function() {
   if (App.initWritingVocabListener) App.initWritingVocabListener();
   // Wire lesson extracted vocab listener
   if (App.initLessonVocabListener) App.initLessonVocabListener();
+  // Wire lookup promotion listener
+  if (App.initLookupVocabListener) App.initLookupVocabListener();
+  // Wire lookup promotion listener
+  if (App.initLookupVocabListener) App.initLookupVocabListener();
   // Load due vocab_items into the drill deck
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
   // Load vocab settings into UI

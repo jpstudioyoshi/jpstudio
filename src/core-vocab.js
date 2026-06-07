@@ -1621,6 +1621,39 @@ function initLessonVocabListener() {
   }
 }
 
+function initLookupVocabListener() {
+  try {
+    (App.AppEvents || window.AppEvents)?.on(AppEvents.VOCAB_LOOKUP, async (payload) => {
+      const word = payload?.word;
+      if (!word || word.length < 2 || word.length > 10) return;
+      try {
+        const threshold = 2;
+        const rows = await window.db.query(
+          'SELECT COUNT(*) as n FROM corpus_lookups WHERE word = ?',
+          [word]
+        );
+        const count = rows?.[0]?.n || 0;
+        if (count < threshold) return;
+        const now = new Date().toISOString();
+        const today = now.split('T')[0];
+        const weight = Math.min(0.6 + (count - threshold) * 0.05, 1.0);
+        for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+          await window.db.run(
+            `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+             VALUES (?, 'lookup', 'corpus_lookups', ?, 'word', ?, ?, 1, 2.5, ?, ?)`,
+            [word, dir, now, weight, today, now]
+          );
+        }
+        console.log('[vocab] lookup promoted:', word, '(' + count + ' lookups)');
+      } catch(e) {
+        console.warn('[vocab] lookup promotion error', e);
+      }
+    });
+  } catch(e) {
+    console.warn('[vocab] lookup listener init error', e);
+  }
+}
+
 // ── Vocab settings save/load ─────────────────────────────────────────
 async function vocabSettingsLoad() {
   try {
@@ -1684,5 +1717,5 @@ async function vocabSettingsSave() {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
