@@ -93,9 +93,24 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
       }
       if (posFilters.length > 0) sql += ' AND (' + posFilters.join(' OR ') + ')';
     }
-    sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50';
+    sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 200';
     const rows = await window.db.query(sql, params);
-    state.vocabItems = rows || [];
+    // Apply source weights from VOCAB_WEIGHTS settings
+    const wtRaw = await window.kvAPI.get('VOCAB_WEIGHTS').catch(() => null);
+    const wt = wtRaw ? JSON.parse(wtRaw) : {};
+    const sourceWeights = {
+      yoshi_phrases: wt.yoshi_phrases ?? 1.0,
+      yoshi_vocab:   wt.yoshi_vocab   ?? 1.0,
+      writing:       wt.writing       ?? 0.9,
+      lookup:        wt.lookup        ?? 0.6,
+      n5:            wt.n5            ?? 0.3,
+    };
+    const weighted = (rows || []).map(r => ({
+      ...r,
+      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5)
+    }));
+    weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
+    state.vocabItems = weighted.slice(0, 50);
     _dataLoaded = true;
     renderVocab();
   } catch (e) {
