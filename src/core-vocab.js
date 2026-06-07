@@ -425,7 +425,7 @@ function renderVocab() {
   const _typeInp = document.getElementById('vocabTypeInput');
   const _typeRes = document.getElementById('vocabTypeResult');
   const _typeNext = document.getElementById('vocabTypeNextBtn');
-  if (_typeInp) { _typeInp.value = ''; if (_vcTextEntry) { _typeInp.focus(); kanaToolbar('vocabTypeInput', { defaultMode: vcDirection === 'en_jp' ? 'hiragana' : 'romaji' }); } }
+  if (_typeInp) { _typeInp.value = ''; if (_vcTextEntry) { _typeInp.focus(); kanaSetMode('vocabTypeInput', vcDirection === 'en_jp' ? 'hiragana' : 'romaji'); } }
   if (_typeRes) _typeRes.textContent = '';
   if (_typeNext) _typeNext.style.display = 'none';
 }
@@ -1849,7 +1849,7 @@ function toggleVcTextEntry() {
   if (typeControls) typeControls.style.display = _vcTextEntry ? 'block' : 'none';
   if (_vcTextEntry) {
     const inp = document.getElementById('vocabTypeInput');
-    if (inp) { inp.value = ''; inp.focus(); kanaToolbar('vocabTypeInput', { defaultMode: vcDirection === 'en_jp' ? 'hiragana' : 'romaji' }); }
+    if (inp) { inp.value = ''; inp.focus(); kanaSetMode('vocabTypeInput', vcDirection === 'en_jp' ? 'hiragana' : 'romaji'); }
     const res = document.getElementById('vocabTypeResult');
     if (res) res.textContent = '';
   }
@@ -1866,21 +1866,23 @@ function submitVocabTypeAnswer() {
   // Check against word (kanji) and reading (hiragana)
   const correct = typed === card.word || typed === (card.reading || '');
   if (correct) {
-    res.style.color = 'var(--teal)';
-    res.textContent = '✓ 正解！';
     inp.value = '';
-    setTimeout(() => {
-      markVocab('know');
-      res.textContent = '';
-    }, 800);
+    res.textContent = '';
+    setTimeout(() => { markVocab('know'); }, 400);
   } else {
     res.style.color = 'var(--red)';
-    res.innerHTML = '✗ &nbsp;' + escHtml(card.word) + (card.reading ? '　' + escHtml(card.reading) : '');
+    res.style.fontSize = '1.4rem';
+    const _wrongAns = vcDirection === 'jp_en' ? escHtml(card.meaning || card.word) : escHtml(card.word) + (card.reading ? '　' + escHtml(card.reading) : '');
+    res.innerHTML = _wrongAns;
     inp.value = '';
-    setTimeout(() => {
-      markVocab('again');
-      res.textContent = '';
-    }, 1500);
+    inp.onkeydown = function(e) {
+      if (e.key === 'Enter') {
+        res.textContent = '';
+        res.style.fontSize = '';
+        inp.onkeydown = function(e2) { if(e2.key==='Enter') submitVocabTypeAnswer(); };
+        markVocab('again');
+      }
+    };
   }
 }
 

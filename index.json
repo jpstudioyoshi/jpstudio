@@ -3741,14 +3741,14 @@
     "type": "function",
     "name": "vocabTypeMarkWrong",
     "file": "src/core-vocab.js",
-    "line": 1887,
+    "line": 1889,
     "desc": "const res = document.getElementById('vocabTypeResult');"
   },
   {
     "type": "function",
     "name": "skipVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 1895,
+    "line": 1897,
     "desc": "const inp = document.getElementById('vocabTypeInput');"
   },
   {
