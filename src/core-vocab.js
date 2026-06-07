@@ -104,6 +104,8 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
         posFilters.push('pos IN (' + colPos.map(() => '?').join(',') + ')');
         params.push(...colPos);
       }
+      // If phrases not selected, exclude NULL pos items (they are untagged phrases)
+      if (!pos.includes('phrase')) sql += " AND pos IS NOT NULL";
       if (posFilters.length > 0) sql += ' AND (' + posFilters.join(' OR ') + ')';
     }
     sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 200';
