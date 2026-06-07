@@ -245,9 +245,10 @@ function markVocab(v) {
   if (typeof window !== 'undefined' && window.db) {
     const _ts = new Date().toISOString();
     const _result = v === 'again' ? 'again' : v === 'gotit' ? 'gotit' : 'know';
+    const _responseMs = _vcCardShownAt ? (Date.now() - _vcCardShownAt) : null;
     window.db.run(
       'INSERT INTO drill_results (created_at, drill_type, item_key, correct, response_ms) VALUES (?,?,?,?,?)',
-      [_ts, 'words', srsKey, v !== 'again' ? 1 : 0, null]
+      [_ts, 'words', srsKey, v !== 'again' ? 1 : 0, _responseMs]
     ).catch(() => {});
     window.db.run(
       'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
@@ -280,6 +281,7 @@ function markVocab(v) {
 
 
 function renderVocab() {
+  _vcCardShownAt = Date.now();
   const vocabCardEl   = document.getElementById('vocabCard');
   const vocabCounterEl= document.getElementById('vocabCounter');
   const deckStatusEl  = document.getElementById('vocabDeckStatus');
@@ -1848,6 +1850,7 @@ async function vocabSettingsSave() {
 
 // ── Text entry drill mode ────────────────────────────────────────────
 let _vcTextEntry = false;
+let _vcCardShownAt = null; // timestamp when current card was rendered
 
 function toggleVcTextEntry() {
   _vcTextEntry = !_vcTextEntry;
