@@ -62,9 +62,22 @@ function vocabSourceFilterChanged() {
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
+function vocabResetSourceFilters() {
+  document.querySelectorAll('.vocab-source-filter').forEach(el => el.checked = true);
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+}
+
+function vocabResetPosFilters() {
+  document.querySelectorAll('.vocab-pos-filter').forEach(el => el.checked = true);
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+}
+
 function vocabGetActivePOS() {
-  const checked = [...document.querySelectorAll('.vocab-pos-filter:checked')].map(el => el.value);
-  return checked.length === 0 ? null : checked;
+  const all = [...document.querySelectorAll('.vocab-pos-filter')];
+  const checked = all.filter(el => el.checked).map(el => el.value);
+  // All checked or none checked = no filter
+  if (checked.length === 0 || checked.length === all.length) return null;
+  return checked;
 }
 
 function vocabPosFilterChanged() {
@@ -1872,5 +1885,5 @@ function skipVocabTypeAnswer() {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
