@@ -398,6 +398,13 @@ function renderVocab() {
 
   if (statusEl) statusEl.textContent = `Session: ${deck.length} left of ${vocabSession.length}`;
   renderVocabList();
+  // Reset text entry UI on new card
+  const _typeInp = document.getElementById('vocabTypeInput');
+  const _typeRes = document.getElementById('vocabTypeResult');
+  const _typeNext = document.getElementById('vocabTypeNextBtn');
+  if (_typeInp) { _typeInp.value = ''; if (_vcTextEntry) _typeInp.focus(); }
+  if (_typeRes) _typeRes.textContent = '';
+  if (_typeNext) _typeNext.style.display = 'none';
 }
 
 function prevVocab() {
@@ -1847,6 +1854,14 @@ function submitVocabTypeAnswer() {
   }
 }
 
+function vocabTypeMarkWrong() {
+  const res = document.getElementById('vocabTypeResult');
+  const nextBtn = document.getElementById('vocabTypeNextBtn');
+  if (res) res.textContent = '';
+  if (nextBtn) nextBtn.style.display = 'none';
+  markVocab('again');
+}
+
 function skipVocabTypeAnswer() {
   const inp = document.getElementById('vocabTypeInput');
   const res = document.getElementById('vocabTypeResult');
@@ -1857,5 +1872,5 @@ function skipVocabTypeAnswer() {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
