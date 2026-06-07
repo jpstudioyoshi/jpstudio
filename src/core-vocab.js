@@ -1646,7 +1646,7 @@ async function extractWritingVocabToItems(text) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: 'You are a Japanese vocabulary extractor. Return ONLY a JSON array, no markdown, no preamble. Each item: {"word":"","reading":"","meaning":""}. Extract only content words (nouns, verbs, adjectives, adverbs). Exclude particles, conjunctions, auxiliary verbs.',
+        system: 'You are a Japanese vocabulary extractor. Return ONLY a JSON array, no markdown, no preamble. Each item: {"word":"","reading":"","meaning":"","pos":""}. Give "word" in DICTIONARY form (plain form — e.g. 食べる not 食べました). "pos" is one of: noun, verb, i-adj, na-adj, adverb, expression. Extract only content words (nouns, verbs, adjectives, adverbs). Exclude particles, conjunctions, auxiliary verbs.',
         messages: [{ role: 'user', content: 'Extract vocabulary from this Japanese text: ' + text }]
       })
     });
@@ -1663,9 +1663,9 @@ async function extractWritingVocabToItems(text) {
       if (!w.word || typeof w.word !== 'string') continue;
       for (const dir of ['jp_en', 'en_jp', 'speaking']) {
         await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, ?, ?, 'writing', 'writing_session', ?, 0.9, 1, 2.5, ?, ?, ?)`,
-          [w.word, w.reading || null, w.meaning || null, now, today, dir, now]
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
+           VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, 1, 2.5, ?, ?, ?)`,
+          [w.word, w.reading || null, w.meaning || null, w.pos || null, now, today, dir, now]
         );
       }
     }

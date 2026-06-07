@@ -1576,12 +1576,13 @@ Look for:
 6. Nouns, verbs, adjectives, adverbs
 
 For EACH word, provide:
-- word: the Japanese word (kanji if available)
+- word: the Japanese word in DICTIONARY form (plain form — e.g. 食べる not 食べました, kanji if available)
 - reading: hiragana reading
 - meaning: English translation (YOU must provide this even if not in the notes)
+- pos: part of speech, one of: noun, verb, i-adj, na-adj, adverb, expression
 
 Return ONLY a JSON array, no explanation:
-[{"word":"病気","reading":"びょうき","meaning":"illness, sickness","sourceText":"病気（びょうき）です"},{"word":"桜","reading":"さくら","meaning":"cherry blossom","sourceText":"桜がきれいです"}]
+[{"word":"病気","reading":"びょうき","meaning":"illness, sickness","pos":"noun","sourceText":"病気（びょうき）です"},{"word":"桜","reading":"さくら","meaning":"cherry blossom","pos":"noun","sourceText":"桜がきれいです"}]
 
 Include "sourceText": the exact phrase or sentence from the notes where this word appeared.
 
@@ -1604,12 +1605,12 @@ ${docContent.slice(0, 10000)}` }]
       for (const v of LessonNotesState.vocab) {
         if (!v.word || !v.reading || !v.meaning) continue;
         await window.db.run(
-          `INSERT INTO words (word, reading, meaning, level, list_source, lesson_id, source, example)
-           VALUES (?,?,?,?,?,?,?,?)
+          `INSERT INTO words (word, reading, meaning, level, list_source, lesson_id, source, example, pos)
+           VALUES (?,?,?,?,?,?,?,?,?)
            ON CONFLICT(word) DO UPDATE SET
              lesson_id = COALESCE(excluded.lesson_id, lesson_id),
              source    = COALESCE(excluded.source, source)`,
-          [v.word, v.reading, v.meaning, 'custom', 'lesson', _lessonId, 'lesson', v.sourceText || null]
+          [v.word, v.reading, v.meaning, 'custom', 'lesson', _lessonId, 'lesson', v.sourceText || null, v.pos || null]
         );
       }
       console.log('[LN] vocab written to SQL:', LessonNotesState.vocab.length, 'words');
@@ -1623,9 +1624,9 @@ ${docContent.slice(0, 10000)}` }]
         if (!v.word || !v.meaning) continue;
         for (const dir of ['jp_en', 'en_jp', 'speaking']) {
           await window.db.run(
-            `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-             VALUES (?, ?, ?, 'yoshi_vocab', ?, ?, 'word', ?, 1.0, 1, 2.5, ?, ?)`,
-            [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, dir, now, today, now]
+            `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, direction, type, pos, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+             VALUES (?, ?, ?, 'yoshi_vocab', ?, ?, 'word', ?, ?, 1.0, 1, 2.5, ?, ?)`,
+            [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, dir, v.pos || null, now, today, now]
           );
         }
       }

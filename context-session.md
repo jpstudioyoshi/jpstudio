@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-07 (session 27 — vocab system complete, writing sitting boost designed)
+Last updated: 2026-06-07 (session 28 — vocab filters, text entry, POS tagging in progress)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -14,7 +14,7 @@ Last updated: 2026-06-07 (session 27 — vocab system complete, writing sitting 
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
-- **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors
+- **Code:** anything touching multiple render paths, multi-line string replacements in JS, multi-file refactors
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -30,43 +30,46 @@ Last updated: 2026-06-07 (session 27 — vocab system complete, writing sitting 
 - Start: "Read context-static.md and context-session.md only. Do not read any other files yet."
 
 ## Current Mode
-Vocab system core complete. Next features:
-1. Writing sitting boost (designed, ready to build)
-2. Text entry drill mode (UI work — needs careful design)
-3. Book vocab import
-See context-vocab.md for full vocab system design.
+Vocab system — POS tagging pipeline next. Then POS filters back online. Text entry working but needs POS data.
 
 ## HTML Element Map
-`html-map.md` in project Knowledge — check before touching any panel element.
+`html-map.md` in project Knowledge.
 
-**Session 25-26 additions:**
+**Session 25-28 additions:**
 - vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
 - vocabWtDirJpEn, vocabWtDirEnJp, vocabWtDirSpeaking
-- vocabIntYoshiPhrases, vocabIntYoshiVocab, vocabIntWriting, vocabIntLookup, vocabIntN5
-- vocabThreshLookup, vocabThreshDecay, vocabSessionSize, vocabWeightsMsg
-- vcDirectionBtn — direction toggle (JP→EN / EN→JP / Speaking)
-- .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE
-- .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE
+- vocabIntYoshiPhrases/Vocab/Writing/Lookup/N5, vocabThreshLookup/Decay/SessionSize, vocabWeightsMsg
+- vcDirectionBtn — JP→EN / EN→JP / Speaking toggle
+- vcTypeToggle — Type mode toggle button
+- vocabFlipControls — flip card buttons (hidden in type mode)
+- vocabTypeControls — text entry area (shown in type mode)
+- vocabTypeInput — text input field
+- vocabTypeResult — result display (correct answer shown on wrong)
+- vocabTypeNextBtn — Next button shown after wrong answer
+- .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default
+- .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — GREYED (awaiting POS data)
+- Reset buttons on both filter rows
 
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
 - Always jp && prefix
 - repr() to inspect match strings before retrying
 - Blank lines in match strings cause MATCH FAILED
-- pbcopy swallows terminal output — never use for direct data queries
+- pbcopy swallows terminal output
 - SQLite DB at ~/Library/Application Support/japanese-studio/jpstudio.db
-- window.db.query() requires explicit [] params array
-- Close Electron app before SQLite writes
+- window.db.query() requires explicit [] params
+- Close Electron before SQLite writes
+- Long conversations: use Claude Code for multi-line JS string replacements
 
-## Vocab System — Complete State
+## Vocab System — Current State
 
 ### All pipelines live
-| Source | Event/trigger | Destination |
+| Source | Trigger | Destination |
 |---|---|---|
 | yoshi_phrases | LESSON_EXTRACTED → initLessonVocabListener | vocab_items |
 | yoshi_vocab | lessonNotesExtractVocabSilent direct write | vocab_items |
 | writing | WRITING_SUBMITTED → extractWritingVocabToItems (Claude) | vocab_items |
-| lookup | VOCAB_LOOKUP → initLookupVocabListener (threshold ≥2, len 2-10) | vocab_items |
+| lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
 | n5 | one-time backfill | vocab_items |
 
 ### vocab_items schema
@@ -74,137 +77,102 @@ id, word, reading, meaning, example, source, source_ref, direction, type, pos, c
 encounter_at, entry_weight, srs_interval, srs_ease, srs_due, last_reviewed, created_at
 UNIQUE(word, source, direction)
 
-### lesson_phrases schema
-id, lesson_id, phrase, reading, meaning, example, type, created_at
-
-### Drill UI
+### Drill UI — working
 - Direction toggle: JP→EN / EN→JP / Speaking
-- Card front/back swaps per direction
-- Speaking: Japanese front, auto VoiceVox on card load
-- Dynamic font scaling by character count
-- Grammar type excluded, 〜 prefix excluded
-- Source + POS filters active
+- Type toggle: switches between flip card and text entry
+- Text entry: correct → auto-advance after 800ms, wrong → show answer, wait for Next tap
+- Source filters: active, all checked by default, Reset button
+- POS filters: GREYED — awaiting POS data
+- Dynamic font scaling on card
+- Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
 
-### Weighting (loadVocabItemsDeck)
-- Fetches 200 rows, sorts by effective_weight = entry_weight × source_weight × direction_weight
-- Slices to 50 for session
-- Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
-- Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
-- Stored in VOCAB_WEIGHTS kvAPI key
+### Weighting
+- effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
+- Fetches 200, sorts, slices to 50
 
-### AppEvents — all hooked in
-- DRILL_ANSWER → StudentModel ✅
-- WRITING_SUBMITTED → vocab pipeline + StudentModel ✅
-- LESSON_EXTRACTED → vocab pipeline ✅
-- VOCAB_LOOKUP → vocab pipeline + StudentModel ✅
-- ANALYSIS_COMPLETE → StudentModel ✅
-- FLUENCY_432 → StudentModel listens, nothing emits yet (known gap)
+## POS Tagging — In Progress (next task)
 
-## Writing Sitting Boost — Designed, Ready to Build
+### Problem
+- N5 words have POS from `words` table ✅
+- yoshi_vocab words stored as conjugated forms (食べました) not dictionary forms ❌
+- yoshi_vocab has no POS ❌
+- writing words have no POS ❌
+- lookup words have no POS ❌
 
-### Concept
-Any writing session with ≥5 sentence submissions automatically boosts associated lookup words
-in the vocab deck for 3 days. Zero user action required — system infers prep context automatically.
-If the session precedes a Yoshi lesson, the lesson pipeline picks up the content and it lives on.
-If not, the boost expires cleanly after 3 days.
+### Plan
+**Step 1 — Update extraction prompt (Claude Code)**
+In `src/features-lesson-notes.js`, function `lessonNotesExtractVocabSilent`:
+- Change prompt to request DICTIONARY form (plain form, not conjugated)
+- Add `pos` field to JSON return: noun, verb, i-adj, na-adj, adverb, expression
+- Update vocab_items insert to write `v.pos || null` to pos column
+- Update words table insert similarly
 
-### Implementation plan
-**New table: writing_sittings**
+**Step 2 — Update writing extraction prompt**
+In `src/core-vocab.js`, function `extractWritingVocabToItems`:
+- Same changes: dictionary form + pos field
+- Update vocab_items insert to write pos
+
+**Step 3 — Clean and re-extract existing yoshi_vocab**
 ```sql
-CREATE TABLE writing_sittings (
-  id             INTEGER PRIMARY KEY AUTOINCREMENT,
-  started_at     TEXT,
-  saved_at       TEXT NOT NULL,
-  sentence_count INTEGER,
-  expires_at     TEXT
-);
+DELETE FROM vocab_items WHERE source='yoshi_vocab';
+DELETE FROM kv_store WHERE key='VOCAB_MIGRATION_V1';
 ```
+Then re-extract from a lesson session to populate with correct dictionary forms + POS.
 
-**Hook point: `saveWritingText()` in `src/core-writing.js` (line 562)**
-- Already knows `writingSentences.length`
-- If length >= 5 → INSERT into writing_sittings with expires_at = datetime('now', '+3 days')
-- One record per save event that meets threshold
+**Step 4 — Lookup words POS**
+- Match against `words` table where word exists → inherit POS
+- Remaining → Claude batch tag (small set)
 
-**Lookup association:**
-- Time window: ±2 hours of saved_at timestamp
-- Query: SELECT DISTINCT word FROM corpus_lookups WHERE looked_up_at BETWEEN (saved_at - 2h) AND (saved_at + 2h)
-- One bump per word per sitting (DISTINCT handles deduplication)
+**Step 5 — Re-enable POS filters**
+Remove opacity/pointer-events from POS filter row in index.html.
 
-**In loadVocabItemsDeck:**
-- Check: any writing_sittings WHERE expires_at > datetime('now')?
-- If yes: fetch their lookup words from corpus_lookups within time windows
-- Boost _effectiveWeight by 1.5× for matching words in vocab_items
+### Claude Code brief (ready to use)
+"Read context-session.md only. Then read src/features-lesson-notes.js and src/core-vocab.js.
 
-**No UI needed** — fully automatic. Optional: small indicator in vocab panel showing "📚 Prep active"
+Task 1: In `lessonNotesExtractVocabSilent` in features-lesson-notes.js, update the extraction prompt to:
+- Request DICTIONARY form (plain form — 食べる not 食べました)
+- Add pos field to JSON: one of noun, verb, i-adj, na-adj, adverb, expression
+- Update the vocab_items INSERT to include pos column: use v.pos || null
+- Update the words table INSERT similarly
 
-### saveWritingText current location
-src/core-writing.js line 562 — already has writingSentences.length available
+Task 2: In `extractWritingVocabToItems` in core-vocab.js, update the Claude prompt to:
+- Request dictionary form
+- Add pos field
+- Update vocab_items INSERT to include pos column
 
-## Text Entry Drill Mode — Designed, Not Built
+Run node check-syntax.js. Do not commit."
 
-### Two drill mechanics
-- **Card flip** (current) — self-assess
-- **Text entry** — type answer, app checks
+## Writing Sitting Boost — Complete
+- `writing_sittings` table created
+- On save with ≥5 sentences → INSERT with expires_at = +3 days
+- loadVocabItemsDeck checks active sittings → boosts lookup words ±2 hours by 1.5×
+- Fully automatic, zero user action
 
-### Text entry content types
-| Content | Prompt | Answer check |
-|---|---|---|
-| Vocab EN→JP | Show English meaning | Match against word or reading in vocab_items |
-| Verb conjugation | Show dict form + target form | Rule-based JS check |
-| Counter drill | Show English quantity + noun | Rule-based JS (needs counter_suffix populated) |
-
-**No Claude API needed** — exact/reading match for vocab, rule-based for conjugation/counters.
-
-**counter_suffix column** added to vocab_items DB but not yet populated.
-Counter nouns need tagging with their suffix (冊, 本, 匹, 台 etc.).
-
-**UI note:** text entry needs careful design — do not start until UI checks done.
-Toggle between flip and entry mode visible in drill footer.
-
-## Book Vocab — Identified, Not Built
-
-Paul works from a textbook with Yoshi. Each chapter has:
-- A theme (e.g. "my favourite place")
-- 4-6 audio chunks (~30-45 seconds each) — currently in Listen panel
-- A vocabulary page of new chapter words — currently stays in the book
-
-**Planned:**
-- Import chapter vocab → vocab_items as source='book'
-- Chapter theme tag → future "next lesson" filter
-- Audio chunks already transcribed via Whisper — could feed vocab pipeline (noisy, lower trust)
-
-**Book not yet identified** — need to know if it's Genki, Minna no Nihongo, or Yoshi-specific.
+## Text Entry Mode — Working, needs tuning
+- Type toggle switches flip↔entry mode
+- Wrong answer: shows correct word/reading, waits for Next tap
+- Needs POS data before verb/counter specific modes can work
+- Input field resets and refocuses on each new card
 
 ## Pending — Priority Order
 
-1. **Writing sitting boost** — ready to build, clean design
-2. **Text entry drill mode** — UI work needed first
-3. **Book vocab import** — identify book first
-4. **POS on yoshi_vocab** — Claude tagging at extraction time or defer
-5. **counter_suffix population** — needed for counter drill
+1. **POS tagging** — Claude Code brief above, then clean yoshi_vocab, re-extract
+2. **POS filters back online** — after data exists
+3. **Writing words POS** — same prompt update already in brief
+4. **Lookup words POS** — match words table, Claude for remainder
+5. **Book vocab import** — 18 pages, OCR artifact ready to build
 6. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-7. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-
-## Drill Type Taxonomy (confirmed)
-- Open semantic vocab → card flip or text entry → vocab_items
-- Closed class (days, months) → simple recognition, retire quickly
-- Rule-generative (counters, conjugation) → text entry, rule-checked
-- Grammar patterns (〜てもいいですか) → sentence construction panel
+7. **Counter suffix population** — counter_suffix column exists, needs tagging
+8. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
 srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions,
-drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions,
-panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
+writing_sittings, drill_results, conversation_sessions, transcript_turns, failure_events,
+agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
 
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ## kvAPI keys
 STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
 VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1
-
-## Architectural notes
-- Yoshi tab → source manager only (no drills) — future work
-- Frequency weighting (N4+) — frequency column already in words table, usable later
-- Direction weights are difficulty calibration, not sequential learning stages
-- One active writing sitting at a time is sufficient — stack won't fill up due to 3-day expiry
