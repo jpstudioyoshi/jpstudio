@@ -106,9 +106,27 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
       n5:            wt.n5            ?? 0.3,
     };
     const dirWeights = wt.directions || { jp_en: 1.0, en_jp: 0.8, speaking: 0.9 };
+    // Get active writing sittings for prep boost
+    let prepWords = new Set();
+    try {
+      const sittings = await window.db.query(
+        "SELECT saved_at FROM writing_sittings WHERE expires_at > datetime('now')",
+        []
+      );
+      if (sittings && sittings.length > 0) {
+        for (const s of sittings) {
+          const savedAt = s.saved_at;
+          const lookups = await window.db.query(
+            "SELECT DISTINCT word FROM corpus_lookups WHERE looked_up_at BETWEEN datetime(?, '-2 hours') AND datetime(?, '+2 hours')",
+            [savedAt, savedAt]
+          );
+          (lookups || []).forEach(l => { if (l.word && l.word.length > 1) prepWords.add(l.word); });
+        }
+      }
+    } catch(e) { console.warn('[vocab] prep boost lookup failed:', e); }
     const weighted = (rows || []).map(r => ({
       ...r,
-      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[r.direction] || 1.0)
+      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[r.direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
     }));
     weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
     state.vocabItems = weighted.slice(0, 50);

@@ -566,6 +566,16 @@ function saveWritingText() {
   const _now = new Date(); const _time = _now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); saved.unshift({date: _now.toLocaleDateString() + ' ' + _time, text, count: writingSentences.length});
   (App.Storage || window.Storage).setStudioTexts(saved.slice(0, 20));
   renderSavedTexts();
+  // Record writing sitting if >= 5 sentences — boosts lookup words for 3 days
+  if (writingSentences.length >= 5 && window.db) {
+    const _savedAt = new Date().toISOString();
+    window.db.run(
+      "INSERT INTO writing_sittings (saved_at, sentence_count, expires_at) VALUES (?, ?, datetime(?, '+3 days'))",
+      [_savedAt, writingSentences.length, _savedAt]
+    ).then(() => {
+      console.log('[writing] sitting recorded:', writingSentences.length, 'sentences, expires in 3 days');
+    }).catch(e => console.warn('[writing] sitting record failed:', e.message));
+  }
   alert('Saved!');
 }
 
