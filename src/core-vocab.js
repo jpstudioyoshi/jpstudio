@@ -46,13 +46,34 @@ function vcTogglePitch() {
   if (btn) btn.classList.toggle('btn-active', vcPitchVisible);
 }
 // ── Load due cards from vocab_items into state.vocabItems ───────────────────
+function vocabGetActiveSources() {
+  const checked = [...document.querySelectorAll('.vocab-source-filter:checked')].map(el => el.value);
+  if (checked.length === 0) return null; // no filter = all sources
+  // expand 'yoshi' to both yoshi source types
+  const sources = [];
+  for (const c of checked) {
+    if (c === 'yoshi') { sources.push('yoshi_phrases'); sources.push('yoshi_vocab'); }
+    else sources.push(c);
+  }
+  return sources;
+}
+
+function vocabSourceFilterChanged() {
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+}
+
 async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
-    const rows = await window.db.query(
-      "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR type != 'grammar') ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50",
-      [direction]
-    );
+    const sources = vocabGetActiveSources();
+    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR type != 'grammar')";
+    const params = [direction];
+    if (sources && sources.length > 0) {
+      sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
+      params.push(...sources);
+    }
+    sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50';
+    const rows = await window.db.query(sql, params);
     state.vocabItems = rows || [];
     _dataLoaded = true;
     renderVocab();

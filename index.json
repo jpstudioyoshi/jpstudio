@@ -3291,548 +3291,576 @@
   },
   {
     "type": "function",
-    "name": "loadVocabItemsDeck",
+    "name": "vocabGetActiveSources",
     "file": "src/core-vocab.js",
     "line": 49,
+    "desc": "const checked = [...document.querySelectorAll('.vocab-source-filter:checked')].map(el => el.value);"
+  },
+  {
+    "type": "function",
+    "name": "vocabSourceFilterChanged",
+    "file": "src/core-vocab.js",
+    "line": 61,
+    "desc": "if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);"
+  },
+  {
+    "type": "function",
+    "name": "loadVocabItemsDeck",
+    "file": "src/core-vocab.js",
+    "line": 65,
     "desc": "if (!window.db) return;"
   },
   {
     "type": "function",
     "name": "startNewSession",
     "file": "src/core-vocab.js",
-    "line": 66,
+    "line": 87,
     "desc": "if (!_dataLoaded || !state.vocabItems || !state.vocabItems.length) return;"
   },
   {
     "type": "function",
     "name": "getSessionDeck",
     "file": "src/core-vocab.js",
-    "line": 87,
+    "line": 108,
     "desc": "return vocabSession.filter(i => !_sessionKnown[i]);"
   },
   {
     "type": "function",
     "name": "markVocab",
     "file": "src/core-vocab.js",
-    "line": 93,
+    "line": 114,
     "desc": "if (!vocabSession.length) return;"
   },
   {
     "type": "function",
     "name": "renderVocab",
     "file": "src/core-vocab.js",
-    "line": 173,
+    "line": 194,
     "desc": "const vocabCardEl   = document.getElementById('vocabCard');"
   },
   {
     "type": "function",
     "name": "prevVocab",
     "file": "src/core-vocab.js",
-    "line": 327,
+    "line": 348,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "nextVocab",
     "file": "src/core-vocab.js",
-    "line": 334,
+    "line": 355,
     "desc": "const deck = getSessionDeck();"
   },
   {
     "type": "function",
     "name": "flipVocab",
     "file": "src/core-vocab.js",
-    "line": 342,
+    "line": 363,
     "desc": "vocabFlipped = !vocabFlipped;"
   },
   {
     "type": "function",
     "name": "toggleVcDirection",
     "file": "src/core-vocab.js",
-    "line": 347,
+    "line": 368,
     "desc": "const cycle = { jp_en: 'en_jp', en_jp: 'speaking', speaking: 'jp_en' };"
   },
   {
     "type": "function",
     "name": "resetVocabDeck",
     "file": "src/core-vocab.js",
-    "line": 355,
+    "line": 376,
     "desc": "state.vocabProgress = {};"
   },
   {
     "type": "function",
     "name": "toggleVocabList",
     "file": "src/core-vocab.js",
-    "line": 364,
+    "line": 385,
     "desc": "const list = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "renderVocabList",
     "file": "src/core-vocab.js",
-    "line": 375,
+    "line": 396,
     "desc": "const container = document.getElementById('vocabList');"
   },
   {
     "type": "function",
     "name": "printVocabList",
     "file": "src/core-vocab.js",
-    "line": 407,
+    "line": 428,
     "desc": "const cards = state.vocab;"
   },
   {
     "type": "function",
     "name": "vcFetch",
     "file": "src/core-vocab.js",
-    "line": 427,
+    "line": 448,
     "desc": "const category = document.getElementById('vcFetchCategory').value.trim();"
   },
   {
     "type": "function",
     "name": "vcFetchSelectAll",
     "file": "src/core-vocab.js",
-    "line": 487,
+    "line": 508,
     "desc": "document.querySelectorAll('.vc-fetch-check').forEach(el => el.checked = checked);"
   },
   {
     "type": "function",
     "name": "vcFetchAdd",
     "file": "src/core-vocab.js",
-    "line": 491,
+    "line": 512,
     "desc": "const words = window._vcFetchWords || [];"
   },
   {
     "type": "function",
     "name": "vcToggleHint",
     "file": "src/core-vocab.js",
-    "line": 527,
+    "line": 548,
     "desc": "const hint = document.getElementById('vcHint');"
   },
   {
     "type": "function",
     "name": "transAddToVocab",
     "file": "src/core-vocab.js",
-    "line": 536,
+    "line": 557,
     "desc": "const src = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "renderGrammar",
     "file": "src/core-vocab.js",
-    "line": 558,
+    "line": 579,
     "desc": "GRAMMAR"
   },
   {
     "type": "function",
     "name": "toggleGrammar",
     "file": "src/core-vocab.js",
-    "line": 575,
+    "line": 596,
     "desc": "const el = document.getElementById('ge' + i);"
   },
   {
     "type": "function",
     "name": "appendChatMsg",
     "file": "src/core-vocab.js",
-    "line": 584,
+    "line": 605,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "updateChatMsg",
     "file": "src/core-vocab.js",
-    "line": 621,
+    "line": 642,
     "desc": "const el = document.getElementById(id);"
   },
   {
     "type": "function",
     "name": "transSpeakOutput",
     "file": "src/core-vocab.js",
-    "line": 669,
+    "line": 690,
     "desc": "const inp = document.getElementById('transInput').value.trim();"
   },
   {
     "type": "function",
     "name": "chatQuick",
     "file": "src/core-vocab.js",
-    "line": 679,
+    "line": 700,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "sendChat",
     "file": "src/core-vocab.js",
-    "line": 685,
+    "line": 706,
     "desc": "const input = document.getElementById('chatInput');"
   },
   {
     "type": "function",
     "name": "startChatSpeech",
     "file": "src/core-vocab.js",
-    "line": 730,
+    "line": 751,
     "desc": "sttStart('chatInput', 'chatSpeechBtn', 'ja');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusFilter",
     "file": "src/core-vocab.js",
-    "line": 752,
+    "line": 773,
     "desc": "KanjiCorpusState — see above"
   },
   {
     "type": "function",
     "name": "kanjiCorpusSort",
     "file": "src/core-vocab.js",
-    "line": 759,
+    "line": 780,
     "desc": "KanjiCorpusState.sort = sort;"
   },
   {
     "type": "function",
     "name": "kanjiSetView",
     "file": "src/core-vocab.js",
-    "line": 768,
+    "line": 789,
     "desc": "KanjiCorpusState — see below"
   },
   {
     "type": "function",
     "name": "kanjiCorpusRender",
     "file": "src/core-vocab.js",
-    "line": 775,
+    "line": 796,
     "desc": "const grid   = document.getElementById('kanjiCorpusGrid');"
   },
   {
     "type": "function",
     "name": "kanjiCorpusShowDetail",
     "file": "src/core-vocab.js",
-    "line": 891,
+    "line": 912,
     "desc": "const detail = document.getElementById('kanjiCorpusDetail');"
   },
   {
     "type": "function",
     "name": "vcFilter",
     "file": "src/core-vocab.js",
-    "line": 966,
+    "line": 987,
     "desc": "VocabCorpusState — see below"
   },
   {
     "type": "function",
     "name": "vcSort",
     "file": "src/core-vocab.js",
-    "line": 973,
+    "line": 994,
     "desc": "VocabCorpusState.sort = s;"
   },
   {
     "type": "function",
     "name": "vcLevels",
     "file": "src/core-vocab.js",
-    "line": 980,
+    "line": 1001,
     "desc": "const levels = new Set();"
   },
   {
     "type": "function",
     "name": "vcRenderTargets",
     "file": "src/core-vocab.js",
-    "line": 993,
+    "line": 1014,
     "desc": "Target words are now surfaced via the priority score in the Words drill."
   },
   {
     "type": "function",
     "name": "vcRenderTargetsInline",
     "file": "src/core-vocab.js",
-    "line": 997,
+    "line": 1018,
     "desc": "const list = document.getElementById('vcTargetsList2');"
   },
   {
     "type": "function",
     "name": "vcDrillWord",
     "file": "src/core-vocab.js",
-    "line": 1003,
+    "line": 1024,
     "desc": "try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}"
   },
   {
     "type": "function",
     "name": "vocabPriorityContext",
     "file": "src/core-vocab.js",
-    "line": 1013,
+    "line": 1034,
     "desc": "Returns a compact text block summarising vocabulary state for Claude."
   },
   {
     "type": "function",
     "name": "wordPriorityScore",
     "file": "src/core-vocab.js",
-    "line": 1115,
+    "line": 1136,
     "desc": "srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown."
   },
   {
     "type": "function",
     "name": "wordEnrichWithSRS",
     "file": "src/core-vocab.js",
-    "line": 1178,
+    "line": 1199,
     "desc": "Enrich a vcMergeEntry with its SRS data and priority score."
   },
   {
     "type": "function",
     "name": "vcBuildPriorityList",
     "file": "src/core-vocab.js",
-    "line": 1192,
+    "line": 1213,
     "desc": "Build a priority-sorted word list. Thin wrapper over vcBuildList that adds"
   },
   {
     "type": "function",
     "name": "vcBuildList",
     "file": "src/core-vocab.js",
-    "line": 1198,
+    "line": 1219,
     "desc": "const corpus = kanjiCorpusGet(); // personal encounter data keyed by word"
   },
   {
     "type": "function",
     "name": "vcMergeEntry",
     "file": "src/core-vocab.js",
-    "line": 1228,
+    "line": 1249,
     "desc": "const lookupCount   = cached?.count || 0;"
   },
   {
     "type": "function",
     "name": "vcRender",
     "file": "src/core-vocab.js",
-    "line": 1264,
+    "line": 1285,
     "desc": "const tbody  = document.getElementById('vcTableBody');"
   },
   {
     "type": "function",
     "name": "vcShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1339,
+    "line": 1360,
     "desc": "const detail = document.getElementById('vcDetail');"
   },
   {
     "type": "function",
     "name": "migrateLearnedWordsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1427,
+    "line": 1448,
     "desc": "GRAMMAR NOTES"
   },
   {
     "type": "function",
     "name": "backfillLessonPhrasesToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1458,
+    "line": 1479,
     "desc": ""
   },
   {
     "type": "function",
     "name": "backfillLookupsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1483,
+    "line": 1504,
     "desc": ""
   },
   {
     "type": "function",
     "name": "backfillN5ToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1515,
+    "line": 1536,
     "desc": ""
   },
   {
     "type": "function",
     "name": "extractWritingVocabToItems",
     "file": "src/core-vocab.js",
-    "line": 1542,
+    "line": 1563,
     "desc": "if (!text || text.length < 2) return;"
   },
   {
     "type": "function",
     "name": "initWritingVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1580,
+    "line": 1601,
     "desc": ""
   },
   {
     "type": "function",
     "name": "initLessonVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1591,
+    "line": 1612,
+    "desc": ""
+  },
+  {
+    "type": "function",
+    "name": "initLookupVocabListener",
+    "file": "src/core-vocab.js",
+    "line": 1645,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vocabSettingsLoad",
     "file": "src/core-vocab.js",
-    "line": 1625,
+    "line": 1679,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vocabSettingsSave",
     "file": "src/core-vocab.js",
-    "line": 1655,
+    "line": 1709,
     "desc": ""
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1432,
+    "line": 1453,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1435,
+    "line": 1456,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1450,
+    "line": 1471,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1463,
+    "line": 1484,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1475,
+    "line": 1496,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1494,
+    "line": 1515,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1507,
+    "line": 1528,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1520,
+    "line": 1541,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1534,
+    "line": 1555,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_WEIGHTS",
     "file": "src/core-vocab.js",
-    "line": 1676,
+    "line": 1730,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_THRESHOLDS",
     "file": "src/core-vocab.js",
-    "line": 1677,
+    "line": 1731,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_INTERVALS",
     "file": "src/core-vocab.js",
-    "line": 1678,
+    "line": 1732,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 104,
+    "line": 125,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 114,
+    "line": 135,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 130,
+    "line": 151,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 139,
+    "line": 160,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 143,
+    "line": 164,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1443,
+    "line": 1464,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1468,
+    "line": 1489,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1500,
+    "line": 1521,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1526,
+    "line": 1547,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1567,
+    "line": 1588,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1606,
+    "line": 1627,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1662,
     "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-vocab.js",
-    "line": 441,
+    "line": 462,
     "desc": "Give me ${…} Japanese vocabulary words in the category: \"${…}\". Level: N5-N4 beg"
   },
   {
