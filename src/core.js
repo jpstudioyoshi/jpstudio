@@ -536,10 +536,10 @@ document.addEventListener('storageReady', function() {
   if (App.initLookupVocabListener) App.initLookupVocabListener();
   // Wire lookup promotion listener
   if (App.initLookupVocabListener) App.initLookupVocabListener();
-  // Load due vocab_items into the drill deck
-  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
   // Load vocab settings into UI
   if (App.vocabSettingsLoad) App.vocabSettingsLoad();
+  // Load due vocab_items into the drill deck
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {

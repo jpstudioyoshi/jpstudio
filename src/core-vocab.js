@@ -27,6 +27,9 @@ let vcReadingVisible = false;
 let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
+let _vcWeights = {};
+let _vcThresholds = { session_size: 20 };
+let _vcIntervals = {};
 
 function toggleVcReading(e) {
   if (e) e.stopPropagation();
@@ -86,6 +89,7 @@ function vocabPosFilterChanged() {
 
 async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
+  vocabSession = [];
   try {
     const sources = vocabGetActiveSources();
     let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR (type != 'grammar' AND type != 'excluded'))";
@@ -111,8 +115,13 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
     sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 200';
     const rows = await window.db.query(sql, params);
     // Apply source weights from VOCAB_WEIGHTS settings
-    const wtRaw = await window.kvAPI.get('VOCAB_WEIGHTS').catch(() => null);
-    const wt = wtRaw ? JSON.parse(wtRaw) : {};
+    let wt;
+    if (_vcWeights && Object.keys(_vcWeights).length > 0) {
+      wt = _vcWeights;
+    } else {
+      const wtRaw = await window.kvAPI.get('VOCAB_WEIGHTS').catch(() => null);
+      wt = wtRaw ? JSON.parse(wtRaw) : {};
+    }
     const sourceWeights = {
       yoshi_phrases: wt.yoshi_phrases ?? 1.0,
       yoshi_vocab:   wt.yoshi_vocab   ?? 1.0,
@@ -144,7 +153,8 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
       _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[r.direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
     }));
     weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
-    state.vocabItems = weighted.slice(0, 50);
+    state.vocabItems = weighted.slice(0, 200);
+    vocabIdx = state.vocabItems[0]?.id ?? (state.vocabItems[0] ? 0 : -1);
     _dataLoaded = true;
     renderVocab();
   } catch (e) {
@@ -157,9 +167,7 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
 function startNewSession() {
   if (!_dataLoaded || !state.vocabItems || !state.vocabItems.length) return;
   if (!state.vocabKnownSessions) state.vocabKnownSessions = {};
-  const sizeRadio = document.querySelector('input[name="vocabSize"]:checked');
-  const sizeVal = sizeRadio ? sizeRadio.value : '20';
-  const size    = sizeVal === 'all' ? state.vocabItems.length : parseInt(sizeVal);
+  const size = _vcThresholds.session_size || 20;
 
   // state.vocabItems is already ordered by entry_weight DESC, encounter_at DESC
   // and pre-filtered to due/new rows by the SQL query — take the top N.
@@ -1760,6 +1768,7 @@ async function vocabSettingsLoad() {
     const i = await window.kvAPI.get('VOCAB_INTERVALS');
     if (w) {
       const wt = JSON.parse(w);
+      _vcWeights = wt;
       if (document.getElementById('vocabWtYoshiPhrases')) document.getElementById('vocabWtYoshiPhrases').value = wt.yoshi_phrases ?? 1.0;
       if (document.getElementById('vocabWtYoshiVocab')) document.getElementById('vocabWtYoshiVocab').value = wt.yoshi_vocab ?? 1.0;
       if (document.getElementById('vocabWtWriting')) document.getElementById('vocabWtWriting').value = wt.writing ?? 0.9;
@@ -1771,12 +1780,14 @@ async function vocabSettingsLoad() {
     }
     if (t) {
       const th = JSON.parse(t);
+      _vcThresholds = th;
       if (document.getElementById('vocabThreshLookup')) document.getElementById('vocabThreshLookup').value = th.lookup_promote ?? 2;
       if (document.getElementById('vocabThreshDecay')) document.getElementById('vocabThreshDecay').value = th.production_decay ?? 5;
       if (document.getElementById('vocabSessionSize')) document.getElementById('vocabSessionSize').value = th.session_size ?? 20;
     }
     if (i) {
       const iv = JSON.parse(i);
+      _vcIntervals = iv;
       if (document.getElementById('vocabIntYoshiPhrases')) document.getElementById('vocabIntYoshiPhrases').value = iv.yoshi_phrases ?? 3;
       if (document.getElementById('vocabIntYoshiVocab')) document.getElementById('vocabIntYoshiVocab').value = iv.yoshi_vocab ?? 3;
       if (document.getElementById('vocabIntWriting')) document.getElementById('vocabIntWriting').value = iv.writing ?? 1;
@@ -1812,12 +1823,16 @@ async function vocabSettingsSave() {
       lookup:        parseInt(document.getElementById('vocabIntLookup').value),
       n5:            parseInt(document.getElementById('vocabIntN5').value),
     };
+    _vcWeights = weights;
+    _vcThresholds = thresholds;
+    _vcIntervals = intervals;
     await window.kvAPI.set('VOCAB_WEIGHTS', JSON.stringify(weights));
     await window.kvAPI.set('VOCAB_THRESHOLDS', JSON.stringify(thresholds));
     await window.kvAPI.set('VOCAB_INTERVALS', JSON.stringify(intervals));
     const msg = document.getElementById('vocabWeightsMsg');
     if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
     console.log('[vocab] settings saved');
+    await loadVocabItemsDeck();
   } catch(e) { console.warn('[vocab] settings save error', e); }
 }
 
