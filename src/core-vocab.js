@@ -105,9 +105,10 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
       lookup:        wt.lookup        ?? 0.6,
       n5:            wt.n5            ?? 0.3,
     };
+    const dirWeights = wt.directions || { jp_en: 1.0, en_jp: 0.8, speaking: 0.9 };
     const weighted = (rows || []).map(r => ({
       ...r,
-      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5)
+      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[r.direction] || 1.0)
     }));
     weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
     state.vocabItems = weighted.slice(0, 50);
@@ -1724,6 +1725,9 @@ async function vocabSettingsLoad() {
       if (document.getElementById('vocabWtWriting')) document.getElementById('vocabWtWriting').value = wt.writing ?? 0.9;
       if (document.getElementById('vocabWtLookup')) document.getElementById('vocabWtLookup').value = wt.lookup ?? 0.6;
       if (document.getElementById('vocabWtN5')) document.getElementById('vocabWtN5').value = wt.n5 ?? 0.3;
+      if (document.getElementById('vocabWtDirJpEn')) document.getElementById('vocabWtDirJpEn').value = (wt.directions?.jp_en) ?? 1.0;
+      if (document.getElementById('vocabWtDirEnJp')) document.getElementById('vocabWtDirEnJp').value = (wt.directions?.en_jp) ?? 0.8;
+      if (document.getElementById('vocabWtDirSpeaking')) document.getElementById('vocabWtDirSpeaking').value = (wt.directions?.speaking) ?? 0.9;
     }
     if (t) {
       const th = JSON.parse(t);
@@ -1750,6 +1754,11 @@ async function vocabSettingsSave() {
       writing:       parseFloat(document.getElementById('vocabWtWriting').value),
       lookup:        parseFloat(document.getElementById('vocabWtLookup').value),
       n5:            parseFloat(document.getElementById('vocabWtN5').value),
+      directions: {
+        jp_en:    parseFloat(document.getElementById('vocabWtDirJpEn').value),
+        en_jp:    parseFloat(document.getElementById('vocabWtDirEnJp').value),
+        speaking: parseFloat(document.getElementById('vocabWtDirSpeaking').value),
+      },
     };
     const thresholds = {
       lookup_promote:   parseInt(document.getElementById('vocabThreshLookup').value),
