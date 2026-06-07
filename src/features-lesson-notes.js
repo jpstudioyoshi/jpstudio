@@ -1519,6 +1519,14 @@ async function lessonNotesAutoExtractAll() {
   
   LessonNotesState.extracting = false;
   lessonNotesSaveCurrentSession();
+  // Emit LESSON_EXTRACTED so vocab pipeline can pick up new phrases
+  try {
+    const _phraseCount = (LessonNotesState.keyPhrases || []).length + (LessonNotesState.grammar || []).length;
+    (App.AppEvents || window.AppEvents)?.emit(AppEvents.LESSON_EXTRACTED, {
+      lessonId: LessonNotesState.currentLessonId || null,
+      phraseCount: _phraseCount
+    });
+  } catch(e) { console.warn('[LN] LESSON_EXTRACTED emit failed:', e); }
 
   // Warn if any extraction came back empty
   const _lnFailed = [];

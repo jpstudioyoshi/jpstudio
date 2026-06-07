@@ -1588,6 +1588,39 @@ function initWritingVocabListener() {
   }
 }
 
+function initLessonVocabListener() {
+  try {
+    (App.AppEvents || window.AppEvents)?.on(AppEvents.LESSON_EXTRACTED, async (payload) => {
+      const lessonId = payload?.lessonId || null;
+      try {
+        const rows = await window.db.query(
+          'SELECT id, phrase, reading, meaning, example, type, created_at FROM lesson_phrases WHERE lesson_id = ?',
+          [lessonId]
+        );
+        if (!rows || rows.length === 0) return;
+        const today = new Date().toISOString().split('T')[0];
+        const now = new Date().toISOString();
+        for (const row of rows) {
+          if (row.type === 'grammar') continue;
+          for (const dir of ['jp_en', 'en_jp', 'speaking']) {
+            await window.db.run(
+              `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+               VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, ?, 1.0, 1, 2.5, ?, ?)`,
+              [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), dir, row.type || 'phrase', row.created_at || now, today, now]
+            );
+          }
+        }
+        console.log('[vocab] lesson extracted — upserted ' + rows.length + ' phrases into vocab_items');
+        if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+      } catch(e) {
+        console.warn('[vocab] lesson vocab listener error', e);
+      }
+    });
+  } catch(e) {
+    console.warn('[vocab] lesson listener init error', e);
+  }
+}
+
 // ── Vocab settings save/load ─────────────────────────────────────────
 async function vocabSettingsLoad() {
   try {
@@ -1651,5 +1684,5 @@ async function vocabSettingsSave() {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });

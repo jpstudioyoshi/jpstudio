@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-06 (session 25 — vocab system Layers 1-5 complete)
+Last updated: 2026-06-06 (session 25 — vocab system substantial progress)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -38,7 +38,7 @@ Last updated: 2026-06-06 (session 25 — vocab system Layers 1-5 complete)
 - Guide: claude-code-guide.md in project root
 
 ## Current Mode
-STABILIZATION complete — Vocab system Layers 1-5 complete.
+STABILIZATION complete — Vocab system active development.
 See ARCHITECTURE_HUB.md for full design. See context-vocab.md for vocab system design.
 
 ## Thread Structure
@@ -50,18 +50,19 @@ See ARCHITECTURE_HUB.md for full design. See context-vocab.md for vocab system d
 `html-map.md` in project Knowledge — check before touching any panel element.
 
 **Session 21 additions:**
-- `strandBalanceChart` — strand balance chart, above drillRecencyGraphic in progress panel
-- `strandWeightsGrid` — strand weights input grid in settings panel
-- `strandWeightsMsg` — "Saved" confirmation span in settings panel
+- `strandBalanceChart`, `strandWeightsGrid`, `strandWeightsMsg`
 
 **Session 23 additions:**
-- `strandYoshiToggle` — Show Yoshi button next to FOUR STRANDS header
+- `strandYoshiToggle`
 
 **Session 25 additions:**
-- `vocabWtYoshiPhrases`, `vocabWtYoshiVocab`, `vocabWtWriting`, `vocabWtLookup`, `vocabWtN5` — source weight inputs in settings
-- `vocabIntYoshiPhrases`, `vocabIntYoshiVocab`, `vocabIntWriting`, `vocabIntLookup`, `vocabIntN5` — initial interval inputs in settings
-- `vocabThreshLookup`, `vocabThreshDecay`, `vocabSessionSize` — deck behaviour inputs in settings
-- `vocabWeightsMsg` — "Saved" confirmation span in vocab settings section
+- `vocabWtYoshiPhrases`, `vocabWtYoshiVocab`, `vocabWtWriting`, `vocabWtLookup`, `vocabWtN5`
+- `vocabIntYoshiPhrases`, `vocabIntYoshiVocab`, `vocabIntWriting`, `vocabIntLookup`, `vocabIntN5`
+- `vocabThreshLookup`, `vocabThreshDecay`, `vocabSessionSize`
+- `vocabWeightsMsg`
+- `vocabDirJpEn`, `vocabDirEnJp`, `vocabDirSpeaking` — direction toggle buttons (now single `vcDirectionBtn`)
+- Source filter row (greyed): `vocab-source-filter` checkboxes (Yoshi/Writing/Lookup/N5)
+- POS filter row (greyed): `vocab-pos-filter` checkboxes
 
 ## Terminal Workflow
 **Shell aliases:** jp, jpstart
@@ -72,105 +73,134 @@ See ARCHITECTURE_HUB.md for full design. See context-vocab.md for vocab system d
 - sed -n X,Yp file | pbcopy — read a block
 - grep -n "pattern" file | pbcopy — locate lines
 - Never paste code blocks directly into terminal — always use python3 heredoc scripts
-- For new files: use cat > filename << 'ENDOFFILE' heredoc (/mnt/user-data/outputs/ not accessible from terminal)
 
 **Critical lessons:**
 - python3 string matching — use repr() to inspect before retrying
 - Blank lines in match strings cause MATCH FAILED — always use repr() to check first
 - Cache buster now auto-bumped on every commit via pre-commit hook — no manual bumping needed
-- pbcopy swallows terminal output — never use for sed -n reads
+- pbcopy swallows terminal output — never use for direct data queries
 - Always jp && prefix
-- /mnt/user-data/outputs/ is Claude-side only — not accessible from terminal
-- SQLite DB is at ~/Library/Application Support/japanese-studio/jpstudio.db (not jpStudio)
-- window.db.query() requires explicit [] params array even for no-param queries — omitting causes silent empty return
-- Cache only busts on commit — use jpstart after every commit to reload
-- Close Electron app before running SQLite writes directly — "database disk image is malformed" means app has DB open
+- SQLite DB is at ~/Library/Application Support/japanese-studio/jpstudio.db
+- window.db.query() requires explicit [] params array even for no-param queries
+- Cache only busts on commit — jpstart after every commit to reload
+- Close Electron app before running SQLite writes directly
 
 ## Known Issues / Pre-existing
 - `yoshiInitUI not defined` — harmless, pre-existing
 - PDF print line breaks — pre-existing
-- `yoshi.s1` strand weight was corrupt (1000) — fixed directly in DB. If settings reset, re-save strand weights to normalize.
 
 ## Session 25 — Completed Work
 
-### Vocab system Layers 1-5 complete ✅
+### Vocab system — major progress ✅
 
-**Commits:** b5d4918, 043250d, c02dbbb, bda0aac, 259ffca, 49fc8f0, 0453597, 15dee0d, 4d660c8, 0453597, 5e3713d, da9d3d6, 729fd10
+**Commits:** b5d4918 through a112af2
 
-**Layer 5 — Settings UI ✅ (commit 729fd10)**
-- Vocabulary section added to settings panel (stPaneSettings)
-- Source weights: yoshi_phrases, yoshi_vocab, writing, lookup, n5
-- Initial intervals per source (days)
-- Deck behaviour: lookup threshold, production decay, session size
-- `vocabSettingsSave()` + `vocabSettingsLoad()` in core-vocab.js
-- Load wired into storageReady in core.js
-- Save/load persists to VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS in kvAPI
+**Schema:**
+- `vocab_items` — direction, type columns added
+- `lesson_phrases` — type column added
+- Three SRS tracks per word: jp_en, en_jp, speaking — UNIQUE(word, source, direction)
 
-**Direction tracks ✅ (commit 5e3713d)**
-- `direction` column added to vocab_items
-- UNIQUE(word, source, direction) — three rows per word
-- Directions: jp_en, en_jp, speaking
-- loadVocabItemsDeck(direction='jp_en') — parameterised, defaults to jp_en
-- 1260 rows total (420 per direction)
+**Pipelines — backfills (one-time, all wired to storageReady):**
+- `lesson_phrases` → `vocab_items` source='yoshi_phrases' ✅
+- `corpus_lookups` → `vocab_items` source='lookup' (multi-char, threshold≥2) ✅
+- N5 `words` → `vocab_items` source='n5' weight=0.3 ✅
+- `lessonNotesLearnedWords` localStorage → `vocab_items` source='yoshi_vocab' ✅
 
-**Source split ✅ (commit da9d3d6)**
-- `yoshi` split into `yoshi_phrases` (lesson_phrases backfill) and `yoshi_vocab` (lessonNotesLearnedWords migration)
-- All backfill functions updated to use correct source tags
+**Pipelines — live:**
+- Writing → Claude extraction → `vocab_items` source='writing' on WRITING_SUBMITTED ✅
+- Lesson notes → `vocab_items` ❌ NOT WIRED — see gap below
 
-**Current vocab_items population:**
-- yoshi_phrases: 261 (87 words × 3 directions)
-- lookup: 156 (52 words × 3 directions)
-- n5: 2622 (874 words × 3 directions)
-- yoshi_vocab: from localStorage migration (if any learned words existed)
-- Total: ~3039+ rows
+**Type tagging:**
+- 93 existing `lesson_phrases` rows retagged: 46 grammar, 41 phrases + 6 words
+- Grammar extraction (`lessonNotesExtractGrammarSilent`) now writes to `lesson_phrases` with type='grammar'
+- Key phrases extraction writes `type` from LLM response
+- Backfill propagates type to `vocab_items`
+- Grammar type excluded from vocab drill: `AND type != 'grammar'`
+- Items starting with `〜` excluded: `AND word NOT LIKE '〜%'`
 
-**Drill confirmed working ✅** — jp_en direction, cards showing word, meaning, example, source tag
+**UI — vocab drill:**
+- Direction toggle: JP→EN / EN→JP / Speaking (cycles via `vcDirectionBtn`)
+- Card front/back swaps correctly per direction
+- Speaking mode auto-plays VoiceVox on card load
+- Dynamic font scaling by character count (no line breaks)
+- Source tag on card back (source · YYYY-MM-DD)
+- `renderVocabList` rewritten for `vocab_items` — SRS status indicator
+- Level filters (N5/N4/N3) removed
+- Source filter row added (greyed, not wired)
+- POS filter row kept (greyed, not wired)
+- Matching game deleted (HTML + JS)
 
-## Pending — Vocab system
+**Settings:**
+- Vocabulary section in settings panel
+- Source weights, initial intervals, deck behaviour inputs
+- `vocabSettingsSave()` + `vocabSettingsLoad()` wired
 
-### Short term
-- Direction mode selector UI — buttons above card to switch jp_en / en_jp / speaking
-- Wire VOCAB_INTERVALS into backfill functions (Yoshi phrases/vocab start at +3 days not today)
-- corpus_productions extraction fix — currently single-kanji only, needs word-level extraction
-- Delete words-sub-game (matching game, never used)
+**Current vocab_items:**
+- lookup|phrase: 156
+- n5|phrase: 2622
+- yoshi_phrases|grammar: 138
+- yoshi_phrases|phrase: 123
+- Total: ~3039 rows
+
+## Pending — Immediate Priority
+
+### 1. Lesson notes live pipeline (most important gap)
+- `features-lesson-notes.js` has NO AppEvents emits
+- `LESSON_EXTRACTED` event doesn't exist in AppEvents.js
+- After `lessonNotesAutoExtractAll` completes → emit `LESSON_EXTRACTED`
+- Listener in `core-vocab.js` → upsert new `lesson_phrases` rows into `vocab_items`
+- Same pattern as `WRITING_SUBMITTED` → `extractWritingVocabToItems`
+
+### 2. Live lookup promotion
+- `_corpusWriteLookup` fires on every quick-translate
+- Currently only historical backfill, no live upsert to `vocab_items`
+- Need: on lookup, check count threshold, upsert if met
+
+### 3. Wire source filters
+- Source filter row exists in HTML but greyed out
+- Remove pointer-events:none, add onchange → loadVocabItemsDeck(vcDirection)
+- Update loadVocabItemsDeck to filter by active sources
+
+### 4. POS column on vocab_items
+- N5 words have pos in `words` table — propagate on backfill
+- Yoshi items need Claude extraction for POS
+- Required before POS filters can work
+- Verbs/adjectives → also feed conjugation drill
+
+### 5. Wire VOCAB_WEIGHTS into deck query
+- Settings UI exists, saves to kvAPI
+- Not yet applied to entry_weight or query ORDER
+
+### 6. Wire VOCAB_INTERVALS into backfills
+- Yoshi phrases/vocab should start at +3 days not today
+
+### 7. Single words from vocab extraction
+- `lessonNotesExtractVocabSilent` writes to `words` table, not `lesson_phrases`
+- Should feed `vocab_items` as source='yoshi_vocab' type='word'
+- Separate pipeline needed
+
+## Pending — Medium Term
 
 ### Layer 6 — Downstream consumers
 - Grammar drill sentence generation uses vocab_items weight profile
-- Sentence construction activity same budget logic
+- Writing prompt: "write using these 10 words" — top weighted due words
 - Cost tag: source='vocab_drill' / 'vocab_sentence_gen'
 
-## Pending — Other
+### Structural
+- Yoshi tab → source manager only (no drills)
+- Source filter as cross-panel concept (Yoshi filter in each activity panel)
+- `pos` column on vocab_items — POS routing (verbs/adj → conjugation drill)
+- Two drill types: card flip vs text entry — future unified engine
 
-### Phase 5 — next frontier
-- Step 1: rule-based monitor — fire on session end, check strand balance thresholds
-- Step 2: LLM recommendation via claudeSummary() → agent_decisions table
-- Step 3: drill suggestion with action link in UI
-
-### Phase 4 remaining
-- 4/3/2 separate panel_sessions entry
-- Lesson notes grammar Part 2
-
-### Medium term
-- notes_text blob in lesson_sessions — rationalize
-- LessonNotesState.grammar — in memory only, never persists
-- Progress panel header — briefing refresh + About me controls
-- jpSat Clear button bug — investigation interrupted
-
-### Future
-- Thread coordination system + site manager pattern
-- Dropbox recordings redirect
-- Video → Audio pipeline (ffmpeg)
-- Pitch accent wiring
-- Lesson Mode Architecture
-- Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
+### Phase 5
+- Rule-based strand balance monitor
+- LLM recommendation → agent_decisions
+- Drill suggestion with action link
 
 ## SQLite Schema (current)
 Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
-pitch_data: 124,137 entries
-vocab_items: ~3039 rows (jp_en/en_jp/speaking × sources)
-DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
-## vocab_items schema
+**vocab_items schema:**
 ```sql
 CREATE TABLE vocab_items (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -181,6 +211,7 @@ CREATE TABLE vocab_items (
   source        TEXT NOT NULL,  -- yoshi_phrases, yoshi_vocab, writing, lookup, n5
   source_ref    TEXT,
   direction     TEXT NOT NULL DEFAULT 'jp_en',  -- jp_en, en_jp, speaking
+  type          TEXT DEFAULT 'phrase',  -- word, phrase, grammar
   encounter_at  TEXT,
   entry_weight  REAL DEFAULT 1.0,
   srs_interval  INTEGER DEFAULT 1,
@@ -192,11 +223,28 @@ CREATE TABLE vocab_items (
 );
 ```
 
-## kvAPI — rationalized usage
-**Keep in kvAPI:** STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS, VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1, goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache, gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
-**Migrated to DB:** DrillSRS (all drill types now in srs_items)
-**Still on localStorage:** voice profile, voice pause data, video watch time, resources, lessonNotesLearnedWords (migrated to vocab_items on first launch)
+**lesson_phrases schema:**
+```sql
+CREATE TABLE lesson_phrases (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  lesson_id  INTEGER REFERENCES lesson_sessions(id),
+  phrase     TEXT NOT NULL,
+  reading    TEXT,
+  meaning    TEXT NOT NULL,
+  example    TEXT,
+  type       TEXT DEFAULT 'phrase',  -- word, phrase, grammar
+  created_at TEXT DEFAULT (datetime('now'))
+);
+```
 
-## Storage rationalization principle
-- kvAPI: config, preferences, small UI state that doesn't need querying
-- DB: anything that grows over time, needs querying, or joins with other data
+DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
+
+## kvAPI keys
+STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
+VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1,
+goals, UI state, API keys, qrSession, YOSHI_KEY, breakdownCache,
+gramSentHistory, GRAM_SENT_SESSIONS, WRITING_ERRORS, vocabBookmarks
+
+## Storage principle
+- kvAPI: config, preferences, small UI state
+- DB: anything that grows, needs querying, or joins other data

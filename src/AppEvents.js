@@ -50,6 +50,7 @@ const AppEvents = (() => {
     VOCAB_PRODUCED: 'vocab:produced',    // { word, context }
     ERROR_RECORDED: 'error:recorded',    // { panel, pattern, errorType }
     WRITING_SUBMITTED: 'writing:submitted', // { checkCount, firstAttempt }
+    LESSON_EXTRACTED: 'lesson:extracted',   // { lessonId, phraseCount }
     FLUENCY_432:    'fluency:432',       // { activity, durationSeconds }
     SESSION_TIME:   'session:time',      // { panel, seconds }
 
