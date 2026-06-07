@@ -3710,6 +3710,27 @@
     "desc": ""
   },
   {
+    "type": "function",
+    "name": "toggleVcTextEntry",
+    "file": "src/core-vocab.js",
+    "line": 1805,
+    "desc": "_vcTextEntry = !_vcTextEntry;"
+  },
+  {
+    "type": "function",
+    "name": "submitVocabTypeAnswer",
+    "file": "src/core-vocab.js",
+    "line": 1821,
+    "desc": "const inp = document.getElementById('vocabTypeInput');"
+  },
+  {
+    "type": "function",
+    "name": "skipVocabTypeAnswer",
+    "file": "src/core-vocab.js",
+    "line": 1850,
+    "desc": "const inp = document.getElementById('vocabTypeInput');"
+  },
+  {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",

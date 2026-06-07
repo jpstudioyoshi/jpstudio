@@ -1799,7 +1799,63 @@ async function vocabSettingsSave() {
   } catch(e) { console.warn('[vocab] settings save error', e); }
 }
 
+// ── Text entry drill mode ────────────────────────────────────────────
+let _vcTextEntry = false;
+
+function toggleVcTextEntry() {
+  _vcTextEntry = !_vcTextEntry;
+  const btn = document.getElementById('vcTypeToggle');
+  const flipControls = document.getElementById('vocabFlipControls');
+  const typeControls = document.getElementById('vocabTypeControls');
+  if (btn) btn.style.borderBottom = _vcTextEntry ? '2px solid var(--teal)' : '2px solid transparent';
+  if (flipControls) flipControls.style.display = _vcTextEntry ? 'none' : '';
+  if (typeControls) typeControls.style.display = _vcTextEntry ? 'block' : 'none';
+  if (_vcTextEntry) {
+    const inp = document.getElementById('vocabTypeInput');
+    if (inp) { inp.value = ''; inp.focus(); }
+    const res = document.getElementById('vocabTypeResult');
+    if (res) res.textContent = '';
+  }
+}
+
+function submitVocabTypeAnswer() {
+  const inp = document.getElementById('vocabTypeInput');
+  const res = document.getElementById('vocabTypeResult');
+  if (!inp || !res) return;
+  const typed = inp.value.trim();
+  if (!typed) return;
+  const card = state.vocabItems[vocabIdx];
+  if (!card) return;
+  // Check against word (kanji) and reading (hiragana)
+  const correct = typed === card.word || typed === (card.reading || '');
+  if (correct) {
+    res.style.color = 'var(--teal)';
+    res.textContent = '✓ 正解！';
+    inp.value = '';
+    setTimeout(() => {
+      markVocab('know');
+      res.textContent = '';
+    }, 800);
+  } else {
+    res.style.color = 'var(--red)';
+    res.innerHTML = '✗ &nbsp;' + escHtml(card.word) + (card.reading ? '　' + escHtml(card.reading) : '');
+    inp.value = '';
+    setTimeout(() => {
+      markVocab('again');
+      res.textContent = '';
+    }, 1500);
+  }
+}
+
+function skipVocabTypeAnswer() {
+  const inp = document.getElementById('vocabTypeInput');
+  const res = document.getElementById('vocabTypeResult');
+  if (inp) inp.value = '';
+  if (res) res.textContent = '';
+  nextVocab();
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
