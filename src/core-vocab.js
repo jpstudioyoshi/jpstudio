@@ -88,7 +88,7 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
     const sources = vocabGetActiveSources();
-    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR type != 'grammar')";
+    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR (type != 'grammar' AND type != 'excluded'))";
     const params = [direction];
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
