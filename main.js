@@ -321,6 +321,7 @@ function createSchema() {
       source_ref    TEXT,
       direction     TEXT NOT NULL DEFAULT 'jp_en',
       type          TEXT DEFAULT 'phrase',
+      pos           TEXT,
       encounter_at  TEXT,
       entry_weight  REAL DEFAULT 1.0,
       srs_interval  INTEGER DEFAULT 1,

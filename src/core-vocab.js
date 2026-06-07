@@ -62,6 +62,15 @@ function vocabSourceFilterChanged() {
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
+function vocabGetActivePOS() {
+  const checked = [...document.querySelectorAll('.vocab-pos-filter:checked')].map(el => el.value);
+  return checked.length === 0 ? null : checked;
+}
+
+function vocabPosFilterChanged() {
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+}
+
 async function loadVocabItemsDeck(direction = 'jp_en') {
   if (!window.db) return;
   try {
@@ -71,6 +80,18 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
       params.push(...sources);
+    }
+    const pos = vocabGetActivePOS();
+    if (pos && pos.length > 0) {
+      // 'phrase' maps to type='phrase', others map to pos column
+      const posFilters = [];
+      if (pos.includes('phrase')) posFilters.push("type = 'phrase'");
+      const colPos = pos.filter(p => p !== 'phrase');
+      if (colPos.length > 0) {
+        posFilters.push('pos IN (' + colPos.map(() => '?').join(',') + ')');
+        params.push(...colPos);
+      }
+      if (posFilters.length > 0) sql += ' AND (' + posFilters.join(' OR ') + ')';
     }
     sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 50';
     const rows = await window.db.query(sql, params);
