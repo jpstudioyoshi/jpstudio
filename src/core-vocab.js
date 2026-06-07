@@ -197,27 +197,35 @@ function markVocab(v) {
   const word   = card.word || '';
   const srsKey = id != null ? String(id) : word;
 
+  const curInterval  = card.srs_interval || 1;
+  const curEase      = card.srs_ease || 2.5;
+  const curGraduated = card.srs_graduated || 0;
+
   if (v === 'know') {
     _sessionKnown[vocabIdx] = true;
+    const newGraduated = 1;
+    const newEase      = curGraduated === 0 ? curEase : Math.min(4.0, curEase + 0.1);
+    const newInterval  = Math.max(1, Math.floor(curInterval * curEase));
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_interval = srs_interval * srs_ease, srs_due = date('now', '+' || CAST(srs_interval * srs_ease AS INTEGER) || ' days'), last_reviewed = datetime('now') WHERE id = ?",
-        [id]
+        "UPDATE vocab_items SET srs_graduated = ?, srs_ease = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
+        [newGraduated, newEase, newInterval, newInterval, id]
       ).catch(() => {});
     }
 
   } else if (v === 'gotit') {
-    // Knew it on reveal — cap interval at 1 day so it returns tomorrow
     _sessionKnown[vocabIdx] = true;
+    const newGraduated = Math.max(curGraduated, 1);
+    const newInterval  = Math.max(1, Math.floor(curInterval * 1.2));
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_interval = 1, srs_due = date('now', '+1 days'), last_reviewed = datetime('now') WHERE id = ?",
-        [id]
+        "UPDATE vocab_items SET srs_graduated = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
+        [newGraduated, newInterval, newInterval, id]
       ).catch(() => {});
     }
 
   } else {
-    // 'again' — move card to back of session, reset SRS
+    // 'again' — move card to back of session
     delete _sessionKnown[vocabIdx];
     state.vocabProgress[vocabIdx] = 'again';
     const sessionPos = vocabSession.indexOf(vocabIdx);
@@ -225,10 +233,12 @@ function markVocab(v) {
       vocabSession.splice(sessionPos, 1);
       vocabSession.push(vocabIdx);
     }
+    const newEase     = curGraduated === 0 ? curEase : Math.max(1.3, curEase - 0.15);
+    const newInterval = curGraduated === 0 ? 1 : Math.max(1, Math.floor(curInterval * 0.2));
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_interval = 1, srs_due = date('now', '+1 days'), last_reviewed = datetime('now') WHERE id = ?",
-        [id]
+        "UPDATE vocab_items SET srs_ease = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
+        [newEase, newInterval, newInterval, id]
       ).catch(() => {});
     }
   }
@@ -473,7 +483,7 @@ function toggleVocabList() {
   const printBtn = document.getElementById('vocabListPrintBtn');
   const hidden = list.style.display === 'none';
   list.style.display = hidden ? 'block' : 'none';
-  btn.textContent = hidden ? '▼ Hide word list' : '▶ Show word list';
+  btn.textContent = hidden ? 'Hide list' : 'Word list';
   if (printBtn) printBtn.style.display = hidden ? 'inline-block' : 'none';
   if (hidden) renderVocabList();
 }
@@ -496,7 +506,7 @@ function renderVocabList() {
     else if (due < today) { dueColor = 'var(--red)'; dueLabel = due; }
     else if (due === today) { dueColor = 'var(--teal)'; dueLabel = 'today'; }
     else { dueColor = 'var(--ink-light)'; dueLabel = due; }
-    return `<div style="display:grid;grid-template-columns:1fr 1fr 1.2fr auto auto;gap:4px 10px;
+    return `<div style="display:grid;grid-template-columns:0.6fr 0.7fr 0.9fr auto auto;gap:4px 10px;
       padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;
       cursor:pointer;transition:background 0.1s"
       onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()"
@@ -504,7 +514,7 @@ function renderVocabList() {
       <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.word || '')}</span>
       <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.reading || '')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.meaning || '')}</span>
-      <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml(c.source || '')}</span>
+      <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml((c.source || '').replace('_vocab','').replace('_phrases',''))}</span>
       <span style="font-family:var(--ui);font-size:0.7rem;color:${dueColor};white-space:nowrap">${escHtml(dueLabel)}</span>
     </div>`;
   }).join('');
