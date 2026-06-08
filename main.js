@@ -594,6 +594,13 @@ function createSchema() {
     db.run('UPDATE schema_version SET version = 9');
     console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
   }
+  // v10: srs_graduated flag on vocab_items
+  if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 10) {
+    const viCols = (db.exec("PRAGMA table_info(vocab_items)")[0]?.values || []).map(r => r[1]);
+    if (!viCols.includes('srs_graduated')) db.run('ALTER TABLE vocab_items ADD COLUMN srs_graduated INTEGER DEFAULT 0');
+    db.run('UPDATE schema_version SET version = 10');
+    console.log('Migrated schema to v10 (vocab_items: srs_graduated)');
+  }
   console.log('Schema created/verified');
 }
 

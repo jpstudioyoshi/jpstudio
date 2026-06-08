@@ -1285,7 +1285,116 @@ function conjUpdateFreqCount() {
 window['conjAddFreqVerbs']  = conjAddFreqVerbs;
 window['conjResetFreqVerbs'] = conjResetFreqVerbs;
 
-function startConjDrillG() {
+// ── DB-driven conjugation verb pool ──────────────────────────────────────────
+// Group/rule are display-only; derive godan group from the dict-form ending.
+function _conjGodanGroupRule(dict) {
+  if (dict === '行く' || dict === 'いく') return { group: 'irr-k', rule: 'く → って' };
+  switch (dict.slice(-1)) {
+    case 'く': return { group: 'ite',   rule: 'く → いて' };
+    case 'ぐ': return { group: 'ide',   rule: 'ぐ → いで' };
+    case 'す': return { group: 'shite', rule: 'す → して' };
+    case 'む': return { group: 'nde',   rule: 'む → んで' };
+    case 'ぶ': return { group: 'nde',   rule: 'ぶ → んで' };
+    case 'ぬ': return { group: 'nde',   rule: 'ぬ → んで' };
+    case 'う': return { group: 'tte',   rule: 'う → って' };
+    case 'つ': return { group: 'tte',   rule: 'つ → って' };
+    case 'る': return { group: 'tte',   rule: 'る(godan) → って' };
+    default:   return { group: 'tte',   rule: 'godan' };
+  }
+}
+
+function _conjMapPoolRow(row) {
+  const dict = row.dict;
+  if (!dict) return null;
+  const read = row.read || dict;
+  const en   = row.en || '';
+  if (row.pos === 'i-adj')  return { dict, read, en, type: 'i-adj',  group: 'i-adj',  rule: 'い-adj' };
+  if (row.pos === 'na-adj') return { dict, read, en, type: 'na-adj', group: 'na-adj', rule: 'な-adj' };
+  // pos === 'verb' → distinguish via verb_class
+  switch (row.verb_class) {
+    case 'ichidan':   return { dict, read, en, type: 'ru',  group: 'ru',  rule: 'る-verb' };
+    case 'irregular':
+    case 'suru':      return { dict, read, en, type: 'irr', group: 'irr', rule: 'irregular' };
+    case 'godan': {
+      const gr = _conjGodanGroupRule(dict);
+      return { dict, read, en, type: 'u', group: gr.group, rule: gr.rule };
+    }
+    default: return null; // unknown verb_class — skip rather than risk wrong conjugation
+  }
+}
+
+// Builds the active conjugation pool from vocab_items (known words first) topped
+// up by high-frequency words. Never throws — returns [] and degrades per-step.
+// Side effect: window._conjPoolMeta = { known, freq }.
+async function buildConjVerbPool() {
+  window._conjPoolMeta = { known: 0, freq: 0 };
+  const pool = [];
+  const seen = new Set();
+  try {
+    if (typeof window === 'undefined' || !window.db) return pool;
+
+    // Step 1 — known words from vocab_items, strongest SRS first
+    try {
+      const rows = await window.db.query(
+        `SELECT v.word AS dict, v.reading AS read, v.meaning AS en, v.pos AS pos, w.verb_class AS verb_class
+           FROM vocab_items v
+           LEFT JOIN words w ON v.word = w.word
+          WHERE v.pos IN ('verb','i-adj','na-adj')
+          GROUP BY v.word
+          ORDER BY v.srs_ease DESC, v.srs_graduated DESC
+          LIMIT 60`, []);
+      if (rows && !rows.error) {
+        for (const row of rows) {
+          if (seen.has(row.dict)) continue;
+          const v = _conjMapPoolRow(row);
+          if (v) { pool.push(v); seen.add(v.dict); }
+        }
+      }
+    } catch (e) {
+      console.warn('[conj] pool step 1 (vocab_items) failed:', e?.message || e);
+    }
+    window._conjPoolMeta.known = pool.length;
+
+    // Step 2 — top up from high-frequency words
+    const remaining = 100 - pool.length;
+    if (remaining > 0) {
+      try {
+        const exclude = [...seen];
+        const placeholders = exclude.length ? exclude.map(() => '?').join(',') : "''";
+        const rows = await window.db.query(
+          `SELECT word AS dict, reading AS read, meaning AS en, pos AS pos, verb_class AS verb_class
+             FROM words
+            WHERE pos IN ('verb','i-adj','na-adj')
+              AND word NOT IN (${placeholders})
+            ORDER BY frequency DESC
+            LIMIT ?`, [...exclude, remaining]);
+        if (rows && !rows.error) {
+          for (const row of rows) {
+            if (seen.has(row.dict)) continue;
+            const v = _conjMapPoolRow(row);
+            if (v) { pool.push(v); seen.add(v.dict); window._conjPoolMeta.freq++; }
+          }
+        }
+      } catch (e) {
+        console.warn('[conj] pool step 2 (words) failed:', e?.message || e);
+      }
+    }
+  } catch (e) {
+    console.warn('[conj] buildConjVerbPool failed:', e?.message || e);
+    return [];
+  }
+  return pool;
+}
+
+window['buildConjVerbPool'] = buildConjVerbPool;
+
+async function startConjDrillG() {
+  // Refresh the DB-driven verb pool before building the drill
+  window._conjExtraVerbs = await buildConjVerbPool();
+  const _meta = window._conjPoolMeta || { known: 0, freq: 0 };
+  const _poolInfo = document.getElementById('conjPoolInfo');
+  if (_poolInfo) _poolInfo.textContent = 'Pool: ' + _meta.known + ' known + ' + _meta.freq + ' frequency';
+
   // Read options from the G-suffixed elements in panel-grammar2
   const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;
   const naIEndingOnly = document.getElementById('optNaIEndingG')?.checked;
@@ -1314,9 +1423,11 @@ function startConjDrillG() {
   // Merge extra high-frequency verbs — only include types matching selected checkboxes
   if (window._conjExtraVerbs && window._conjExtraVerbs.length) {
     const allowedTypes = new Set();
-    if (document.getElementById('optUG')?.checked)   allowedTypes.add('u');
-    if (document.getElementById('optRuG')?.checked)  allowedTypes.add('ru');
-    if (document.getElementById('optIrrG')?.checked) allowedTypes.add('irr');
+    if (document.getElementById('optUG')?.checked)    allowedTypes.add('u');
+    if (document.getElementById('optRuG')?.checked)   allowedTypes.add('ru');
+    if (document.getElementById('optIrrG')?.checked)  allowedTypes.add('irr');
+    if (document.getElementById('optIAdjG')?.checked) allowedTypes.add('i-adj');
+    if (document.getElementById('optNaAdjG')?.checked) allowedTypes.add('na-adj');
     const existing = new Set(verbTypes.map(v => v.dict));
     window._conjExtraVerbs.forEach(v => {
       if (!existing.has(v.dict) && allowedTypes.has(v.type)) verbTypes.push(v);
@@ -1397,9 +1508,11 @@ function conjForceNewSession() {
   // Merge extra high-frequency verbs — only types matching selected checkboxes
   if (window._conjExtraVerbs && window._conjExtraVerbs.length) {
     const allowedTypes = new Set();
-    if (document.getElementById('optUG')?.checked)   allowedTypes.add('u');
-    if (document.getElementById('optRuG')?.checked)  allowedTypes.add('ru');
-    if (document.getElementById('optIrrG')?.checked) allowedTypes.add('irr');
+    if (document.getElementById('optUG')?.checked)    allowedTypes.add('u');
+    if (document.getElementById('optRuG')?.checked)   allowedTypes.add('ru');
+    if (document.getElementById('optIrrG')?.checked)  allowedTypes.add('irr');
+    if (document.getElementById('optIAdjG')?.checked) allowedTypes.add('i-adj');
+    if (document.getElementById('optNaAdjG')?.checked) allowedTypes.add('na-adj');
     const existing = new Set(verbTypes.map(v => v.dict));
     window._conjExtraVerbs.forEach(v => {
       if (!existing.has(v.dict) && allowedTypes.has(v.type)) verbTypes.push(v);
