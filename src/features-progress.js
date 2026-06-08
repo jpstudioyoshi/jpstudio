@@ -134,9 +134,7 @@ function renderFourStrandRecency() {
   const DAY = 86400000;
 
   const rec = Storage.getJSON(DRILL_LAST_COMPLETED_KEY, {});
-  if ((typeof KM !== 'undefined') && KM.isTodayComplete()         && !rec.kana)     rec.kana     = todayStr;
-  if ((typeof WS !== 'undefined') && WS.isComplete && WS.isComplete() && !rec.words)    rec.words    = todayStr;
-  // Also mark words complete if vocab_items drill was used today
+  // Mark words complete if vocab_items drill was used today
   if (!rec.words && window._vocabDrillUsedToday) rec.words = todayStr;
   if ((typeof CM !== 'undefined') && CM.isTodayComplete()         && !rec.counters)  rec.counters = todayStr;
   if ((typeof ConjSession !== 'undefined') && ConjSession.isTodayComplete() && !rec.conj) rec.conj = todayStr;

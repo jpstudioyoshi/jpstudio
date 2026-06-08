@@ -132,29 +132,6 @@ function agentCollectSignals() {
     }
   } catch(e) {}
 
-  // 8. Kana mastery signals
-  try {
-    if (typeof KM !== 'undefined' && HIRAGANA && HIRAGANA.length) {
-      const hPool = HIRAGANA.filter(k => k !== null);
-      const kPool = KATAKANA ? KATAKANA.filter(k => k !== null) : [];
-      const hStats = KM.getMasteryStats(hPool);
-      const kStats = kPool.length ? KM.getMasteryStats(kPool) : null;
-      const kanaDone = KM.isTodayComplete();
-
-      if (!kanaDone) {
-        if (hStats.pct < 100) {
-          signals.push({ type: 'kana_drill', priority: 2,
-            label: 'Hiragana ' + hStats.pct + '% mastered (' + hStats.mastered + '/' + hStats.total + ') — drill today',
-            actionPanel: 'kana', actionLabel: 'Kana drill' });
-        } else if (kStats && kStats.pct < 100) {
-          signals.push({ type: 'kana_drill', priority: 2,
-            label: 'Katakana ' + kStats.pct + '% mastered (' + kStats.mastered + '/' + kStats.total + ') — drill today',
-            actionPanel: 'kana', actionLabel: 'Kana drill' });
-        }
-      }
-    }
-  } catch(e) {}
-
   // 9. Conjugation error patterns
   try {
     if (typeof GrammarErrors !== 'undefined') {
@@ -627,13 +604,6 @@ function agentUpdatePresence() {
     const conjStarted  = conjSession  && !conjSession.completed  && conjSession.queue?.length > 0;
     const countStarted = countSession && !countSession.completed && countSession.queue?.length > 0;
     setTabDot('grammar2NavBtn', conjStarted || countStarted);
-
-    // 文字 tab: show dot if kana OR words started but not done today
-    const kanaSession  = (typeof KM !== 'undefined') ? KM.loadSession() : null;
-    const wordsSession = (typeof WS !== 'undefined') ? WS.load() : null;
-    const kanaStarted  = kanaSession  && !kanaSession.completed;
-    const wordsStarted = wordsSession && !wordsSession.completed;
-    setTabDot('kanaNavBtn', kanaStarted || wordsStarted);
 
     // ── Strip on 質問 dashboard ─────────────────────────────────
     if (strip) {

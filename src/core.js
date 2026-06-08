@@ -507,7 +507,6 @@ function restoreListenPrefs() {
 
 // Storage-independent inits run immediately
 initApiKeyBar();
-initKanaDrill();
 
 // Data-dependent inits deferred until SQLite cache is populated
 document.addEventListener('storageReady', function() {

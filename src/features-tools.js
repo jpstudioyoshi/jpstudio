@@ -328,7 +328,6 @@ try {
   window["scoreRtk"] = scoreRtk;
   window["seekToBookmark"] = seekToBookmark;
   window["sendChat"] = sendChat;
-  window["setKanaMode"] = setKanaMode;
   window["setRtkDirection"] = setRtkDirection;
   window["setRtkMode"] = setRtkMode;
   window["setTimesMode"] = setTimesMode;
@@ -336,7 +335,6 @@ try {
   window["showGramTab"] = showGramTab;
   window["showGramTabAndHighlight"] = showGramTabAndHighlight;
   window["showPanel"] = showPanel;
-  window["skipKana"] = skipKana;
   window["startBlitz"] = startBlitz;
   window["startChatSpeech"] = startChatSpeech;
   window["startConjDrill"] = startConjDrill;

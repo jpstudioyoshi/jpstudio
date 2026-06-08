@@ -71,23 +71,6 @@ const StudentModel = (() => {
     } catch(e) { return { streak: 0, lastDate: null, totalSessions: 0, lastAccuracy: null }; }
   }
 
-  function collectKana() {
-    try {
-      const hPool = (HIRAGANA || []).filter(k => k !== null);
-      const kPool = (KATAKANA  || []).filter(k => k !== null);
-      const hStats = hPool.length ? KM.getMasteryStats(hPool) : { mastered: 0, total: 0, pct: 0 };
-      const kStats = kPool.length ? KM.getMasteryStats(kPool) : { mastered: 0, total: 0, pct: 0 };
-      return {
-        hiragana:   hStats,
-        katakana:   kStats,
-        doneToday:  KM.isTodayComplete(),
-        lastAccuracy: state.lastAccuracy ?? null,
-        // Raw mastery data for Claude — per-character streak scores
-        rawMastery: safeJSON(STORAGE_KEYS.KANA_MASTERY, {}),
-      };
-    } catch(e) { return { hiragana: {}, katakana: {}, doneToday: false, rawMastery: {} }; }
-  }
-
   function collectVocab() {
     try {
       const vocab    = state.vocab        || [];
@@ -425,7 +408,6 @@ const StudentModel = (() => {
       grammar:     collectGrammar(),
       // ── Core ──────────────────────────────────────────
       core:        collectCore(),
-      kana:        collectKana(),
       vocab:       collectVocab(),
       conjugation: collectConjugation(),
       counters:    collectCounters(),
@@ -497,11 +479,6 @@ const StudentModel = (() => {
       `## Student Snapshot — ${new Date(s.generatedAt).toISOString().slice(0,10)}`,
       '',
       `**Streak:** ${s.core.streak} days | Sessions: ${s.core.totalSessions}`,
-      '',
-      '### Kana',
-      `Hiragana: ${s.kana.hiragana?.mastered ?? '?'}/${s.kana.hiragana?.total ?? '?'} mastered (${s.kana.hiragana?.pct ?? '?'}%)`,
-      `Katakana: ${s.kana.katakana?.mastered ?? '?'}/${s.kana.katakana?.total ?? '?'} mastered (${s.kana.katakana?.pct ?? '?'}%)`,
-      `Done today: ${s.kana.doneToday ? 'yes' : 'no'}`,
       '',
       '### Conjugation',
       `Done today: ${s.conjugation.doneToday ? 'yes' : 'no'}`,

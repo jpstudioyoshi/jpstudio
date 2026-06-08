@@ -1246,30 +1246,6 @@ document.addEventListener('keydown', e => {
 }, true);
 
 
-function kanaToggleGrid() {
-  const kg = document.getElementById('kanaGrid');
-  const btn = document.getElementById('kanaGridToggleBtn');
-  if (!kg || !btn) return;
-  const hidden = kg.style.display === 'none';
-  kg.style.display = hidden ? '' : 'none';
-  if (hidden) {
-    // Always re-render to ensure correct kana set
-    const allKana = (KanaDrillState.mode === 'katakana' || KanaDrillState.mode === 'words') ? KATAKANA : HIRAGANA;
-    const el = document.getElementById('kanaGrid');
-    el.innerHTML = allKana.map(k => {
-      if (!k) return '<div class="kana-cell" style="opacity:0;pointer-events:none"></div>';
-      const sw = KanaDrillState.sessionWrong[k.char] || 0;
-      const sc = KanaDrillState.sessionCorrect[k.char] || 0;
-      const total = sw + sc;
-      const ratio = total > 0 ? sc / total : -1;
-      const cls = ratio >= 0.8 ? 'mastered' : (total >= 2 && ratio < 0.8 ? 'struggling' : '');
-      return `<div class="kana-cell ${cls}"><span class="kana-char">${k.char}</span><span class="kana-rom">${k.rom}</span></div>`;
-    }).join('');
-  }
-  btn.textContent = hidden ? 'Hide grid' : 'Show grid';
-}
-
-
 // ── Watch: Media library ──────────────────────────────────────────────────
 
 
