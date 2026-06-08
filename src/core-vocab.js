@@ -219,7 +219,8 @@ function markVocab(v) {
   } else if (v === 'gotit') {
     _sessionKnown[vocabIdx] = true;
     const newGraduated = Math.max(curGraduated, 1);
-    const newInterval  = Math.max(1, Math.floor(curInterval * 1.2));
+    const newEase      = Math.max(1.3, curEase - 0.10);
+    const newInterval  = Math.max(1, Math.floor(curInterval * newEase));
     if (window.db && id != null) {
       window.db.run(
         "UPDATE vocab_items SET srs_graduated = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
@@ -237,7 +238,7 @@ function markVocab(v) {
       vocabSession.push(vocabIdx);
     }
     const newEase     = curGraduated === 0 ? curEase : Math.max(1.3, curEase - 0.15);
-    const newInterval = curGraduated === 0 ? 1 : Math.max(1, Math.floor(curInterval * 0.2));
+    const newInterval = 1;
     if (window.db && id != null) {
       window.db.run(
         "UPDATE vocab_items SET srs_ease = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",

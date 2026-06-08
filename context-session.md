@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-07 (session 29 — POS tagging complete, drill UI improvements)
+Last updated: 2026-06-08 (session 29 — strand tile fix, filter improvements, text entry mode)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -27,10 +27,10 @@ Last updated: 2026-06-07 (session 29 — POS tagging complete, drill UI improvem
 
 ## Claude Code
 - Launch: jp && claude --model claude-opus-4-8
-- Start: "Read context-static.md and context-session.md only. Do not read any other files yet."
+- Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
 
 ## Current Mode
-Vocab system — POS tagging complete. Drill UI stable. Next: re-extract previous lessons, book vocab import.
+VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complete.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge.
@@ -46,10 +46,8 @@ Vocab system — POS tagging complete. Drill UI stable. Next: re-extract previou
 - vocabTypeInput — text input field
 - vocabTypeResult — result display (correct answer shown on wrong)
 - vocabTypeNextBtn — Next button shown after wrong answer
-- .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default
-- .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE
-- Reset buttons on both filter rows
-- vocabList — word list panel, fixed position right, toggled by "Word list" / "Hide list" button
+- .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default, Reset button
+- .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — GREYED (awaiting POS data)
 
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
@@ -57,101 +55,120 @@ Vocab system — POS tagging complete. Drill UI stable. Next: re-extract previou
 - repr() to inspect match strings before retrying
 - Blank lines in match strings cause MATCH FAILED
 - pbcopy swallows terminal output
-- TWO databases exist — app uses: ~/Library/Application Support/japanese-studio/jpstudio.db
-- ~/Library/Application Support/jpstudio/jpstudio.db is empty/unused — ignore it
+- SQLite DB at ~/Library/Application Support/japanese-studio/jpstudio.db
 - window.db.query() requires explicit [] params
 - Close Electron before SQLite writes
 - Long conversations: use Claude Code for multi-line JS string replacements
 
-## Vocab System — Current State
+## Vocab System — Complete State
 
 ### All pipelines live
-| Source | Trigger | Destination | POS |
-|---|---|---|---|
-| yoshi_phrases | LESSON_EXTRACTED → initLessonVocabListener | vocab_items | from words table |
-| yoshi_vocab | lessonNotesExtractVocabSilent direct write | vocab_items | ✅ Claude extraction |
-| writing | WRITING_SUBMITTED → extractWritingVocabToItems (Claude) | vocab_items | ✅ Claude extraction |
-| lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items | ✅ matched from words table |
-| n5 | one-time backfill | vocab_items | ✅ from words table |
+| Source | Trigger | Destination |
+|---|---|---|
+| yoshi_phrases | LESSON_EXTRACTED → initLessonVocabListener | vocab_items |
+| yoshi_vocab | lessonNotesExtractVocabSilent direct write | vocab_items |
+| writing | WRITING_SUBMITTED → extractWritingVocabToItems (Claude) | vocab_items |
+| lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
+| n5 | one-time backfill | vocab_items |
 
 ### vocab_items schema
 id, word, reading, meaning, example, source, source_ref, direction, type, pos, counter_suffix,
 encounter_at, entry_weight, srs_interval, srs_ease, srs_due, last_reviewed, created_at
 UNIQUE(word, source, direction)
 
-### type values
-- `word` — standard vocab item
-- `phrase` — multi-word phrase
-- `grammar` — grammar pattern (excluded from drill)
-- `excluded` — undrillable items (conjugated forms, sentences, untaggable lookups)
+### lesson_phrases schema
+id, lesson_id, phrase, reading, meaning, example, type, created_at
 
 ### Drill UI — working
 - Direction toggle: JP→EN / EN→JP / Speaking
 - Type toggle: switches between flip card and text entry
-- Text entry: correct → silent auto-advance (400ms), wrong → show answer in TARGET language, Enter to continue
-- Kana mode auto-switches: EN→JP = hiragana, JP→EN = romaji
+- Text entry: correct → auto-advance after 800ms, wrong → show answer, wait for Next tap
 - Source filters: active, all checked by default, Reset button
-- POS filters: active (data now exists for yoshi_vocab, writing, n5, lookup)
+- POS filters: GREYED — awaiting POS data
 - Dynamic font scaling on card
 - Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
-- Word list: fixed position right of card, scrollable, shows source + due date, today highlighted
+- Strand tile: updates immediately on markVocab (window._vocabDrillUsedToday flag)
+
+### SRS — SM-2
+- Known: srs_interval = srs_interval × srs_ease, due pushed out
+- Again: srs_interval = 1, due tomorrow
+- Got it: same as Again
+- srs_ease starts 2.5, adjusts with performance
 
 ### Weighting
 - effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
-- Fetches up to session_size×3 rows, sorts, slices to session_size
-- Settings save triggers immediate deck reload (no restart needed)
-- Module-level _vcWeights, _vcThresholds, _vcIntervals populated at load and on save
+- Fetches 200, sorts by effective_weight, slices to 50
+- Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
+- Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
+- Stored in VOCAB_WEIGHTS kvAPI key
 
-### Session size
-- Controlled by vocabSessionSize element in settings panel
-- Read by startNewSession() from _vcThresholds.session_size
-- vocabSettingsLoad() runs before loadVocabItemsDeck() on startup (order matters)
+### Filter logic
+- Source: all checked = no filter; partial = filter to checked sources; none = empty deck
+- POS: all checked or none = no filter; partial = filter to pos column + type='phrase' for Phrases
+- NULL pos items excluded when POS filter active and Phrases not checked
 
-## POS Tagging — Complete
+## POS Tagging — Next Priority
 
-### Status
-- `pos` column added to vocab_items (ALTER TABLE applied to correct DB)
-- yoshi_vocab: Claude extraction returns dictionary form + pos ✅
-- writing: Claude extraction returns dictionary form + pos ✅
-- lookup: 42 words matched from words table ✅; 114 untaggable rows marked type='excluded' ✅
-- n5: already had POS from words table ✅
-- POS filters active in drill UI ✅
+### Problem
+- N5 words have POS from words table ✅
+- yoshi_vocab: stored as conjugated forms (食べました not 食べる), no POS ❌
+- writing words: no POS ❌
+- lookup words: no POS ❌
 
-### Known data gaps
-- Previous lesson sessions not yet re-extracted (yoshi_vocab rows only exist for May 22)
-- To re-extract a lesson: DELETE FROM kv_store WHERE key='lessonDoc_XXXX'; then reload that lesson
-- All lessonDoc_ keys except May 22 were deleted in session 29 — re-extraction happens on next lesson open
+### Plan (Claude Code)
+**Brief:**
+"Read context-session.md and context-vocab.md from Knowledge only.
+
+Task 1: In `lessonNotesExtractVocabSilent` in src/features-lesson-notes.js, update the extraction prompt to:
+- Request DICTIONARY form (plain form — 食べる not 食べました, おいしい not おいしかった)
+- Add pos field to JSON return: one of noun, verb, i-adj, na-adj, adverb, expression
+- Update the vocab_items INSERT to include pos column (v.pos || null)
+- Update the words table INSERT similarly
+
+Task 2: In `extractWritingVocabToItems` in src/core-vocab.js, update the Claude prompt to:
+- Request dictionary form
+- Add pos field
+- Update vocab_items INSERT to include pos column
+
+Run node check-syntax.js. Do not commit."
+
+**After Claude Code completes:**
+1. Delete existing yoshi_vocab from vocab_items and reset flag:
+```sql
+DELETE FROM vocab_items WHERE source='yoshi_vocab';
+DELETE FROM kv_store WHERE key='VOCAB_MIGRATION_V1';
+```
+2. Re-extract from a lesson session to populate with correct forms + POS
+3. Re-enable POS filter row in index.html (remove opacity/pointer-events)
+
+### Lookup words POS (after yoshi/writing done)
+- Match against words table where word exists → inherit POS
+- Remainder → Claude batch tag
 
 ## Writing Sitting Boost — Complete
-- `writing_sittings` table created
+- writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
 - On save with ≥5 sentences → INSERT with expires_at = +3 days
-- loadVocabItemsDeck checks active sittings → boosts lookup words by 1.5×
-- Fully automatic, zero user action
+- loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
+- Fully automatic
 
-## Text Entry Mode — Working
-- Type toggle switches flip↔entry mode
-- Correct: silent auto-advance after 400ms
-- Wrong: shows answer in target language (EN→JP shows JP word+reading, JP→EN shows English meaning)
-- Enter key advances after wrong answer
-- Input field resets and refocuses on each new card
-- Kana mode set via kanaSetMode() — no toolbar rendered (intentional)
-
-## Word List Panel — Working
-- Toggle: "Word list" / "Hide list" button in footer
-- Fixed position: top:120px, right:16px, width:380px
-- Shows jp_en direction only; columns: word, reading, meaning, source (cleaned), due date
-- Today's words highlighted in teal; overdue in red
-- Clicking a row jumps to that card
+## Session 29 Fixes
+- **Strand tile** — vocab drill now updates four strand recency tile immediately
+  - `markVocab` sets `window._vocabDrillUsedToday = true`
+  - Calls `renderFourStrandRecency()` after each answer
+  - `renderFourStrandRecency` checks flag alongside WS.isComplete()
+- **POS filter NULL handling** — items with pos=NULL excluded when Phrases filter not selected
+- **Filter defaults** — all source/POS checkboxes checked by default
+- **Reset buttons** — added to both filter rows
 
 ## Pending — Priority Order
 
-1. **Re-extract previous lessons** — Paul's task (open each lesson in Lesson Notes panel; lessonDoc_ keys already cleared)
-2. **Book vocab import** — 18 pages, OCR artifact ready to build
-3. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-4. **Counter suffix population** — counter_suffix column exists, needs tagging
-5. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-6. **Strand imbalance notification** — designed, not built
-7. **Satellite app** — verify Gist sync after button text changes
+1. **POS tagging** — Claude Code brief above
+2. **POS filters back online** — after data exists
+3. **Book vocab import** — 18 pages, OCR artifact
+4. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
+5. **Counter suffix population** — counter_suffix column exists, needs tagging
+6. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
+7. **corpus_productions extraction fix** — currently single-kanji, needs word-level
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
