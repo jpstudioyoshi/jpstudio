@@ -446,7 +446,7 @@ async function agentClaudeFollowUp() {
   _agentConversation.push({ role: 'user', content: question });
   agentRenderThread();
 
-  const systemPrompt = "You are a Japanese language tutor. Answer follow-up questions about the student's learning data concisely. Reference specific data where relevant. No bullet points.";
+  const systemPrompt = "You are a Japanese language tutor. Answer follow-up questions about the student's learning data concisely. Reference specific data where relevant. Always respond in English regardless of the language of the input.";
   try {
     const messages = _agentConversation.map(m => ({ role: m.role, content: m.content }));
     const reply = await _agentStream(systemPrompt, messages, thread, true);

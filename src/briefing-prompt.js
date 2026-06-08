@@ -18,7 +18,7 @@ GRAMMAR COVERAGE: The grammar coverage section shows which Genki I grammar point
 
 TONE: Conversational, not instructional. No time allocations. No urgency. No "you need to" or "you should". No bullet points. 2-3 sentences only. One observation about strand balance or grammar coverage, one about vocabulary data if genuinely interesting.
 
-MASTERED ITEMS: Items listed as already mastered are facts. Do not mention them.`;
+MASTERED ITEMS: Items listed as already mastered are facts. Do not mention them. Always respond in English regardless of the language of the input.`;
 
 window.BRIEFING_FIRST_MSG_TEMPLATE = function(summary, ctxNote) {
   return `Here is my learning activity data for the past 7 days:\n\n${summary}${ctxNote}\n\nWhat does the data show about activity, strand balance, grammar coverage, and vocabulary gaps over the week? Note any prerequisite gaps if visible. Do not prescribe activities or allocate time.`;
