@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-08 (session 30 — SM-2 fixes, POS tagging, conjugation drill DB pool)
+Last updated: 2026-06-03 (session 21 — strand balance chart, Yoshi wiring, weights UI, Phase 3 complete)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -10,11 +10,13 @@ Last updated: 2026-06-08 (session 30 — SM-2 fixes, POS tagging, conjugation dr
 - "done" means command ran and printed OK.
 - Paul's eyesight is not great — prefer larger text, high contrast, bigger buttons in UI work.
 - Give commands one at a time — do not batch unrelated commands.
-- Core principle: system should look after itself — Paul learns, doesn't drive the system.
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
-- **Code:** anything touching multiple render paths, multi-line string replacements in JS, multi-file refactors
+- **Code:** anything touching multiple render paths, tracing logic across functions, multi-file refactors, anything where "trace this call chain" is needed
+- Cost: Code uses more input tokens (reads full files). Chat is cheaper for small edits.
+- Code saves ~45-60 min vs chat for complex render path fixes.
+- Code tends to over-reach — give tight focused briefs, verify diff before committing.
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -22,151 +24,164 @@ Last updated: 2026-06-08 (session 30 — SM-2 fixes, POS tagging, conjugation dr
 
 ## GitHub Workflow
 - Repo: https://github.com/jpstudioyoshi/jpstudio (private)
+- Token stored in remote URL — no password prompt needed.
 - Standard push: jp && git add -A && git commit -m "message" && git push
-- Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
+- Pre-commit hook runs check-syntax.js automatically — always check output
+- **Token scope for jpStudio:** `repo` scope
+- **Token scope for Satellite Gist sync:** `gist` scope only — stored in phone localStorage, never in source
 
 ## Claude Code
+- Installed: @anthropic-ai/claude-code (sudo npm install -g @anthropic-ai/claude-code)
+- Auth: ANTHROPIC_API_KEY set permanently in ~/.zshrc
 - Launch: jp && claude --model claude-opus-4-8
-- Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
+- Start each session: "Read context-static.md and context-session.md only. Do not read any other files yet."
+- Cost: uses Anthropic API credits. Best for multi-file tasks. Single-file edits cheaper in chat.
+- Token tip: give tight focused briefs, one panel/file at a time.
+- Guide: claude-code-guide.md in project root
+- Switch to Opus 4.8 for hard debugging: claude config set model claude-opus-4-8
 
 ## Current Mode
-VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complete.
+ARCHITECTURE — inter-panel communication, intelligent hub, Nation four strands framework.
+Phase 3 complete. Moving into Phase 4: Yoshi-driven learning.
+See ARCHITECTURE_HUB.md in project Knowledge for full design.
+
+## Thread Structure
+- **Architecture thread** — design decisions, cross-cutting concerns, doc updates (this thread)
+- **StudentModel thread** — all wiring into and out of StudentModel
+- Other threads for their respective panels/features
 
 ## HTML Element Map
-`html-map.md` in project Knowledge.
+`html-map.md` in project Knowledge — panel-by-panel ID inventory. Check before touching any panel element.
 
-**Session 25-30 additions:**
-- vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
-- vocabWtDirJpEn, vocabWtDirEnJp, vocabWtDirSpeaking
-- vocabIntYoshiPhrases/Vocab/Writing/Lookup/N5, vocabThreshLookup/Decay/SessionSize, vocabWeightsMsg
-- vcDirectionBtn — JP→EN / EN→JP / Speaking toggle
-- vcTypeToggle — Type mode toggle button
-- vocabFlipControls — flip card buttons (hidden in type mode)
-- vocabTypeControls — text entry area (shown in type mode)
-- vocabTypeInput — text input field
-- vocabTypeResult — result display (correct answer shown on wrong)
-- vocabTypeNextBtn — Next button shown after wrong answer
-- .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default, Reset button
-- .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE, all checked by default, Reset button
-- conjPoolInfo span — shows "Pool: X known + Y frequency" on drill start
+**Session 21 additions:**
+- `strandBalanceChart` — strand balance chart container, above drillRecencyGraphic in progress panel
+- `strandWeightsGrid` — strand weights input grid in settings panel
+- `strandWeightsMsg` — "Saved" confirmation span in settings panel
 
 ## Terminal Workflow
-- python3 - << 'PYEOF' for multi-line edits
-- Always jp && prefix
-- repr() to inspect match strings before retrying
-- Blank lines in match strings cause MATCH FAILED
-- pbcopy swallows terminal output
-- SQLite DB at ~/Library/Application Support/japanese-studio/jpstudio.db
-- window.db.query() requires explicit [] params
-- Close Electron before SQLite writes
-- Long conversations: use Claude Code for multi-line JS string replacements
-- DevTools console (Cmd+Option+I) for in-app JS — not terminal
+All edits are done via terminal — no file upload/download.
 
-## Vocab System — Complete State
+**Shell aliases (in ~/.zshrc):**
+- jp — cd ~/Documents/jpStudio
+- jpstart — kill app, restart, cd to project
+- git ship — git add -A && git commit -m "update" && git push (jpsat repo)
 
-### All pipelines live
-| Source | Trigger | Destination |
-|---|---|---|
-| yoshi_phrases | LESSON_EXTRACTED → initLessonVocabListener | vocab_items |
-| yoshi_vocab | lessonNotesExtractVocabSilent direct write | vocab_items |
-| writing | WRITING_SUBMITTED → extractWritingVocabToItems (Claude) | vocab_items |
-| lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
-| n5 | one-time backfill | vocab_items |
+**Standard patterns:**
+- python3 - << 'PYEOF' for multi-line edits (most reliable — note the dash)
+- Always prefix with jp && to avoid directory drift
+- sed -n X,Yp file | pbcopy — read a block
+- grep -n "pattern" file | pbcopy — locate lines only
+- Update style.css?v= version string after CSS changes to bust Electron cache
+- Use date +%s for guaranteed cache bust on JS files
 
-### vocab_items schema
-id, word, reading, meaning, example, source, source_ref, direction, type, pos, counter_suffix,
-encounter_at, entry_weight, srs_interval, srs_ease, srs_due, srs_graduated, last_reviewed, created_at
-UNIQUE(word, source, direction)
+**Critical lessons:**
+- python3 string matching fails silently on whitespace/encoding — use repr() to inspect before retrying
+- Template literal backticks in heredocs need careful escaping — use python3 - << 'PYEOF' with raw strings
+- Blank lines in match strings cause MATCH FAILED — always use repr() to inspect first
+- Cache buster regex was \?v=\d+ — now fixed to \?v=[^"]+ to catch letter suffixes
+- pbcopy swallows terminal output — never use it for sed -n reads, only for grep locating
+- Always use jp && prefix — never assume current directory
+- Never paste code blocks directly into terminal — always use python3 heredoc scripts
+- git stash pop restores Code session changes if accidentally stashed
 
-### lesson_phrases schema
-id, lesson_id, phrase, reading, meaning, example, type, created_at
+## Known Issues / Pre-existing
+- **DB startup errors** — `rows is not iterable` in features-progress.js. Root cause: sql.js or IPC handler. Needs investigation.
+- `yoshiInitUI not defined` on startup — pre-existing, not blocking
+- PDF print line breaks — pre-existing
+- Stale root-level core-foundation.js (May 23) — never loaded, cleanup later
+- Whisper/OpenAI key — needs new key from OpenAI, then test save/restart cycle
+- Read panel listen layout — still buggy
+- `countShowMastery is not defined` — core-counters.js line 926
+- `lessonNotesClozeRevealAll is not defined` — features-ln-p2.js line 1344, remove it
 
-### Drill UI — working
-- Direction toggle: JP→EN / EN→JP / Speaking
-- Type toggle: switches between flip card and text entry
-- Text entry: correct → auto-advance after 800ms, wrong → show answer, wait for Next tap
-- Source filters: active, all checked by default, Reset button
-- POS filters: ACTIVE, all checked by default, Reset button
-- Dynamic font scaling on card
-- Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
-- Strand tile: updates immediately on markVocab (window._vocabDrillUsedToday flag)
+## Session 21 — Completed Work
 
-### SRS — SM-2 (corrected session 30)
-- Known: srs_interval = floor(interval × ease), ease +0.1 (if graduated), due pushed out
-- Got it: srs_interval = floor(interval × max(1.3, ease - 0.10)), ease unchanged
-- Again: srs_interval = 1, due tomorrow, ease -0.15 (if graduated, min 1.3)
-- srs_ease starts 2.5, srs_graduated column added (schema v10)
+### Cache buster fix
+- `check-syntax.js` regex fixed: `\?v=\d+` → `\?v=[^"]+`
+- Was silently skipping files with letter suffixes — likely cause of weeks of stale cache issues
 
-### Weighting
-- effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
-- Fetches 200, sorts by effective_weight, slices to 50
-- Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
-- Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
-- Stored in VOCAB_WEIGHTS kvAPI key
+### StudentModel fully wired
+- `invalidate()` → all 7 drill completion points
+- `snapshotAsync()` → progress panel open
+- AppEvents subscription → 7 event types
+- `AppEvents.emit()` → all 8 panel emission points
+- `SESSION_SAVED` → writes Yoshi sessions to `panel_sessions` with `panel='yoshi'`
+- `RECORDING_STARTED`/`STOPPED` → writes voice recording time to `panel_sessions`
+- Voice panel removed from `_STRAND_MAP` — timer was counting dev discussion time
 
-### Filter logic
-- Source: all checked = no filter; partial = filter to checked sources; none = empty deck
-- POS: all checked or none = no filter; partial = filter to pos column + type='phrase' for Phrases
-- NULL pos items excluded when POS filter active and Phrases not checked
+### Strand balance chart
+- Live in progress panel, stacked bars
+- Yoshi portion shown in teal, other activity in strand colour
+- Bar length = weighted contribution (not raw minutes)
+- Amber < 20%, red at zero
+- Re-renders on weight save (with cache invalidation)
+- Tile snippet text removed — was noise
 
-### POS Tagging — COMPLETE
-- yoshi_vocab: dictionary form + POS extracted via Claude at lesson notes extraction time ✅
-- writing words: dictionary form + POS extracted via Claude at writing submission time ✅
-- N5 words: POS inherited from words table ✅
-- lookup words: inherited from words table where match exists; remainder batch-tagged ✅
-- POS enum: noun, verb, i-adj, na-adj, adverb, expression
+### Strand weights UI
+- 14 activities in settings, S1-S4 inputs, auto-saves to `STRAND_WEIGHTS` kvAPI key
+- `sentences` (Sentence Building) added: S1:0, S2:100, S3:50, S4:0
+- Fluency tiles fixed: removed conjugation and vocab, added writing
 
-## Conjugation Drill — DB-driven pool (session 30)
+### Sentence building instrumentation
+- `GramSentState.startedAt` added at session init
+- Completion hook writes to `panel_sessions` (`panel='sentences'`) and `learning_events`
 
-### Pool logic
-- Step 1: vocab_items WHERE pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY srs_ease DESC, srs_graduated DESC — up to 60
-- Step 2: top up to 100 from words table ORDER BY frequency DESC, excluding step 1 words
-- verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
-- Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
-- Null verb_class words skipped (not guessed)
-- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — can be removed later
-- As vocab_items grows with lesson extractions, "known" count rises and hardcoded frequency fill shrinks naturally
+### FLUENCY tiles corrected
+- Removed: Conjugation, Vocabulary
+- Added: Writing
 
-### Conjugation SRS — future build
-Design note at CONJ_SRS_DESIGN.md in project root.
-- SRS unit = (word, source_form, target_form)
-- Direction toggle: forward (dict→form) and reverse (conjugated→dict)
-- Rule-level mastery via grammar_mastery table
-- Prerequisite: basic dict→all-forms scoring well first
-- Research: Suzuki & DeKeyser 2017, Kim 2022 meta-analysis
+## Pending Work — Priority Order
 
-## Writing Sitting Boost — Complete
-- writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
-- On save with ≥5 sentences → INSERT with expires_at = +3 days
-- loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
-- Fully automatic
+### Phase 4 — Yoshi-driven learning (next major work)
+Both features require **AnalysisService audit first** (Claude Code session):
+1. **Vocabulary: less arbitrary** — SRS deck driven by Yoshi session vocab + N5 core
+   - AnalysisService currently extracts vocab — need to know format and reliability
+   - Connect: Yoshi transcript vocab → SRS deck on SESSION_SAVED
+2. **Grammar → Genki integration** — grammar forms from Yoshi sessions light up Genki sections
+   - Initially: prompt to read the relevant chapter
+   - Later: auto-generate sentence drill sentences targeting that form
+   - Requires: AnalysisService grammar tagging audit + Genki taxonomy audit
 
-## Session 30 Changes
-- **SM-2 gotit fix** — now uses floor(interval × max(1.3, ease - 0.10)) instead of fixed ×1.2
-- **SM-2 again fix** — resets to interval=1 always (was ×0.2 for graduated cards)
-- **srs_graduated migration** — schema v10 adds column to vocab_items
-- **POS tagging** — both extraction prompts updated; yoshi_vocab reset and re-extracted
-- **Lookup POS** — inherited from words table + batch tagged (0 remaining)
-- **Conjugation drill pool** — DB-driven, replaces hardcoded + freq batch system
+### Phase 3 remaining
+1. **Strand imbalance notification** — outbound StudentModel signal when strand < 20%
+2. **4/3/2 separation** — currently inside voice panel time, needs own `panel_sessions` entry for separate bar colour
 
-## Pending — Priority Order
+### Pending audits
+1. **AnalysisService** — what does it extract, how reliable, what format
+2. **Genki taxonomy** — what grammar points, structure, currently wired to anything
+3. **Data audit** — run typical session, verify DB writes
 
-1. **Book vocab import** — 18 pages, OCR artifact (deferred)
-2. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-3. **Counter suffix population** — counter_suffix column exists, needs tagging
-4. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-5. **corpus_productions extraction fix** — currently single-kanji, needs word-level
-6. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md, after basic forms scoring well
+### Known instrumentation gaps
+- Voice drill answers (needs thought)
+- Anki reviews (needs thought)
+- Lesson session saves (Yoshi grammar tags)
+- `_conjRecordGrammarEvidence` — unclear where it writes
+- Read-aloud — listen thread
+- Round trip — session duration only when built
 
-## SQLite Schema (current tables)
-kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
-srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions,
-writing_sittings, drill_results, conversation_sessions, transcript_turns, failure_events,
-agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
+### Medium term
+- DrillSRS migration from kvAPI to `srs_items` DB table
+- REVIEW.md at project root
+- Progress panel header — briefing refresh + About me controls
+- Stale root core-foundation.js — delete safely
 
-Schema version: 10
-DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
+### Future
+- Dropbox recordings redirect
+- Video → Audio pipeline (ffmpeg)
+- Pitch accent wiring
+- Lesson Mode Architecture
+- Counters to add: 階(kai), 回(kai/do), 番(ban), 足(soku), 着(chaku/ki)
 
-## kvAPI keys
-STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
-VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1
+## SQLite Schema (current)
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events
+pitch_data: 124,137 entries
+
+## kvAPI keys (session 21 additions)
+- `STRAND_WEIGHTS` — strand weight settings, 14 activity keys, s1/s2/s3/s4 per key
+
+## Storage Migration Status
+### Migrated to kvAPI
+gramSentHistory, vocabBookmarks, qrSession, breakdownCache, GRAM_SENT_SESSIONS, YOSHI_KEY, WRITING_ERRORS, STRAND_WEIGHTS ✓
+
+### Still on localStorage
+voice profile, voice pause data, video watch time, resources, learned words
