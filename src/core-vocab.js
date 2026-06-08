@@ -28,7 +28,7 @@ let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
 let _vcWeights = {};
-let _vcThresholds = { session_size: 20 };
+let _vcThresholds = { session_size_jp_en: 30, session_size_en_jp: 25, session_size_speaking: 20 };
 let _vcIntervals = {};
 
 function toggleVcReading(e) {
@@ -167,7 +167,8 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
 function startNewSession() {
   if (!_dataLoaded || !state.vocabItems || !state.vocabItems.length) return;
   if (!state.vocabKnownSessions) state.vocabKnownSessions = {};
-  const size = _vcThresholds.session_size || 20;
+  const _sizeKey = vcDirection === 'en_jp' ? 'session_size_en_jp' : vcDirection === 'speaking' ? 'session_size_speaking' : 'session_size_jp_en';
+  const size = _vcThresholds[_sizeKey] || 20;
 
   // state.vocabItems is already ordered by entry_weight DESC, encounter_at DESC
   // and pre-filtered to due/new rows by the SQL query — take the top N.
@@ -1795,7 +1796,9 @@ async function vocabSettingsLoad() {
       _vcThresholds = th;
       if (document.getElementById('vocabThreshLookup')) document.getElementById('vocabThreshLookup').value = th.lookup_promote ?? 2;
       if (document.getElementById('vocabThreshDecay')) document.getElementById('vocabThreshDecay').value = th.production_decay ?? 5;
-      if (document.getElementById('vocabSessionSize')) document.getElementById('vocabSessionSize').value = th.session_size ?? 20;
+      if (document.getElementById('vocabSessionSizeJpEn')) document.getElementById('vocabSessionSizeJpEn').value = th.session_size_jp_en ?? 30;
+      if (document.getElementById('vocabSessionSizeEnJp')) document.getElementById('vocabSessionSizeEnJp').value = th.session_size_en_jp ?? 25;
+      if (document.getElementById('vocabSessionSizeSpeaking')) document.getElementById('vocabSessionSizeSpeaking').value = th.session_size_speaking ?? 20;
     }
     if (i) {
       const iv = JSON.parse(i);
@@ -1826,7 +1829,9 @@ async function vocabSettingsSave() {
     const thresholds = {
       lookup_promote:   parseInt(document.getElementById('vocabThreshLookup').value),
       production_decay: parseInt(document.getElementById('vocabThreshDecay').value),
-      session_size:     parseInt(document.getElementById('vocabSessionSize').value),
+      session_size_jp_en:     parseInt(document.getElementById('vocabSessionSizeJpEn').value),
+      session_size_en_jp:     parseInt(document.getElementById('vocabSessionSizeEnJp').value),
+      session_size_speaking: parseInt(document.getElementById('vocabSessionSizeSpeaking').value),
     };
     const intervals = {
       yoshi_phrases: parseInt(document.getElementById('vocabIntYoshiPhrases').value),
