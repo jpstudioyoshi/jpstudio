@@ -454,13 +454,11 @@ async function gramSentPracticePattern(pattern) {
 }
 
 async function _gramSentGenerateOne(target, level, theme, avoidJp) {
-  const _vpc = (App.vocabPriorityContext || window.vocabPriorityContext);
-  const vocabCtx = _vpc ? _vpc() : '';
-  const lnVocab = (window.LessonNotesState && window.LessonNotesState.vocab && window.LessonNotesState.vocab.length)
-    ? window.LessonNotesState.vocab.slice(0, 10).map(v => v.word || v.jp || v.phrase || '').filter(Boolean)
-    : [];
-  const lnNote = lnVocab.length ? `Words from the most recent Yoshi lesson (use at least one if natural): ${lnVocab.join(', ')}` : '';
-  const vocabNote = (vocabCtx || lnNote) ? `Where natural, prefer vocabulary from this learner profile — do not force it:\n${vocabCtx}${lnNote ? '\n' + lnNote : ''}` : '';
+  const _vkr = (App.vocabKnownRecent || window.vocabKnownRecent);
+  const knownVocab = _vkr ? _vkr() : '';
+  const vocabNote = knownVocab
+    ? `Use only vocabulary the learner already knows. Prefer words from this list where natural — do not force it:\n${knownVocab}`
+    : '';
   const avoidNote = avoidJp && avoidJp.length ? `Avoid repeating these sentences: ${avoidJp.join(' / ')}` : '';
   const themeNote = theme ? `Set the sentence in the context of: ${theme}.` : '';
   const prompt = `Generate 1 Japanese sentence for a ${level} learner practising: "${target}".\n${themeNote}\n${vocabNote}\n${avoidNote}\nThe sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).\nReply ONLY with a JSON object, no markdown:\n{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}`;

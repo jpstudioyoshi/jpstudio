@@ -1923,7 +1923,23 @@ function skipVocabTypeAnswer() {
   nextVocab();
 }
 
+// Returns recently graduated vocab_items words for use as sentence scaffolding
+function vocabKnownRecent(limit = 20) {
+  try {
+    const rows = window.db.query(
+      `SELECT word, meaning FROM vocab_items
+       WHERE srs_graduated = 1
+       ORDER BY last_reviewed DESC
+       LIMIT ?`, [limit]
+    );
+    return rows.map(r => r.word + '（' + r.meaning + '）').join(', ');
+  } catch(e) {
+    console.warn('[vocabKnownRecent]', e.message);
+    return '';
+  }
+}
+
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
 });
