@@ -1672,7 +1672,7 @@ function showPanel(id) {
   panel.style.display = 'block';
   const btn = document.querySelector('nav button[data-panel="' + id + '"], .sidebar button[data-panel="' + id + '"]');
   if (btn) btn.classList.add('active');
-  if (id === 'kana') initKanaDrill();
+  if (id === 'kana') { if (typeof strokePanelInit === 'function') setTimeout(strokePanelInit, 50); }
   const _psc = document.getElementById('progressSidebarControls');
   if (_psc) _psc.style.display = id === 'progress' ? 'flex' : 'none';
   const _gph = document.getElementById('grammarPanelHeader'); if (_gph) _gph.style.display = id === 'grammar2' ? 'flex' : 'none';

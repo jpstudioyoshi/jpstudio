@@ -538,39 +538,17 @@ function kanaToggleHint() {
 
 function setKanaMode(mode) {
   const _timerRow    = document.getElementById('kanaTimerRow');
-  const _strokeInRow = document.getElementById('kanaStrokeInputRow');
   const _dc  = document.querySelector('#panel-kana .drill-container');
   const _hr  = document.querySelector('#panel-kana hr');
   const _kg  = document.getElementById('kanaGrid');
-  const _sp  = document.getElementById('kanaStrokesPanel');
   const _pl  = document.getElementById('kanaProgressLabel');
   const _wo  = document.getElementById('wordsDrillOptions');
-  if (mode === 'strokes') {
-    if (_dc)  _dc.style.display  = 'none';
-    if (_hr)  _hr.style.display  = 'none';
-    if (_kg)  _kg.style.display  = 'none';
-    if (_pl)  _pl.style.display  = 'none';
-    if (_sp)  _sp.style.display  = 'block';
-    if (_wo)  _wo.style.display  = 'none';
-    if (_timerRow)    _timerRow.style.display    = 'none';
-    if (_strokeInRow) { _strokeInRow.style.display = 'flex'; }
-    const slot = document.getElementById('kanaRightSlot');
-    if (slot) slot.style.height = 'auto';
-    document.querySelectorAll('#panel-kana .mode-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes("'strokes'")));
-    setTimeout(strokePanelInit, 50);
-    return;
-  }
-  // Hide strokes panel, restore drill UI
-  if (_sp)  _sp.style.display  = 'none';
   if (_dc)  _dc.style.display  = '';
   if (_hr)  _hr.style.display  = '';
   if (_kg)  _kg.style.display  = (mode === 'words') ? 'none' : '';
   if (_pl)  _pl.style.display  = '';
   if (_wo)  _wo.style.display  = (mode === 'words') ? 'block' : 'none';
   if (_timerRow)    _timerRow.style.display    = '';
-  if (_strokeInRow) _strokeInRow.style.display = 'none';
-  const slot = document.getElementById('kanaRightSlot');
-  if (slot) slot.style.height = '36px';
 
   // Reset challenge mode UI when entering words mode
   if (mode === 'words') {
@@ -603,7 +581,6 @@ function setKanaMode(mode) {
   if (dakutenLabel) {
     dakutenLabel.style.display = (mode === 'katakana') ? 'flex' : 'none';
   }
-  // Timer always visible except strokes (handled above)
   // Show grid toggle button only in words mode
   const _gtBtn = document.getElementById('kanaGridToggleBtn');
   if (_gtBtn) {

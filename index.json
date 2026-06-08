@@ -1480,7 +1480,7 @@
     "type": "function",
     "name": "toggleKanaDakuten",
     "file": "src/core-kana-drill.js",
-    "line": 621,
+    "line": 598,
     "desc": "KanaDrillState.dakutenEnabled = document.getElementById('kanaDakutenCheck')?.checked || false;"
   },
   {
