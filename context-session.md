@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-08 (session 30 — SM-2 fixes, POS tagging complete)
+Last updated: 2026-06-08 (session 30 — SM-2 fixes, POS tagging, conjugation drill DB pool)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -48,6 +48,7 @@ VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complet
 - vocabTypeNextBtn — Next button shown after wrong answer
 - .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default, Reset button
 - .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE, all checked by default, Reset button
+- conjPoolInfo span — shows "Pool: X known + Y frequency" on drill start
 
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
@@ -74,7 +75,7 @@ VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complet
 
 ### vocab_items schema
 id, word, reading, meaning, example, source, source_ref, direction, type, pos, counter_suffix,
-encounter_at, entry_weight, srs_interval, srs_ease, srs_due, last_reviewed, created_at
+encounter_at, entry_weight, srs_interval, srs_ease, srs_due, srs_graduated, last_reviewed, created_at
 UNIQUE(word, source, direction)
 
 ### lesson_phrases schema
@@ -94,7 +95,7 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Known: srs_interval = floor(interval × ease), ease +0.1 (if graduated), due pushed out
 - Got it: srs_interval = floor(interval × max(1.3, ease - 0.10)), ease unchanged
 - Again: srs_interval = 1, due tomorrow, ease -0.15 (if graduated, min 1.3)
-- srs_ease starts 2.5
+- srs_ease starts 2.5, srs_graduated column added (schema v10)
 
 ### Weighting
 - effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
@@ -112,13 +113,27 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - yoshi_vocab: dictionary form + POS extracted via Claude at lesson notes extraction time ✅
 - writing words: dictionary form + POS extracted via Claude at writing submission time ✅
 - N5 words: POS inherited from words table ✅
-- lookup words: POS inheritance from words table pending (see below)
-- Extraction prompts request dictionary form (食べる not 食べました, おいしい not おいしかった)
+- lookup words: inherited from words table where match exists; remainder batch-tagged ✅
 - POS enum: noun, verb, i-adj, na-adj, adverb, expression
 
-### Lookup words POS (next after book import)
-- Match against words table where word exists → inherit POS
-- Remainder → Claude batch tag
+## Conjugation Drill — DB-driven pool (session 30)
+
+### Pool logic
+- Step 1: vocab_items WHERE pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY srs_ease DESC, srs_graduated DESC — up to 60
+- Step 2: top up to 100 from words table ORDER BY frequency DESC, excluding step 1 words
+- verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
+- Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
+- Null verb_class words skipped (not guessed)
+- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — can be removed later
+- As vocab_items grows with lesson extractions, "known" count rises and hardcoded frequency fill shrinks naturally
+
+### Conjugation SRS — future build
+Design note at CONJ_SRS_DESIGN.md in project root.
+- SRS unit = (word, source_form, target_form)
+- Direction toggle: forward (dict→form) and reverse (conjugated→dict)
+- Rule-level mastery via grammar_mastery table
+- Prerequisite: basic dict→all-forms scoring well first
+- Research: Suzuki & DeKeyser 2017, Kim 2022 meta-analysis
 
 ## Writing Sitting Boost — Complete
 - writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
@@ -127,19 +142,21 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Fully automatic
 
 ## Session 30 Changes
-- **SM-2 gotit fix** — now uses `floor(interval × max(1.3, ease - 0.10))` instead of fixed ×1.2
-- **SM-2 again fix** — resets to interval=1 always (was `×0.2` for graduated cards)
-- **POS tagging** — both extraction prompts updated with adjective example; already had dictionary form + pos field
-- **yoshi_vocab reset + re-extracted** — old conjugated-form data deleted, re-extracted with correct POS
+- **SM-2 gotit fix** — now uses floor(interval × max(1.3, ease - 0.10)) instead of fixed ×1.2
+- **SM-2 again fix** — resets to interval=1 always (was ×0.2 for graduated cards)
+- **srs_graduated migration** — schema v10 adds column to vocab_items
+- **POS tagging** — both extraction prompts updated; yoshi_vocab reset and re-extracted
+- **Lookup POS** — inherited from words table + batch tagged (0 remaining)
+- **Conjugation drill pool** — DB-driven, replaces hardcoded + freq batch system
 
 ## Pending — Priority Order
 
-1. **Book vocab import** — 18 pages, OCR artifact
-2. **Lookup words POS** — inherit from words table, batch-tag remainder
-3. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-4. **Counter suffix population** — counter_suffix column exists, needs tagging
-5. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-6. **corpus_productions extraction fix** — currently single-kanji, needs word-level
+1. **Book vocab import** — 18 pages, OCR artifact (deferred)
+2. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
+3. **Counter suffix population** — counter_suffix column exists, needs tagging
+4. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
+5. **corpus_productions extraction fix** — currently single-kanji, needs word-level
+6. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md, after basic forms scoring well
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
@@ -147,6 +164,7 @@ srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, wr
 writing_sittings, drill_results, conversation_sessions, transcript_turns, failure_events,
 agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
 
+Schema version: 10
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ## kvAPI keys
