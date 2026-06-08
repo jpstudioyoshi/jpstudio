@@ -1670,7 +1670,7 @@ async function extractWritingVocabToItems(text) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: 'You are a Japanese vocabulary extractor. Return ONLY a JSON array, no markdown, no preamble. Each item: {"word":"","reading":"","meaning":"","pos":""}. Give "word" in DICTIONARY form (plain form — e.g. 食べる not 食べました). "pos" is one of: noun, verb, i-adj, na-adj, adverb, expression. Extract only content words (nouns, verbs, adjectives, adverbs). Exclude particles, conjunctions, auxiliary verbs.',
+        system: 'You are a Japanese vocabulary extractor. Return ONLY a JSON array, no markdown, no preamble. Each item: {"word":"","reading":"","meaning":"","pos":""}. Give "word" in DICTIONARY form (plain form — e.g. 食べる not 食べました, おいしい not おいしかった). "pos" is one of: noun, verb, i-adj, na-adj, adverb, expression. Extract only content words (nouns, verbs, adjectives, adverbs). Exclude particles, conjunctions, auxiliary verbs.',
         messages: [{ role: 'user', content: 'Extract vocabulary from this Japanese text: ' + text }]
       })
     });

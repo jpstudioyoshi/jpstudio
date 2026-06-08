@@ -1576,7 +1576,7 @@ Look for:
 6. Nouns, verbs, adjectives, adverbs
 
 For EACH word, provide:
-- word: the Japanese word in DICTIONARY form (plain form — e.g. 食べる not 食べました, kanji if available)
+- word: the Japanese word in DICTIONARY form (plain form — e.g. 食べる not 食べました, おいしい not おいしかった, kanji if available)
 - reading: hiragana reading
 - meaning: English translation (YOU must provide this even if not in the notes)
 - pos: part of speech, one of: noun, verb, i-adj, na-adj, adverb, expression
