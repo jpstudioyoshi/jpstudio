@@ -63,8 +63,11 @@ async function gdGenerate() {
     const registerNote = register === 'both' ? 'Mix polite and plain forms.' :
                          register === 'polite' ? 'Use polite forms only (ます/です).' : 'Use plain forms only.';
     const contextNote = context ? `Set sentences in the context of: ${context}.` : '';
+    const _vkr2 = (App.vocabKnownRecent || window.vocabKnownRecent);
+    const knownVocab2 = _vkr2 ? _vkr2() : '';
+    const vocabNote2 = knownVocab2 ? `\nUse only vocabulary the learner already knows. Prefer words from this list where natural — do not force it:\n${knownVocab2}` : '';
     const prompt = `Generate ${count} Japanese sentences for a ${level} grammar drill targeting: "${target}".
-${registerNote}${contextNote ? '\n' + contextNote : ''}
+${registerNote}${contextNote ? '\n' + contextNote : ''}${vocabNote2}
 Each sentence must clearly use the target grammar. Include a natural English translation and a brief grammar hint (one sentence explaining the grammar point used).
 Reply ONLY with a JSON array, no markdown:
 [{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}]`;
