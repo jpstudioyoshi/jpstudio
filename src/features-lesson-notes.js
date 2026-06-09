@@ -218,6 +218,26 @@ function lessonNotesGetFullPanelHTML() {
   return html;
 }
 
+// Ensure a lesson_sessions DB row exists for a freshly created notes session,
+// linking it so lesson_phrases / extracted_grammar writes have a real lesson_id.
+async function lessonNotesEnsureDbRow(session, sessions) {
+  if (!window.db || !session) return;
+  try {
+    const _date = session.date;
+    const _existing = await window.db.get('SELECT id FROM lesson_sessions WHERE date=? LIMIT 1', [_date]);
+    let _dbId = _existing?.id;
+    if (!_dbId) {
+      await window.db.run('INSERT INTO lesson_sessions (date, created_at, source) VALUES (?,?,?)', [_date, new Date().toISOString(), 'lesson_notes']);
+      const _row = await window.db.get('SELECT last_insert_rowid() AS id');
+      _dbId = _row?.id;
+    }
+    session.lessonSessionDbId = _dbId;
+    LessonNotesState.currentLessonId = _dbId;
+    lessonNotesSaveSessions(sessions);
+    console.log('[LN] lesson_sessions row:', _dbId, 'for date', _date);
+  } catch(e) { console.warn('[LN] lesson_sessions link failed:', e.message); }
+}
+
 async function lessonNotesPanelHandlePaste(event) {
   event.preventDefault();
   const text = event.clipboardData?.getData('text');
@@ -227,11 +247,12 @@ async function lessonNotesPanelHandlePaste(event) {
   const sessions = lessonNotesGetSessions();
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
   const title = firstLine + (firstLine.length >= 30 ? '...' : '');
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
-  
+  await lessonNotesEnsureDbRow(newSession, sessions);
+
   // Process pasted text
   LessonNotesState.rawText = text;
   LessonNotesState.docContent = lessonNotesParseWithTimestamps(text);
@@ -270,11 +291,12 @@ async function lessonNotesPanelHandleFile(files) {
   // Create new session
   const sessions = lessonNotesGetSessions();
   const title = file.name.replace(/\.(docx|txt|md)$/i, '');
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
-  
+  await lessonNotesEnsureDbRow(newSession, sessions);
+
   // Read file
   if (file.name.endsWith('.docx')) {
     await lessonNotesReadDocxForPanel(file);
@@ -344,14 +366,16 @@ async function lessonNotesReadDocxForPanel(file) {
   }
 }
 
-function lessonNotesNewFromPanel() {
+async function lessonNotesNewFromPanel() {
   const title = prompt('Lesson title:');
   if (!title) return;
-  
+
   const sessions = lessonNotesGetSessions();
-  sessions.unshift({ id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '' });
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
+  sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
+  await lessonNotesEnsureDbRow(newSession, sessions);
   LessonNotesState.vocab = [];
   LessonNotesState.stories = [];
   LessonNotesState.keyPhrases = [];
@@ -2830,7 +2854,7 @@ async function lnCreateFromPaste() {
   var sessions = lessonNotesGetSessions();
   var stories = parsed && parsed.stories ? parsed.stories : [];
   var keyPhrases = parsed && parsed.keyPhrases ? parsed.keyPhrases : [];
-  sessions.unshift({
+  var newSession = {
     id: Date.now(),
     date: (function() {
       var d = title.replace(/^\[/, '').trim();
@@ -2849,9 +2873,12 @@ async function lnCreateFromPaste() {
     topics: topics,
     summary: summary,
     whatsapp: isWhatsApp ? messages : [],
-  });
+    lessonSessionDbId: null,
+  };
+  sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
+  await lessonNotesEnsureDbRow(newSession, sessions);
   lessonNotesRenderPanel();
 }
 

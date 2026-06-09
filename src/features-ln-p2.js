@@ -727,25 +727,41 @@ function lessonNotesLoadSession(idx) {
       LessonNotesState.docImages = sessions[idx].images || [];
       LessonNotesState.docContent = sessions[idx].docContent || [];
 
-      // Look up lesson_sessions SQL row by date to set currentLessonId
+      // Resolve currentLessonId BEFORE any auto-extract so lesson_phrases /
+      // extracted_grammar writes have a real lesson_id.
       LessonNotesState.currentLessonId = null;
+      const _dbId = sessions[idx].lessonSessionDbId || null;
       const _lnDate = sessions[idx].date ? sessions[idx].date.slice(0,10) : null;
-      if (_lnDate && window.db) {
+
+      // Auto-extract if we have doc content but missing extracted data.
+      // Only auto-extract for NEW sessions (no vocab yet) - don't re-extract old
+      // sessions that are just missing the newer fields (keyPhrases, grammar).
+      const _maybeAutoExtract = () => {
+        if (LessonNotesState.docContent.length > 0 && LessonNotesState.vocab.length === 0) {
+          setTimeout(() => lessonNotesAutoExtractAll(), 200);
+        }
+      };
+
+      if (_dbId) {
+        LessonNotesState.currentLessonId = _dbId;
+        console.log('[LN] lesson_id from session:', _dbId);
+        _maybeAutoExtract();
+      } else if (_lnDate && window.db) {
         (async () => {
           try {
             const _lnRows = await window.db.query('SELECT id FROM lesson_sessions WHERE date = ? LIMIT 1', [_lnDate]);
             const _lnId = _lnRows?.[0]?.id || null;
             LessonNotesState.currentLessonId = _lnId;
-            if (_lnId) console.log('[LN] lesson_id linked:', _lnId, 'for date', _lnDate);
+            if (_lnId) {
+              console.log('[LN] lesson_id linked:', _lnId, 'for date', _lnDate);
+              sessions[idx].lessonSessionDbId = _lnId;
+              lessonNotesSaveSessions(sessions);
+            }
           } catch(e) { console.warn('[LN] lesson_id lookup failed:', e.message); }
+          _maybeAutoExtract();
         })();
-      }
-      
-      // Auto-extract if we have doc content but missing extracted data
-      // Only auto-extract for NEW sessions (no vocab yet) - don't re-extract old sessions
-      // that are just missing the newer fields (keyPhrases, grammar)
-      if (LessonNotesState.docContent.length > 0 && LessonNotesState.vocab.length === 0) {
-        setTimeout(() => lessonNotesAutoExtractAll(), 200);
+      } else {
+        _maybeAutoExtract();
       }
     }
   }
