@@ -1763,11 +1763,8 @@ Assign each point a group from: Particles, Verb Forms, Adjectives, Connectors & 
 
 Find at least 5-8 grammar points. Look at EVERY Japanese sentence for grammar worth highlighting.
 
-Lesson content:
+${nodeList ? "GRAMMAR NODE IDs — use ONLY these exact IDs:\n" + nodeList + "\n\nFor each grammar point, grammarNodeIds must contain matching IDs from this list only. Empty array if none match.\n\n" : ""}Lesson content:
 ${docContent.slice(0, 10000)}`;
-    if (nodeList) {
-      prompt += "\n\nGRAMMAR NODE IDs - use ONLY these exact IDs:\n" + nodeList + "\n\nFor each grammar point add \"grammarNodeIds\":[\"id1\"] — exact IDs from the list that match. Empty array if none match.";
-    }
     const data = await _fy_claudeAPI({
       max_tokens: 4000,
       messages: [{ role: 'user', content: prompt }]
