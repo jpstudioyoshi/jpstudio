@@ -322,8 +322,9 @@ function renderVocab() {
       if (vcEn) vcEn.textContent = 'Session complete!';
       if (vcPs) vcPs.textContent = '';
       vocabCardEl.classList.remove('flipped');
+      _vcSessionComplete = true;
       vocabCounterEl.textContent = 'All session words known';
-      if (statusEl) statusEl.textContent = 'Session done — start a new one';
+      if (statusEl) statusEl.textContent = 'Session done — tap card to restart';
       resetBtnEl.style.display = 'inline-block';
       deckStatusEl.textContent = '';
       renderVocabList();
@@ -345,8 +346,9 @@ function renderVocab() {
     if (vcEn) vcEn.textContent = 'Session complete!';
     if (vcPs) vcPs.textContent = '';
     vocabCardEl.classList.remove('flipped');
+    _vcSessionComplete = true;
     vocabCounterEl.textContent = 'All session words known';
-    if (statusEl) statusEl.textContent = 'Session done — start a new one';
+    if (statusEl) statusEl.textContent = 'Session done — tap card to restart';
     deckStatusEl.textContent = '';
     resetBtnEl.style.display = 'none';
     renderVocabList();
@@ -461,7 +463,9 @@ function nextVocab() {
   renderVocab();
 }
 
+let _vcSessionComplete = false;
 function flipVocab() {
+  if (_vcSessionComplete) { resetVocabDeck(); return; }
   vocabFlipped = !vocabFlipped;
   document.getElementById('vocabCard').classList.toggle('flipped', vocabFlipped);
 }
@@ -476,6 +480,7 @@ function toggleVcDirection() {
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 function resetVocabDeck() {
+  _vcSessionComplete = false;
   state.vocabProgress = {};
   state.vocabKnownSessions = {};
   saveState();

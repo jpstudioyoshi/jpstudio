@@ -1713,9 +1713,13 @@ Content: ${docContent.slice(0, 6000)}` }]
 
 async function lessonNotesExtractGrammarSilent(docContent, apiKey) {
   try {
-    const data = await _fy_claudeAPI({
-      max_tokens: 4000,
-      messages: [{ role: 'user', content: `Analyze these Japanese lesson notes and identify grammatical patterns that a learner should understand. Don't just look for explicitly labeled grammar — analyze the Japanese sentences themselves to find:
+    let nodeList = '';
+    try {
+      nodeList = GrammarModel.getCoverageMap()
+        .map(n => `${n.id} (${n.label}, Genki ch.${n.genki})`)
+        .join(', ');
+    } catch (e) { nodeList = ''; }
+    let prompt = `Analyze these Japanese lesson notes and identify grammatical patterns that a learner should understand. Don't just look for explicitly labeled grammar — analyze the Japanese sentences themselves to find:
 
 - Verb forms used (て-form, ～ました, ～ている, ～たい, potential ～られる, volitional ～ましょう, etc.)
 - Particle usage patterns (に vs へ vs で, は vs が, etc.)
@@ -1731,12 +1735,18 @@ For each pattern found, provide a clear explanation suitable for a learner.
 
 Return JSON array only:
 Assign each point a group from: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other
-[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","group":"group name"}]
+[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","group":"group name","grammarNodeIds":["node_id"]}]
 
 Find at least 5-8 grammar points. Look at EVERY Japanese sentence for grammar worth highlighting.
 
 Lesson content:
-${docContent.slice(0, 10000)}` }]
+${docContent.slice(0, 10000)}`;
+    if (nodeList) {
+      prompt += "\n\nGRAMMAR NODE IDs - use ONLY these exact IDs:\n" + nodeList + "\n\nFor each grammar point add \"grammarNodeIds\":[\"id1\"] — exact IDs from the list that match. Empty array if none match.";
+    }
+    const data = await _fy_claudeAPI({
+      max_tokens: 4000,
+      messages: [{ role: 'user', content: prompt }]
     ,
       track: 'lesson'
     });
@@ -1754,6 +1764,12 @@ ${docContent.slice(0, 10000)}` }]
         );
       }
       console.log('[LN] grammar patterns written to lesson_phrases:', LessonNotesState.grammar.length);
+      const nodeIds = [...new Set(LessonNotesState.grammar.flatMap(g => g.grammarNodeIds || []))];
+      await window.db.run(
+        'UPDATE lesson_sessions SET extracted_grammar=? WHERE id=?',
+        [JSON.stringify(nodeIds), _lessonId]
+      );
+      console.log('[LN] extracted_grammar written:', nodeIds.length, 'node IDs');
     } catch(e) { console.warn('[LN] grammar SQL write failed:', e.message); }
   } catch (e) { console.error('Grammar extraction error:', e); }
 }
