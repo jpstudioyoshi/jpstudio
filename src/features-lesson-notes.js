@@ -1780,14 +1780,16 @@ ${docContent.slice(0, 10000)}`;
     // Write grammar patterns to lesson_phrases with type='grammar'
     try {
       const _lessonId = LessonNotesState.currentLessonId || null;
-      for (const g of LessonNotesState.grammar) {
-        if (!g.pattern || !g.explanation) continue;
+      const _rows = LessonNotesState.grammar.filter(g => g.pattern && g.explanation).slice(0, 50);
+      if (_rows.length) {
+        const _params = _rows.flatMap(g => [_lessonId, g.pattern, g.explanation, g.example || null, 'grammar']);
+        const _values = _rows.map(() => '(?,?,?,?,?)').join(',');
         await window.db.run(
-          'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example, type) VALUES (?,?,?,?,?)',
-          [_lessonId, g.pattern, g.explanation, g.example || null, 'grammar']
+          'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example, type) VALUES ' + _values,
+          _params
         );
       }
-      console.log('[LN] grammar patterns written to lesson_phrases:', LessonNotesState.grammar.length);
+      console.log('[LN] grammar patterns written to lesson_phrases:', _rows.length);
       const nodeIds = [...new Set(LessonNotesState.grammar.flatMap(g => g.grammarNodeIds || []))];
       await window.db.run(
         'UPDATE lesson_sessions SET extracted_grammar=? WHERE id=?',
