@@ -1739,9 +1739,12 @@ async function lessonNotesExtractGrammarSilent(docContent, apiKey) {
   try {
     let nodeList = '';
     try {
-      nodeList = GrammarModel.getCoverageMap()
-        .map(n => `${n.id} (${n.label}, Genki ch.${n.genki})`)
-        .join(', ');
+      if (typeof GrammarModel !== 'undefined') {
+        if (!GrammarModel.loaded) await GrammarModel.load();
+        nodeList = GrammarModel.getCoverageMap()
+          .map(n => `${n.id} (${n.label}, Genki ch.${n.genki})`)
+          .join(', ');
+      }
     } catch (e) { nodeList = ''; }
     let prompt = `Analyze these Japanese lesson notes and identify grammatical patterns that a learner should understand. Don't just look for explicitly labeled grammar — analyze the Japanese sentences themselves to find:
 
@@ -1765,6 +1768,7 @@ Find at least 5-8 grammar points. Look at EVERY Japanese sentence for grammar wo
 
 ${nodeList ? "GRAMMAR NODE IDs — use ONLY these exact IDs:\n" + nodeList + "\n\nFor each grammar point, grammarNodeIds must contain matching IDs from this list only. Empty array if none match.\n\n" : ""}Lesson content:
 ${docContent.slice(0, 10000)}`;
+    console.log('[LN] prompt node list length:', nodeList.length);
     const data = await _fy_claudeAPI({
       max_tokens: 4000,
       messages: [{ role: 'user', content: prompt }]
