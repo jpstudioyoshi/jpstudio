@@ -1365,46 +1365,10 @@ async function lessonNotesExtractGrammar() {
   
   const area = document.querySelector('#lessonNotesView, #lessonNotesViewMain');
   if (area) area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-light)">Extracting grammar points...</div>';
-  
-  try {
-    const data = await _fy_claudeAPI({
-      max_tokens: 5000,
-      messages: [{ role: 'user', content: `Analyze these Japanese lesson notes and identify grammatical patterns that a learner should understand. Don't just look for explicitly labeled grammar — analyze the Japanese sentences themselves to find:
 
-- Verb forms used (て-form, ～ました, ～ている, ～たい, potential ～られる, volitional ～ましょう, etc.)
-- Particle usage patterns (に vs へ vs で, は vs が, etc.)
-- Sentence patterns (～のが好き, ～てください, ～かったです, ～みたい, etc.)
-- Nominalization patterns (Verb+の)
-- Giving/receiving constructions (あげる/もらう/くれる)
-- Time and duration expressions (とき, ～間, かかる)
-- Counting and counter patterns
-- Adjective conjugations (い-adj past, な-adj usage)
-- Any other N5-N3 grammar points appearing in the examples
+  await lessonNotesExtractGrammarSilent(docContent, apiKey);
+  lessonNotesPushToGramNotes(LessonNotesState.grammar); // → Grammar Notes panel
 
-For each pattern found, provide a clear explanation suitable for a learner.
-
-Return JSON array only:
-Assign each point a group from: Particles, Verb Forms, Adjectives, Connectors & Conjunctions, Expressions & Set Phrases, Sentence Endings, Other
-[{"pattern":"grammar pattern name","explanation":"clear explanation in English of how it works","example":"actual example from the lesson text","exampleMeaning":"English translation","sourceText":"the exact sentence from the notes containing this pattern","group":"group name"}]
-
-Find the 10-15 most important grammar points only. Prioritise variety across groups over completeness.
-
-Lesson content:
-${docContent.slice(0, 10000)}` }]
-    ,
-      track: 'lesson'
-    });
-    
-    const text = _fy_claudeText(data) || '[]';
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (jsonMatch) {
-      LessonNotesState.grammar = JSON.parse(jsonMatch[0]);
-      lessonNotesPushToGramNotes(LessonNotesState.grammar); // → Grammar Notes panel
-    }
-  } catch (e) {
-    console.error('Grammar extraction error:', e);
-  }
-  
   lessonNotesRender();
   lessonNotesSaveCurrentSession(); // Save extracted grammar
 }
