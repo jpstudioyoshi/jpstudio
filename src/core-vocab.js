@@ -472,6 +472,7 @@ function toggleVcDirection() {
   vcDirection = cycle[vcDirection] || 'jp_en';
   const btn = document.getElementById('vcDirectionBtn');
   if (btn) btn.textContent = labels[vcDirection];
+  Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 function resetVocabDeck() {
@@ -1852,7 +1853,7 @@ async function vocabSettingsSave() {
     const msg = document.getElementById('vocabWeightsMsg');
     if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
     console.log('[vocab] settings saved');
-    await loadVocabItemsDeck();
+    await loadVocabItemsDeck(vcDirection);
   } catch(e) { console.warn('[vocab] settings save error', e); }
 }
 
