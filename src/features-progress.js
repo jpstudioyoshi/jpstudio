@@ -398,7 +398,7 @@ async function renderStrandBalance() {
     const range = rangeEl ? rangeEl.value : 'week';
     const DAY = 86400000;
     let since;
-    if (range === 'today')     since = new Date(Date.now() - 1 * DAY).toISOString();
+    if (range === 'today')     since = new Date(new Date().toDateString()).toISOString();
     else if (range === 'week') since = new Date(Date.now() - 7 * DAY).toISOString();
     else if (range === 'prev') since = new Date(Date.now() - 14 * DAY).toISOString();
     else                       since = new Date(Date.now() - 365 * DAY).toISOString();
