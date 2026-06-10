@@ -54,7 +54,7 @@ function toggleVcReading(e) {
   const el = document.getElementById('vcReading');
   const btn = document.getElementById('vcReadingToggle');
   if (el) el.style.display = vcReadingVisible ? 'block' : 'none';
-  if (btn) btn.textContent = vcReadingVisible ? 'Hide reading' : 'Show reading';
+  if (btn) btn.classList.toggle('active', vcReadingVisible);
 }
 
 let vcPitchVisible = true;
@@ -548,7 +548,8 @@ function toggleVocabList() {
   const printBtn = document.getElementById('vocabListPrintBtn');
   const hidden = list.style.display === 'none';
   list.style.display = hidden ? 'block' : 'none';
-  btn.textContent = hidden ? 'Hide list' : 'Word list';
+  btn.textContent = 'List';
+  btn.classList.toggle('active', hidden);
   if (printBtn) printBtn.style.display = hidden ? 'inline-block' : 'none';
   if (hidden) renderVocabList();
 }
@@ -585,14 +586,14 @@ function renderVocabList() {
     else if (due < today) { dueColor = 'var(--red)'; dueLabel = due; }
     else if (due === today) { dueColor = 'var(--teal)'; dueLabel = 'today'; }
     else { dueColor = 'var(--ink-light)'; dueLabel = due; }
-    return `<div style="display:grid;grid-template-columns:20px 0.9fr 0.7fr 1fr auto;gap:4px 10px;
+    return `<div style="display:grid;grid-template-columns:0.9fr 0.7fr 1fr auto 20px;gap:4px 10px;
       padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;"
       class="row-hover">
-      <input type="checkbox" class="vocab-del-cb" data-word="${escHtml(c.word||'')}" onclick="event.stopPropagation();vocabListCheckChanged()" style="cursor:pointer;accent-color:var(--teal)">
       <span style="font-family:var(--jp);font-size:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()">${escHtml(c.word || '')}</span>
       <span style="font-family:var(--jp);font-size:0.8rem;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(c.reading || '')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem;overflow:hidden;text-overflow:ellipsis">${escHtml(c.meaning || '')}</span>
       <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml(_fmtSourceList(c.source, (c.encounter_at||'').slice(0,10)))}</span>
+      <input type="checkbox" class="vocab-del-cb" data-word="${escHtml(c.word||'')}" onclick="event.stopPropagation();vocabListCheckChanged()" style="cursor:pointer;accent-color:var(--teal)">
     </div>`;
   }).join('');
   container.innerHTML = header + rows;
