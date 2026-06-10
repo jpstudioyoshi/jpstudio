@@ -905,6 +905,20 @@ async function renderGrammarCoverage() {
 
   const coverage = GrammarModel.getCoverageMap();
 
+  // Gold dot: node IDs touched in the currently active Yoshi lesson (fallback: most recent)
+  const activeGrammarIds = new Set();
+  try {
+    const _lessonId = (typeof LessonNotesState !== 'undefined' && LessonNotesState.currentLessonId)
+      ? LessonNotesState.currentLessonId
+      : null;
+    const _egRows = _lessonId
+      ? await window.db.query('SELECT extracted_grammar FROM lesson_sessions WHERE id = ?', [_lessonId])
+      : await window.db.query('SELECT extracted_grammar FROM lesson_sessions WHERE extracted_grammar IS NOT NULL AND extracted_grammar != ? ORDER BY id DESC LIMIT 1', ['[]']);
+    if (_egRows.length && _egRows[0].extracted_grammar) {
+      JSON.parse(_egRows[0].extracted_grammar).forEach(id => activeGrammarIds.add(id));
+    }
+  } catch(e) {}
+
   // Group by Genki chapter
   const byChapter = {};
   for (const node of coverage) {
@@ -967,13 +981,18 @@ async function renderGrammarCoverage() {
           if (node.lastEncountered) tip += ' · seen in session ' + Math.round(daysSinceEnc) + 'd ago';
         }
       }
+      // Gold dot — node touched in active Yoshi session
+      let goldDot = '';
+      if (activeGrammarIds.has(node.id)) {
+        goldDot = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffe600;margin-left:6px;box-shadow:0 0 4px #ffe600;flex-shrink:0" title="covered in this lesson"></span>';
+      }
       html += '<div title="' + tip + '" '
         + 'onclick="grammarNodeClick(\'' + node.id + '\')" '
         + 'style="cursor:pointer;padding:5px 10px;border-radius:5px;display:flex;align-items:center;'
         + 'background:' + st.bg + ';border:' + qBorder + ';'
         + 'font-family:var(--ui);font-size:0.76rem;color:' + st.text + ';'
         + 'white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis">'
-        + node.label + encDot
+        + node.label + encDot + goldDot
         + '</div>';
 
     }
