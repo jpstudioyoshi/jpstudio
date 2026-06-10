@@ -1032,10 +1032,9 @@ function grammarNodeClick(nodeId) {
     return `<span style="color:${col};margin-right:8px">${isMet ? '✓' : '✗'} ${label}</span>`;
   }).join('') || '<span style="color:var(--ink-light)">none</span>';
 
-  const statusCol = m.status === 'mastered' || m.status === 'override' ? 'var(--teal)'
-                  : m.status === 'partial'   ? 'var(--gold)'
-                  : m.status === 'weak'      ? 'var(--red)'
-                  : 'var(--ink-light)';
+  const _pill = document.querySelector('#grammarCoverageGrid [data-nodeid="' + nodeId + '"]');
+  const statusCol = _pill ? _pill.style.background : 'var(--paper-dark)';
+  const statusText = (statusCol === 'var(--paper-dark)' || !statusCol) ? 'var(--ink)' : '#000';
 
   const qSection = m.questionCount > 0
     ? `<div style="margin-top:8px;font-size:0.75rem;color:var(--ink-light)">
@@ -1060,8 +1059,8 @@ function grammarNodeClick(nodeId) {
   panel.style.overflowY = 'auto';
   panel.innerHTML = `
     <div onclick="grammarOverridePopup('${nodeId}')" title="Click to set override"
-      style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:#000;font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer;margin-bottom:8px">${node.label}</div>
-    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:8px"><span style="opacity:0.6">prereq: </span>${prereqs}</div>` : ''}
+      style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:${statusText};font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer;margin-bottom:8px">${node.label}</div>
+    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:8px"><span style="opacity:0.6">Prerequisites: </span>${prereqs.replace(/✓\s*/g,"").replace(/✗\s*/g,"✗ ")}</div>` : ''}
     ${weakSection}
     ${qSection}
     ${node.notes ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);line-height:1.6;border-top:1px solid var(--border);padding-top:10px">${node.notes.replace(/\n/g,'<br>')}</div>` : ''}
