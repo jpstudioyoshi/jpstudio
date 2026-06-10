@@ -526,6 +526,22 @@ function resetVocabDeck() {
   loadVocabItemsDeck();
 }
 
+function vocabListCheckChanged() {
+  const anyChecked = document.querySelectorAll('.vocab-del-cb:checked').length > 0;
+  const btn = document.getElementById('vocabListDeleteBtn');
+  if (btn) btn.style.display = anyChecked ? 'inline-block' : 'none';
+}
+async function vocabListDeleteSelected() {
+  const checked = document.querySelectorAll('.vocab-del-cb:checked');
+  if (!checked.length) return;
+  const words = [...new Set([...checked].map(cb => cb.dataset.word))];
+  if (!confirm(`Delete ${words.length} word(s) from all directions? This cannot be undone.`)) return;
+  for (const word of words) {
+    await window.db.run('DELETE FROM vocab_items WHERE word = ?', [word]).catch(() => {});
+  }
+  await loadVocabItemsDeck(vcDirection, false);
+  renderVocabList();
+}
 function toggleVocabList() {
   const list = document.getElementById('vocabList');
   const btn = document.getElementById('vocabListToggleBtn');
@@ -558,25 +574,29 @@ function renderVocabList() {
     return;
   }
   const today = new Date().toISOString().slice(0, 10);
-  container.innerHTML = items.map(({ c, i }) => {
+  const header = `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--panel);z-index:1">
+    <span style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light)">${items.length} words</span>
+    <button id="vocabListDeleteBtn" onclick="vocabListDeleteSelected()" style="display:none;font-family:var(--ui);font-size:0.7rem;padding:3px 10px;border-radius:4px;border:1px solid var(--red);color:var(--red);background:transparent;cursor:pointer">Delete selected</button>
+  </div>`;
+  const rows = items.map(({ c, i }) => {
     const due = (c.srs_due || '').slice(0, 10);
     let dueColor, dueLabel;
     if (!due) { dueColor = 'var(--ink-light)'; dueLabel = 'new'; }
     else if (due < today) { dueColor = 'var(--red)'; dueLabel = due; }
     else if (due === today) { dueColor = 'var(--teal)'; dueLabel = 'today'; }
     else { dueColor = 'var(--ink-light)'; dueLabel = due; }
-    return `<div style="display:grid;grid-template-columns:0.6fr 0.7fr 0.9fr auto auto;gap:4px 10px;
-      padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;
-      cursor:pointer;transition:background 0.1s"
-      onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()"
+    return `<div style="display:grid;grid-template-columns:20px 0.6fr 0.7fr 0.9fr auto auto;gap:4px 10px;
+      padding:6px 10px;border-bottom:1px solid var(--border);align-items:center;"
       class="row-hover">
-      <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.word || '')}</span>
+      <input type="checkbox" class="vocab-del-cb" data-word="${escHtml(c.word||'')}" onclick="event.stopPropagation();vocabListCheckChanged()" style="cursor:pointer;accent-color:var(--teal)">
+      <span style="font-family:var(--jp);font-size:inherit;cursor:pointer" onclick="vocabIdx=${i};if(!vocabSession.includes(${i}))vocabSession.push(${i});renderVocab()">${escHtml(c.word || '')}</span>
       <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.reading || '')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.meaning || '')}</span>
       <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml(_fmtSourceList(c.source, (c.encounter_at||'').slice(0,10)))}</span>
       <span style="font-family:var(--ui);font-size:0.7rem;color:${dueColor};white-space:nowrap">${escHtml(dueLabel)}</span>
     </div>`;
   }).join('');
+  container.innerHTML = header + rows;
 }
 
 function printVocabList() {
