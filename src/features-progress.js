@@ -1052,19 +1052,24 @@ function grammarNodeClick(nodeId) {
 
   panel.style.display = 'block';
   panel.innerHTML = `
-    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px">
-      <div style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink)">${node.label}</div>
-      <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Ch ${node.genki}</div>
-      <div style="font-family:var(--ui);font-size:0.72rem;color:${statusCol};margin-left:auto">
-        ${m.status === 'override' ? 'override' : m.status} · ${m.score}%
-      </div>
-      <button onclick="document.getElementById('grammarDetailPanel').style.display='none';document.getElementById('grammarDetailPanel').dataset.node=''"
-        style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.8rem;padding:0 2px">✕</button>
+    <div style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink)">${node.label}</div>
+    <div style="font-family:var(--ui);font-size:0.72rem;color:${statusCol};margin-top:2px">
+      Ch ${node.genki} · ${m.status === 'override' ? 'override' : m.status} · ${m.score}%
     </div>
-    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">Prerequisites</div>
+    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:10px;margin-bottom:4px">Prerequisites</div>
     <div style="font-family:var(--ui);font-size:0.75rem;margin-bottom:2px">${prereqs}</div>` : ''}
     ${weakSection}
     ${qSection}
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <button onclick="showPanel('settings');stSwitchTab('grammar')"
+        style="font-family:var(--ui);font-size:0.78rem;padding:8px 10px;background:none;border:1px solid var(--ink-light);border-radius:6px;color:var(--ink);cursor:pointer;text-align:left">
+        ${m.status === 'override' ? 'Edit override →' : 'Set override →'}
+      </button>
+      <button onclick="const p=document.getElementById('grammarDetailPanel');p.innerHTML='';p.dataset.node=''"
+        style="font-family:var(--ui);font-size:0.78rem;padding:8px 10px;background:none;border:1px solid var(--ink-light);border-radius:6px;color:var(--ink-light);cursor:pointer;text-align:left">
+        Clear
+      </button>
+    </div>
   `;
 }
 
