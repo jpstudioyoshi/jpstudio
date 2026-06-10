@@ -412,8 +412,10 @@ function renderVocab() {
         (reading ? '<div style="margin-top:4px;font-family:var(--jp);font-size:1rem;color:var(--teal)">' + escHtml(reading) + '</div>' : '') +
         (example ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>' : '');
     } else {
-      vcEn.innerHTML = escHtml(meaning) +
-        (example ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4">' + escHtml(example) + '</div>' : '');
+      vcEn.style.textAlign = 'center';
+      const _meanings = meaning.split('/').map(m => escHtml(m.trim())).join('<br>');
+      vcEn.innerHTML = _meanings +
+        (example ? '<div style="margin-top:8px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);line-height:1.4;text-align:center">' + escHtml(example) + '</div>' : '');
     }
   }
   if (_vcBR) _vcBR.textContent = isReverse ? '' : reading;
