@@ -1732,6 +1732,8 @@ function showPanel(id) {
   if (id === 'writing') { renderSavedTexts(); setTimeout(() => { setWritingMode('hiragana'); }, 0); }
   if (id === 'progress') {
     updateProgressPanel();
+    const _yBtn = document.getElementById('strandYoshiToggle');
+    if (_yBtn && (typeof _strandShowYoshi !== 'undefined' ? _strandShowYoshi : true)) { _yBtn.style.borderColor = 'var(--teal)'; _yBtn.style.color = 'var(--teal)'; }
     if (typeof renderConjMastery === 'function') renderConjMastery();
     if (typeof renderCounterMastery === 'function') renderCounterMastery();
     if (typeof renderGramSentHeatmap === 'function') renderGramSentHeatmap();

@@ -372,11 +372,15 @@ async function renderStrandMini() {
       return;
     }
     const total = sb.totalMins || 1;
-    const COLORS = { 1: 'var(--teal)', 2: 'var(--gold)', 3: '#4a9eff', 4: '#7ed886' };
+    const _yoshiMins = sb.yoshiMins || {};
+    const _totalNoYoshi = Math.max(1, total - Object.values(_yoshiMins).reduce((a,b)=>a+b,0));
     el.innerHTML = [1,2,3,4].map(n => {
       const mins = sb.strands[n] || 0;
-      const pct  = Math.round(mins / total * 100);
-      const color = mins === 0 ? 'var(--border)' : pct < 20 ? '#e87e00' : COLORS[n];
+      const yMins = _yoshiMins[n] || 0;
+      const dispMins = _strandShowYoshi ? mins : Math.max(0, mins - yMins);
+      const dispPct  = _strandShowYoshi ? Math.round(mins/total*100) : Math.round(dispMins/_totalNoYoshi*100);
+      const pct = dispPct;
+      const color = dispMins === 0 ? 'var(--border)' : pct < 20 ? '#e87e00' : 'var(--accent, #5b8)';
       return '<div style="width:36px;height:5px;background:var(--border);border-radius:2px;overflow:hidden">'
         + '<div style="width:' + pct + '%;height:100%;background:' + color + ';border-radius:2px;transition:width 0.4s"></div>'
         + '</div>';
