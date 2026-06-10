@@ -87,9 +87,9 @@ function vocabPosFilterChanged() {
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
-async function loadVocabItemsDeck(direction = 'jp_en') {
+async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
   if (!window.db) return;
-  vocabSession = [];
+  if (resetSession) vocabSession = [];
   try {
     const sources = vocabGetActiveSources();
     const _localToday = new Date().toLocaleDateString('sv-SE');
@@ -493,7 +493,7 @@ function toggleVcDirection() {
   const btn = document.getElementById('vcDirectionBtn');
   if (btn) btn.textContent = labels[vcDirection];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
-  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, false);
 }
 function resetVocabDeck() {
   _vcSessionComplete = false;
