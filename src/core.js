@@ -34,6 +34,7 @@ function updateProgressPanel() {
   try { (App.renderCounterMastery || window.renderCounterMastery)?.(); } catch(e) {}
   try { (App.renderGramSentHeatmap || window.renderGramSentHeatmap)?.(); } catch(e) {}
   try { (App.renderStrandBalance || window.renderStrandBalance)?.(); } catch(e) {}
+  setTimeout(() => { try { (App.renderStrandMini || window.renderStrandMini)?.(); } catch(e) {} }, 1500);
 }
 
 function progressRenderCost() {

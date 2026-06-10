@@ -3706,168 +3706,168 @@
     "type": "function",
     "name": "progressRenderCost",
     "file": "src/core.js",
-    "line": 39,
+    "line": 40,
     "desc": "const container = document.getElementById('progress-cost-display');"
   },
   {
     "type": "function",
     "name": "getGramData",
     "file": "src/core.js",
-    "line": 114,
+    "line": 115,
     "desc": "return Storage.getJSON(STORAGE_KEYS.GRAM_NOTES, {});"
   },
   {
     "type": "function",
     "name": "saveGramData",
     "file": "src/core.js",
-    "line": 117,
+    "line": 118,
     "desc": "Storage.setJSON(STORAGE_KEYS.GRAM_NOTES, data);"
   },
   {
     "type": "function",
     "name": "migrateTextToEntries",
     "file": "src/core.js",
-    "line": 120,
+    "line": 121,
     "desc": "return text.split(/\\n---\\n/).map(chunk => {"
   },
   {
     "type": "function",
     "name": "getGramEntries",
     "file": "src/core.js",
-    "line": 129,
+    "line": 130,
     "desc": "const data = getGramData();"
   },
   {
     "type": "function",
     "name": "loadGramNotes",
     "file": "src/core.js",
-    "line": 139,
+    "line": 140,
     "desc": "escHtml moved to core-foundation.js"
   },
   {
     "type": "function",
     "name": "gramNotesShowTab",
     "file": "src/core.js",
-    "line": 141,
+    "line": 142,
     "desc": "GRAM_TABS.forEach(t => {"
   },
   {
     "type": "function",
     "name": "gramNotesFromSelect",
     "file": "src/core.js",
-    "line": 159,
+    "line": 160,
     "desc": "localStorage.setItem('gramNotesSub', val);"
   },
   {
     "type": "function",
     "name": "renderGramEntries",
     "file": "src/core.js",
-    "line": 164,
+    "line": 165,
     "desc": "const container = document.getElementById('gnote-entries-' + tab);"
   },
   {
     "type": "function",
     "name": "addGramEntry",
     "file": "src/core.js",
-    "line": 190,
+    "line": 191,
     "desc": "const input = document.getElementById('gnote-input-' + tab);"
   },
   {
     "type": "function",
     "name": "deleteGramEntry",
     "file": "src/core.js",
-    "line": 200,
+    "line": 201,
     "desc": "const data = getGramData();"
   },
   {
     "type": "function",
     "name": "moveGramEntry",
     "file": "src/core.js",
-    "line": 206,
+    "line": 207,
     "desc": "if (!toTab || toTab === fromTab) return;"
   },
   {
     "type": "function",
     "name": "editGramEntry",
     "file": "src/core.js",
-    "line": 218,
+    "line": 219,
     "desc": "const entryEl = document.getElementById('gentry-' + tab + '-' + idx);"
   },
   {
     "type": "function",
     "name": "saveGramEntryEdit",
     "file": "src/core.js",
-    "line": 238,
+    "line": 239,
     "desc": "const entryEl = document.getElementById('gentry-' + tab + '-' + idx);"
   },
   {
     "type": "function",
     "name": "cancelGramEntryEdit",
     "file": "src/core.js",
-    "line": 247,
+    "line": 248,
     "desc": "renderGramEntries(tab); }"
   },
   {
     "type": "function",
     "name": "gramSearch",
     "file": "src/core.js",
-    "line": 249,
+    "line": 250,
     "desc": "const resultsEl = document.getElementById('gramSearchResults');"
   },
   {
     "type": "function",
     "name": "showGramTab",
     "file": "src/core.js",
-    "line": 317,
+    "line": 318,
     "desc": "document.querySelectorAll('.gramnote-tab').forEach(b => b.classList.remove('active'));"
   },
   {
     "type": "function",
     "name": "showGramTabAndHighlight",
     "file": "src/core.js",
-    "line": 325,
+    "line": 326,
     "desc": "document.getElementById('gramSearchInput').value = '';"
   },
   {
     "type": "function",
     "name": "htmlToPlainMarkdown",
     "file": "src/core.js",
-    "line": 344,
+    "line": 345,
     "desc": "function nodeToText(node, inTable) {"
   },
   {
     "type": "function",
     "name": "openGramSendDialog",
     "file": "src/core.js",
-    "line": 389,
+    "line": 390,
     "desc": "const msgEl = document.getElementById(msgId);"
   },
   {
     "type": "function",
     "name": "sendToGramNote",
     "file": "src/core.js",
-    "line": 423,
+    "line": 424,
     "desc": ""
   },
   {
     "type": "function",
     "name": "saveListenPrefs",
     "file": "src/core.js",
-    "line": 442,
+    "line": 443,
     "desc": ""
   },
   {
     "type": "function",
     "name": "restoreListenPrefs",
     "file": "src/core.js",
-    "line": 457,
+    "line": 458,
     "desc": ""
   },
   {
     "type": "storage",
     "name": "gramNotesSub",
     "file": "src/core.js",
-    "line": 160,
+    "line": 161,
     "desc": "localStorage"
   },
   {
@@ -3881,14 +3881,14 @@
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core.js",
-    "line": 118,
+    "line": 119,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "LISTEN_TRACK_NAMES",
     "file": "src/core.js",
-    "line": 445,
+    "line": 446,
     "desc": "Storage.set"
   },
   {
@@ -6420,205 +6420,212 @@
   },
   {
     "type": "function",
-    "name": "renderStrandBalance",
+    "name": "renderStrandMini",
     "file": "src/features-progress.js",
     "line": 361,
+    "desc": "const el = document.getElementById('strandMini');"
+  },
+  {
+    "type": "function",
+    "name": "renderStrandBalance",
+    "file": "src/features-progress.js",
+    "line": 387,
     "desc": "const el = document.getElementById('strandBalanceChart');"
   },
   {
     "type": "function",
     "name": "strandToggleYoshi",
     "file": "src/features-progress.js",
-    "line": 410,
+    "line": 436,
     "desc": "── Strand Yoshi Toggle ──────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "strandWeightsLoad",
     "file": "src/features-progress.js",
-    "line": 439,
+    "line": 466,
     "desc": ""
   },
   {
     "type": "function",
     "name": "strandWeightsRender",
     "file": "src/features-progress.js",
-    "line": 452,
+    "line": 479,
     "desc": "const el = document.getElementById('strandWeightsGrid');"
   },
   {
     "type": "function",
     "name": "strandWeightsSave",
     "file": "src/features-progress.js",
-    "line": 470,
+    "line": 497,
     "desc": "const out = {};"
   },
   {
     "type": "function",
     "name": "masteryViewSet",
     "file": "src/features-progress.js",
-    "line": 490,
+    "line": 517,
     "desc": "_masteryView = view;"
   },
   {
     "type": "function",
     "name": "renderConjMastery",
     "file": "src/features-progress.js",
-    "line": 500,
+    "line": 527,
     "desc": "const el = document.getElementById('conjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderAdjMastery",
     "file": "src/features-progress.js",
-    "line": 699,
+    "line": 726,
     "desc": "const el = document.getElementById('adjMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderCounterMastery",
     "file": "src/features-progress.js",
-    "line": 783,
+    "line": 810,
     "desc": "const el = document.getElementById('counterMasteryPanel');"
   },
   {
     "type": "function",
     "name": "renderGrammarCoverage",
     "file": "src/features-progress.js",
-    "line": 891,
+    "line": 918,
     "desc": "── Grammar Coverage Grid ─────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1009,
+    "line": 1036,
     "desc": "const node = GrammarModel.getNode(nodeId);"
   },
   {
     "type": "function",
     "name": "grammarOverridePopup",
     "file": "src/features-progress.js",
-    "line": 1074,
+    "line": 1101,
     "desc": "const existing = document.getElementById('grammarOverrideModal');"
   },
   {
     "type": "function",
     "name": "grammarDismissEncounter",
     "file": "src/features-progress.js",
-    "line": 1112,
+    "line": 1139,
     "desc": "const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;"
   },
   {
     "type": "function",
     "name": "_pieSliceColors",
     "file": "src/features-progress.js",
-    "line": 1125,
+    "line": 1152,
     "desc": "const r = parseInt(baseHex.slice(1,3),16)/255;"
   },
   {
     "type": "function",
     "name": "_renderErrorPie",
     "file": "src/features-progress.js",
-    "line": 1150,
+    "line": 1177,
     "desc": "const SIZE = 100, CX = 50, CY = 50, R = 46;"
   },
   {
     "type": "function",
     "name": "_renderSubPie",
     "file": "src/features-progress.js",
-    "line": 1192,
+    "line": 1219,
     "desc": "if (!subSorted.length) return;"
   },
   {
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1237,
+    "line": 1264,
     "desc": "Changes here apply to both."
   },
   {
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1254,
+    "line": 1281,
     "desc": "const examples = (window._errorExamples || {})[key] || [];"
   },
   {
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1294,
+    "line": 1321,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};"
   },
   {
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1302,
+    "line": 1329,
     "desc": "const chartEl = document.getElementById('progress-error-chart');"
   },
   {
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1373,
+    "line": 1400,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;"
   },
   {
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1417,
+    "line": 1444,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1427,
+    "line": 1454,
     "desc": "const chart = document.getElementById('particleBreakdownChart');"
   },
   {
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1456,
+    "line": 1483,
     "desc": "showPanel('grammar2');"
   },
   {
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1513,
+    "line": 1540,
     "desc": "const el = document.getElementById('stPaneWeights');"
   },
   {
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1568,
+    "line": 1595,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;"
   },
   {
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1582,
+    "line": 1609,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;"
   },
   {
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1594,
+    "line": 1621,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };"
   },
   {
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1609,
+    "line": 1637,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');"
   },
   {

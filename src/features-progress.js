@@ -358,6 +358,32 @@ function _accuracyFromHistory(history, view, entry) {
 
 
 // ── Strand Balance Chart ──────────────────────────────────────────────────────
+async function renderStrandMini() {
+  const el = document.getElementById('strandMini');
+  if (!el) return;
+  try {
+    const SM = App.StudentModel || window.StudentModel;
+    if (!SM) return;
+    const since = new Date(Date.now() - 7 * 86400000).toISOString();
+    const snap = await SM.snapshotAsync(since);
+    const sb = snap.strandBalance;
+    if (!sb || !sb.hasData) {
+      el.innerHTML = '<div style="width:36px;height:4px;background:var(--border);border-radius:2px"></div>'.repeat(4);
+      return;
+    }
+    const total = sb.totalMins || 1;
+    const COLORS = { 1: 'var(--teal)', 2: 'var(--gold)', 3: '#4a9eff', 4: '#7ed886' };
+    el.innerHTML = [1,2,3,4].map(n => {
+      const mins = sb.strands[n] || 0;
+      const pct  = Math.round(mins / total * 100);
+      const color = mins === 0 ? 'var(--border)' : pct < 20 ? '#e87e00' : COLORS[n];
+      return '<div style="width:36px;height:5px;background:var(--border);border-radius:2px;overflow:hidden">'
+        + '<div style="width:' + pct + '%;height:100%;background:' + color + ';border-radius:2px;transition:width 0.4s"></div>'
+        + '</div>';
+    }).join('');
+  } catch(e) { el.innerHTML = ''; }
+}
+
 async function renderStrandBalance() {
   const el = document.getElementById('strandBalanceChart');
   if (!el) return;
@@ -415,6 +441,7 @@ function strandToggleYoshi() {
     btn.style.color = _strandShowYoshi ? 'var(--teal)' : '';
   }
   renderStrandBalance();
+  try { (App.renderStrandMini || window.renderStrandMini)?.(); } catch(e) {}
 }
 
 // ── Strand Weights ────────────────────────────────────────────────────────────
@@ -1603,6 +1630,7 @@ function progRangeSet(val) {
   (App.masteryViewSet || window.masteryViewSet)?.(masteryMap[val]);
   renderFourStrandRecency();
   (App.renderStrandBalance || window.renderStrandBalance)?.();
+  try { (App.renderStrandMini || window.renderStrandMini)?.(); } catch(e) {}
 }
 
 // ── Sentence Building heatmap ─────────────────────────────────────────────
@@ -1680,7 +1708,7 @@ function renderGramSentHeatmap() {
 
 // ── App registry — features-progress.js exports ───────────────────────────
 Object.assign(App, {
-  renderStrandBalance, strandToggleYoshi, strandWeightsRender, strandWeightsSave, strandWeightsLoad, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
+  renderStrandMini, renderStrandBalance, strandToggleYoshi, strandWeightsRender, strandWeightsSave, strandWeightsLoad, renderFourStrandRecency, renderGramSentHeatmap, progRangeSet, renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage, grammarNodeClick, drillLastCompletedWrite, particleBreakdownToggle, particleBreakdownRender, progressRenderErrors, progressRenderCost, apiUsageReset, apiUsageTrack, gramSentPracticeError, progressExport, progressImport,
   weightsRender, weightsSave, weightsReset,
   renderConjMastery, renderAdjMastery, renderCounterMastery, renderGrammarCoverage,
   grammarNodeClick, drillLastCompletedWrite,
