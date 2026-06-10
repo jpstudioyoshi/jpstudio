@@ -1061,7 +1061,7 @@ function grammarNodeClick(nodeId) {
     ${weakSection}
     ${qSection}
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-      <button onclick="showPanel('settings');stSwitchTab('grammar')"
+      <button onclick="grammarOverridePopup('${nodeId}')"
         style="font-family:var(--ui);font-size:0.78rem;padding:8px 10px;background:none;border:1px solid var(--ink-light);border-radius:6px;color:var(--ink);cursor:pointer;text-align:left">
         ${m.status === 'override' ? 'Edit override →' : 'Set override →'}
       </button>
@@ -1071,6 +1071,44 @@ function grammarNodeClick(nodeId) {
       </button>
     </div>
   `;
+}
+
+function grammarOverridePopup(nodeId) {
+  const existing = document.getElementById('grammarOverrideModal');
+  if (existing) existing.remove();
+  const node = GrammarModel.getNode(nodeId);
+  const label = node ? node.label : nodeId;
+  const coverage = GrammarModel.getCoverageMap ? GrammarModel.getCoverageMap() : [];
+  const cm = coverage.find(n => n.id === nodeId);
+  const statusBg = cm ? (
+    cm.status === 'mastered' || cm.status === 'override' ? '#00b894' :
+    cm.status === 'confident' ? '#4a9eff' :
+    cm.status === 'partial'   ? '#e6a817' :
+    cm.status === 'weak'      ? '#e05050' : 'var(--paper-dark)'
+  ) : 'var(--paper-dark)';
+  const statusText = (cm && cm.status !== 'untouched') ? '#000' : 'var(--ink)';
+  const options = [
+    { label: 'weak',      score: 0.30, bg: '#e05050', text: '#fff' },
+    { label: 'partial',   score: 0.60, bg: '#e6a817', text: '#000' },
+    { label: 'confident', score: 0.80, bg: '#4a9eff', text: '#000' },
+    { label: 'mastered',  score: 1.00, bg: '#00b894', text: '#000' },
+  ];
+  const modal = document.createElement('div');
+  modal.id = 'grammarOverrideModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999';
+  modal.innerHTML = `
+    <div style="background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:20px 24px;min-width:260px;font-family:var(--ui)">
+      <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:6px">Set override</div>
+      <div style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusBg};color:${statusText};font-family:var(--ui);font-size:0.76rem;font-weight:600;margin-bottom:16px">${label}</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${options.map(o => `<button onclick="stGrammarSetOverride('${nodeId}',${o.score});document.getElementById('grammarOverrideModal').remove();renderGrammarCoverage()"
+          style="padding:8px 14px;border-radius:6px;border:none;background:${o.bg};color:${o.text};font-family:var(--ui);font-size:0.82rem;cursor:pointer;text-align:left">${o.label}</button>`).join('')}
+        <button onclick="document.getElementById('grammarOverrideModal').remove()"
+          style="padding:8px 14px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--ink-light);font-family:var(--ui);font-size:0.78rem;cursor:pointer;margin-top:4px">Cancel</button>
+      </div>
+    </div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
 }
 
 async function grammarDismissEncounter(nodeId) {
