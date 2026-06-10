@@ -322,7 +322,7 @@ function renderVocab() {
     if (vcPs) vcPs.textContent = '';
     vocabCounterEl.textContent = _dataLoaded ? 'No words due' : '';
     deckStatusEl.textContent = '';
-    resetBtnEl.style.display = 'none';
+    resetBtnEl.style.visibility = 'hidden';
     renderVocabList();
     return;
   }
@@ -343,7 +343,7 @@ function renderVocab() {
       _vcSessionComplete = true;
       vocabCounterEl.textContent = 'All session words known';
       if (statusEl) statusEl.textContent = 'Session done — tap card to restart';
-      resetBtnEl.style.display = 'inline-block';
+      resetBtnEl.style.visibility = 'visible';
       deckStatusEl.textContent = '';
       renderVocabList();
       return;
@@ -368,7 +368,7 @@ function renderVocab() {
     vocabCounterEl.textContent = 'All session words known';
     if (statusEl) statusEl.textContent = 'Session done — tap card to restart';
     deckStatusEl.textContent = '';
-    resetBtnEl.style.display = 'none';
+    resetBtnEl.style.visibility = 'hidden';
     renderVocabList();
     return;
   }
@@ -467,7 +467,7 @@ function renderVocab() {
   const pos = deck.indexOf(vocabIdx);
   vocabCounterEl.textContent = `Card ${pos + 1} of ${deck.length} remaining in session`;
   deckStatusEl.textContent = '';
-  resetBtnEl.style.display = 'none';
+  resetBtnEl.style.visibility = 'hidden';
 
   if (statusEl) statusEl.textContent = `Session: ${deck.length} left of ${vocabSession.length}`;
   renderVocabList();
