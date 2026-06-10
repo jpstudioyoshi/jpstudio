@@ -236,7 +236,7 @@ function renderFourStrandRecency() {
   labels['_vocab'] = labels.anki || labels.words || labels.counters || null;
 
   // Build grid — one section per strand
-  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+  let html = '<div style="display:flex;flex-direction:column;gap:72px">';
 
   for (const strand of strands) {
     // Find the most recently done item in this strand (for summary line)
@@ -688,7 +688,7 @@ function renderConjMastery() {
         <div style="width:14px;text-align:center;font-size:0.75rem">${arrow}</div>
       </div>`;
     }
-    html += '</div></div>';
+    html += '</div></div><div style="border-bottom:1px solid var(--border);margin-top:12px"></div>';
   }
 
   el.innerHTML = html;
@@ -945,16 +945,16 @@ async function renderGrammarCoverage() {
     return statusStyle.untouched;
   }
 
-  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+  let html = '<div style="display:flex;flex-direction:column;gap:16px">';
 
   for (const ch of Object.keys(byChapter).sort((a,b) => a-b)) {
     const nodes = byChapter[ch];
     const allMastered = nodes.every(n => n.status === 'mastered' || n.status === 'override');
     const chColor = allMastered ? 'var(--teal)' : 'var(--ink-light)';
 
-    html += '<div>';
-    html += '<div style="font-family:var(--ui);font-size:0.62rem;letter-spacing:0.1em;color:' + chColor + ';margin-bottom:5px;opacity:0.8">Ch ' + ch + '</div>';
-    html += '<div style="display:flex;flex-wrap:wrap;gap:5px">';
+    html += '<div style="display:flex;align-items:flex-start;gap:8px">';
+    html += '<div style="font-family:var(--ui);font-size:0.62rem;letter-spacing:0.1em;color:' + chColor + ';opacity:1;font-weight:600;min-width:32px;padding-top:7px;flex-shrink:0">Ch ' + ch + '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:5px;flex:1">';
 
     for (const node of nodes) {
       const st = scoreToStyle(node.rawScore, node.override);
@@ -986,14 +986,16 @@ async function renderGrammarCoverage() {
       if (activeGrammarIds.has(node.id)) {
         goldDot = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffe600;margin-left:6px;box-shadow:0 0 4px #ffe600;flex-shrink:0" title="covered in this lesson"></span>';
       }
-      html += '<div title="' + tip + '" '
+      const _badge = goldDot ? '<span style="position:absolute;top:-4px;right:-4px;width:9px;height:9px;border-radius:50%;background:#ffe600;box-shadow:0 0 4px #ffe600;pointer-events:none"></span>' : '';
+      html += '<div style="position:relative;display:inline-flex">'
+        + '<div title="' + tip + '" '
         + 'onclick="grammarNodeClick(\'' + node.id + '\')" '
         + 'style="cursor:pointer;padding:5px 10px;border-radius:5px;display:flex;align-items:center;'
         + 'background:' + st.bg + ';border:' + qBorder + ';'
         + 'font-family:var(--ui);font-size:0.76rem;color:' + st.text + ';'
         + 'white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis">'
-        + node.label + encDot + goldDot
-        + '</div>';
+        + node.label + encDot
+        + '</div>' + _badge + '</div>';
 
     }
 
