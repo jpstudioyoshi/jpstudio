@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-10 (session 31 — grammar node mapping pipeline, lesson session DB linking)
+Last updated: 2026-06-10 (session 32 — grammar coverage panel, nav/sidebar rework)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -30,7 +30,7 @@ Last updated: 2026-06-10 (session 31 — grammar node mapping pipeline, lesson s
 - Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
 
 ## Current Mode
-VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complete.
+STABILIZATION — nav/UI polish, grammar panel refinement.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge.
@@ -50,6 +50,11 @@ VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complet
 - .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE, all checked by default, Reset button
 - conjPoolInfo span — shows "Pool: X known + Y frequency" on drill start
 
+**Session 31-32 additions:**
+- #strandMini — live 4-bar strand display in sidebar, replaces 進捗 button, clicks → progress panel
+- #grammarCoverageGrid / #grammarDetailPanel — flex row, 68%/29% split
+- scrape-grammar.js / scrape-grammar-g2.js — dev tools in project root
+
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
 - Always jp && prefix
@@ -62,6 +67,81 @@ VOCAB SYSTEM BUILD-OUT — data quality and UI completion. Core pipeline complet
 - Long conversations: use Claude Code for multi-line JS string replacements
 - DevTools console (Cmd+Option+I) for in-app JS — not terminal
 - window.db.run() returns {changes: 0} even on successful batch INSERTs — not an error indicator
+
+## Current Nav / Sidebar Layout
+
+### Sidebar (left, fixed)
+Top to bottom:
+1. #strandMini — live strand bars, clicks → progress panel
+2. ヨシ — lessonnotes panel
+3. 質問 — dashboard
+4. 筆順 — kana/stroke order
+5. 資料 — resources (contains ノート + 語彙録 buttons in header)
+6. [flex spacer]
+7. ⚙ (large) — settings, bottom
+
+### Nav (top bar)
+文法 | 語彙 | 読む | 書く | 聞く | 見る | 話す
+
+### Quick Translate Bar
+翻訳 button | input | ▼ history | kana buttons | × clear | result | 🔊 speak
+
+### Removed from sidebar
+- 翻訳 (moved to quick translate bar)
+- ノート / 語彙録 (moved under 資料 header buttons)
+- 進捗 (replaced by #strandMini)
+
+### progressSidebarControls
+Still in sidebar HTML (today/week/last week/all radios) — cosmetically untidy, low priority.
+
+## Grammar Coverage Panel — Complete (session 31-32)
+
+### Key files
+| File | Location |
+|---|---|
+| renderGrammarCoverage() | src/features-progress.js ~line 891 |
+| grammarNodeClick() | src/features-progress.js ~line 1009 |
+| grammarOverridePopup() | src/features-progress.js ~line 1076 |
+| renderStrandMini() | src/features-progress.js ~line 361 |
+| Grammar panel HTML | index.html ~line 2390–2410 |
+| grammar_nodes.json | src/data/grammar_nodes.json — 55 Genki I nodes, includes notes + url fields |
+| grammar_nodes_g2.json | src/data/grammar_nodes_g2.json — 53 Genki II nodes, not yet integrated |
+
+### What was built
+- Gold dots (corner badge, #ffe600) on pills for nodes in active/recent lesson session
+- Two-column layout: grid 68% / detail panel 29% (permanent, sticky)
+- Chapter labels inline left of pill rows
+- Pills full width, no truncation, data-nodeid attribute for highlight
+- Detail panel: pill-coloured title (clickable → override popup), prerequisites one line, St. Olaf notes with formatting, scrollable, pill highlight on click
+- Override popup: 4 coloured buttons (weak/partial/confident/mastered) → stGrammarSetOverride()
+- Legend: mastered, confident, partial, weak, untouched
+- scrape-grammar.js fetches all 55 Genki I node explanations → notes field in grammar_nodes.json
+- scrape-grammar-g2.js ready for Genki II when nodes are added
+
+### Gold dot source sentence — PENDING
+- Gold dots show nodes from lesson_sessions.extracted_grammar
+- Would like to show source sentence from lesson_phrases in the detail panel
+- Blocked: lesson_phrases has no node_id column — phrase label ≠ node ID
+- Fix: add node_id column to lesson_phrases schema + update extraction to write it
+- Workaround: fuzzy match on phrase label (deferred)
+
+### Gold dot dismiss — PENDING
+- Button in detail panel to dismiss gold dot for a node until next lesson loads
+- Not yet built
+
+## Four Strands Display
+
+### Defaults (session 32)
+- Range default: week (was "all")
+- Yoshi toggle default: ON (_strandShowYoshi = true)
+- "today" range: midnight local time (not rolling 24h)
+- "last 7 days" label removed from chart
+
+### renderStrandMini
+- Queries last 7 days always (independent of progressRange)
+- Respects _strandShowYoshi
+- Called on init (1500ms delay for StudentModel), on strandToggleYoshi, on progRangeSet
+- Colors: same dynamic logic as renderStrandBalance (red=0, orange<20%, green otherwise)
 
 ## Vocab System — Complete State
 
@@ -81,6 +161,7 @@ UNIQUE(word, source, direction)
 
 ### lesson_phrases schema
 id, lesson_id, phrase, reading, meaning, example, type, created_at
+— NOTE: no node_id column (see Gold dot source sentence above)
 
 ### Drill UI — working
 - Direction toggle: JP→EN / EN→JP / Speaking
@@ -125,87 +206,27 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
 - Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
 - Null verb_class words skipped (not guessed)
-- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — can be removed later
-- As vocab_items grows with lesson extractions, "known" count rises and hardcoded frequency fill shrinks naturally
 
 ### Conjugation SRS — future build
 Design note at CONJ_SRS_DESIGN.md in project root.
-- SRS unit = (word, source_form, target_form)
-- Direction toggle: forward (dict→form) and reverse (conjugated→dict)
-- Rule-level mastery via grammar_mastery table
-- Prerequisite: basic dict→all-forms scoring well first
-- Research: Suzuki & DeKeyser 2017, Kim 2022 meta-analysis
 
 ## Writing Sitting Boost — Complete
 - writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
 - On save with ≥5 sentences → INSERT with expires_at = +3 days
 - loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
-- Fully automatic
-
-## Sidebar — Planned (not yet built)
-- Settings button to move to bottom of sidebar
-- Top of sidebar: #strandMini — 4 horizontal coloured stripes, no text, proportional to 7-day strand totals
-- Clicking strandMini opens progress panel
-- Colours: S1 teal, S2 gold, S3 muted blue, S4 green
-- renderStrandMini() to be added to features-progress.js
-- Called on app init and on progress panel update
-
-## Grammar Node Mapping Pipeline — Session 31 (COMPLETE, display pending)
-
-### Design
-- Purpose: highlight which Genki grammar nodes were foregrounded in each Yoshi session
-- NOT mastery tracking — focus view only ("here's what to work on from this lesson")
-- Per-session, not cumulative — viewing an old session shows only that session's nodes
-- No writes to grammar_mastery table
-
-### Data flow (now working)
-1. Lesson notes grammar extraction (`lessonNotesExtractGrammar`) calls `lessonNotesExtractGrammarSilent`
-2. Silent function awaits `GrammarModel.load()`, builds node list from all 55 nodes
-3. Node list injected into Claude prompt BEFORE lesson content
-4. Claude returns `grammarNodeIds` array per grammar point (exact node IDs only)
-5. Batch INSERT to `lesson_phrases` (type='grammar', lesson_id set)
-6. Unique node IDs collected → `UPDATE lesson_sessions SET extracted_grammar=?`
-7. Example: session 69 → 19 node IDs, 24 grammar patterns
-
-### Lesson session DB linking (fixed)
-- Previously: `currentLessonId` set via async date-match DB lookup that raced with auto-extraction
-- Now: `lessonSessionDbId` stored on kvAPI session object at creation time
-- Helper `lessonNotesEnsureDbRow()` finds-or-creates `lesson_sessions` row, stores ID back to kvAPI
-- Load function reads `lessonSessionDbId` directly; date-match kept as fallback for old sessions
-- Old sessions: cache `lessonSessionDbId` on first load so subsequent loads are synchronous
-
-### Bugs fixed this session
-- `lessonNotesExtractGrammar()` (UI button) was a separate function with its own prompt — no node IDs, no DB writes
-- Now delegates to `lessonNotesExtractGrammarSilent()` for all API calls
-- `GrammarModel.loaded` race: silent function now awaits `GrammarModel.load()` before building node list
-- Batch INSERT replaces sequential awaits (avoids timeout on 15+ rows)
-- Node list moved before lesson content in prompt for better Claude attention
-
-### Display — NEXT
-- Progress panel `renderGrammarCoverage()` to read `extracted_grammar` from all recent `lesson_sessions`
-- Show gold dot on Genki node pills that appear in any session's `extracted_grammar`
-- Tooltip: which session date(s) covered this node
-- No mastery colour change — annotation layer only
-- Backfill: delete and re-extract 3-4 recent sessions after display is wired
-
-## Session 31 Changes
-- **Grammar node mapping pipeline** — full data pipeline working end-to-end
-- **Lesson session DB linking** — `lessonSessionDbId` stored in kvAPI, race condition eliminated
-- **lessonNotesExtractGrammar refactor** — UI button now delegates to silent version
-- **GrammarModel load guard** — awaits load before building node list
-- **Batch INSERT** — replaces sequential awaits in grammar SQL write
-- **Node list placement** — moved before lesson content in prompt
 
 ## Pending — Priority Order
 
-1. **Grammar node display** — read `extracted_grammar` from `lesson_sessions`, show gold dots on Genki node pills in progress panel; backfill 3-4 sessions
-2. **Sidebar strand mini-display** — #strandMini at top, settings button to bottom
-3. **Book vocab import** — 18 pages, OCR artifact (deferred)
-4. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-5. **Counter suffix population** — counter_suffix column exists, needs tagging
-6. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-7. **corpus_productions extraction fix** — currently single-kanji, needs word-level
-8. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md, after basic forms scoring well
+1. **Gold dot: source sentence** — add node_id to lesson_phrases schema; show source sentence in detail panel
+2. **Gold dot: dismiss button** — hide dot for node until next lesson loads
+3. **progressSidebarControls tidy** — radio buttons visible below ⚙, cosmetic issue
+4. **Genki II nodes** — grammar_nodes_g2.json exists, not yet integrated
+5. **Book vocab import** — 18 pages, OCR artifact (deferred)
+6. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
+7. **Counter suffix population** — counter_suffix column exists, needs tagging
+8. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
+9. **corpus_productions extraction fix** — currently single-kanji, needs word-level
+10. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
