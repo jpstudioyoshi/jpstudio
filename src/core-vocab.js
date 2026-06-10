@@ -92,8 +92,9 @@ async function loadVocabItemsDeck(direction = 'jp_en') {
   vocabSession = [];
   try {
     const sources = vocabGetActiveSources();
-    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now') OR srs_due IS NULL) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR (type != 'grammar' AND type != 'excluded'))";
-    const params = [direction];
+    const _localToday = new Date().toLocaleDateString('sv-SE');
+    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now','localtime') OR srs_due IS NULL) AND (last_reviewed IS NULL OR last_reviewed < ?) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR (type != 'grammar' AND type != 'excluded'))";
+    const params = [_localToday, direction];
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
       params.push(...sources);
@@ -474,6 +475,7 @@ function toggleVcDirection() {
   const cycle = { jp_en: 'en_jp', en_jp: 'speaking', speaking: 'jp_en' };
   const labels = { jp_en: 'JP → EN', en_jp: 'EN → JP', speaking: 'Speaking' };
   vcDirection = cycle[vcDirection] || 'jp_en';
+  window.kvAPI.set('VOCAB_DIRECTION', vcDirection).catch(() => {});
   const btn = document.getElementById('vcDirectionBtn');
   if (btn) btn.textContent = labels[vcDirection];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
@@ -1817,6 +1819,13 @@ async function vocabSettingsLoad() {
       if (document.getElementById('vocabIntWriting')) document.getElementById('vocabIntWriting').value = iv.writing ?? 1;
       if (document.getElementById('vocabIntLookup')) document.getElementById('vocabIntLookup').value = iv.lookup ?? 1;
       if (document.getElementById('vocabIntN5')) document.getElementById('vocabIntN5').value = iv.n5 ?? 0;
+    }
+    const _savedDir = await window.kvAPI.get('VOCAB_DIRECTION').catch(() => null);
+    if (_savedDir && ['jp_en','en_jp','speaking'].includes(_savedDir)) {
+      vcDirection = _savedDir;
+      const _dirBtn = document.getElementById('vcDirectionBtn');
+      const _dirLabels = { jp_en: 'JP → EN', en_jp: 'EN → JP', speaking: 'Speaking' };
+      if (_dirBtn) _dirBtn.textContent = _dirLabels[vcDirection];
     }
   } catch(e) { console.warn('[vocab] settings load error', e); }
 }
