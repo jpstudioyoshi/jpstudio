@@ -385,7 +385,7 @@ function _corpusWriteLookup(word, entry) {
     'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
     [ts, 'translate', 'vocab:lookup', JSON.stringify({ word, context: ctx })]
   ).catch(() => {});
-  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.VOCAB_LOOKUP, { word, context: ctx }); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.VOCAB_LOOKUP, { word, context: ctx, meaning: (entry.en || entry.meaning || entry.text || ''), reading: (entry.reading || entry.dictForm || '') }); } catch(e) {}
 }
 
 function qtHistoryAdd(word) {

@@ -1812,11 +1812,18 @@ function initLookupVocabListener() {
         const now = new Date().toISOString();
         const today = now.split('T')[0];
         const weight = Math.min(0.6 + (count - threshold) * 0.05, 1.0);
+        const _meaning = payload.meaning || '';
+        const _reading = payload.reading || '';
         for (const dir of ['jp_en', 'en_jp', 'speaking']) {
           await window.db.run(
-            `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-             VALUES (?, 'lookup', 'corpus_lookups', ?, 'word', ?, ?, 1, 2.5, ?, ?)`,
-            [word, dir, now, weight, today, now]
+            `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
+             VALUES (?, ?, ?, 'lookup', 'corpus_lookups', ?, 'word', ?, ?, 1, 2.5, ?, ?)
+             ON CONFLICT(word, source, direction) DO UPDATE SET
+               meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
+               reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
+               encounter_at = excluded.encounter_at,
+               entry_weight = excluded.entry_weight`,
+            [word, _reading, _meaning, dir, now, weight, today, now]
           );
         }
         console.log('[vocab] lookup promoted:', word, '(' + count + ' lookups)');
