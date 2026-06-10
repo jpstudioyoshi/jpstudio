@@ -426,13 +426,13 @@ async function renderStrandBalance() {
         <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">${barHtml}</div>
       </div>`;
     }).join('');
-    el.innerHTML = `<div style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);opacity:0.6;margin-bottom:6px">last 7 days</div>` + rows;
+    el.innerHTML = rows;
   } catch(e) { console.warn('[renderStrandBalance]', e); el.innerHTML = ''; }
 }
 
 
 // ── Strand Yoshi Toggle ──────────────────────────────────────────────────────
-let _strandShowYoshi = false;
+let _strandShowYoshi = true;
 function strandToggleYoshi() {
   _strandShowYoshi = !_strandShowYoshi;
   const btn = document.getElementById('strandYoshiToggle');
