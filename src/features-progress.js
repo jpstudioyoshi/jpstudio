@@ -989,7 +989,7 @@ async function renderGrammarCoverage() {
       const _badge = goldDot ? '<span style="position:absolute;top:-4px;right:-4px;width:9px;height:9px;border-radius:50%;background:#ffe600;box-shadow:0 0 4px #ffe600;pointer-events:none"></span>' : '';
       html += '<div style="position:relative;display:inline-flex">'
         + '<div title="' + tip + '" '
-        + 'onclick="grammarNodeClick(\'' + node.id + '\')" '
+        + 'data-nodeid="' + node.id + '" onclick="grammarNodeClick(\'' + node.id + '\')" '
         + 'style="cursor:pointer;padding:5px 10px;border-radius:5px;display:flex;align-items:center;'
         + 'background:' + st.bg + ';border:' + qBorder + ';'
         + 'font-family:var(--ui);font-size:0.76rem;color:' + st.text + ';'
@@ -1050,20 +1050,23 @@ function grammarNodeClick(nodeId) {
        </div>`
     : '';
 
+  // Highlight selected pill
+  document.querySelectorAll('#grammarCoverageGrid [data-nodeid]').forEach(el => el.style.outline = '');
+  const selectedPill = document.querySelector('#grammarCoverageGrid [data-nodeid="' + nodeId + '"]');
+  if (selectedPill) selectedPill.style.outline = '2px solid var(--ink)';
+
   panel.style.display = 'block';
+  panel.style.maxHeight = (document.getElementById('grammarCoverageGrid').offsetHeight || 600) + 'px';
+  panel.style.overflowY = 'auto';
   panel.innerHTML = `
     <div onclick="grammarOverridePopup('${nodeId}')" title="Click to set override"
-      style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:#000;font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer;margin-bottom:6px">${node.label}</div>
-    <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">
-      Ch ${node.genki} · ${m.status === 'override' ? 'override' : m.status} · ${m.score}%
-    </div>
-    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:10px;margin-bottom:4px">Prerequisites</div>
-    <div style="font-family:var(--ui);font-size:0.75rem;margin-bottom:2px">${prereqs}</div>` : ''}
+      style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:#000;font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer;margin-bottom:8px">${node.label}</div>
+    ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:8px"><span style="opacity:0.6">prereq: </span>${prereqs}</div>` : ''}
     ${weakSection}
     ${qSection}
-    ${node.notes ? `<div style="margin-top:12px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);line-height:1.6;border-top:1px solid var(--border);padding-top:10px">${node.notes.replace(/\n/g,'<br>')}</div>` : ''}
+    ${node.notes ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);line-height:1.6;border-top:1px solid var(--border);padding-top:10px">${node.notes.replace(/\n/g,'<br>')}</div>` : ''}
     <div style="margin-top:14px">
-      <button onclick="const p=document.getElementById('grammarDetailPanel');p.innerHTML='';p.dataset.node=''"
+      <button onclick="const p=document.getElementById('grammarDetailPanel');p.innerHTML='';p.dataset.node='';document.querySelectorAll('#grammarCoverageGrid [data-nodeid]').forEach(el=>el.style.outline='')"
         class="btn-action btn-xs">Clear</button>
     </div>
   `;
