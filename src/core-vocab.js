@@ -30,13 +30,14 @@ let vocabSessionPos = 0;    // position within session
 // Per-direction session state cache
 const _vcDirState = {};
 function _vcSaveDirState(dir) {
-  _vcDirState[dir] = { session: [...vocabSession], idx: vocabIdx, pos: vocabSessionPos };
+  _vcDirState[dir] = { session: [...vocabSession], idx: vocabIdx, pos: vocabSessionPos, items: state.vocabItems ? [...state.vocabItems] : [] };
 }
 function _vcRestoreDirState(dir) {
-  if (_vcDirState[dir]) {
+  if (_vcDirState[dir] && _vcDirState[dir].items.length) {
     vocabSession = [..._vcDirState[dir].session];
     vocabIdx = _vcDirState[dir].idx;
     vocabSessionPos = _vcDirState[dir].pos;
+    state.vocabItems = [..._vcDirState[dir].items];
     return true;
   }
   return false;
