@@ -377,7 +377,19 @@ function renderVocab() {
   const example = card.example || '';
   const source  = card.source || '';
   const encDate = (card.encounter_at || '').split('T')[0] || '';
-  const sourceTag = source ? (encDate ? source + ' · ' + encDate : source) : '';
+  const _fmtSource = (src, dt) => {
+    if (!src) return '';
+    const isYoshi = src === 'yoshi_phrases' || src === 'yoshi_vocab';
+    if (isYoshi && dt) {
+      const d = new Date(dt + 'T00:00:00');
+      const mon = d.toLocaleString('en-GB', { month: 'long' });
+      const yr = d.getFullYear();
+      return 'Yoshi · ' + mon + ' ' + yr;
+    }
+    const labels = { writing: 'Writing', lookup: 'Lookup', n5: 'N5' };
+    return labels[src] || src;
+  };
+  const sourceTag = _fmtSource(source, encDate);
 
   if (hintEl) hintEl.textContent = reading;
   // Direction-aware card rendering
@@ -503,6 +515,16 @@ function toggleVocabList() {
 }
 
 function renderVocabList() {
+  const _fmtSourceList = (src, dt) => {
+    if (!src) return '';
+    const isYoshi = src === 'yoshi_phrases' || src === 'yoshi_vocab';
+    if (isYoshi && dt) {
+      const d = new Date(dt + 'T00:00:00');
+      return 'Yoshi · ' + d.toLocaleString('en-GB', { month: 'short' }) + ' ' + d.getFullYear();
+    }
+    const labels = { writing: 'Writing', lookup: 'Lookup', n5: 'N5' };
+    return labels[src] || src;
+  };
   const container = document.getElementById('vocabList');
   if (!container || container.style.display === 'none') return;
   const items = (state.vocabItems || [])
@@ -528,7 +550,7 @@ function renderVocabList() {
       <span style="font-family:var(--jp);font-size:inherit">${escHtml(c.word || '')}</span>
       <span style="font-family:var(--jp);font-size:inherit;color:var(--ink-light)">${escHtml(c.reading || '')}</span>
       <span style="font-family:var(--ui);font-size:0.75rem">${escHtml(c.meaning || '')}</span>
-      <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml((c.source || '').replace('_vocab','').replace('_phrases',''))}</span>
+      <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);padding:2px 6px;border:1px solid var(--border);border-radius:3px;white-space:nowrap">${escHtml(_fmtSourceList(c.source, (c.encounter_at||'').slice(0,10)))}</span>
       <span style="font-family:var(--ui);font-size:0.7rem;color:${dueColor};white-space:nowrap">${escHtml(dueLabel)}</span>
     </div>`;
   }).join('');
