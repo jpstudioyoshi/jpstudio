@@ -513,7 +513,7 @@ function toggleVcDirection() {
   if (_vcRestoreDirState(vcDirection)) {
     renderVocab();
   } else {
-    if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, false);
+    if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, true);
   }
 }
 function resetVocabDeck() {
