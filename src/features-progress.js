@@ -993,7 +993,7 @@ async function renderGrammarCoverage() {
         + 'style="cursor:pointer;padding:5px 10px;border-radius:5px;display:flex;align-items:center;'
         + 'background:' + st.bg + ';border:' + qBorder + ';'
         + 'font-family:var(--ui);font-size:0.76rem;color:' + st.text + ';'
-        + 'white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis">'
+        + 'white-space:nowrap">'
         + node.label + encDot
         + '</div>' + _badge + '</div>';
 
