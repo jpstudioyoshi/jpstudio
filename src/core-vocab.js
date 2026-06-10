@@ -381,7 +381,7 @@ function renderVocab() {
     if (!src) return '';
     const isYoshi = src === 'yoshi_phrases' || src === 'yoshi_vocab';
     if (isYoshi && dt) {
-      const d = new Date(dt + 'T00:00:00');
+      const d = new Date(dt.replace(' ', 'T'));
       const mon = d.toLocaleString('en-GB', { month: 'long' });
       const yr = d.getFullYear();
       return 'Yoshi · ' + mon + ' ' + yr;
