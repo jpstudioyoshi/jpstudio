@@ -5,23 +5,42 @@
     "genki": 1,
     "group": "foundation",
     "prerequisites": [],
-    "evidence": ["writing", "speaking"]
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/desu-genki-i-chapter-1/",
+    "notes": "X は Y です\n\n\"It is 12:30.\" \"I am a student.\" These are sentences that can be translated into Japanese using an appropriate noun and the word desu.\n\n～です。　　　　It is …\n\n　　　　　　　　　　じゅうにじはんです。　　　(It) is half past twelve 　　　　　　　　　　　　Juunniji han desu.\n\nがくせいです。　　　　　 (I) am a student.\n\nGakusei desu.                                               \n\nSimilarly, one can use the pattern X wa Y desu to identify a person or a thing X as item Y.\n\nX は Y　です。 　　　X is Y. As for X, it is Y.\n\nわたし　は　スー・キム　です。              I am Sue Kim.\n\nWatashi wa Suu Kimu desu.\n\n                                   やましたさんは　せんせいです。　　  Mr Yamashita is a teacher.\n\n                 　　　　Yamashita san wa sensei desu."
   },
   {
     "id": "question_ka",
     "label": "Question か",
     "genki": 1,
     "group": "foundation",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/question-sentences-genki-i-chapter-1/",
+    "notes": "Question Sentences\n\nIt is most common to use the end particle ka when making a question sentence.  Simply add ka to the end of a statement.\n\nりゅがくせいですか。　　　　　　(Are you) an international student?\n\n ryuugakusee desu ka.\n\nQuestions may also contain question words such as nan (what), nanji (what time), nansai (how old), nannensee (what year in school). \n\nいまなんじですか。　　　　　　　What time is it now?\n\n  ima nanji desu ka.\n\nメアリさんはなんさいですか。　　How old are you, Mary?\n\n   Mearii san wa nansai desu ka."
   },
   {
     "id": "particle_no_possession",
     "label": "の possession",
     "genki": 1,
     "group": "particle",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/no-with-nouns-genki-i-chapter-1/",
+    "notes": "Noun の Noun\n\nNo (の)is a particle that connects two nouns\n\nExamples:\n\nたけしさんのでんわばんごう – Takeshi's phone number\n\nTakeshi san no denwa bangoo\n\nだいがくのせんせい – a college professor\n\ndaigaku no sensei\n\nにほんごのがくせい – a student of the Japanese language\n\nnihongo no gakusee\n\nにほんのだいがく- a college in Japan\n\nnihon no daigaku\n\nThe main idea in the Japanese language always comes at the end, with any further description place before it.\n\nBy using no with two nouns, it is more or less like using one big noun"
   },
   {
     "id": "word_order",
@@ -29,65 +48,118 @@
     "genki": 1,
     "group": "foundation",
     "prerequisites": [],
-    "evidence": ["writing", "speaking"]
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/word-order-genki-i-chapter-3/",
+    "notes": "Word Order\n\nJapanese sentences are structured as Subject-Object-Verb.\n\nわたしはきょうとしょかんでにほんごをべんきょうします。\n\ntopic -> time -> place -> object -> verb\n\nI will study Japanese in the library today.\n\nわたしはよくしちじごろうちへかえります。\n\ntopic -> frequency -> time -> goal -> verb\n\nI often go back at around seven."
   },
-
   {
     "id": "kore_sore_are",
     "label": "これ／それ／あれ",
     "genki": 2,
     "group": "foundation",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/kore-sore-are-dore-genki-i-chapter-2/",
+    "notes": "これ　それ　あれ　どれ\n\nWhen you want to talk about things you do not know the name of, you can use such expressions as kore, sore, are, and dore.  Kore refers to something close to the speaker; sore refers to something close to the person you're talking to; are refers to an object that is neither close to the speaker or the listener.\n\nあれはわたしのペンです (That is my pen over there.)\n\nare wa watashi no pen desu.\n\nこれはいくらですか？(How much is this?)\n\nkore wa ikura desu ka.\n\nそれはさんぜんえんです。 (That is 3,000 yen.)\n\nsore wa sanzen en desu.\n\nDore means can be used to express \"which.\" Question words like dore and nani cannot be followed by the particle wa. Instead, they must be followed by the particle ga.\n\nどれがあなたのペンですか。(Which one is your pen?)\n\ndore ga anata no pen desu ka."
   },
   {
     "id": "koko_soko_asoko",
     "label": "ここ／そこ／あそこ",
     "genki": 2,
     "group": "foundation",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/koko-soko-asoko-doko-genki-i-chapter-2/",
+    "notes": "ここ　そこ　あそこ　どこ\n\nkoko, soko, asoko, and doko are all words for places.\n\nここ　　here, near me\n\nそこ　　there, near you\n\nあそこ　over there\n\nどこ　　where\n\nすみません、ゆうびんきょくはどこですか。                    Excuse me, where is the post office?\n\nsumimasen, yuubinkyoku wa doko desu ka."
   },
   {
     "id": "particle_mo",
     "label": "も also/too",
     "genki": 2,
     "group": "particle",
-    "prerequisites": ["particle_wa"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "particle_wa"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particle-mo-genki-i-chapter-4/",
+    "notes": "も\n\nも is not only used to refer to the second item which shares a common attribute with the first, but it can also be used when two or more people perform the same activity. Or when someone buys, sees, or eats two or more things or when you go to two places, do something on two different occasions, and so forth. It is important to note that も replaces the particles は、が、or を.\n\nわたしはきのうきょうとにいきました。　　　　I went to Kyoto yesterday.\n\nやましたせんせいもきのうきょうとにいきました。　　　Prof. Yamashita went to Kyoto yesterday too.\n\nメアリーさんはくつをかいました。　　　　Mary bought shoes.\n\nメアリーさんはかばんもかいました。　　　Mary also bought a bag.\n\nロバートさんはどようびにパーティーにいきました。　　Robert went to a party on Saturday.\n\nにちようびにもパーティーにいきました。　　　He went to a party on Sunday too."
   },
   {
     "id": "noun_ja_arimasen",
     "label": "じゃありません noun negative",
     "genki": 2,
     "group": "foundation",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/noun-ja-arimasen-genki-i-chapter-2/",
+    "notes": "Noun じゃありません\n\nTo negate a statement of the form X wa Y desu, where Y is a noun, you replace desu with ja arimasen.\n\nやまださんはがくせいじゃありません。             Mr. Yamada is not a student.\n\nyamada san wa gakusee ja arimasen."
   },
   {
     "id": "particles_ne_yo",
     "label": "ね／よ sentence enders",
     "genki": 2,
     "group": "particle",
-    "prerequisites": ["desu"],
-    "evidence": ["speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particles-ne-yo-genki-i-chapter-2/",
+    "notes": "～ね / ～よ\n\nNe is an end particle expressing the speaker's desire for confirmation from the listener.  An English equivalent might be \"right?\"\n\nメアリーさんのせんもんはぶんがくですね。                    Mary, your major is literature, right?\n\nmearii san no senmon wa bungaku desu ne.\n\nこれはにくじゃありませんね。                                            This is not meat, is it?\n\nkore wa niku ja arimasen ne.\n\nYo is another end particle that expresses the speaker's desire to assure the listener of what has been said.  A rough English translation is \"I tell you.\"  When yo is added, the statement becomes an authoritative decree.\n\nとんかつはさかなじゃありませんよ。                                Let me assure you, \"tonkatsu\" is not fish.\n\ntonkatsu wa sakana ja arimasen yo.\n\nスミスさんはイギリスじんですよ。                                       (In case you were wondering,) Mr. Smith is British.\n\nsumisu san wa igirisu jin desu yo."
   },
-
   {
     "id": "particle_wa",
     "label": "は topic particle",
     "genki": 3,
     "group": "particle",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particle-wa-genki-i-chapter-3/",
+    "notes": "The Topic Particle は\n\nThe particle は presents the topic of one's utterance (\"As for item X, it is such that…\"). It puts forward the item that you want to talk about and comment on. A topic phrase, however, need not be the subject of a sentence.\n\nEx: メアリーさん、しゅまつはたいていなにをしますか。 (Mary, what do you usually do on the weekends?)"
   },
   {
     "id": "present_tense_masu",
     "label": "〜ます present tense",
     "genki": 3,
     "group": "morphology",
-    "prerequisites": ["verb_groups", "word_order"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "verb_groups",
+      "word_order"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/present-tense-genki-i-chapter-3/",
+    "notes": "Verb types and the \"present tense\"\n\nThe present tense in Japanese is used to describe one of two things:  1) an activity a person habitually or regularly engages in, or 2) an activity that a person is planning on performing or doing in the future.\n\nHabitual actions:\n\nわたしはよくテレビをみます。                I often watch TV.\n\nメアリーさんはときどきあさごはんをたべません。Mary sometimes doesn't eat breakfast.\n\nFuture actions:\n\nわたしはあしたきょうとにいきます。                      I will go to Kyoto tomorrow.\n\nスーさんはきょううちにかえりません。                   Sue will not return today."
   },
   {
     "id": "verb_groups",
@@ -95,121 +167,223 @@
     "genki": 3,
     "group": "morphology",
     "prerequisites": [],
-    "evidence": ["conjugation_drill"]
+    "evidence": [
+      "conjugation_drill"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/basic-verb-conjugation-genki-i-chapter-3/",
+    "notes": "Basic Verb Conjugation\n\nThere are three categories of verbs in Japanese:  ru-verbs, u-verbs, and irregular verbs.  Ru and u verbs follow regular conjugation:\n\nRu-verbs                                    u-verbs\n\nverb bases                                     tabe                                            iku\n\ndictionary forms                            たべる (to eat)                        いく(to go)\n\npresent, affirmative                        たべます                                    いきます\n\npresent, negative                             たべません                                いきません\n\nstems                                            たべ                                              いき\n\nThere are only two irregular verbs in Japanese:  する　and 　くる.  They are cojugated as follows:\n\ndictionary forms                            する                                               くる\n\npresent, affirmative                        します                                           きます\n\npresent, negative                            しません                                        きません\n\nstems                                             し                                                    き\n\nRu-verbs are so called becaus"
   },
   {
     "id": "particle_wo",
     "label": "を object particle",
     "genki": 3,
     "group": "particle",
-    "prerequisites": ["verb_groups"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "verb_groups"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particles-genki-i-chapter-3/",
+    "notes": "Particles\n\nNouns are generally followed by particles in Japanese.  These particles indicate the nouns relationship to the verb.\n\nで　　The particle で indicates where the even described by the verb takes place.\n\nうちでテレビをみます。            I will watch TV at .\n\nに　　The particle に indicates two things:  1) the goal toward which things move, and 2) the time at which an event takes place.\n\n1)  わたしはうちにかえります。        I will return .\n\n2) 　じゅいちじにねます。　　　　I will go to bed at eleven.\n\nへ　　The particle へ also indicates the goal of a movement.  It is pronounced \"e.\"\n\nわたしはうちへかえります。            I will return .\n\n　\n\nを　The particle を indicates direct objects.  It is pronounced \"o.\"\n\nコーヒーをのみます。            I drink coffee.\n\nテープをききます。                I listen to tapes."
   },
   {
     "id": "particle_ni_time",
     "label": "に time particle",
     "genki": 3,
     "group": "particle",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/time-reference-genki-i-chapter-3/",
+    "notes": "Time Reference\n\nYou need the particle に with the days of the week, numerical time expressions, and months.  You do not need to use the time particle に with time expressions defined relative to the present moment, such as \"today\" and \"tomorrow\", expressions describing regular intervals such as \"every day\", or the word for \"when.\"\n\nにちようびにいきます。            I will go on Sunday.\n\nくがつにかえります。                I will go back in September."
   },
   {
     "id": "particle_de_place",
     "label": "で place of action",
     "genki": 3,
     "group": "particle",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particle-de-genki-i-chapter-10/",
+    "notes": "で\n\nYou can use the particle で with nouns that describe the means of transportation and the instruments you use.\n\nはしでごはんをたべます。　　　We eat our meals with chopsticks.\n\nにほんごではなしましょう。　　Let's talk in Japanese.\n\nバスでえきまでいきました。　　I went to the station by bus.\n\nテレビでえいがをみました。　　I saw a movie on TV."
   },
   {
     "id": "particle_he",
     "label": "へ direction particle",
     "genki": 3,
     "group": "particle",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particles-genki-i-chapter-3/",
+    "notes": "Particles\n\nNouns are generally followed by particles in Japanese.  These particles indicate the nouns relationship to the verb.\n\nで　　The particle で indicates where the even described by the verb takes place.\n\nうちでテレビをみます。            I will watch TV at .\n\nに　　The particle に indicates two things:  1) the goal toward which things move, and 2) the time at which an event takes place.\n\n1)  わたしはうちにかえります。        I will return .\n\n2) 　じゅいちじにねます。　　　　I will go to bed at eleven.\n\nへ　　The particle へ also indicates the goal of a movement.  It is pronounced \"e.\"\n\nわたしはうちへかえります。            I will return .\n\n　\n\nを　The particle を indicates direct objects.  It is pronounced \"o.\"\n\nコーヒーをのみます。            I drink coffee.\n\nテープをききます。                I listen to tapes."
   },
   {
     "id": "time_reference",
     "label": "Time expressions",
     "genki": 3,
     "group": "foundation",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/time-reference-genki-i-chapter-3/",
+    "notes": "Time Reference\n\nYou need the particle に with the days of the week, numerical time expressions, and months.  You do not need to use the time particle に with time expressions defined relative to the present moment, such as \"today\" and \"tomorrow\", expressions describing regular intervals such as \"every day\", or the word for \"when.\"\n\nにちようびにいきます。            I will go on Sunday.\n\nくがつにかえります。                I will go back in September."
   },
   {
     "id": "frequency_adverbs",
     "label": "Frequency adverbs (よく、たまに…)",
     "genki": 3,
     "group": "foundation",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/frequency-adverbs-genki-i-chapter-3/",
+    "notes": "Frequency Adverbs\n\nFrequency adverbs are added to indicate how often something is done.  Examples of frequency adverbs are まいにち (everyday), よく(often), and ときどき (sometimes.)\n\nわたしはときどききっさてんにいきます。            I sometimes go to a coffee shop.\n\n　　\n\nIt is also important to remember that adverbs of infrequency must be followed by a negative at the end of the sentence.\n\nわたしはぜんぜんテレビをみません。                        I do not watch TV at all."
   },
-
   {
     "id": "past_tense_masu",
     "label": "〜ました past tense (polite)",
     "genki": 4,
     "group": "morphology",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/past-tense-genki-i-chapter-4/",
+    "notes": "Past Tense\n\nThe past tense of verbs looks like the following, where ～ stands for the stem of a verb.\n\npresent tense affirmative: ～ます\n\npresent tense negative: ～ません\n\npast tense affirmative: ～ました\n\npast tense negative: ～ませんでした\n\nメアリさんはくじごろうちにかえりました。　　　Mary returned at about nine.\n\nわたしはきのうにほんごをべんきょしませんでした。　　I did not study Japanese yesterday.\n\nFor です sentences, the following should be observed:\n\npresent tense affirmative: ～です\n\npresent tense negative: ～じゃありません\n\npast tense affirmative: ～でした\n\npast tense negative: ～じゃありませんでした\n\nやましたせんせいはとうざいだいがくのがくせいでした。 　　Mr. Yamashita was a student at Tozai University.\n\nあれはにほんのえいがじゃありませんでした。　　　　That was not a Japanese film."
   },
   {
     "id": "aru_iru",
     "label": "ある／いる existence verbs",
     "genki": 4,
     "group": "foundation",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/aru-iru-genki-i-chapter-4/",
+    "notes": "Xがあります/ います\n\nXがあります means \"there is/there are X (non-living things).\" The particle が introduces item X. You can also use ありますto say that you have or own something or that and event will take place.\n\nあそこにマクドナルドがあります。 There's a McDonald's over there.\n\nテレビがありますか。 Do you have a TV?\n\nあしたはにほんごのくらすがありません。 There will be no Japanese class tomorrow.\n\nWhen you want to present or some sentient being, rather than a thing, you need to use the verb います.\n\nあそこにりゅうがくせいがいます。 There is an international student over there."
   },
   {
     "id": "location_words",
     "label": "Location words (うえ、した、まえ…)",
     "genki": 4,
     "group": "foundation",
-    "prerequisites": ["aru_iru"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "aru_iru"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/location-words-genki-i-chapter-4/",
+    "notes": "Describing Where Things Are\n\nYou can describe where things are by using some of the location words below:\n\nみぎ 　　　　　to the right of\n\nひだり 　　　　to the left of\n\nまえ 　　　　　in front of\n\nうしろ　　　　behind\n\nなか 　　　　　inside\n\nうえ 　　　　　on/above\n\nした　　　　　under/beneath\n\nそば　　　　　near\n\nとなり　　　　next to\n\nThe format is as follows:\n\nX は Y の location word です。\n\nThe particle で is used with these words.\n\nぎんこうはとしょかんのとなりです。　　　　The bank is next to the library.\n\nわたしはハーゲンダッツのまえでメアリーさんをまちました。　　I waited for Mary in front of the Haagen-Dazs place."
   },
   {
     "id": "particle_to",
     "label": "と and/with particle",
     "genki": 4,
     "group": "particle",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particle-to-genki-i-chapter-4/",
+    "notes": "と\n\nThe particle と has two functions: 1) to connect two nouns A and B, and 2) to describe with whom you do something, or \"together with.\"\n\n1) にほんごとえいごをはなします。　　　I speak Japanese and English.\n\n2) メアリーさんはスーさんとかんこくにいきます。　　　Mary will go to Korea with Sue."
   },
   {
     "id": "duration_of_time",
     "label": "Duration expressions (〜時間、〜分)",
     "genki": 4,
     "group": "foundation",
-    "prerequisites": ["time_reference"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "time_reference"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/duration-of-time-genki-i-chapter-4/",
+    "notes": "いちじかん\n\nThe duration of an activity is expressed with a bare noun, like いちじかん. Such nouns are not followed by particles and usually appear immediately before the verb. Approximate measurements can be expressed using ぐらい after ～じかん.\n\nメアリーさんはそこでたけしさんをいちじかんまちました。\n\nMary waited for Takeshi there for an hour.\n\nわたしはきのうにほんごをさんじかんぐらいべんきょうしました。\n\nI studied Japanese for about three hours yestereday."
   },
-
   {
     "id": "i_adjective",
     "label": "い-adjective (present/past/negative)",
     "genki": 5,
     "group": "morphology",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/adjectives-genki-i-chapter-5/",
+    "notes": "Adjectives\n\nThere are two types of adjectives in Japanese: い-adjectives and な-adjectives. い and な are their last syllables when they modify nouns.\n\nい-adjectives (using おもしろい as an example)\n\npresent affirmative: おもしろいです\n\npresent negative: おもしろくありません\n\npast affirmative: おもしろかったです\n\npast negative: おもしろくありませんでした\n\nThe only irregularly conjugated adjective is いい,which is conjugated as follows:\n\npresent affirmative: いいです\n\npresent negative: よくありません\n\npast affirmative: よかったです\n\npast negative: よくありませんでした\n\nな-adjectives (using げんき（な）as an example)\n\npresent affirmative: げんきです\n\npresent negative: げんきじゃありません\n\npast affirmative: げんきでした\n\npast negative: げんきじゃありませんでした"
   },
   {
     "id": "na_adjective",
     "label": "な-adjective",
     "genki": 5,
     "group": "morphology",
-    "prerequisites": ["desu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "desu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/adjectives-genki-i-chapter-5/",
+    "notes": "Adjectives\n\nThere are two types of adjectives in Japanese: い-adjectives and な-adjectives. い and な are their last syllables when they modify nouns.\n\nい-adjectives (using おもしろい as an example)\n\npresent affirmative: おもしろいです\n\npresent negative: おもしろくありません\n\npast affirmative: おもしろかったです\n\npast negative: おもしろくありませんでした\n\nThe only irregularly conjugated adjective is いい,which is conjugated as follows:\n\npresent affirmative: いいです\n\npresent negative: よくありません\n\npast affirmative: よかったです\n\npast negative: よくありませんでした\n\nな-adjectives (using げんき（な）as an example)\n\npresent affirmative: げんきです\n\npresent negative: げんきじゃありません\n\npast affirmative: げんきでした\n\npast negative: げんきじゃありませんでした"
   },
   {
     "id": "suki_kirai",
     "label": "すき／きらい + が",
     "genki": 5,
     "group": "foundation",
-    "prerequisites": ["na_adjective", "particle_ga"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "na_adjective",
+      "particle_ga"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/suki-kirai-genki-i-chapter-5/",
+    "notes": "すき（な）/ きらい（な）\n\nThe pattern for sentences with すき（な）and きらい（な）is as follows:\n\nX は Y が　すき/ きらい　です。　　　X likes/dislikes Y\n\nIt is important to note three things: one, if you like or dislike something very much, the intensifier, だい may be used. Two, if you want to say you neither like nor dislike something, you would say:\n\nすきでもきらいでもありません。　　　　I neither like nor dislike (it).\n\nAnd three, すきな and きらいな may be used as noun modifiers. For example:\n\nこれはわたしのすきなテレビです。　　　This is my favorite TV program."
   },
   {
     "id": "counting",
@@ -217,237 +391,445 @@
     "genki": 5,
     "group": "foundation",
     "prerequisites": [],
-    "evidence": ["counter_drill"]
+    "evidence": [
+      "counter_drill"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/counting-genki-i-chapter-5/",
+    "notes": "Counting\n\nJapanese used different number words for different kinds of items. For example, the words used for counting people are different from the words used for counting bookes. It is important to keep in mind that the number words come after the item they are counting.\n\nリーさんはきってをさんまいかいました。　　　Lee bought three stamps.\n\nきって refers to the item, and さんまい refers to the number of items."
   },
   {
     "id": "masho",
     "label": "〜ましょう let's",
     "genki": 5,
     "group": "morphology",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/masho-genki-i-chapter-5/",
+    "notes": "～ましょう/ ～ましょうか\n\nThe ending of the long form of a verb can be replaced with ～ましょう or ～ましょうか to suggest a plan of action.\n\nいっしょにとしょかんでべんきょうしましょう。\n\nLet's study in the library together.\n\nきっさてんでコーヒーをのみましょうか。\n\nShall we drink coffee at a coffee shop together?"
   },
-
   {
     "id": "te_form",
     "label": "て-form (critical hub)",
     "genki": 6,
     "group": "morphology",
-    "prerequisites": ["verb_groups", "past_tense_masu"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "verb_groups",
+      "past_tense_masu"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/te-form-genki-i-chapter-6/",
+    "notes": "てform\n\nThe てform has many uses in Japanese. Among these uses are:\n\n• making requests (\"…please.\")\n\n• giving and asking for permission (\"you may…/May I…\")\n\n• stating that something is forbidden (\"you must not…\")\n\n• forming a sentence that describes two events or activities (\"I did this and did that.\")\n\nConjugating for the てform is fairly complex. There are separate rules for る, irregular, and the various うverbs. A summary follows.\n\nるverbs:\n\nたべる　→　たべて\n\nうverbs come in several groups, based on the final syllable of their ditionary forms.\n\nうverbs with final う、つ、and る\n\nあう　→　あって\n\nまつ　→　まって\n\nとる　→　とって\n\nうverbs with final む、ぶ、and ぬ\n\nよむ　→　よんで\n\nあそぶ　→　あそんで\n\nしぬ　→　しんで\n\nうverbs with final く\n\nかく　→　かいて\n\none exception in this class is いく　→　いって\n\nうverbs with final ぐ\n\nおよご　→　およいで\n\nうverbs with final す\n\nはなす　→　はなして\n\nirregular verbs\n\nする　→　して\n\nくる　→　きて"
   },
   {
     "id": "te_kudasai",
     "label": "〜てください request",
     "genki": 6,
     "group": "functional",
-    "prerequisites": ["te_form"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_form"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/tekudasai-genki-i-chapter-6/",
+    "notes": "～てください\n\nUse a verbal te-form together with ください to make a polite request to another person \"please do … for me.\"\n\nきょうかしょのテープをきいてください。\n\nPlease listen to the tape that goes with the textbook.\n\nすみません。ちょっとおしえてください。\n\nExcuse me. Please teach me a little. (=Tell me, I need your advice.)"
   },
   {
     "id": "te_mo_ii",
     "label": "〜てもいい permission",
     "genki": 6,
     "group": "functional",
-    "prerequisites": ["te_form"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_form"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/temoiidesu-tewaikemasen-genki-i-chapter-6/",
+    "notes": "～てもいいです/～てはいけません\n\nA verbal te-form plus もいいです means \"you may do …,\" which describes an activity that is permitted. To ask for permission, you can turn it into a question sentence, ～てもいいですか。\n\nきょうかしょをみてもいいですか。\n\nMay I see the text book?\n\nはい、みてもいいですよ。\n\nYes, you may.\n\nTo deny somebody permission to do something, you can use the te-form plus はいけません。\n\nいいえ、きょうかしょをみてはいけません。\n\nNo you may not see the textbook."
   },
   {
     "id": "te_wa_ikemasen",
     "label": "〜てはいけない prohibition",
     "genki": 6,
     "group": "functional",
-    "prerequisites": ["te_form"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_form"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/temoiidesu-tewaikemasen-genki-i-chapter-6/",
+    "notes": "～てもいいです/～てはいけません\n\nA verbal te-form plus もいいです means \"you may do …,\" which describes an activity that is permitted. To ask for permission, you can turn it into a question sentence, ～てもいいですか。\n\nきょうかしょをみてもいいですか。\n\nMay I see the text book?\n\nはい、みてもいいですよ。\n\nYes, you may.\n\nTo deny somebody permission to do something, you can use the te-form plus はいけません。\n\nいいえ、きょうかしょをみてはいけません。\n\nNo you may not see the textbook."
   },
   {
     "id": "kara_reason",
     "label": "〜から reason/because",
     "genki": 6,
     "group": "clause",
-    "prerequisites": ["present_tense_masu", "past_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu",
+      "past_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/kara-genki-i-chapter-6/",
+    "notes": "～から\n\nA sentence that ends with から(because) explains the reason the reason or the cause of a situation, a proposal, and so forth.\n\n(situation)。(exlanation)から。\n\nわたしわこんばんべんきょうします。あしたテストがありますから。\n\nI will study this evening. (Because) we will have an exam tomorrow.\n\nバスにのりましょう。タクシーはたかいですから。\n\nLet's take the bus. (Because) taxis are expensive."
   },
-
   {
     "id": "te_iru",
     "label": "〜ている progressive/state",
     "genki": 7,
     "group": "functional",
-    "prerequisites": ["te_form"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "te_form"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/teiru-genki-i-chapter-7/",
+    "notes": "～ている\n\nA verbal \"te-form\", when followed by the helping verb いる, means either of the following:\n\n1) an action in progress, or\n\n2) a past event that is connected with the present.\n\nスーさんはいまべんきょうしています。　　　　Sue is studying right now.\n\nやましたせんせいはけっこんしています。　　　Prof. Yamashita is married.\n\nBelow are some examples of verbs commonly used in the ～ている framework.\n\nto have もつ　→　もっている\n\nto know しる　→　しっている\n\nto to be overweight　ふとる　→　ふとっている\n\nto be thin　やせる　→　やせている\n\nto wear　きる　→　きている\n\nto be awake　おきる　→　おきている\n\nto live すむ　→　すんでいる\n\nto work for　とてめる　→　とてめている\n\nIt is important to note that ～ている verbs conjugate as a るverb."
   },
   {
     "id": "te_form_joining",
     "label": "て-form joining sentences",
     "genki": 7,
     "group": "functional",
-    "prerequisites": ["te_form"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_form"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/te-form-joining-sentences-genki-i-chapter-7/",
+    "notes": "てforms for joining sentences\n\nJust like using the てform to join to verbs, it can also be used to combine adjectives and nouns.\n\nThe てform of an いadjective is formed by substituting くて for the final い.\n\nThe てform of a なadjective and a noun+です is formed by adding で to the base or the noun.\n\nい adjective: やすい→　やすくて\n\nirregular: いい　→　よくて\n\nな adjective: げんき（な）→　げんきで\n\nnoun + です：　にほんじんです　→　にほんじんで\n\nあのみせのたべものはやすくて、おいしいです。\n\nThe food at that restaurant is inexpensive and delicious.\n\nやましたせんせいはにほんじんで、よんじゅっさいぐらいです。\n\nProf. Yamashita is a Japanese and he is about forty years old."
   },
   {
     "id": "ni_iku",
     "label": "〜に行く purpose of movement",
     "genki": 7,
     "group": "functional",
-    "prerequisites": ["te_form", "particle_ni_time"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_form",
+      "particle_ni_time"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/ni-iku-genki-i-chapter-7/",
+    "notes": "verb stem + にいく\n\nIf a person moves to another place in order to do something, we can describe their movement and its purpose this way:\n\ndestination of movement　に/ へ　the purpose of movement 　に　いく/くる/かえる\n\nThe purpose of movement can either be a noun or a phrase with a verb, its object and so forth. Verbs describing the purpose of a movement must be in their stem forms.\n\nデパートにかばんをかいにいきました。　I went to a department store to buy a bag.\n\nメアリーさんはにほんににほんごをべんきょうしにきました。\n\nMary has come to Japan to study Japanese."
   },
-
   {
     "id": "short_forms_plain",
     "label": "Plain/short forms (present)",
     "genki": 8,
     "group": "morphology",
-    "prerequisites": ["present_tense_masu", "verb_groups"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu",
+      "verb_groups"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/short-forms-genki-i-chapter-8/",
+    "notes": "Short Forms\n\nVerbs and い-adjectives in the affirmative – same as their dictionary forms\n\nな-adjectives and noun + です in the affirmative – replace です with だ\n\nい-adjectives and な-adjectives and noun + ですin the negative – replace ありません with ない\n\nNegative Short Forms\n\nru-verbs: Take othe final る off and add ない\n\nEx: 食べる -> 食べない\n\nu-verbs: Take the final –u off and add –anai\n\nEx: よむ -> よまない\n\nIrregular verbs: する -> しない、くる -> こない\n\nException: ある -> ない\n\nThere are some points worth noting with negative short forms:\n\n1. The negative short forms of verbs that end with the hiragana う are …わない instead of …あない\n\n2. The vowel changes with the irregular verb くる\n\n3. The verb ある in the negative is ない\n\nShort forms are used to quote someone else, in casual conversations (as signs of intimacy), and in making negative requests."
   },
   {
     "id": "particle_ga",
     "label": "が subject particle (vs は)",
     "genki": 8,
     "group": "particle",
-    "prerequisites": ["particle_wa"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "particle_wa"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/particle-ga-genki-i-chapter-8/",
+    "notes": "が\n\nが is a way of introducing new information to others that don't know. For instance, Bill knows that Robert went to Okinawa, but Sally doesn't. Bill would say to Sally:\n\nロバートさんがおきなわに行きました。(Robert went to Okinawa).\n\nAlso, the particle が indicates that there is information missing about a certain noun.\n\nEx: だれがおきなわに行きましたか。(Who went to Okinawa?)"
   },
   {
     "id": "nai_de_kudasai",
     "label": "〜ないでください negative request",
     "genki": 8,
     "group": "functional",
-    "prerequisites": ["short_forms_plain"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/nai-de-kudasai-genki-i-chapter-8/",
+    "notes": "…ないでください\n\nTo request that someone refrain from doing something, one can use a negative verbal short form plus でください.\n\nEx: ここでしゃしんをとらないでください(Please don't take pictures here.)\n\nNegative short form + でください(Please don't…)"
   },
   {
     "id": "verbs_as_nouns",
     "label": "Verb の nominalization",
     "genki": 8,
     "group": "functional",
-    "prerequisites": ["short_forms_plain"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/verbs-as-nouns-genki-i-chapter-8/",
+    "notes": "Verb のがすきです\n\nAdd の to a verbal short form to express the idea of \"doing X\"\n\nEx: わたしは日本語をべんきょうするのがすきです。(I like studying the Japanese language)"
   },
-
   {
     "id": "short_form_past",
     "label": "Plain/short forms (past)",
     "genki": 9,
     "group": "morphology",
-    "prerequisites": ["short_forms_plain", "past_tense_masu"],
-    "evidence": ["conjugation_drill", "writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain",
+      "past_tense_masu"
+    ],
+    "evidence": [
+      "conjugation_drill",
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/short-form-past-genki-i-chapter-9/",
+    "notes": "Past Tense Short Forms\n\nVerbs: replace て/で in te-forms with た/だ\n\nい-adjectives in affirmative and all categories in the negative: replace the final い with かった\n\nな-adjectives and noun+です in the affirmative: replace だ in the present tense short forms with だった\n\ntwo irregularities: いく　→　いった 　　and 　　いい　→　よかった、よくなかった\n\nExamples:\n\npast tense affirmative:\n\nよむ　→　よんだ\n\nかわいい　→　かわいかった\n\nしずか（な）　→　しずかだった\n\nがくせい　→　がくせいだった\n\npast tense negative:\n\nよむ　→　よまなかった\n\nかわいい　→　かわいくなかった\n\nしずか（な）　→　しずかじゃなかった\n\nがくせい　→　がくせいじゃなかった"
   },
   {
     "id": "qualifying_nouns",
     "label": "Verb/adjective modifying nouns",
     "genki": 9,
     "group": "clause",
-    "prerequisites": ["short_forms_plain", "i_adjective"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain",
+      "i_adjective"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/qualifying-nouns-with-verbs-and-adjectives-genki-i-chapter-9/",
+    "notes": "Qualifying Nouns with Verbs and Adjectives\n\nThe short form of verbs and adjectives can be used to qualify nouns. It is important to remember that the qualifier comes before the object it is qualifying.\n\nExamples:\n\nおもしろい　ひと　a person who is interesting\n\nかみがながい　ひと　a person who has long hair\n\nめがねをかけている　ひと　a person who wears glasses\n\nねこがすきな　ひと　a person who likes cats"
   },
   {
     "id": "kara_explanation",
     "label": "〜から explanation (sentence-internal)",
     "genki": 9,
     "group": "clause",
-    "prerequisites": ["short_form_past", "kara_reason"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_form_past",
+      "kara_reason"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/kara-explanation-within-sentence-genki-i-chapter-9/",
+    "notes": "～から\n\nから added to a sentence means \"because.\" The explanation clause can be added into the sentence using から: explanation + から.\n\nexplanation から, situation.\n\n＝　situation because explanation\n\n＝　explanation therefore situation\n\nあしたしけんがあるから、わたしはこんばんべんきょうします。\n\nI will study this evening because we will have an exam tomorrow.\n\n(= We will have an exam tomorrow, therefore, I will study this evening.)\n\nかぶきのきっぷがありますから、いっしょにみにいきましょう。\n\nLet's go see Kabuki. I have tickets."
   },
   {
     "id": "mada_te_imasen",
     "label": "まだ〜ていません not yet",
     "genki": 9,
     "group": "functional",
-    "prerequisites": ["te_iru"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "te_iru"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/mada-te-imasen-genki-i-chapter-9/",
+    "notes": "まだ～ていません\n\nUsing まだ plus the verb with ていません gives the impression that the sentence is still connected with the present. 　It means \"have not…yet.\"\n\nスーさんはまだおきていません。　　　Sue has not woken up yet.\n\nわたしはまだひるごはんをたべていません。　　　I haven't eaten lunch yet."
   },
-
   {
     "id": "tsumori",
     "label": "〜つもり intention",
     "genki": 10,
     "group": "functional",
-    "prerequisites": ["short_forms_plain"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/tsumorida-genki-i-chapter-10/",
+    "notes": "～つもりだ\n\nつもり follows verbs in the present tense short forms to describe what a person is planning to do in the future. You can also use a verb in the negative plus つもり to describe what you are planning not to do, or what you do not intend to do.\n\nverb (present, short) + つもりだ　　　　I intend to do…\n\nわたしはしゅうまつにたけしさんとテニスをするつもりです。\n\nI intend to play tennis with Takeshi this weekend.\n\nやましたせんせいはあしただいがくにこないつもりです。\n\nProfessor Yamashita does not intend to come to school tomorrow."
   },
   {
     "id": "comparison",
     "label": "Comparison (〜より、いちばん)",
     "genki": 10,
     "group": "functional",
-    "prerequisites": ["i_adjective", "na_adjective"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "i_adjective",
+      "na_adjective"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/comparison-genki-i-chapter-10/",
+    "notes": "Comparison\n\nIn Japanese, when making a comparison, the adjective keeps its original form. There is no alteration, as in \"great/greater.\" The comparison is expressed by adding something to the noun.\n\nAのほうがBより(property)。　　A is more (property) than B.\n\nエルビス・プレスリーのほうがフランク・シナトラよりかっこいいです。\n\nElvis Presley is more hip than Frank Sinatra.\n\nYou can ask for another person's opinion on two things in comparitive terms:\n\nAとBとどっちのほうが　(property)。　　Between A and B, which is more (property)?\n\nバスとでんしゃとどっちのほうがやすいですか。\n\nWhich is cheaper, going by bus or by train?\n\nWhen comparing three or more items, the degree qualifier いちばん is used.\n\n[(class of items) の中で] A がいちばん　(property).\n\nA is the most (property) [among (a class of items)]\n\nやきそばとうどんとごはんのなかで、なにがいちばんすきですか。\n\nBetween yakisoba, udon, and rice, which do you like the best?"
   },
   {
     "id": "naru",
     "label": "〜になる to become",
     "genki": 10,
     "group": "functional",
-    "prerequisites": ["particle_ni_time", "i_adjective"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "particle_ni_time",
+      "i_adjective"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/naru-to-become-genki-i-chapter-10/",
+    "notes": "Adjective + なる\n\nThe verb なる means \"to become.\" It indicates a change, and can follow nouns and both types of adjectives. With いadjectives the final い is dropped and く is added.\n\nあたたかい　→　あたたかくなる　　　to become warm/warmer\n\nしずか（な）　→　しずかになる　　to become quiet/quieter\n\nかいししゃいん　→　かいしゃいんになる　　to become a company employee\n\nにほんごのべんきょうがすきになりました。\n\nI have grown fond of studying the Japanese language."
   },
-
   {
     "id": "tai",
     "label": "〜たい want to",
     "genki": 11,
     "group": "functional",
-    "prerequisites": ["present_tense_masu"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "present_tense_masu"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/tai-genki-i-chapter-11/",
+    "notes": "～たい\n\nYou can use a verb stem plus たいです to describe your hope or aspiration. The combination of a verb plus たい conjugates as an い-adjective. たいですsentences are usually not used to report others wishes or aspirations.\n\nこんどのしゅうまつは、えいがをみたいです。\n\nI want to see a film this weekend.\n\nいつかちゅうごくにいきたいです。\n\nI want to go to China someday.\n\nTo describe your observation to the effect that somebody wants to do something, you must use a special verb たがっているinstead of たい. This derives from the dictionary form たがる and indicates \"I think that she wants to, because of the way she is behaving.\"\n\nメアリーさんはコーヒーをのみたがっています。\n\n(It seems) Mary wants to drunk coffee."
   },
   {
     "id": "tari_tari_suru",
     "label": "〜たり〜たりする listing actions",
     "genki": 11,
     "group": "functional",
-    "prerequisites": ["short_form_past"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_form_past"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/tari-tarisuru-genki-i-chapter-11/",
+    "notes": "～たり～たりする\n\nThis is used to mention exemplars, implying that other things are left unsaid.\n\n(activity A) たり (activity B) たりする\n\ndo such things as A and B\n\nTo get the たり form of a predicate, you just add り to the past tense short form of a predicate. For example, する　becomes したり, and たべる becomes たべたり.\n\nおおさかでかいものをしたり、かんこくりょうりをたべたりします。\n\nIn Osaka, I will do such things as shopping and eating Korean dishes.\n\nおどったり、おんがくをきいたりするのがすきです。\n\nI like dancing, listening to music, and so forth."
   },
   {
     "id": "koto_ga_aru",
     "label": "〜たことがある experience",
     "genki": 11,
     "group": "functional",
-    "prerequisites": ["short_form_past"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_form_past"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/kotoga-aru-genki-i-chapter-11/",
+    "notes": "～ことがある\n\nThe past tense short form of a verb plus ことがある describes that you did something or something happened, in earlier times.\n\nverb(past, short) + ことがある　　　　have the experience of…\n\nヨーロッパにいったことがありますか。　　はい、いったことがあります。\n\nHave you ever been to Europe? 　　Yes, I have.\n\nたけしさんはじゅぎょうをやすんだことがありません。\n\nTakeshi has never been absent from classes (in his life)."
   },
-
   {
     "id": "n_desu",
     "label": "〜んです explanation/emphasis",
     "genki": 12,
     "group": "functional",
-    "prerequisites": ["short_forms_plain", "short_form_past"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain",
+      "short_form_past"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/n-desu-genki-i-chapter-12/",
+    "notes": "～んです\n\nThere are two ways in Japanese to make a statement. One is to simply report it, and the other is offered as a means of explanation. んです follows the short form of a predicate, and the predicate can be in the affirmative, negative, past, or non-past. When it follows a noun or a な-adjective, な comes in between.\n\nあしたテストがあるんです。　　I have an exam tomorrow (so I can't go out tonight.)\n\nトイレにいきたいんです。　　　I have to go to the bathroom (so tell me where it is.)\n\n～んです can be used in questions to invite explanations and further clarifications. It is often used with question words such as どうして and どうした.\n\nQ: どうしてかれとわかれたんですか。\n\nWhy did you break up with your boyfriend? (You've got to tell me.)\n\nA: かれ、ぜんぜんおふろにはいらないんです。\n\nOh, him. He never takes a bath. (That's a good enough reason, isn't it?)"
   },
   {
     "id": "ho_ga_ii",
     "label": "〜ほうがいい had better",
     "genki": 12,
     "group": "functional",
-    "prerequisites": ["short_form_past"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_form_past"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/ho-ga-ii-desu-genki-i-chapter-12/",
+    "notes": "～ほうがいいです\n\nほうがいいです \"it is better (for you) to do…\" is a sentence-final expression that can be used to give advice. It implies that if you do not follow the advice, danger or a problem will result. It refers to something very specific. When the advice is in the affirmative, ほうがいいです generally follows the past tense short form. When the advice is in the negative, the verb is in the present tense short form.\n\nもっとやさいをたべたほうがいいですよ。　　　You'd better eat more vegetables.\n\nじゅきょうをやすまないほうがいいですよ。　　It is better not to skip classes."
   },
   {
     "id": "nakucha_ikemasen",
     "label": "〜なくちゃいけない must",
     "genki": 12,
     "group": "functional",
-    "prerequisites": ["short_forms_plain"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/nakucha-ikemasen-genki-i-chapter-12/",
+    "notes": "なくちゃいけません\n\nなくちゃいけません may be used to say that something is necessary or it must be done. なくちゃ means \"if you do not…\" and いけません means \"you cannot go.\" To form a なくちゃいけません sentence, substitute ない in the negative short form of a verb with なくちゃ.\n\nたべる　→　たべない　→　たべなくちゃいけません\n\nいう　→　いわない　→　いわなくちゃいけません\n\nする　→　しない　→　しなくちゃいけません\n\nくる　→　こない　→　こなくちゃいけません\n\nけさは、ろくじにおきなくちゃいけませんでした。\n\nI had to get up at six this morning.\n\nまいにち、れんしゅうしなくちゃいけないんです。\n\n(The truth is,) I must practice every day."
   },
   {
     "id": "node_because",
     "label": "〜ので because (softer)",
     "genki": 12,
     "group": "clause",
-    "prerequisites": ["short_forms_plain", "kara_reason"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain",
+      "kara_reason"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/node-genki-i-chapter-12/",
+    "notes": "～ので\n\nYou can use ので to give the reason for the situation described in the sentence. ので acts much in the same way as から but it sounds slightly more formal. The reason part of the sentence ends in a short form predicate. When ので follows a noun or a なadjective, な comes in between.\n\nいつもにほんごではなすので、にほんごがじょうずになりました。\n\nMy Japanese has improved because I always speak Japanese.\n\nきょうはにちようびなので、ぎんこうはやすみです。\n\nBanks are closed, because today is a Sunday."
   },
   {
     "id": "desho",
     "label": "〜でしょう probably",
     "genki": 12,
     "group": "functional",
-    "prerequisites": ["short_forms_plain"],
-    "evidence": ["writing", "speaking"]
+    "prerequisites": [
+      "short_forms_plain"
+    ],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "url": "https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/desho-genki-i-chapter-12/",
+    "notes": "～でしょう\n\nWe use でしょう at the end of a sentence when we are making a guess or a prediction. でしょう follows verbs and い-adjectives in short forms, and in the affirmative and in the negative. It may also follow な-adjective bases and nouns. でしょう directly follows these elements.\n\n(verb)\n\nあしたはあめがふるでしょう。　　It will probably rain tomorrow.\n\nふらないでしょう。　　I will probably not rain tomorrow.\n\n(い-adjective)\n\nほっかいどうはさむいでしょう。　　It is probably cold in Hokkaido.\n\n(な-adjective)\n\nやましたせんせいはさかながすきでしょう。　　Professor Yamashita probably likes fish.\n\n(noun)\n\nあのひとはオーストラリアじんでしょう。　　That person is probably from Australia.\n\nにほんごとかんこくごと、どっちのほうがむずかしいでしょうか。\n\nWhich would you say is more difficult, Japanese or Korean?"
   }
 ]

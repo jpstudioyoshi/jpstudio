@@ -1052,23 +1052,19 @@ function grammarNodeClick(nodeId) {
 
   panel.style.display = 'block';
   panel.innerHTML = `
-    <div style="font-family:var(--ui);font-size:inherit;font-weight:600;color:var(--ink)">${node.label}</div>
-    <div style="font-family:var(--ui);font-size:0.72rem;color:${statusCol};margin-top:2px">
+    <div onclick="grammarOverridePopup('${nodeId}')" title="Click to set override"
+      style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:#000;font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer;margin-bottom:6px">${node.label}</div>
+    <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:4px">
       Ch ${node.genki} · ${m.status === 'override' ? 'override' : m.status} · ${m.score}%
     </div>
     ${node.prerequisites.length ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:10px;margin-bottom:4px">Prerequisites</div>
     <div style="font-family:var(--ui);font-size:0.75rem;margin-bottom:2px">${prereqs}</div>` : ''}
     ${weakSection}
     ${qSection}
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-      <button onclick="grammarOverridePopup('${nodeId}')"
-        style="font-family:var(--ui);font-size:0.78rem;padding:8px 10px;background:none;border:1px solid var(--ink-light);border-radius:6px;color:var(--ink);cursor:pointer;text-align:left">
-        ${m.status === 'override' ? 'Edit override →' : 'Set override →'}
-      </button>
+    ${node.notes ? `<div style="margin-top:12px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);line-height:1.6;border-top:1px solid var(--border);padding-top:10px">${node.notes.replace(/\n/g,'<br>')}</div>` : ''}
+    <div style="margin-top:14px">
       <button onclick="const p=document.getElementById('grammarDetailPanel');p.innerHTML='';p.dataset.node=''"
-        style="font-family:var(--ui);font-size:0.78rem;padding:8px 10px;background:none;border:1px solid var(--ink-light);border-radius:6px;color:var(--ink-light);cursor:pointer;text-align:left">
-        Clear
-      </button>
+        class="btn-action btn-xs">Clear</button>
     </div>
   `;
 }
