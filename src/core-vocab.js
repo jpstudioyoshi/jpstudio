@@ -30,7 +30,7 @@ let vocabSessionPos = 0;    // position within session
 // Per-direction session state cache
 const _vcDirState = {};
 function _vcSaveDirState(dir) {
-  _vcDirState[dir] = { session: [...vocabSession], idx: vocabIdx, pos: vocabSessionPos, items: state.vocabItems ? [...state.vocabItems] : [] };
+  _vcDirState[dir] = { session: [...vocabSession], idx: vocabIdx, pos: vocabSessionPos, items: state.vocabItems ? [...state.vocabItems] : [], known: Object.assign({}, _sessionKnown) };
 }
 function _vcRestoreDirState(dir) {
   if (_vcDirState[dir] && _vcDirState[dir].items.length) {
@@ -38,6 +38,8 @@ function _vcRestoreDirState(dir) {
     vocabIdx = _vcDirState[dir].idx;
     vocabSessionPos = _vcDirState[dir].pos;
     state.vocabItems = [..._vcDirState[dir].items];
+    Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
+    Object.assign(_sessionKnown, _vcDirState[dir].known || {});
     return true;
   }
   return false;
@@ -508,7 +510,6 @@ function toggleVcDirection() {
   window.kvAPI.set('VOCAB_DIRECTION', vcDirection).catch(() => {});
   const btn = document.getElementById('vcDirectionBtn');
   if (btn) btn.textContent = labels[vcDirection];
-  Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
   if (_vcRestoreDirState(vcDirection)) {
     renderVocab();
   } else {
