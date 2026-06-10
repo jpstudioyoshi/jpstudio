@@ -27,6 +27,20 @@ let vcReadingVisible = false;
 let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
+// Per-direction session state cache
+const _vcDirState = {};
+function _vcSaveDirState(dir) {
+  _vcDirState[dir] = { session: [...vocabSession], idx: vocabIdx, pos: vocabSessionPos };
+}
+function _vcRestoreDirState(dir) {
+  if (_vcDirState[dir]) {
+    vocabSession = [..._vcDirState[dir].session];
+    vocabIdx = _vcDirState[dir].idx;
+    vocabSessionPos = _vcDirState[dir].pos;
+    return true;
+  }
+  return false;
+}
 let _vcWeights = {};
 let _vcThresholds = { session_size_jp_en: 30, session_size_en_jp: 25, session_size_speaking: 20 };
 let _vcIntervals = {};
@@ -488,12 +502,17 @@ function flipVocab() {
 function toggleVcDirection() {
   const cycle = { jp_en: 'en_jp', en_jp: 'speaking', speaking: 'jp_en' };
   const labels = { jp_en: 'JP → EN', en_jp: 'EN → JP', speaking: 'Speaking' };
+  _vcSaveDirState(vcDirection);
   vcDirection = cycle[vcDirection] || 'jp_en';
   window.kvAPI.set('VOCAB_DIRECTION', vcDirection).catch(() => {});
   const btn = document.getElementById('vcDirectionBtn');
   if (btn) btn.textContent = labels[vcDirection];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
-  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, false);
+  if (_vcRestoreDirState(vcDirection)) {
+    renderVocab();
+  } else {
+    if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, false);
+  }
 }
 function resetVocabDeck() {
   _vcSessionComplete = false;
