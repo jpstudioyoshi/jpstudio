@@ -1613,12 +1613,20 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
   const errorWeights = {}; // key: word.dict+'-'+form+'-'+pol+'-'+reg → extra slots
 
   // ── Build candidate pool ───────────────────────────────────────────────
+  // Weighted form/pol/reg selection — error-prone combinations appear more often
+  function _weightedPick(arr, getWeight) {
+    const weights = arr.map(v => 1 + getWeight(v));
+    const total = weights.reduce((a, b) => a + b, 0);
+    let r = Math.random() * total;
+    for (let i = 0; i < arr.length; i++) { r -= weights[i]; if (r <= 0) return arr[i]; }
+    return arr[arr.length - 1];
+  }
   const combos = [];
   for (let i = 0; i < 80; i++) {
     const word = verbTypes[Math.floor(Math.random()*verbTypes.length)];
-    const form = forms[Math.floor(Math.random()*forms.length)];
-    const pol = polarities[Math.floor(Math.random()*polarities.length)];
-    const reg = registers[Math.floor(Math.random()*registers.length)];
+    const form = _weightedPick(forms, f => GrammarErrors.weight(f, 'aff', 'polite', word.type || 'u'));
+    const pol  = _weightedPick(polarities, p => GrammarErrors.weight(form, p, 'polite', word.type || 'u'));
+    const reg  = _weightedPick(registers, r => GrammarErrors.weight(form, pol, r, word.type || 'u'));
     if ((form==='te'||form==='volitional') && pol==='neg') continue;
     const result = conjugate(word, form, pol, reg);
     if (result.answer !== '—') {
@@ -1650,7 +1658,7 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
   const recentKeys = new Set(window._conjLastRunKeys || []);
   const deduped = pool.filter(c => !recentKeys.has(c.key));
   const finalPool = deduped.length >= CONJ_QUESTIONS_PER_RUN ? deduped : pool;
-  const shuffled = finalPool.sort(() => Math.random() - 0.5).slice(0, CONJ_QUESTIONS_PER_RUN || 15);
+  const shuffled = finalPool.sort(() => Math.random() - 0.5).filter((item, idx, arr) => arr.findIndex(x => x.word.dict === item.word.dict) === idx).slice(0, CONJ_QUESTIONS_PER_RUN || 15);
   conjQueue = shuffled.length > 5 ? conjDeConsecutive(shuffled) : shuffled;
   window._conjLastRunKeys = conjQueue.map(c => c.key);
   conjTypedAnswers = new Array(conjQueue.length).fill(null);
