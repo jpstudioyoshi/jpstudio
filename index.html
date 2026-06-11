@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260611194623">
+<link rel="stylesheet" href="style.css?v=20260612002245">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260611194623"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260611194623"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260611194623"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260612002245"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260612002245"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260612002245"></script>
 </head>
 <body>
 
@@ -1946,7 +1946,7 @@
         <span>min</span>
       </div>
     </div>
-  <div id="vtInnerWrap" style="background:#141416;border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+  <div id="vtInnerWrap">
 
     <!-- Drop zone — shown until files loaded -->
     <input type="file" id="vtVideoInput" accept="video/*,audio/*,.srt,.vtt,.txt" multiple style="display:none">
@@ -1987,6 +1987,47 @@
       <div id="vtVideoCol" style="display:flex;flex-direction:column;min-height:0">
         <video id="vtVideo" style="display:none;width:100%;border-radius:8px;background:#000;cursor:pointer;flex:1;min-height:0;object-fit:contain" onclick="vtTogglePlay()"
           ontimeupdate="vtOnTimeUpdate()" onplay="vtOnPlay()" onpause="vtOnPause()" onloadedmetadata="vtOnLoaded()"></video>
+
+    <!-- Timeline + controls (hidden until video loaded) -->
+    <div id="vtControls" style="display:none">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">
+        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.06em;color:var(--ink-light)">TIMELINE</span>
+      </div>
+      <div style="position:relative;margin-bottom:8px">
+        <canvas id="vtWaveform" style="width:100%;height:44px;border-radius:6px;cursor:pointer;display:block"
+          onclick="vtWaveClick(event)" title="Click to seek"></canvas>
+        <div id="vtWaveMsg" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);pointer-events:none">Decoding…</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button id="vtPlayBtn" class="btn-toggle" onclick="vtTogglePlay()" style="min-width:70px">
+          ▶ Play
+        </button>
+        <span id="vtTime" style="font-family:monospace;font-size:0.82rem;color:var(--ink-light);min-width:90px">0:00 / 0:00</span>
+        <select class="select-std" id="vtSpeed" onchange="vtSetSpeed()">
+          <option value="0.5">.5×</option>
+          <option value="0.75">.75</option>
+          <option value="1" selected>1×</option>
+          <option value="1.5">1.5×</option>
+        </select>
+        <button id="vtFuriAllBtn" class="btn-action" onclick="vtFuriAll()" title="Add furigana to all lines">
+          ふ
+        </button>
+        <span style="flex:1"></span>
+        <select class="select-std" id="vtHistorySelect" onchange="vtLoadFromHistory(this.value)">
+          <option value="">— Recent —</option>
+        </select>
+        <label for="vtTransInput" id="vtChangeTransBtn"
+          style="padding:5px 8px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;display:inline-flex;align-items:center;gap:4px"
+          title="Change transcript">
+          📄
+        </label>
+        <label for="vtVideoInput" id="vtChangeVideoBtn"
+          style="padding:5px 8px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;display:inline-flex;align-items:center;gap:4px"
+          title="Change video">
+          🎬
+        </label>
+      </div>
+    </div>
         <div id="vtNoVideo" onclick="document.getElementById('vtVideoInput').click()" 
           style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:600px;border:2px dashed var(--border);border-radius:8px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;gap:8px;transition:border-color 0.15s"
           ondragover="event.preventDefault();this.style.borderColor='var(--teal)'"
@@ -2001,17 +2042,6 @@
       <!-- Right: transcript container -->
       <div id="vtTranscriptCol" style="display:flex;flex-direction:column;min-height:0;position:relative">
         
-        <!-- Vocab List overlay (covers transcript area only) -->
-        <div id="vtVocabListOverlay" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:var(--paper-dark);z-index:50;overflow-y:auto;padding:12px;border:1px solid var(--gold);border-radius:6px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-            <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--gold)">VOCAB</span>
-            <button class="btn-action" onclick="vtRegenerateVocabList()" title="Regenerate list">↻</button>
-            <button class="btn-nav" onclick="vtCloseVocabList()" style="margin-left:auto">✕</button>
-          </div>
-          <div id="vtVocabListContent" style="font-family:var(--jp);font-size:0.85rem;line-height:1.7">
-            <span style="color:var(--ink-light)">Loading...</span>
-          </div>
-        </div>
         
         <!-- Transcript wrap (shown when transcript loaded) -->
         <div id="vtTranscriptWrap" style="display:none;flex-direction:column">
@@ -2039,53 +2069,10 @@
 
     </div><!-- end vtMainLayout -->
 
-    <!-- Shadow mode panel - click header to toggle -->
-    <div id="vtShadowPanel" style="display:none;flex-direction:column;gap:10px">
-
-      <!-- Target waveform + play - click to activate/toggle shadow mode -->
-      <div id="vtShadowHeader" onclick="vtToggleShadow()" style="background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color 0.15s" title="Click to toggle shadow mode">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-          <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--red)">🎙 SHADOW TARGET</span>
-          <button id="vtShTargetPlayBtn" class="btn-action" onclick="event.stopPropagation();vtShPlayTarget()">▶</button>
-          <span id="vtShTargetTime" style="font-family:monospace;font-size:0.75rem;color:var(--ink-light)">0:00</span>
-          <span id="vtShadowTarget" style="flex:1;font-family:var(--jp);font-size:0.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</span>
-        </div>
-        <canvas id="vtShTargetWave" style="width:100%;height:40px;display:block;border-radius:4px;cursor:pointer" onclick="event.stopPropagation();vtShSeekTarget(event)"></canvas>
-      </div>
-
-      <!-- Shadow waveform + record/play -->
-      <div style="background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 12px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
-          <span style="font-family:var(--ui);font-size:0.65rem;letter-spacing:0.06em;color:var(--ink-light)">YOU</span>
-          <button id="vtShRecordBtn" onclick="vtShRecord()"
-            style="padding:4px 14px;background:var(--red);color:#fff;border:none;border-radius:5px;font-family:var(--ui);font-size:0.78rem;font-weight:600;cursor:pointer">⏺</button>
-          <button id="vtShPlaybackBtn" class="btn-action" onclick="vtShPlayback()" disabled style="opacity:0.4">▶</button>
-          <select class="select-std" id="vtMicSelect" onclick="vtRequestMicAccess()" onchange="vtSetMic(this.value)">
-            <option value="">🎤 Click to select mic</option>
-          </select>
-          <label style="display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);cursor:pointer;margin-left:auto">
-            <input type="checkbox" id="vtShRepeat" style="accent-color:var(--teal)"> Auto
-          </label>
-          <span id="vtShStatus" style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)"></span>
-        </div>
-        <canvas id="vtShShadowWave" style="width:100%;height:40px;display:block;border-radius:4px;background:#0a0a0c"></canvas>
-      </div>
-
-    </div><!-- end vtShadowPanel -->
     <!-- Timeline + controls (hidden until video loaded) -->
     <div id="vtControls" style="display:none">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.06em;color:var(--ink-light)">TIMELINE</span>
-        <button class="btn-action" onclick="vtAddMarker()" title="Drop marker at current time (M)">
-          ◆ Mark
-        </button>
-        <button class="btn-destructive" onclick="vtClearMarkers()" title="Clear all markers">
-          ✕
-        </button>
-        <div id="vtMarkerList" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:1"></div>
-        <button id="vtWaveToggleBtn" class="btn-toggle" onclick="vtToggleWaveMode()">
-          Waveform
-        </button>
       </div>
       <div style="position:relative;margin-bottom:8px">
         <canvas id="vtWaveform" style="width:100%;height:44px;border-radius:6px;cursor:pointer;display:block"
@@ -2104,31 +2091,9 @@
           <option value="1.25">1.25</option>
           <option value="1.5">1.5×</option>
         </select>
-        <button id="vtLoopBtn" class="btn-toggle" onclick="vtSetLoopA()">
-          A–B
-        </button>
-        <select class="select-std" id="vtLoopPause" onchange="vtSetLoopPause(parseFloat(this.value))" title="Pause between loops">
-          <option value="0" selected>0s</option>
-          <option value="1">1s</option>
-          <option value="2">2s</option>
-          <option value="3">3s</option>
-          <option value="5">5s</option>
-        </select>
-        <button class="btn-destructive" onclick="vtClearLoop()">
-          ✕
-        </button>
-        <button id="vtDictateBtn" class="btn-toggle" onclick="vtToggleDictation()"
-          title="Dictation mode - type what you hear">
-          ✎
-        </button>
-        <button id="vtBreakdownBtnBar" class="btn-action" onclick="vtShowBreakdown()"
-          title="Break down current line">
-          ?
-        </button>
         <button id="vtFuriAllBtn" class="btn-action" onclick="vtFuriAll()" title="Add furigana to all lines">
           ふ
         </button>
-        <span id="vtLoopInfo" style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)"></span>
         <span style="flex:1"></span>
         <select class="select-std" id="vtHistorySelect" onchange="vtLoadFromHistory(this.value)">
           <option value="">— Recent —</option>
@@ -2147,57 +2112,17 @@
     </div>
 
     <!-- Line translate panel -->
-    <div id="vtLineTranslate" style="display:none;margin-top:10px;background:#141416;border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color 0.15s">
+    <div id="vtLineTranslate" style="display:none;margin-top:10px;border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color 0.15s">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex:0 0 auto !important">
         <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--teal)">訳 TRANSLATION</span>
         <button class="btn-action" onclick="vtTranslateLine()" title="Translate current line">Translate</button>
-        <button id="vtBreakdownBtnLine" class="btn-action" onclick="vtBreakdownLine()" title="Break down the grammar and vocabulary">Break down</button>
-        <button id="vtVocabListBtn" onclick="vtShowVocabList()" style="padding:3px 10px;background:none;border:1px solid var(--gold);border-radius:4px;font-family:var(--ui);font-size:0.68rem;color:var(--gold);cursor:pointer" title="Content word vocabulary list">Vocab</button>
         <button class="btn-destructive" onclick="vtClearTranslation()" style="margin-left:auto" title="Clear">✕</button>
       </div>
       <div id="vtLineJp" style="font-family:var(--jp);font-size:2.2rem;color:var(--ink);margin-bottom:6px;line-height:1.6;user-select:text"></div>
       <div id="vtLineEn" style="font-family:var(--ui);font-size:0.88rem;color:var(--teal);line-height:1.5;user-select:text"><span style="color:var(--ink-light);font-size:0.78rem">Click Translate to translate current line</span></div>
-      <div id="vtBreakdownArea" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex:0 0 auto !important">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">BREAKDOWN</span>
-          <button onclick="document.getElementById('vtBreakdownArea').style.display='none'" style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.8rem">✕</button>
-        </div>
-        <div id="vtBreakdownContentLine" style="font-family:var(--jp);font-size:0.88rem;line-height:1.9;color:var(--ink);white-space:pre-wrap;user-select:text"></div>
-      </div>
     </div>
 
-    <!-- Dictation panel -->
-    <div id="vtDictatePanel" style="display:none;margin-top:10px;background:#141416;border:1px solid var(--border);border-radius:8px;padding:14px 16px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">DICTATION</span>
-        <button class="btn-action" onclick="vtDictateReplay()" title="Replay (R)">▶ Replay</button>
-        <button class="btn-action" onclick="vtDictateCheck()" title="Check (Enter)">Check</button>
-        <button class="btn-action" onclick="vtDictateReveal()" title="Reveal answer">Reveal</button>
-        <button class="btn-nav" onclick="vtDictateNext()" title="Next line (→)">Next</button>
-        <span id="vtDictateStats" style="margin-left:auto;font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)"></span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="vtDictateInput" placeholder="Type romaji → hiragana" 
-          style="flex:1;padding:10px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;font-family:var(--jp);font-size:1rem;color:var(--ink);box-sizing:border-box;caret-color:var(--teal)"
-          onkeydown="vtDictateKeydown(event)" autocomplete="off">
-        <span data-kana-for="vtDictateInput"></span>
-      </div>
-      <div id="vtDictateFeedback" style="margin-top:8px;font-family:var(--jp);font-size:0.95rem;line-height:1.6;min-height:24px"></div>
-    </div>
 
-  <!-- Breakdown popup -->
-  <div id="vtBreakdownPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;padding:20px;overflow-y:auto">
-    <div style="max-width:700px;margin:40px auto;background:var(--paper-dark);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3)">
-        <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold)">📖 BREAKDOWN</span>
-        <button class="btn-nav" onclick="vtCloseBreakdown()">Close</button>
-      </div>
-      <div id="vtBreakdownLine" style="padding:16px 18px;font-family:var(--jp);font-size:1.15rem;color:var(--ink);line-height:1.8;border-bottom:1px solid var(--border);background:rgba(48,213,200,0.05);user-select:text"></div>
-      <div id="vtBreakdownContentPopup" style="padding:18px;font-family:var(--jp);font-size:0.95rem;color:var(--ink);line-height:1.9;min-height:600px;user-select:text">
-        <span style="color:var(--ink-light);font-size:0.85rem">Loading breakdown…</span>
-      </div>
-    </div>
-  </div>
 
   </div><!-- end vtInnerWrap -->
   </div><!-- end panel-video -->
@@ -2607,15 +2532,15 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260611194623"></script>
-<script src="src/core-anki.js?v=20260611194623"></script>
-<script src="src/core-counters.js?v=20260611194623"></script>
-<script src="src/core-srs.js?v=20260611194623"></script>
-<script src="src/core-stt.js?v=20260611194623"></script>
-<script src="src/core-writing.js?v=20260611194623"></script>
-<script src="src/core-listen.js?v=20260611194623"></script>
-<script src="src/core-vocab.js?v=20260611194623"></script>
-<script src="src/core.js?v=20260611194623"></script>
+<script src="src/core-foundation.js?v=20260612002245"></script>
+<script src="src/core-anki.js?v=20260612002245"></script>
+<script src="src/core-counters.js?v=20260612002245"></script>
+<script src="src/core-srs.js?v=20260612002245"></script>
+<script src="src/core-stt.js?v=20260612002245"></script>
+<script src="src/core-writing.js?v=20260612002245"></script>
+<script src="src/core-listen.js?v=20260612002245"></script>
+<script src="src/core-vocab.js?v=20260612002245"></script>
+<script src="src/core.js?v=20260612002245"></script>
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- TIMES DRILL MODAL                                      -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -2744,26 +2669,26 @@
 
   </div>
 
-<script src="src/features-core.js?v=20260611194623"></script>
-<script src="src/features-kana.js?v=20260611194623"></script>
-<script src="src/features-times.js?v=20260611194623"></script>
-<script src="src/briefing-prompt.js?v=20260611194623"></script>
-<script src="src/GrammarModel.js?v=20260611194623"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260611194623"></script>
-<script src="src/AppEvents.js?v=20260611194623"></script>
-<script src="src/features-lesson-notes.js?v=20260611194623"></script>
-  <script src="src/features-ln-p2.js?v=20260611194623"></script>
-<script src="src/features-grammar.js?v=20260611194623"></script>
-<script src="src/features-reading.js?v=20260611194623"></script>
-<script src="src/features-video.js?v=20260611194623"></script>
-<script src="src/features-pictures.js?v=20260611194623"></script>
-<script src="src/features-progress.js?v=20260611194623"></script>
-  <script src="src/features-listen-log.js?v=20260611194623"></script>
-<script src="src/features-stroke.js?v=20260611194623"></script>
-<script src="src/features-tools.js?v=20260611194623"></script>
-<script src="src/features-voice.js?v=20260611194623"></script>
-<script src="src/features-voice-drill.js?v=20260611194623"></script>
-<script src="src/features-custom-drill.js?v=20260611194623"></script>
+<script src="src/features-core.js?v=20260612002245"></script>
+<script src="src/features-kana.js?v=20260612002245"></script>
+<script src="src/features-times.js?v=20260612002245"></script>
+<script src="src/briefing-prompt.js?v=20260612002245"></script>
+<script src="src/GrammarModel.js?v=20260612002245"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260612002245"></script>
+<script src="src/AppEvents.js?v=20260612002245"></script>
+<script src="src/features-lesson-notes.js?v=20260612002245"></script>
+  <script src="src/features-ln-p2.js?v=20260612002245"></script>
+<script src="src/features-grammar.js?v=20260612002245"></script>
+<script src="src/features-reading.js?v=20260612002245"></script>
+<script src="src/features-video.js?v=20260612002245"></script>
+<script src="src/features-pictures.js?v=20260612002245"></script>
+<script src="src/features-progress.js?v=20260612002245"></script>
+  <script src="src/features-listen-log.js?v=20260612002245"></script>
+<script src="src/features-stroke.js?v=20260612002245"></script>
+<script src="src/features-tools.js?v=20260612002245"></script>
+<script src="src/features-voice.js?v=20260612002245"></script>
+<script src="src/features-voice-drill.js?v=20260612002245"></script>
+<script src="src/features-custom-drill.js?v=20260612002245"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2774,20 +2699,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260611194623"></script>
-<script src="src/IssueTracker.js?v=20260611194623"></script>
-<script src="src/services/LessonSession.js?v=20260611194623"></script>
-<script src="src/services/AudioService.js?v=20260611194623"></script>
-<script src="src/services/PreflightService.js?v=20260611194623"></script>
-<script src="src/services/TranscriptionService.js?v=20260611194623"></script>
-<script src="src/services/AnalysisService.js?v=20260611194623"></script>
-<script src="src/services/StorageService.js?v=20260611194623"></script>
-<script src="src/Orchestrator.js?v=20260611194623"></script>
-<script src="src/ui/DrillCard.js?v=20260611194623"></script>
-<script src="src/ui/TextEntry.js?v=20260611194623"></script>
-<script src="src/ui/YoshiUI.js?v=20260611194623"></script>
+<script src="src/StudentModel.js?v=20260612002245"></script>
+<script src="src/IssueTracker.js?v=20260612002245"></script>
+<script src="src/services/LessonSession.js?v=20260612002245"></script>
+<script src="src/services/AudioService.js?v=20260612002245"></script>
+<script src="src/services/PreflightService.js?v=20260612002245"></script>
+<script src="src/services/TranscriptionService.js?v=20260612002245"></script>
+<script src="src/services/AnalysisService.js?v=20260612002245"></script>
+<script src="src/services/StorageService.js?v=20260612002245"></script>
+<script src="src/Orchestrator.js?v=20260612002245"></script>
+<script src="src/ui/DrillCard.js?v=20260612002245"></script>
+<script src="src/ui/TextEntry.js?v=20260612002245"></script>
+<script src="src/ui/YoshiUI.js?v=20260612002245"></script>
 
-<script src="src/design-overlay.js?v=20260611194623"></script>
+<script src="src/design-overlay.js?v=20260612002245"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 

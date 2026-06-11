@@ -2447,19 +2447,19 @@
   /* Style sidebar in fullscreen Watch mode */
   body:has(#panel-video.vt-fullscreen) .sidebar {
     z-index: 10001;
-    background: #0d0d0f;
-    border-right-color: #333;
+    background: var(--paper-dark);
+    border-right-color: var(--border);
   }
   body:has(#panel-video.vt-fullscreen) .sidebar button {
-    color: #666;
+    color: var(--ink-light);
   }
   body:has(#panel-video.vt-fullscreen) .sidebar button:hover {
-    color: #aaa;
-    background: #1a1a1c;
+    color: var(--ink);
+    background: var(--panel);
   }
   body:has(#panel-video.vt-fullscreen) .sidebar button.active {
     color: var(--teal);
-    background: #1a1a1c;
+    background: var(--panel);
   }
   /* Style nav in fullscreen Watch mode */
   body:has(#panel-video.vt-fullscreen) nav {
@@ -2468,17 +2468,15 @@
     left: 52px;
     right: 0;
     z-index: 10000;
-    background: #0d0d0f;
-    border-bottom: 1px solid #333;
-    padding: 6px 20px;
+    background: var(--paper-dark);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
   }
   body:has(#panel-video.vt-fullscreen) nav button {
-    color: #666;
-    font-size: 0.75rem;
-    padding: 6px 12px;
+    color: var(--ink-light);
   }
   body:has(#panel-video.vt-fullscreen) nav button:hover {
-    color: #aaa;
+    color: var(--ink);
   }
   body:has(#panel-video.vt-fullscreen) nav button.active {
     color: var(--teal);
