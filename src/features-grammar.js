@@ -1927,12 +1927,18 @@ function checkConjG() {
         if (typeof _conjRecordGrammarEvidence === 'function') {
           _conjRecordGrammarEvidence(item, true, null);
         }
+        // Correct with hint on = slip (not a clean pass)
+        if (_conjHintUsed) {
+          const verbType = item.word.type || 'u';
+          GrammarErrors.record(item.form, item.pol, item.reg, verbType, 'slip');
+        }
       }
     } else { 
       levClass = conjClassifyError(valHira, ansHira, item);
       if (!_conjTrackingPaused) {
         const verbType = item.word.type || 'u';
-        GrammarErrors.record(item.form, item.pol, item.reg, verbType, levClass.severity);
+        const effectiveSeverity = _conjHintUsed && levClass.severity === 'miss' ? 'slip' : levClass.severity;
+        GrammarErrors.record(item.form, item.pol, item.reg, verbType, effectiveSeverity);
         if (typeof _conjRecordGrammarEvidence === 'function') {
           _conjRecordGrammarEvidence(item, false, levClass);
         }
