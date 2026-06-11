@@ -1176,6 +1176,8 @@ const LOCAL_ONLY_KEYS = new Set([
   // Written before Storage.init() — must stay local
   'jpQTHistory',
   'listenTrackNames',
+  // UI session state — panel restore
+  'lnLastSessionId',
   // Legacy — none
 ]);
 
