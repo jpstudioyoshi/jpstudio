@@ -217,7 +217,8 @@ Design note at CONJ_SRS_DESIGN.md in project root.
 
 ## Pending — Priority Order
 
-1. **Gold dot: source sentence** — add node_id to lesson_phrases schema; show source sentence in detail panel
+1. **vocab_items schema refactor** — one row per word + separate vocab_srs table; use Claude Fable 5 in Claude Code, dedicated session
+2. **Gold dot: source sentence** — add node_id to lesson_phrases schema; show source sentence in detail panel
 2. **Gold dot: dismiss button** — hide dot for node until next lesson loads
 3. **progressSidebarControls tidy** — radio buttons visible below ⚙, cosmetic issue
 4. **Genki II nodes** — grammar_nodes_g2.json exists, not yet integrated
@@ -240,3 +241,30 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 ## kvAPI keys
 STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
 VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1
+
+## Vocabulary Model — Canonical Definition (session 31)
+
+### Three tiers
+- **Horizon** — in `words` table (N5 reference), not yet in `vocab_items`
+- **Target** — in `vocab_items`, not yet graduated in both jp_en AND en_jp
+- **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in both directions)
+
+All learning activities exist to move words from target → active.
+Speaking direction graduation is tracked separately — it can lag behind recognition.
+
+### vocab_items data state (after session 31 cleanup)
+- 867 unique words (`type='word'`)
+- 59 unique phrases (`type='phrase'`) — chunk-learned, no POS needed
+- 46 grammar patterns (`type='grammar'`) — excluded from vocab drill
+- POS propagated from `words` table and `pitch_data` covers most words
+- `vocab_status` VIEW created — one row per word, `status='active'|'target'`
+
+### Planned schema refactor (next dedicated thread)
+Current: one row per word+source+direction (up to 15 rows per word)
+Target: one row per word in `vocab_items` + separate `vocab_srs` table (one row per word+direction)
+Reason: word properties (POS, reading, meaning) are duplicated across rows; directions are isolated from each other; no single word-level status without a view
+
+### vocab_status VIEW
+- Collapses 3 direction rows into one word record
+- `status='active'` = graduated_jp_en AND graduated_en_jp both = 1
+- Use this view for briefing, sentence generation, and any word-level reporting
