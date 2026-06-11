@@ -559,6 +559,9 @@ const StudentModel = (() => {
     const AE = (typeof AppEvents !== 'undefined') ? AppEvents : null;
     if (!AE) { console.warn('[StudentModel] AppEvents not available — skipping subscriptions'); return; }
 
+    // NOTE: VOCAB_PRODUCED and FLUENCY_432 have no emitter yet (pending items) — these
+    // event strings are currently written direct to learning_events (core-srs.js / features-voice.js),
+    // so these listeners never fire until the emitters are built.
     const events = [
       AE.DRILL_ANSWER, AE.VOCAB_LOOKUP, AE.VOCAB_PRODUCED,
       AE.ERROR_RECORDED, AE.WRITING_SUBMITTED, AE.FLUENCY_432, AE.SESSION_TIME,

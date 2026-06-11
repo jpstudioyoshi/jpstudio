@@ -9131,42 +9131,42 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 587,
+    "line": 590,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 591,
+    "line": 594,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 606,
+    "line": 609,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 610,
+    "line": 613,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 628,
+    "line": 631,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 649,
+    "line": 652,
     "desc": "db.run"
   },
   {
