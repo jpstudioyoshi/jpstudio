@@ -569,6 +569,7 @@ const StudentModel = (() => {
         console.log('[StudentModel] received:', evt, payload);
         invalidate();
       });
+    });
 
     // Recording session — write voice panel time based on actual mic usage
     let _recStartTime = null;
@@ -613,7 +614,6 @@ const StudentModel = (() => {
       }
       _recStartTime = null;
       invalidate();
-    });
     });
 
     // Analysis complete — persist vocab and grammar evidence

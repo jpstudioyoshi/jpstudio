@@ -9131,28 +9131,28 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 586,
+    "line": 587,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 590,
+    "line": 591,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 605,
+    "line": 606,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/StudentModel.js",
-    "line": 609,
+    "line": 610,
     "desc": "db.run"
   },
   {
