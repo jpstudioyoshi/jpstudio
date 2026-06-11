@@ -1081,161 +1081,161 @@
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1470,
+    "line": 1472,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer"
   },
   {
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1472,
+    "line": 1474,
     "desc": "const input = document.createElement('input');"
   },
   {
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1491,
+    "line": 1493,
     "desc": "Storage.clearAll();"
   },
   {
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1501,
+    "line": 1503,
     "desc": "STATE"
   },
   {
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1523,
+    "line": 1525,
     "desc": "Storage.setState(state); }"
   },
   {
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1526,
+    "line": 1528,
     "desc": "const today = new Date().toDateString();"
   },
   {
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1543,
+    "line": 1545,
     "desc": "API KEY BAR"
   },
   {
     "type": "function",
     "name": "wordsSubFromSelect",
     "file": "src/core-foundation.js",
-    "line": 1572,
+    "line": 1574,
     "desc": "═══════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "wordsSwitchSubRestore",
     "file": "src/core-foundation.js",
-    "line": 1577,
+    "line": 1579,
     "desc": "const last = localStorage.getItem('wordsLastSub') || 'vocab';"
   },
   {
     "type": "function",
     "name": "kanjiRefToggle",
     "file": "src/core-foundation.js",
-    "line": 1584,
+    "line": 1586,
     "desc": "const p = document.getElementById('kanjiRefPanel');"
   },
   {
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1589,
+    "line": 1591,
     "desc": "['vocab','anki','game','counters','days'].forEach(s => {"
   },
   {
     "type": "function",
     "name": "_panelInteractPing",
     "file": "src/core-foundation.js",
-    "line": 1614,
+    "line": 1616,
     "desc": "_panelLastInteract = Date.now(); }"
   },
   {
     "type": "function",
     "name": "_panelSessionClose",
     "file": "src/core-foundation.js",
-    "line": 1619,
+    "line": 1621,
     "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;"
   },
   {
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1642,
+    "line": 1644,
     "desc": "const currentPanel = document.querySelector('.panel.active');"
   },
   {
     "type": "function",
     "name": "renderMarkdown",
     "file": "src/core-foundation.js",
-    "line": 1785,
+    "line": 1787,
     "desc": "if (!text) return '';"
   },
   {
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1810,
+    "line": 1812,
     "desc": "const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };"
   },
   {
     "type": "function",
     "name": "stRenderContext",
     "file": "src/core-foundation.js",
-    "line": 1832,
+    "line": 1834,
     "desc": "const el = document.getElementById('stContextDisplay');"
   },
   {
     "type": "function",
     "name": "stCopyContext",
     "file": "src/core-foundation.js",
-    "line": 1868,
+    "line": 1870,
     "desc": ""
   },
   {
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1876,
+    "line": 1878,
     "desc": "if (window.mgmt?.openWindow) {"
   },
   {
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1887,
+    "line": 1889,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1966,
+    "line": 1968,
     "desc": "if (typeof GrammarModel === 'undefined') return;"
   },
   {
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1988,
+    "line": 1990,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);"
   },
   {
     "type": "storage",
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
-    "line": 1573,
+    "line": 1575,
     "desc": "localStorage"
   },
   {
@@ -1256,7 +1256,7 @@
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1693,
+    "line": 1695,
     "desc": "Storage.set"
   },
   {
@@ -1333,14 +1333,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1629,
+    "line": 1631,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1633,
+    "line": 1635,
     "desc": "db.run"
   },
   {
