@@ -550,6 +550,7 @@ const StudentModel = (() => {
       lines.push('');
     }
 
+    lines.push('### Language instruction\nRespond in English only. Do not use German or any other language.');
     return lines.filter(l => l !== null).join('\n');
   }
 

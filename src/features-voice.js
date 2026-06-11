@@ -423,7 +423,7 @@ async function agentClaudeFollowUp() {
   _agentConversation.push({ role: 'user', content: question });
   agentRenderThread();
 
-  const systemPrompt = "You are a Japanese language tutor. Answer follow-up questions about the student's learning data concisely. Reference specific data where relevant. Always respond in English regardless of the language of the input.";
+  const systemPrompt = "You are a Japanese language tutor helping an English-speaking learner. Answer follow-up questions about the student's learning data concisely. Reference specific data where relevant. IMPORTANT: Always write responses in English only. Never use German or any other language. English only.";
   try {
     const messages = _agentConversation.map(m => ({ role: m.role, content: m.content }));
     const reply = await _agentStream(systemPrompt, messages, thread, true);
