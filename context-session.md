@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-10 (session 32 — grammar coverage panel, nav/sidebar rework)
+Last updated: 2026-06-11 (session 32 — schema v11, DB audit, dead code sweep)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -26,11 +26,11 @@ Last updated: 2026-06-10 (session 32 — grammar coverage panel, nav/sidebar rew
 - Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
 
 ## Claude Code
-- Launch: jp && claude --model claude-opus-4-8
+- Launch: jp && claude --model claude-fable-5
 - Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
 
 ## Current Mode
-STABILIZATION — nav/UI polish, grammar panel refinement.
+STABILIZATION — data quality, schema clean-up, dead code removal. Core pipelines complete.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge.
@@ -50,11 +50,6 @@ STABILIZATION — nav/UI polish, grammar panel refinement.
 - .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE, all checked by default, Reset button
 - conjPoolInfo span — shows "Pool: X known + Y frequency" on drill start
 
-**Session 31-32 additions:**
-- #strandMini — live 4-bar strand display in sidebar, replaces 進捗 button, clicks → progress panel
-- #grammarCoverageGrid / #grammarDetailPanel — flex row, 68%/29% split
-- scrape-grammar.js / scrape-grammar-g2.js — dev tools in project root
-
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
 - Always jp && prefix
@@ -68,81 +63,6 @@ STABILIZATION — nav/UI polish, grammar panel refinement.
 - DevTools console (Cmd+Option+I) for in-app JS — not terminal
 - window.db.run() returns {changes: 0} even on successful batch INSERTs — not an error indicator
 
-## Current Nav / Sidebar Layout
-
-### Sidebar (left, fixed)
-Top to bottom:
-1. #strandMini — live strand bars, clicks → progress panel
-2. ヨシ — lessonnotes panel
-3. 質問 — dashboard
-4. 筆順 — kana/stroke order
-5. 資料 — resources (contains ノート + 語彙録 buttons in header)
-6. [flex spacer]
-7. ⚙ (large) — settings, bottom
-
-### Nav (top bar)
-文法 | 語彙 | 読む | 書く | 聞く | 見る | 話す
-
-### Quick Translate Bar
-翻訳 button | input | ▼ history | kana buttons | × clear | result | 🔊 speak
-
-### Removed from sidebar
-- 翻訳 (moved to quick translate bar)
-- ノート / 語彙録 (moved under 資料 header buttons)
-- 進捗 (replaced by #strandMini)
-
-### progressSidebarControls
-Still in sidebar HTML (today/week/last week/all radios) — cosmetically untidy, low priority.
-
-## Grammar Coverage Panel — Complete (session 31-32)
-
-### Key files
-| File | Location |
-|---|---|
-| renderGrammarCoverage() | src/features-progress.js ~line 891 |
-| grammarNodeClick() | src/features-progress.js ~line 1009 |
-| grammarOverridePopup() | src/features-progress.js ~line 1076 |
-| renderStrandMini() | src/features-progress.js ~line 361 |
-| Grammar panel HTML | index.html ~line 2390–2410 |
-| grammar_nodes.json | src/data/grammar_nodes.json — 55 Genki I nodes, includes notes + url fields |
-| grammar_nodes_g2.json | src/data/grammar_nodes_g2.json — 53 Genki II nodes, not yet integrated |
-
-### What was built
-- Gold dots (corner badge, #ffe600) on pills for nodes in active/recent lesson session
-- Two-column layout: grid 68% / detail panel 29% (permanent, sticky)
-- Chapter labels inline left of pill rows
-- Pills full width, no truncation, data-nodeid attribute for highlight
-- Detail panel: pill-coloured title (clickable → override popup), prerequisites one line, St. Olaf notes with formatting, scrollable, pill highlight on click
-- Override popup: 4 coloured buttons (weak/partial/confident/mastered) → stGrammarSetOverride()
-- Legend: mastered, confident, partial, weak, untouched
-- scrape-grammar.js fetches all 55 Genki I node explanations → notes field in grammar_nodes.json
-- scrape-grammar-g2.js ready for Genki II when nodes are added
-
-### Gold dot source sentence — PENDING
-- Gold dots show nodes from lesson_sessions.extracted_grammar
-- Would like to show source sentence from lesson_phrases in the detail panel
-- Blocked: lesson_phrases has no node_id column — phrase label ≠ node ID
-- Fix: add node_id column to lesson_phrases schema + update extraction to write it
-- Workaround: fuzzy match on phrase label (deferred)
-
-### Gold dot dismiss — PENDING
-- Button in detail panel to dismiss gold dot for a node until next lesson loads
-- Not yet built
-
-## Four Strands Display
-
-### Defaults (session 32)
-- Range default: week (was "all")
-- Yoshi toggle default: ON (_strandShowYoshi = true)
-- "today" range: midnight local time (not rolling 24h)
-- "last 7 days" label removed from chart
-
-### renderStrandMini
-- Queries last 7 days always (independent of progressRange)
-- Respects _strandShowYoshi
-- Called on init (1500ms delay for StudentModel), on strandToggleYoshi, on progRangeSet
-- Colors: same dynamic logic as renderStrandBalance (red=0, orange<20%, green otherwise)
-
 ## Vocab System — Complete State
 
 ### All pipelines live
@@ -154,14 +74,20 @@ Still in sidebar HTML (today/week/last week/all radios) — cosmetically untidy,
 | lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
 | n5 | one-time backfill | vocab_items |
 
-### vocab_items schema
-id, word, reading, meaning, example, source, source_ref, direction, type, pos, counter_suffix,
-encounter_at, entry_weight, srs_interval, srs_ease, srs_due, srs_graduated, last_reviewed, created_at
-UNIQUE(word, source, direction)
+### vocab_items schema (v11 — session 32)
+id, word, reading, meaning, example, source, source_ref, type, pos, counter_suffix,
+encounter_at, entry_weight, created_at
+UNIQUE(word, source)
+— direction and SRS columns removed; now in vocab_srs
+
+### vocab_srs schema (new — session 32)
+id, vocab_id (FK → vocab_items.id), direction, srs_interval, srs_ease, srs_due,
+srs_graduated, last_reviewed
+UNIQUE(vocab_id, direction)
+— SRS rows created lazily on first review via INSERT ... ON CONFLICT DO UPDATE
 
 ### lesson_phrases schema
 id, lesson_id, phrase, reading, meaning, example, type, created_at
-— NOTE: no node_id column (see Gold dot source sentence above)
 
 ### Drill UI — working
 - Direction toggle: JP→EN / EN→JP / Speaking
@@ -172,12 +98,13 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Dynamic font scaling on card
 - Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
 - Strand tile: updates immediately on markVocab (window._vocabDrillUsedToday flag)
+- List view now works in all directions (EN→JP, Speaking) — side effect of v11 refactor
 
 ### SRS — SM-2 (corrected session 30)
 - Known: srs_interval = floor(interval × ease), ease +0.1 (if graduated), due pushed out
 - Got it: srs_interval = floor(interval × max(1.3, ease - 0.10)), ease unchanged
 - Again: srs_interval = 1, due tomorrow, ease -0.15 (if graduated, min 1.3)
-- srs_ease starts 2.5, srs_graduated column added (schema v10)
+- srs_ease starts 2.5, srs_graduated per direction in vocab_srs
 
 ### Weighting
 - effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
@@ -185,6 +112,7 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
 - Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
 - Stored in VOCAB_WEIGHTS kvAPI key
+- NOTE: weighting behaviour may differ subtly post-v11 — review flagged
 
 ### Filter logic
 - Source: all checked = no filter; partial = filter to checked sources; none = empty deck
@@ -201,77 +129,153 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 ## Conjugation Drill — DB-driven pool (session 30)
 
 ### Pool logic
-- Step 1: vocab_items WHERE pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY srs_ease DESC, srs_graduated DESC — up to 60
+- Step 1: vocab_items WHERE pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY MAX(srs_ease) DESC, MAX(srs_graduated) DESC across directions — up to 60
 - Step 2: top up to 100 from words table ORDER BY frequency DESC, excluding step 1 words
 - verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
 - Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
 - Null verb_class words skipped (not guessed)
+- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — can be removed later
 
 ### Conjugation SRS — future build
 Design note at CONJ_SRS_DESIGN.md in project root.
+- SRS unit = (word, source_form, target_form)
+- Direction toggle: forward (dict→form) and reverse (conjugated→dict)
+- Rule-level mastery via grammar_mastery table
+- Prerequisite: basic dict→all-forms scoring well first
 
 ## Writing Sitting Boost — Complete
 - writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
 - On save with ≥5 sentences → INSERT with expires_at = +3 days
 - loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
+- Fully automatic
+
+## Sidebar — Planned (not yet built)
+- Settings button to move to bottom of sidebar
+- Top of sidebar: #strandMini — 4 horizontal coloured stripes, no text, proportional to 7-day strand totals
+- Clicking strandMini opens progress panel
+- Colours: S1 teal, S2 gold, S3 muted blue, S4 green
+- renderStrandMini() to be added to features-progress.js
+- Called on app init and on progress panel update
+
+## Grammar Node Mapping Pipeline — Session 31 (COMPLETE, display pending)
+
+### Design
+- Purpose: highlight which Genki grammar nodes were foregrounded in each Yoshi session
+- NOT mastery tracking — focus view only ("here's what to work on from this lesson")
+- Per-session, not cumulative — viewing an old session shows only that session's nodes
+- No writes to grammar_mastery table
+
+### Data flow (now working)
+1. Lesson notes grammar extraction (`lessonNotesExtractGrammar`) calls `lessonNotesExtractGrammarSilent`
+2. Silent function awaits `GrammarModel.load()`, builds node list from all 55 nodes
+3. Node list injected into Claude prompt BEFORE lesson content
+4. Claude returns `grammarNodeIds` array per grammar point (exact node IDs only)
+5. Batch INSERT to `lesson_phrases` (type='grammar', lesson_id set)
+6. Unique node IDs collected → `UPDATE lesson_sessions SET extracted_grammar=?`
+7. Example: session 69 → 19 node IDs, 24 grammar patterns
+
+### Lesson session DB linking (fixed session 31)
+- `lessonSessionDbId` stored on kvAPI session object at creation time
+- Helper `lessonNotesEnsureDbRow()` finds-or-creates `lesson_sessions` row, stores ID back to kvAPI
+- Date-match kept as fallback for old sessions
+
+### Display — NEXT
+- Progress panel `renderGrammarCoverage()` to read `extracted_grammar` from all recent `lesson_sessions`
+- Show gold dot on Genki node pills that appear in any session's `extracted_grammar`
+- Tooltip: which session date(s) covered this node
+- No mastery colour change — annotation layer only
+- Backfill: delete and re-extract 3-4 recent sessions after display is wired
+
+## Session 32 Changes
+- **Schema v11** — vocab_items split into word data + vocab_srs; one row per (word, source); SRS state separated by direction
+- **Migration** — 1126 word rows, 3378 SRS rows, 0 orphans, backup kept as vocab_items_backup
+- **markVocab** — now uses INSERT ... ON CONFLICT DO UPDATE upserts; SRS rows created lazily
+- **Duplicate initLookupVocabListener** — removed from core.js
+- **lnLastSessionId** — added to LOCAL_ONLY_KEYS in core-foundation.js
+- **Dead code sweep** — 8 certain + 14 likely dead functions identified; saved to dead-code-findings.md; no deletions yet
+- **Claude Code model** — updated to claude-fable-5
+
+## DB Audit — Session 32
+
+### Storage layers
+- **kvAPI** — config, preferences, small UI state (backed by kv_store SQL table)
+- **SQLite** — all structured learning data (24 tables)
+- **localStorage** — legacy only; no new writes; intentional LOCAL_ONLY_KEYS documented in core-foundation.js
+
+### localStorage — assessed clean
+All remaining keys are intentional: device preferences (mic, TTS voice), caches (translate, breakdown — rebuild naturally), UI state (lnLastSessionId). Nothing to migrate.
+
+### Data files (src/data/)
+All JSON files are static reference data — correct to stay as JSON. Key files:
+- grammar_nodes.json (57K) — 55 Genki I nodes, loaded by GrammarModel at runtime
+- jlpt_words.json — source for words table (already in SQL) 
+- conjugation_data.json, kana_data.json, counter_data.json — static reference, JSON fine
+- **Future consideration:** grammar_nodes → SQL if joining node definitions with lesson_sessions.extracted_grammar becomes awkward in app code
+
+### Table row counts
+| Table | Count | Status |
+|---|---|---|
+| vocab_items | 1126 | ✅ active |
+| vocab_srs | 3378 | ✅ active (new v11) |
+| learning_events | 1648 | ✅ active |
+| corpus_lookups | 1219 | ✅ active |
+| corpus_productions | 1405 | ✅ active |
+| corpus_entries | 879 | ✅ active |
+| panel_sessions | 341 | ✅ active |
+| pitch_data | 124137 | ✅ fully loaded |
+| transcript_vocab | 0 | ⚠ pipeline deprioritised — transcript noise |
+| agent_decisions | 0 | ⚠ recommendation tracking never wired |
+| conversation_sessions | 0 | ⚠ waiting for FLUENCY_432 emitter |
+| failure_events | 0 | ✅ hopefully just no failures |
+
+### panel_sessions — behavioural analytics available
+- Has started_at, ended_at, duration_s — panel sequence queries possible at zero API cost
+- Can answer: "how often do I leave video to translate within 2 minutes" — pure SQL
+- Speaker balance deferred — waiting for two-channel recording / diarization
+- **Future:** surface panel sequence insights in progress panel ("How you're learning" tab)
+
+### agent_decisions — future feedback loop
+- Designed to record briefing recommendations + whether acted on
+- Currently: system is descriptive (records what you did) but not prescriptive with memory
+- **Future priority:** progress panel second view — "How you're learning" alongside "What you've learned"
+  - Strand imbalance detection (e.g. 15% time on counters → flag low variety)
+  - Panel sequence patterns (leaving video → translate frequently)
+  - Briefing recommendation follow-through tracking
 
 ## Pending — Priority Order
 
-1. **vocab_items schema refactor** — one row per word + separate vocab_srs table; use Claude Fable 5 in Claude Code, dedicated session
-2. **Gold dot: source sentence** — add node_id to lesson_phrases schema; show source sentence in detail panel
-2. **Gold dot: dismiss button** — hide dot for node until next lesson loads
-3. **progressSidebarControls tidy** — radio buttons visible below ⚙, cosmetic issue
-4. **Genki II nodes** — grammar_nodes_g2.json exists, not yet integrated
-5. **Book vocab import** — 18 pages, OCR artifact (deferred)
-6. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-7. **Counter suffix population** — counter_suffix column exists, needs tagging
-8. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring
-9. **corpus_productions extraction fix** — currently single-kanji, needs word-level
-10. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md
+1. **Grammar node display** — read `extracted_grammar` from `lesson_sessions`, show gold dots on Genki node pills in progress panel; backfill 3-4 sessions
+2. **Dead code deletion** — action dead-code-findings.md: delete 8 certain, review 14 likely; dedicated Claude Code session
+3. **Vocab weighting review** — confirm effective_weight calc behaves correctly post-v11 schema change
+4. **Sidebar strand mini-display** — #strandMini at top, settings button to bottom
+5. **"How you're learning" panel view** — panel sequence analytics + agent_decisions wiring; progress panel second tab
+6. **Book vocab import** — 18 pages, OCR artifact (deferred)
+7. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
+8. **Counter suffix population** — counter_suffix column exists, needs tagging
+9. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring → populates conversation_sessions
+10. **corpus_productions extraction fix** — currently single-kanji, needs word-level
+11. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md, after basic forms scoring well
+12. **Transcript statistics** — word count per session derivable from transcript_turns at zero API cost; query only, no new tables
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
 srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions,
 writing_sittings, drill_results, conversation_sessions, transcript_turns, failure_events,
-agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items
+agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items,
+vocab_srs, vocab_items_backup, kanji_ref, schema_version
 
-Schema version: 10
+Schema version: 11
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ## kvAPI keys
 STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
 VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1
 
-## Vocabulary Model — Canonical Definition (session 31)
+## Vocabulary Model — Canonical Definition
 
 ### Three tiers
 - **Horizon** — in `words` table (N5 reference), not yet in `vocab_items`
 - **Target** — in `vocab_items`, not yet graduated in both jp_en AND en_jp
-- **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in both directions)
+- **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in vocab_srs for both directions)
 
-All learning activities exist to move words from target → active.
-Speaking direction graduation is tracked separately — it can lag behind recognition.
-
-### vocab_items data state (after session 31 cleanup)
-- 867 unique words (`type='word'`)
-- 59 unique phrases (`type='phrase'`) — chunk-learned, no POS needed
-- 46 grammar patterns (`type='grammar'`) — excluded from vocab drill
-- POS propagated from `words` table and `pitch_data` covers most words
-- `vocab_status` VIEW created — one row per word, `status='active'|'target'`
-
-### Planned schema refactor (next dedicated thread)
-Current: one row per word+source+direction (up to 15 rows per word)
-Target: one row per word in `vocab_items` + separate `vocab_srs` table (one row per word+direction)
-Reason: word properties (POS, reading, meaning) are duplicated across rows; directions are isolated from each other; no single word-level status without a view
-
-### vocab_status VIEW
-- Collapses 3 direction rows into one word record
-- `status='active'` = graduated_jp_en AND graduated_en_jp both = 1
-- Use this view for briefing, sentence generation, and any word-level reporting
-
-### Refactor brief additions
-- Pitch, verb_class, frequency, jlpt_level to be denormalised into vocab_items word record at insert time (no runtime joins needed)
-- Lookup pipeline to classify at entry: word vs phrase based on Japanese structure
-  - Contains particle / space / already conjugated (ends ます、ません、ました、います) → type='phrase' → store in phrases, no POS
-  - Otherwise → type='word' → enrich from words/pitch_data at insert
-- Japanese structure determines type, not English translation
+Speaking direction graduation tracked separately — can lag behind recognition.

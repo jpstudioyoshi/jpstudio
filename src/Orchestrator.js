@@ -271,45 +271,6 @@ const Orchestrator = (() => {
   };
 })();
 
-// ── Backward-compatibility shims ──────────────────────────────────────────────
-
-async function yoshiStartRecording() {
-  try {
-    await Orchestrator.startLesson();
-  } catch (e) {
-    alert('Recording error: ' + e.message);
-  }
-}
-
-async function yoshiStopRecording() {
-  await Orchestrator.stopLesson();
-}
-
-async function yoshiLoadLessonSessions() {
-  return Orchestrator.loadSessions();
-}
-
-async function yoshiDeleteLessonSession(sessionId, audioPath, teacherPath) {
-  const msg = (audioPath || teacherPath)
-    ? 'Delete this recording session? This will also delete the audio files.'
-    : 'Delete this recording session?';
-  if (!confirm(msg)) return;
-  await Orchestrator.deleteSession(sessionId, audioPath, teacherPath);
-  (App.lessonNotesRenderPanel || window.lessonNotesRenderPanel)?.();
-}
-
-async function yoshiTranscribeCurrent() {
-  const btn = document.getElementById('overlayTranscribeBtn');
-  if (btn) { btn.textContent = '⏳ Transcribing…'; btn.disabled = true; }
-  try {
-    await Orchestrator.transcribeCurrentSession();
-    if (btn) { btn.textContent = '✓ Done'; }
-  } catch(e) {
-    if (btn) { btn.textContent = '✗ Failed'; btn.disabled = false; }
-    console.error('[yoshiTranscribeCurrent]', e);
-  }
-}
-
 async function yoshiSaveWhatsapp(sessionId) {
   const el  = document.getElementById('lessonWhatsappPaste');
   const text = el?.value || '';
@@ -339,12 +300,6 @@ async function yoshiSaveWhatsapp(sessionId) {
 try {
   Object.assign(App, {
     Orchestrator,
-    // Backward-compat shims also registered so callers can use App.yoshiXxx
-    yoshiStartRecording,
-    yoshiStopRecording,
-    yoshiLoadLessonSessions,
-    yoshiDeleteLessonSession,
     yoshiSaveWhatsapp,
-    yoshiTranscribeCurrent,
   });
 } catch(e) { console.error('[Orchestrator] App registry failed:', e); }

@@ -100,17 +100,6 @@ const YoshiUI = (() => {
   });
 
   // ── Button wiring ──────────────────────────────────────
-  // Named functions allow removeEventListener to deduplicate.
-
-  async function _onRecord() {
-    const _Orchestrator = App.Orchestrator || window.Orchestrator;
-    try { await _Orchestrator.startLesson(); }
-    catch (e) { alert('Could not start recording: ' + e.message); }
-  }
-  async function _onStop() {
-    const _Orchestrator = App.Orchestrator || window.Orchestrator;
-    await _Orchestrator.stopLesson();
-  }
 
   function wireButtons() {
     // No-op: record/stop buttons removed from main panel.

@@ -271,10 +271,6 @@ function ctrRefRenderGrid() {
   function isContracted(reading) {
     return /っ/.test(reading) || /ぽん|ぴき|ぱい|ほ゛/.test(reading);
   }
-  function isVoiced(reading, base) {
-    // Compare with base (un-contracted) — voiced = ぼ ば び ぶ べ
-    return /ぼ|ば|び|ぶ|べ/.test(reading);
-  }
 
   let html = '<table style="border-collapse:collapse;font-size:inherit;width:100%">';
   

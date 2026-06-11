@@ -707,90 +707,6 @@ function lnSetTranscriptMode(mode) {
   if (timelineBtn) timelineBtn.classList.toggle('active', mode === 'timeline');
 }
 
-async function lnLoadTimeline(recId, _elParam, turns, startMs) {
-  // Parse WhatsApp messages from session rawText
-  const sessions = lessonNotesGetSessions();
-  const session = LessonNotesState.currentIdx !== null ? sessions[LessonNotesState.currentIdx] : null;
-  const rawText = session && session.rawText ? session.rawText : '';
-  const _parseWA = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
-  const waMsgs = rawText && _parseWA ? _parseWA(rawText) : [];
-
-  // Convert WhatsApp HH:MM(:SS) time strings to seconds from recording start
-  // We have startMs (unix ms) for the recording. WA times are wall clock HH:MM.
-  // Build a Date from the recording date + WA time to get a comparable wall time.
-  function waTimeToSeconds(timeStr) {
-    if (!startMs) return null;
-    const startDate = new Date(startMs);
-    const parts = timeStr.split(':');
-    const h = parseInt(parts[0]), m = parseInt(parts[1]), s = parseInt(parts[2] || 0);
-    // Construct a date with the same Y/M/D as the recording but WA time
-    const wDate = new Date(startDate);
-    wDate.setHours(h, m, s, 0);
-    return (wDate.getTime() - startMs) / 1000;
-  }
-
-  // Build merged entries — audio segments + Yoshi's WA messages only
-  const merged = [];
-
-  for (const t of turns) {
-    const ts = Math.round(t.start != null ? t.start : (t.timestamp != null ? t.timestamp : 0));
-    merged.push({ type: 'audio', ts, text: t.text || '', speaker: t.speaker });
-  }
-
-  for (const msg of waMsgs) {
-    // Only include Yoshi's messages — skip messages from the student
-    if (!msg.sender || /paulandres|paul/i.test(msg.sender)) continue;
-    // Skip any message where text looks like an unparsed header
-    if (!msg.text || msg.text.startsWith('[')) continue;
-    const secs = waTimeToSeconds(msg.time);
-    if (secs === null || secs < -120) continue; // allow up to 2 min before recording
-    merged.push({ type: 'whatsapp', ts: secs, text: msg.text, sender: msg.sender, waTime: msg.time });
-  }
-
-  // Sort by timestamp
-  merged.sort(function(a, b) { return a.ts - b.ts; });
-
-  // Look up element fresh in case DOM was rebuilt during async work
-  const el = document.getElementById('lnTranscriptArea') || _elParam;
-  if (!el) return;
-  el.innerHTML = '';
-
-  if (!merged.length) {
-    el.innerHTML = '<span style="color:var(--ink-light)">No content to display.</span>';
-    return;
-  }
-
-  for (const entry of merged) {
-    const row = document.createElement('div');
-
-    if (entry.type === 'audio') {
-      // Audio transcript row — seekable, teal time
-      const m = Math.floor(entry.ts / 60), s = entry.ts % 60;
-      const offsetStr = m + ':' + String(s).padStart(2, '0');
-      let timeStr = offsetStr;
-      if (startMs) {
-        const wallDate = new Date(startMs + entry.ts * 1000);
-        timeStr = wallDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      }
-      row.style.cssText = 'display:flex;gap:8px;padding:4px 6px;border-radius:4px;cursor:pointer;align-items:baseline';
-      row.classList.add('row-hover');
-      row.onclick = (function(sec) { return function() { lnSeekToTime(sec); }; })(entry.ts);
-      row.innerHTML =
-        '<span style="color:var(--teal);flex-shrink:0;font-size:0.72rem;min-width:44px;font-variant-numeric:tabular-nums" title="' + offsetStr + ' from start">' + timeStr + '</span>' +
-        '<span style="flex-shrink:0;font-size:0.8rem">🙋</span>' +
-        '<span style="color:var(--ink);line-height:1.6;font-size:1rem">' + (App.escHtml || window.escHtml || function(s){return s;})(entry.text) + '</span>';
-    } else {
-      // WhatsApp message row — gold, not seekable
-      row.style.cssText = 'display:flex;gap:8px;padding:6px 6px 6px 10px;border-radius:4px;align-items:baseline;border-left:2px solid var(--gold);margin:4px 0';
-      row.innerHTML =
-        '<span style="color:var(--gold);flex-shrink:0;font-size:0.72rem;min-width:44px;font-variant-numeric:tabular-nums">' + entry.waTime + '</span>' +
-        '<span style="flex-shrink:0;font-size:0.8rem">🧑‍🏫</span>' +
-        '<span style="color:var(--ink);line-height:1.6;font-size:inherit">' + (App.escHtml || window.escHtml || function(s){return s;})(entry.text) + '</span>';
-    }
-    el.appendChild(row);
-  }
-}
-
 function lnSeekToTime(secs) {
   const student = document.getElementById('lnAudioStudent');
   const teacher = document.getElementById('lnAudioTeacher');
@@ -2760,94 +2676,6 @@ function lnPlaySentence(idx) {
   }
 }
 
-async function lnCreateFromPaste() {
-  var raw = (document.getElementById('lnPasteArea') || {}).value || '';
-  raw = raw.trim();
-  var titleEl = document.getElementById('lnNewTitle');
-  var title = (titleEl ? titleEl.value.trim() : '') || new Date().toISOString().slice(0,10);
-  if (!raw) return;
-
-  lessonNotesRenderPanel();
-
-  var messages = (App.yoshiParseWhatsapp || window.yoshiParseWhatsapp)(raw);
-  var isWhatsApp = messages.length > 2;
-  var vocab = [], corrections = [], grammar = [], topics = [], summary = '', parsed = null;
-
-  try {
-    var apiKey = (App.getApiKey || window.getApiKey)?.();
-    if (apiKey) {
-      var resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 2000,
-          system: 'Analyse Japanese lesson content. Respond ONLY with valid JSON, no markdown.',
-          messages: [{ role: 'user', content:
-            'Extract from this ' + (isWhatsApp ? 'WhatsApp lesson chat' : 'lesson document') + ':\n'
-            + '1. vocab: [{jp, reading, en}] — vocabulary items with readings\n'
-            + '2. stories: [{title, text}] — any continuous Japanese text passages (sentences, paragraphs)\n'
-            + '3. keyPhrases: [{phrase, meaning, example}] — useful expressions and sentence patterns\n'
-            + '4. grammar: [{pattern, explanation, example}] — grammar points covered\n'
-            + '5. corrections: [{original, corrected, note}] — errors that were corrected\n'
-            + '6. topics: [string] — topics covered\n'
-            + '7. summary: string (one sentence)\n\n'
-            + 'Content:\n' + raw.slice(0, 4000)
-            + '\n\nJSON only: {"vocab":[],"stories":[],"keyPhrases":[],"grammar":[],"corrections":[],"topics":[],"summary":""}'
-          }]
-        })
-      });
-      var data = await resp.json();
-      console.warn('[API] Claude call · feature="lesson-paste" · in=' + (data.usage?.input_tokens ?? '?') + ' out=' + (data.usage?.output_tokens ?? '?') + ' tokens');
-      (App.apiUsageTrack || window.apiUsageTrack)?.('lesson-paste', data.usage?.input_tokens ?? 0, data.usage?.output_tokens ?? 0);
-      var text = (data.content && data.content[0] && data.content[0].text) || '';
-      parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
-      vocab = parsed.vocab || [];
-      corrections = parsed.corrections || [];
-      grammar = parsed.grammar || [];
-      topics = parsed.topics || [];
-      summary = parsed.summary || '';
-    }
-  } catch(e) { console.warn('[lnCreateFromPaste]', e.message); }
-
-  var sessions = lessonNotesGetSessions();
-  var stories = parsed && parsed.stories ? parsed.stories : [];
-  var keyPhrases = parsed && parsed.keyPhrases ? parsed.keyPhrases : [];
-  var newSession = {
-    id: Date.now(),
-    date: (function() {
-      var d = title.replace(/^\[/, '').trim();
-      if (/^\d{4}-\d{2}-\d{2}/.test(d)) return d.slice(0,10);
-      var m = d.match(/(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/);
-      if (m) { var yy = m[3].length===2?'20'+m[3]:m[3]; return yy+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'); }
-      return new Date().toISOString().slice(0,10);
-    })(),
-    title: title,
-    rawText: raw,
-    vocab: vocab,
-    stories: stories,
-    keyPhrases: keyPhrases,
-    grammar: grammar,
-    corrections: corrections,
-    topics: topics,
-    summary: summary,
-    whatsapp: isWhatsApp ? messages : [],
-    lessonSessionDbId: null,
-  };
-  sessions.unshift(newSession);
-  lessonNotesSaveSessions(sessions);
-  LessonNotesState.currentIdx = 0;
-  await lessonNotesEnsureDbRow(newSession, sessions);
-  lessonNotesRenderPanel();
-}
-
-Object.assign(App, { lnCreateFromPaste });
-
 // ── Moved from features-tools.js ────────────────────────────────────────────
 function lessonNotesUpdateDropdown() {
   // No-op stub. Dropdown update is handled by lessonNotesRenderPanel.
@@ -3250,8 +3078,6 @@ function lnDeleteSession() {
   lnSaveSessions(sessions);
   lessonNotesLoadSession(sessions.length ? 0 : -1);
 }
-
-// lnCreateFromPaste moved to features-lesson-notes.js
 
 async function lnHandleFile(files) {
   if (!files || !files[0]) return;

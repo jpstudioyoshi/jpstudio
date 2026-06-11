@@ -364,9 +364,6 @@ try {
   window["listenTransToggleKana"] = listenTransToggleKana;
   window["listenTransSetMode"] = listenTransSetMode;
   window["listenTransClear"] = listenTransClear;
-  window["vcFetch"] = vcFetch;
-  window["vcFetchAdd"] = vcFetchAdd;
-  window["vcFetchSelectAll"] = vcFetchSelectAll;
   window["vcToggleHint"] = vcToggleHint;
   window["vgEnd"] = vgEnd;
   window["vgNext"] = vgNext;
