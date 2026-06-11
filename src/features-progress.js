@@ -191,7 +191,7 @@ function renderFourStrandRecency() {
   }
 
   // Vocabulary tile uses most recent of anki, words, counters keys
-  const _vocabDate = [rec.anki, rec.words, rec.counters].filter(Boolean).sort().pop() || null;
+  const _vocabDate = [rec.anki, rec.words, rec.counters, rec.kana].filter(Boolean).sort().pop() || null;
 
   const strands = [
     { label: 'INPUT', sub: 'listening & reading', items: [
@@ -207,7 +207,6 @@ function renderFourStrandRecency() {
       { label: 'Vocabulary',   key: '_vocab',    panel: 'words'     },
       { label: 'Sentence Building', key: 'gramSent', panel: 'grammar2'  },
       { label: 'Conjugation',  key: 'conj',      panel: 'grammar2'  },
-      { label: 'Kana',         key: 'kana',      panel: 'kana'      },
       { label: 'Questions',    key: 'chat',      panel: 'dashboard' },
     ]},
     { label: 'FLUENCY', sub: 'using what you know', items: [
@@ -236,7 +235,7 @@ function renderFourStrandRecency() {
   labels['_vocab'] = labels.anki || labels.words || labels.counters || null;
 
   // Build grid — one section per strand
-  let html = '<div style="display:flex;flex-direction:column;gap:72px">';
+  let html = '<div style="display:flex;flex-direction:column;gap:12px">';
 
   for (const strand of strands) {
     // Find the most recently done item in this strand (for summary line)
@@ -270,10 +269,6 @@ function renderFourStrandRecency() {
     }
 
     html += '</div>'; // end tiles row
-    // Summary line — most recent activity in this strand
-    if (summaryText) {
-      html += '<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-top:4px;padding-left:2px;line-height:1.4">' + summaryText + '</div>';
-    }
     html += '</div>'; // end strand block
   }
 
