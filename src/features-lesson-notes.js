@@ -1607,16 +1607,13 @@ ${docContent.slice(0, 10000)}` }]
     try {
       const _lessonId = LessonNotesState.currentLessonId || null;
       const now = new Date().toISOString();
-      const today = now.split('T')[0];
       for (const v of LessonNotesState.vocab) {
         if (!v.word || !v.meaning) continue;
-        for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-          await window.db.run(
-            `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, direction, type, pos, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-             VALUES (?, ?, ?, 'yoshi_vocab', ?, ?, 'word', ?, ?, 1.0, 1, 2.5, ?, ?)`,
-            [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, dir, v.pos || null, now, today, now]
-          );
-        }
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, type, pos, encounter_at, entry_weight, created_at)
+           VALUES (?, ?, ?, 'yoshi_vocab', ?, 'word', ?, ?, 1.0, ?)`,
+          [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, v.pos || null, now, now]
+        );
       }
       console.log('[LN] vocab written to vocab_items:', LessonNotesState.vocab.length, 'words');
     } catch(e) { console.warn('[LN] vocab_items write failed:', e.message); }

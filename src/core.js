@@ -534,14 +534,12 @@ document.addEventListener('storageReady', function() {
   if (App.initLessonVocabListener) App.initLessonVocabListener();
   // Wire lookup promotion listener
   if (App.initLookupVocabListener) App.initLookupVocabListener();
-  // Wire lookup promotion listener
-  if (App.initLookupVocabListener) App.initLookupVocabListener();
   // Load vocab settings into UI
   if (App.vocabSettingsLoad) App.vocabSettingsLoad();
   // Load due vocab_items into the drill deck
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
   // Restore today's drill activity flag from DB (survives restart)
-  if (window.db) window.db.query("SELECT 1 FROM vocab_items WHERE last_reviewed >= date('now') LIMIT 1", []).then(r => { if (r && r.length) window._vocabDrillUsedToday = true; });
+  if (window.db) window.db.query("SELECT 1 FROM vocab_srs WHERE last_reviewed >= date('now') LIMIT 1", []).then(r => { if (r && r.length) window._vocabDrillUsedToday = true; });
 
   // Pitch accent data import (one-time, skipped if already populated)
   if (window.pitchAPI) {

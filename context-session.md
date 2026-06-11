@@ -268,3 +268,10 @@ Reason: word properties (POS, reading, meaning) are duplicated across rows; dire
 - Collapses 3 direction rows into one word record
 - `status='active'` = graduated_jp_en AND graduated_en_jp both = 1
 - Use this view for briefing, sentence generation, and any word-level reporting
+
+### Refactor brief additions
+- Pitch, verb_class, frequency, jlpt_level to be denormalised into vocab_items word record at insert time (no runtime joins needed)
+- Lookup pipeline to classify at entry: word vs phrase based on Japanese structure
+  - Contains particle / space / already conjugated (ends ます、ません、ました、います) → type='phrase' → store in phrases, no POS
+  - Otherwise → type='word' → enrich from words/pitch_data at insert
+- Japanese structure determines type, not English translation

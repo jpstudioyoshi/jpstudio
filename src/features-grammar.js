@@ -1339,10 +1339,11 @@ async function buildConjVerbPool() {
       const rows = await window.db.query(
         `SELECT v.word AS dict, v.reading AS read, v.meaning AS en, v.pos AS pos, w.verb_class AS verb_class
            FROM vocab_items v
+           LEFT JOIN vocab_srs s ON s.vocab_id = v.id
            LEFT JOIN words w ON v.word = w.word
           WHERE v.pos IN ('verb','i-adj','na-adj')
           GROUP BY v.word
-          ORDER BY v.srs_ease DESC, v.srs_graduated DESC
+          ORDER BY MAX(s.srs_ease) DESC, MAX(s.srs_graduated) DESC
           LIMIT 60`, []);
       if (rows && !rows.error) {
         for (const row of rows) {

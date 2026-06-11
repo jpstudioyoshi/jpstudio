@@ -333,17 +333,24 @@ function createSchema() {
       example       TEXT,
       source        TEXT NOT NULL,
       source_ref    TEXT,
-      direction     TEXT NOT NULL DEFAULT 'jp_en',
       type          TEXT DEFAULT 'phrase',
       pos           TEXT,
+      counter_suffix TEXT,
       encounter_at  TEXT,
       entry_weight  REAL DEFAULT 1.0,
+      created_at    TEXT NOT NULL,
+      UNIQUE(word, source)
+    );
+    CREATE TABLE IF NOT EXISTS vocab_srs (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      vocab_id      INTEGER NOT NULL REFERENCES vocab_items(id),
+      direction     TEXT NOT NULL,
       srs_interval  INTEGER DEFAULT 1,
       srs_ease      REAL DEFAULT 2.5,
       srs_due       TEXT,
+      srs_graduated INTEGER DEFAULT 0,
       last_reviewed TEXT,
-      created_at    TEXT NOT NULL,
-      UNIQUE(word, source, direction)
+      UNIQUE(vocab_id, direction)
     );
     CREATE TABLE IF NOT EXISTS grammar_mastery (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -597,9 +604,54 @@ function createSchema() {
   // v10: srs_graduated flag on vocab_items
   if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 10) {
     const viCols = (db.exec("PRAGMA table_info(vocab_items)")[0]?.values || []).map(r => r[1]);
-    if (!viCols.includes('srs_graduated')) db.run('ALTER TABLE vocab_items ADD COLUMN srs_graduated INTEGER DEFAULT 0');
+    if (viCols.includes('direction') && !viCols.includes('srs_graduated')) db.run('ALTER TABLE vocab_items ADD COLUMN srs_graduated INTEGER DEFAULT 0');
     db.run('UPDATE schema_version SET version = 10');
     console.log('Migrated schema to v10 (vocab_items: srs_graduated)');
+  }
+  // v11: split vocab_items into word data + vocab_srs (one SRS row per word+direction)
+  if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 11) {
+    const viCols11 = (db.exec("PRAGMA table_info(vocab_items)")[0]?.values || []).map(r => r[1]);
+    if (viCols11.includes('direction')) {
+      db.run(`CREATE TABLE IF NOT EXISTS vocab_srs (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        vocab_id      INTEGER NOT NULL REFERENCES vocab_items(id),
+        direction     TEXT NOT NULL,
+        srs_interval  INTEGER DEFAULT 1,
+        srs_ease      REAL DEFAULT 2.5,
+        srs_due       TEXT,
+        srs_graduated INTEGER DEFAULT 0,
+        last_reviewed TEXT,
+        UNIQUE(vocab_id, direction)
+      )`);
+      db.run(`INSERT INTO vocab_srs (vocab_id, direction, srs_interval, srs_ease, srs_due, srs_graduated, last_reviewed)
+        SELECT c.id, v.direction, v.srs_interval, v.srs_ease, v.srs_due, v.srs_graduated, v.last_reviewed
+        FROM vocab_items v
+        JOIN (SELECT MIN(id) AS id, word, source FROM vocab_items GROUP BY word, source) c
+          ON c.word = v.word AND c.source = v.source`);
+      db.run('ALTER TABLE vocab_items RENAME TO vocab_items_backup');
+      db.run(`CREATE TABLE vocab_items (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        word          TEXT NOT NULL,
+        reading       TEXT,
+        meaning       TEXT,
+        example       TEXT,
+        source        TEXT NOT NULL,
+        source_ref    TEXT,
+        type          TEXT DEFAULT 'phrase',
+        pos           TEXT,
+        counter_suffix TEXT,
+        encounter_at  TEXT,
+        entry_weight  REAL DEFAULT 1.0,
+        created_at    TEXT NOT NULL,
+        UNIQUE(word, source)
+      )`);
+      db.run(`INSERT INTO vocab_items (id, word, reading, meaning, example, source, source_ref, type, pos, encounter_at, entry_weight, created_at)
+        SELECT id, word, reading, meaning, example, source, source_ref, type, pos, encounter_at, entry_weight, created_at
+        FROM vocab_items_backup
+        WHERE id IN (SELECT MIN(id) FROM vocab_items_backup GROUP BY word, source)`);
+    }
+    db.run('UPDATE schema_version SET version = 11');
+    console.log('Migrated schema to v11 (vocab_items/vocab_srs split)');
   }
   console.log('Schema created/verified');
 }

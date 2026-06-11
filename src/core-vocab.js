@@ -110,8 +110,8 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
   try {
     const sources = vocabGetActiveSources();
     const _localToday = new Date().toLocaleDateString('sv-SE');
-    let sql = "SELECT * FROM vocab_items WHERE (srs_due <= date('now','localtime') OR srs_due IS NULL) AND (last_reviewed IS NULL OR last_reviewed < ?) AND direction = ? AND word NOT LIKE '〜%' AND (type IS NULL OR (type != 'grammar' AND type != 'excluded'))";
-    const params = [_localToday, direction];
+    let sql = "SELECT v.*, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded'))";
+    const params = [direction, _localToday];
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
       params.push(...sources);
@@ -168,7 +168,7 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
     } catch(e) { console.warn('[vocab] prep boost lookup failed:', e); }
     const weighted = (rows || []).map(r => ({
       ...r,
-      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[r.direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
+      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
     }));
     weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
     state.vocabItems = weighted.slice(0, 200);
@@ -229,8 +229,10 @@ function markVocab(v) {
     const newInterval  = Math.max(1, Math.floor(curInterval * curEase));
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_graduated = ?, srs_ease = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
-        [newGraduated, newEase, newInterval, newInterval, id]
+        `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
+         VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
+         ON CONFLICT(vocab_id, direction) DO UPDATE SET srs_graduated = excluded.srs_graduated, srs_ease = excluded.srs_ease, srs_interval = excluded.srs_interval, srs_due = excluded.srs_due, last_reviewed = excluded.last_reviewed`,
+        [id, vcDirection, newGraduated, newEase, newInterval, newInterval]
       ).catch(() => {});
     }
 
@@ -241,8 +243,10 @@ function markVocab(v) {
     const newInterval  = Math.max(1, Math.floor(curInterval * newEase));
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_graduated = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
-        [newGraduated, newInterval, newInterval, id]
+        `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
+         VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
+         ON CONFLICT(vocab_id, direction) DO UPDATE SET srs_graduated = excluded.srs_graduated, srs_interval = excluded.srs_interval, srs_due = excluded.srs_due, last_reviewed = excluded.last_reviewed`,
+        [id, vcDirection, newGraduated, curEase, newInterval, newInterval]
       ).catch(() => {});
     }
 
@@ -259,8 +263,10 @@ function markVocab(v) {
     const newInterval = 1;
     if (window.db && id != null) {
       window.db.run(
-        "UPDATE vocab_items SET srs_ease = ?, srs_interval = ?, srs_due = date('now', '+' || ? || ' days'), last_reviewed = datetime('now') WHERE id = ?",
-        [newEase, newInterval, newInterval, id]
+        `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
+         VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
+         ON CONFLICT(vocab_id, direction) DO UPDATE SET srs_ease = excluded.srs_ease, srs_interval = excluded.srs_interval, srs_due = excluded.srs_due, last_reviewed = excluded.last_reviewed`,
+        [id, vcDirection, curGraduated, newEase, newInterval, newInterval]
       ).catch(() => {});
     }
   }
@@ -537,6 +543,7 @@ async function vocabListDeleteSelected() {
   const words = [...new Set([...checked].map(cb => cb.dataset.word))];
   if (!confirm(`Delete ${words.length} word(s) from all directions? This cannot be undone.`)) return;
   for (const word of words) {
+    await window.db.run('DELETE FROM vocab_srs WHERE vocab_id IN (SELECT id FROM vocab_items WHERE word = ?)', [word]).catch(() => {});
     await window.db.run('DELETE FROM vocab_items WHERE word = ?', [word]).catch(() => {});
   }
   await loadVocabItemsDeck(vcDirection, false);
@@ -568,8 +575,7 @@ function renderVocabList() {
   const container = document.getElementById('vocabList');
   if (!container || container.style.display === 'none') return;
   const items = (state.vocabItems || [])
-    .map((c, i) => ({ c, i }))
-    .filter(({ c }) => c.direction === 'jp_en');
+    .map((c, i) => ({ c, i }));
   if (!items.length) {
     container.innerHTML = '<div style="padding:12px 14px;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',sans-serif;font-size:0.75rem;color:var(--ink-light);font-style:italic">No words yet.</div>';
     return;
@@ -1634,11 +1640,16 @@ async function migrateLearnedWordsToVocabItems() {
     const due = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
     for (const word of words) {
       if (!word || typeof word !== 'string') continue;
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, created_at)
+         VALUES (?, 'yoshi_vocab', 'lessonNotesLearnedWords', ?, 0.1, ?)`,
+        [word, now, now]
+      );
       for (const dir of ['jp_en', 'en_jp', 'speaking']) {
         await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, 'yoshi_vocab', 'lessonNotesLearnedWords', ?, 0.1, 30, 2.5, ?, ?, ?)`,
-          [word, now, due, dir, now]
+          `INSERT OR IGNORE INTO vocab_srs (vocab_id, direction, srs_interval, srs_ease, srs_due)
+           SELECT id, ?, 30, 2.5, ? FROM vocab_items WHERE word = ? AND source = 'yoshi_vocab'`,
+          [dir, due, word]
         );
       }
     }
@@ -1656,16 +1667,13 @@ async function backfillLessonPhrasesToVocabItems() {
     if (flag) return;
     const rows = await window.db.query('SELECT id, phrase, reading, meaning, example, type, created_at FROM lesson_phrases', []);
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1'); return; }
-    const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     for (const row of rows) {
-      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-        await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-           VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, ?, 1.0, 1, 2.5, ?, ?)`,
-          [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), dir, row.type || 'phrase', row.created_at || now, today, now]
-        );
-      }
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
+         VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)`,
+        [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now]
+      );
     }
     await window.kvAPI.set('VOCAB_LESSON_BACKFILL_V1', '1');
     console.log('[vocab] backfilled ' + rows.length + ' lesson_phrases into vocab_items');
@@ -1687,17 +1695,14 @@ async function backfillLookupsToVocabItems() {
        HAVING lookup_count >= 2`, []
     );
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1'); return; }
-    const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     for (const row of rows) {
       const weight = Math.min(0.6 + (row.lookup_count - 2) * 0.05, 1.0);
-      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-        await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, 'lookup', ?, ?, ?, 1, 2.5, ?, ?, ?)`,
-          [row.word, 'corpus_lookups', row.first_seen || now, weight, today, dir, now]
-        );
-      }
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, source, source_ref, encounter_at, entry_weight, created_at)
+         VALUES (?, 'lookup', ?, ?, ?, ?)`,
+        [row.word, 'corpus_lookups', row.first_seen || now, weight, now]
+      );
     }
     await window.kvAPI.set('VOCAB_LOOKUPS_BACKFILL_V1', '1');
     console.log('[vocab] backfilled ' + rows.length + ' lookup words into vocab_items');
@@ -1713,18 +1718,15 @@ async function backfillN5ToVocabItems() {
     if (flag) return;
     const rows = await window.db.query('SELECT word, reading, meaning FROM words', []);
     if (!rows || rows.length === 0) { await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1'); return; }
-    const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     let inserted = 0;
     for (const row of rows) {
-      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-        const result = await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, ?, ?, 'n5', 'words', ?, 0.3, 1, 2.5, ?, ?, ?)`,
-          [row.word, row.reading || null, row.meaning || null, now, today, dir, now]
-        );
-        if (result && result.changes) inserted++;
-      }
+      const result = await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, encounter_at, entry_weight, created_at)
+         VALUES (?, ?, ?, 'n5', 'words', ?, 0.3, ?)`,
+        [row.word, row.reading || null, row.meaning || null, now, now]
+      );
+      if (result && result.changes) inserted++;
     }
     await window.kvAPI.set('VOCAB_N5_BACKFILL_V1', '1');
     console.log('[vocab] N5 backfill: ' + inserted + ' new words added (of ' + rows.length + ' total)');
@@ -1755,16 +1757,13 @@ async function extractWritingVocabToItems(text) {
     }
     if (!Array.isArray(words) || words.length === 0) return;
     const now = new Date().toISOString();
-    const today = now.split('T')[0];
     for (const w of words) {
       if (!w.word || typeof w.word !== 'string') continue;
-      for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-        await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, direction, created_at)
-           VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, 1, 2.5, ?, ?, ?)`,
-          [w.word, w.reading || null, w.meaning || null, w.pos || null, now, today, dir, now]
-        );
-      }
+      await window.db.run(
+        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at)
+         VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, ?)`,
+        [w.word, w.reading || null, w.meaning || null, w.pos || null, now, now]
+      );
     }
     console.log('[vocab] writing extraction: ' + words.length + ' words from submission');
   } catch (e) {
@@ -1793,17 +1792,14 @@ function initLessonVocabListener() {
           [lessonId]
         );
         if (!rows || rows.length === 0) return;
-        const today = new Date().toISOString().split('T')[0];
         const now = new Date().toISOString();
         for (const row of rows) {
           if (row.type === 'grammar') continue;
-          for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-            await window.db.run(
-              `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-               VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, ?, 1.0, 1, 2.5, ?, ?)`,
-              [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), dir, row.type || 'phrase', row.created_at || now, today, now]
-            );
-          }
+          await window.db.run(
+            `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
+             VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)`,
+            [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now]
+          );
         }
         console.log('[vocab] lesson extracted — upserted ' + rows.length + ' phrases into vocab_items');
         if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
@@ -1830,22 +1826,19 @@ function initLookupVocabListener() {
         const count = rows?.[0]?.n || 0;
         if (count < threshold) return;
         const now = new Date().toISOString();
-        const today = now.split('T')[0];
         const weight = Math.min(0.6 + (count - threshold) * 0.05, 1.0);
         const _meaning = payload.meaning || '';
         const _reading = payload.reading || '';
-        for (const dir of ['jp_en', 'en_jp', 'speaking']) {
-          await window.db.run(
-            `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, direction, type, encounter_at, entry_weight, srs_interval, srs_ease, srs_due, created_at)
-             VALUES (?, ?, ?, 'lookup', 'corpus_lookups', ?, 'word', ?, ?, 1, 2.5, ?, ?)
-             ON CONFLICT(word, source, direction) DO UPDATE SET
-               meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
-               reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
-               encounter_at = excluded.encounter_at,
-               entry_weight = excluded.entry_weight`,
-            [word, _reading, _meaning, dir, now, weight, today, now]
-          );
-        }
+        await window.db.run(
+          `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at)
+           VALUES (?, ?, ?, 'lookup', 'corpus_lookups', 'word', ?, ?, ?)
+           ON CONFLICT(word, source) DO UPDATE SET
+             meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
+             reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
+             encounter_at = excluded.encounter_at,
+             entry_weight = excluded.entry_weight`,
+          [word, _reading, _meaning, now, weight, now]
+        );
         console.log('[vocab] lookup promoted:', word, '(' + count + ' lookups)');
       } catch(e) {
         console.warn('[vocab] lookup promotion error', e);
@@ -2014,9 +2007,11 @@ function skipVocabTypeAnswer() {
 function vocabKnownRecent(limit = 20) {
   try {
     const rows = window.db.query(
-      `SELECT word, meaning FROM vocab_items
-       WHERE srs_graduated = 1
-       ORDER BY last_reviewed DESC
+      `SELECT v.word, v.meaning FROM vocab_items v
+       JOIN vocab_srs s ON s.vocab_id = v.id
+       WHERE s.srs_graduated = 1
+       GROUP BY v.id
+       ORDER BY MAX(s.last_reviewed) DESC
        LIMIT ?`, [limit]
     );
     return rows.map(r => r.word + '（' + r.meaning + '）').join(', ');
