@@ -1255,7 +1255,27 @@ function voiceCheckKeys() {
 
 function voiceUpdateStatus(msg) {
   const el = document.getElementById('voiceStatus');
-  if (el) el.textContent = msg;
+  if (el) el.textContent = '';
+
+  const btn = document.getElementById('voiceRecordBtn');
+  if (btn && !VoiceState.recording) {
+    btn.style.background = msg
+      ? 'linear-gradient(135deg, #e0c020, #f0d050)'   // busy: yellow
+      : 'linear-gradient(135deg, var(--teal), #28b8ad)'; // ready: green
+  }
+}
+
+function voiceShowError(msg) {
+  voiceUpdateStatus('');
+  const toast = document.createElement('div');
+  toast.textContent = msg;
+  toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);'
+    + 'background:#c0392b;color:#fff;padding:10px 18px;border-radius:8px;'
+    + 'font-family:var(--ui);font-size:0.85rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.3);'
+    + 'max-width:80vw;text-align:center;cursor:pointer';
+  toast.onclick = () => toast.remove();
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
 }
 
 function voiceGetSavedConversations() {
@@ -2355,7 +2375,7 @@ async function voiceToggleRecord() {
   const { hasOpenAI } = voiceCheckKeys();
   
   if (!hasOpenAI) {
-    voiceUpdateStatus('Please add your OpenAI API key in the ⚙ API bar above');
+    voiceShowError('Please add your OpenAI API key in the ⚙ API bar above');
     (App.showPanel || window.showPanel)?.('settings');
     return;
   }
@@ -2408,7 +2428,7 @@ async function voiceToggleRecord() {
       
     } catch (err) {
       console.error('Microphone error:', err);
-      voiceUpdateStatus('Could not access microphone');
+      voiceShowError('Could not access microphone');
     }
   }
 }
@@ -2417,7 +2437,7 @@ async function voiceProcessAudio(audioBlob) {
   const _gen = VoiceState.convoGen|0;
   const openaiKey = getOpenAIKey();
   if (!openaiKey) {
-    voiceUpdateStatus('No OpenAI key');
+    voiceShowError('No OpenAI key');
     return;
   }
   
@@ -2448,7 +2468,7 @@ async function voiceProcessAudio(audioBlob) {
     if (!whisperResp.ok) {
       const err = await whisperResp.text();
       console.error('Whisper error:', err);
-      voiceUpdateStatus('Transcription failed');
+      voiceShowError('Transcription failed');
       return;
     }
     
@@ -2484,7 +2504,7 @@ async function voiceProcessAudio(audioBlob) {
     
   } catch (e) {
     console.error('Voice processing error:', e);
-    voiceUpdateStatus('Error processing audio');
+    voiceShowError('Error processing audio');
   }
 }
 
@@ -2497,7 +2517,7 @@ async function voiceSendToClaude(userText) {
   
   const apiKey = (App.getApiKey || window.getApiKey)?.();
   if (!apiKey) {
-    voiceUpdateStatus('No Claude API key');
+    voiceShowError('No Claude API key');
     return;
   }
 
@@ -2686,7 +2706,7 @@ Or if no errors:
     
   } catch (e) {
     console.error('Claude error:', e);
-    voiceUpdateStatus('Error getting response');
+    voiceShowError('Error getting response');
   }
 }
 
