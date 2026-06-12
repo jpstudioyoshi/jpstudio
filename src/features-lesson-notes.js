@@ -497,6 +497,9 @@ function lnLinkRecording(recId) {
   lessonNotesSaveSessions(sessions);
   LessonNotesState.viewMode = 'recording';
   lessonNotesRenderPanel();
+
+  // One-click: kick off transcription immediately on linking
+  lnTranscribeLinked().then(function() { lessonNotesRenderPanel(); });
 }
 
 async function lnTranscribeLinked() {
