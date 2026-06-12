@@ -72,7 +72,6 @@ function vtCollapseLoadBar() {
   document.getElementById('vtVideo').style.display = 'block';
   const noVid = document.getElementById('vtNoVideo');
   if (noVid) noVid.style.display = 'none';
-  document.getElementById('vtTranscriptWrap').style.display = 'block';
   document.getElementById('vtControls').style.display = 'block';
 }
 
