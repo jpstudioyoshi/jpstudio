@@ -1402,6 +1402,30 @@ function voiceDeleteConversation() {
 }
 
 function voiceNewChat() {
+  VoiceState.convoGen = (VoiceState.convoGen|0) + 1;
+
+  // Stop any active recording (discard pending transcription)
+  if (VoiceState.recording) {
+    VoiceState.recording = false;
+    VoiceState._discardRecording = true;
+    if (VoiceState.mediaRecorder && VoiceState.mediaRecorder.state !== 'inactive') {
+      VoiceState.mediaRecorder.stop();
+    }
+    const recBtn = document.getElementById('voiceRecordBtn');
+    if (recBtn) {
+      recBtn.innerHTML = '\ud83c\udfa4\ufe0f';
+      recBtn.style.background = 'linear-gradient(135deg, var(--teal), #28b8ad)';
+    }
+  }
+
+  // Stop any TTS / sentence playback
+  speechSynthesis.cancel();
+  VoiceState.sentencePlaying = false;
+  VoiceState.sentenceWaiting = false;
+  VoiceState.sentenceQueue = [];
+  VoiceState.sentenceIdx = 0;
+  VoiceState.sentenceText = '';
+
   VoiceState.messages = [];
   VoiceState.currentConvoName = '';
   voiceUpdateConvoDropdown();
@@ -2365,7 +2389,12 @@ async function voiceToggleRecord() {
         if (VoiceState.stream) {
           VoiceState.stream.getTracks().forEach(t => t.stop());
         }
-        
+
+        if (VoiceState._discardRecording) {
+          VoiceState._discardRecording = false;
+          return;
+        }
+
         // Process the audio
         const audioBlob = new Blob(VoiceState.audioChunks, { type: 'audio/webm' });
         await voiceProcessAudio(audioBlob);
@@ -2385,6 +2414,7 @@ async function voiceToggleRecord() {
 }
 
 async function voiceProcessAudio(audioBlob) {
+  const _gen = VoiceState.convoGen|0;
   const openaiKey = getOpenAIKey();
   if (!openaiKey) {
     voiceUpdateStatus('No OpenAI key');
@@ -2436,6 +2466,9 @@ async function voiceProcessAudio(audioBlob) {
       if (pauses.length) pauseDataAdd(pauses);
     }
     
+    // Discard if conversation was reset while transcribing
+    if (_gen !== (VoiceState.convoGen|0)) return;
+
     // Add user message with flag that it was from voice
     VoiceState.messages.push({ role: 'user', content: userText, fromVoice: true });
     if (VoiceState.rtRound >= 2) kanjiCorpusRecordChatProduction(userText); // round-trip R2 production
@@ -2467,7 +2500,8 @@ async function voiceSendToClaude(userText) {
     voiceUpdateStatus('No Claude API key');
     return;
   }
-  
+
+  const _gen = VoiceState.convoGen|0;
   voiceUpdateStatus('Thinking...');
   
   const level = document.getElementById('voiceLevel')?.value || 'N5';
@@ -2629,6 +2663,9 @@ Or if no errors:
       reply = rawText;
     }
     
+    // Discard if conversation was reset while waiting for Claude
+    if (_gen !== (VoiceState.convoGen|0)) return;
+
     // Add correction note if present (before assistant message so it appears after user)
     if (correction) {
       VoiceState.messages.push({ role: 'correction', content: correction });
