@@ -198,7 +198,7 @@ function vtRenderTranscript() {
       ${ts ? `<span class="vt-cue-time" onclick="vtCueClick(${i})" title="Jump to ${ts}" style="cursor:pointer">${ts}</span>` : ''}
       <span class="vt-cue-text" id="vt-cue-text-${i}" style="${lineStyle}"
         onclick="vtCueClick(${i})"
-        ondblclick="vtCueClick(${i});vtTranslateLine()"
+        ondblclick="vtCueClick(${i});vtSendCueToQT(${i})"
         onmouseup="vtWordSelect(${i},event)">${displayText}</span>
       ${furiBtn}
       ${cue.start !== null ? `<button class="vt-furi-btn" onclick="event.stopPropagation();vtSendToShadow(${i})" title="Send to shadow tool">🎙</button>` : ''}
@@ -206,6 +206,17 @@ function vtRenderTranscript() {
   }).join('');
 }
 
+function vtSendCueToQT(idx) {
+  const cue = VideoState.cues[idx];
+  if (!cue) return;
+  const text = (cue.text || '').replace(/[\n\r]+/g, ' ').trim();
+  if (!text) return;
+  const input = document.getElementById('globalQTInput');
+  if (input) {
+    input.value = text;
+    if (typeof globalQuickTranslate === 'function') globalQuickTranslate();
+  }
+}
 function vtSendToShadow(idx) {
   const cue = VideoState.cues[idx];
   if (!cue || cue.start === null) return;
