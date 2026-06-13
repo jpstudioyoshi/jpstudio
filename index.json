@@ -5678,632 +5678,436 @@
   },
   {
     "type": "function",
-    "name": "vtFuriAll",
-    "file": "src/features-video.js",
-    "line": 660,
-    "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;"
-  },
-  {
-    "type": "function",
     "name": "toggleComprehension",
     "file": "src/features-video.js",
-    "line": 688,
+    "line": 670,
     "desc": "const panel = document.getElementById('compPanel');"
   },
   {
     "type": "function",
     "name": "compPopulateVoices",
     "file": "src/features-video.js",
-    "line": 697,
+    "line": 679,
     "desc": "const all = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "compGetVoices",
     "file": "src/features-video.js",
-    "line": 716,
+    "line": 698,
     "desc": "const all = speechSynthesis.getVoices();"
   },
   {
     "type": "function",
     "name": "compGenerate",
     "file": "src/features-video.js",
-    "line": 726,
+    "line": 708,
     "desc": "const topic = document.getElementById('compTopic').value.trim() || 'daily life';"
   },
   {
     "type": "function",
     "name": "compRender",
     "file": "src/features-video.js",
-    "line": 780,
+    "line": 762,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compToggleScript",
     "file": "src/features-video.js",
-    "line": 813,
+    "line": 795,
     "desc": "const show = document.getElementById('compShowScript').checked;"
   },
   {
     "type": "function",
     "name": "compPlay",
     "file": "src/features-video.js",
-    "line": 818,
+    "line": 800,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compPlayLine",
     "file": "src/features-video.js",
-    "line": 847,
+    "line": 829,
     "desc": "if (!ComprehensionState.data) return;"
   },
   {
     "type": "function",
     "name": "compSpeakLine",
     "file": "src/features-video.js",
-    "line": 864,
+    "line": 846,
     "desc": "return new Promise(resolve => {"
   },
   {
     "type": "function",
     "name": "compStop",
     "file": "src/features-video.js",
-    "line": 878,
+    "line": 860,
     "desc": "ComprehensionState.playing = false;"
   },
   {
     "type": "function",
     "name": "compReplay",
     "file": "src/features-video.js",
-    "line": 886,
+    "line": 868,
     "desc": "compStop();"
   },
   {
     "type": "function",
     "name": "compAnswer",
     "file": "src/features-video.js",
-    "line": 895,
+    "line": 877,
     "desc": "if (!ComprehensionState.data) return;"
-  },
-  {
-    "type": "function",
-    "name": "vtToggleDictation",
-    "file": "src/features-video.js",
-    "line": 928,
-    "desc": "VideoState.dictationRevealed → VideoState.dictationRevealed"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateUpdateStats",
-    "file": "src/features-video.js",
-    "line": 970,
-    "desc": "Toggle hiragana/katakana for dictation input"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateReplay",
-    "file": "src/features-video.js",
-    "line": 980,
-    "desc": "if (VideoState.activeIdx < 0 || !VideoState.cues[VideoState.activeIdx]) return;"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateCheck",
-    "file": "src/features-video.js",
-    "line": 997,
-    "desc": "if (VideoState.dictationRevealed) return; // Already checked/revealed"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateDiff",
-    "file": "src/features-video.js",
-    "line": 1034,
-    "desc": "let html = '<span style=\"color:var(--red)\">✗</span> ';"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateReveal",
-    "file": "src/features-video.js",
-    "line": 1062,
-    "desc": "const feedback = document.getElementById('vtDictateFeedback');"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateNext",
-    "file": "src/features-video.js",
-    "line": 1082,
-    "desc": "if (VideoState.activeIdx < VideoState.cues.length - 1) {"
-  },
-  {
-    "type": "function",
-    "name": "vtDictateKeydown",
-    "file": "src/features-video.js",
-    "line": 1109,
-    "desc": "if (e.key === 'Enter') {"
-  },
-  {
-    "type": "function",
-    "name": "vtShowBreakdown",
-    "file": "src/features-video.js",
-    "line": 1144,
-    "desc": "BREAKDOWN POPUP"
-  },
-  {
-    "type": "function",
-    "name": "vtCloseBreakdown",
-    "file": "src/features-video.js",
-    "line": 1217,
-    "desc": "const popup = document.getElementById('vtBreakdownPopup');"
-  },
-  {
-    "type": "function",
-    "name": "vtPopulateMics",
-    "file": "src/features-video.js",
-    "line": 1278,
-    "desc": "VideoState.selectedMicId → VideoState.selectedMicId"
-  },
-  {
-    "type": "function",
-    "name": "vtSetMic",
-    "file": "src/features-video.js",
-    "line": 1308,
-    "desc": "VideoState.selectedMicId = deviceId || null;"
-  },
-  {
-    "type": "function",
-    "name": "vtRequestMicAccess",
-    "file": "src/features-video.js",
-    "line": 1317,
-    "desc": "const select = document.getElementById('vtMicSelect');"
-  },
-  {
-    "type": "function",
-    "name": "vtToggleShadow",
-    "file": "src/features-video.js",
-    "line": 1324,
-    "desc": "VideoState.shadowActive = !VideoState.shadowActive;"
-  },
-  {
-    "type": "function",
-    "name": "vtShSetTarget",
-    "file": "src/features-video.js",
-    "line": 1363,
-    "desc": "VideoState.shTargetCue = cue;"
-  },
-  {
-    "type": "function",
-    "name": "vtShExtractTargetAudio",
-    "file": "src/features-video.js",
-    "line": 1374,
-    "desc": "const video = document.getElementById('vtVideo');"
-  },
-  {
-    "type": "function",
-    "name": "vtShPlayTarget",
-    "file": "src/features-video.js",
-    "line": 1402,
-    "desc": "if (!VideoState.shTargetBuffer) return;"
-  },
-  {
-    "type": "function",
-    "name": "vtShStopTarget",
-    "file": "src/features-video.js",
-    "line": 1431,
-    "desc": "if (VideoState.shTargetSource) { try { VideoState.shTargetSource.stop(); } catch(e) {} VideoState.sh"
-  },
-  {
-    "type": "function",
-    "name": "vtShSeekTarget",
-    "file": "src/features-video.js",
-    "line": 1438,
-    "desc": "if (!VideoState.shTargetBuffer) return;"
-  },
-  {
-    "type": "function",
-    "name": "vtShRecord",
-    "file": "src/features-video.js",
-    "line": 1466,
-    "desc": "if (VideoState.shRecording) { vtShStopRecord(); return; }"
-  },
-  {
-    "type": "function",
-    "name": "vtShStopRecord",
-    "file": "src/features-video.js",
-    "line": 1503,
-    "desc": "if (VideoState.shRecorder && VideoState.shRecording) VideoState.shRecorder.stop();"
-  },
-  {
-    "type": "function",
-    "name": "vtShPlayback",
-    "file": "src/features-video.js",
-    "line": 1507,
-    "desc": "if (!VideoState.shBlob) return;"
-  },
-  {
-    "type": "function",
-    "name": "vtShStopAll",
-    "file": "src/features-video.js",
-    "line": 1520,
-    "desc": "vtShStopTarget();"
-  },
-  {
-    "type": "function",
-    "name": "vtShDrawStaticWave",
-    "file": "src/features-video.js",
-    "line": 1528,
-    "desc": "const canvas = document.getElementById(id);"
-  },
-  {
-    "type": "function",
-    "name": "vtShClearWave",
-    "file": "src/features-video.js",
-    "line": 1548,
-    "desc": "const canvas = document.getElementById(id);"
-  },
-  {
-    "type": "function",
-    "name": "vtShDrawLiveWave",
-    "file": "src/features-video.js",
-    "line": 1556,
-    "desc": "const canvas = document.getElementById('vtShShadowWave');"
-  },
-  {
-    "type": "function",
-    "name": "vtShDrawBlobWave",
-    "file": "src/features-video.js",
-    "line": 1579,
-    "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesGet",
     "file": "src/features-video.js",
-    "line": 1611,
+    "line": 937,
     "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesSave",
     "file": "src/features-video.js",
-    "line": 1619,
+    "line": 945,
     "desc": ""
   },
   {
     "type": "function",
     "name": "resourcesRender",
     "file": "src/features-video.js",
-    "line": 1625,
+    "line": 951,
     "desc": "const grid = document.getElementById('resourcesGrid');"
   },
   {
     "type": "function",
     "name": "resourcesAdd",
     "file": "src/features-video.js",
-    "line": 1695,
+    "line": 1021,
     "desc": "const urlEl = document.getElementById('resNewUrl');"
   },
   {
     "type": "function",
     "name": "resourcesPickIcon",
     "file": "src/features-video.js",
-    "line": 1790,
+    "line": 1116,
     "desc": "if (url.includes('youtube')) return '▶️';"
   },
   {
     "type": "function",
     "name": "resourcesEdit",
     "file": "src/features-video.js",
-    "line": 1801,
+    "line": 1127,
     "desc": "const resources = resourcesGet();"
   },
   {
     "type": "function",
     "name": "resourcesSaveEdit",
     "file": "src/features-video.js",
-    "line": 1826,
+    "line": 1152,
     "desc": "const resources = resourcesGet();"
   },
   {
     "type": "function",
     "name": "resourcesDelete",
     "file": "src/features-video.js",
-    "line": 1845,
+    "line": 1171,
     "desc": "if (!confirm('Delete this resource?')) return;"
   },
   {
     "type": "function",
     "name": "resourcesReset",
     "file": "src/features-video.js",
-    "line": 1854,
+    "line": 1180,
     "desc": "if (!confirm('Reset to default resources? This will remove all your custom links.')) return;"
   },
   {
     "type": "function",
     "name": "vtAddSavedLink",
     "file": "src/features-video.js",
-    "line": 1871,
+    "line": 1197,
     "desc": "VideoState.savedFiles → VideoState.savedFiles"
   },
   {
     "type": "function",
     "name": "vtSaveHistory",
     "file": "src/features-video.js",
-    "line": 1888,
+    "line": 1214,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vtLoadHistory",
     "file": "src/features-video.js",
-    "line": 1901,
+    "line": 1227,
     "desc": ""
   },
   {
     "type": "function",
     "name": "vtUpdateHistoryDropdown",
     "file": "src/features-video.js",
-    "line": 1911,
+    "line": 1237,
     "desc": "const select = document.getElementById('vtHistorySelect');"
   },
   {
     "type": "function",
     "name": "vtLoadFromHistory",
     "file": "src/features-video.js",
-    "line": 1942,
+    "line": 1268,
     "desc": "if (!indexStr) return;"
   },
   {
     "type": "function",
     "name": "vtTryLoadMatchingTranscript",
     "file": "src/features-video.js",
-    "line": 1977,
+    "line": 1303,
     "desc": "const baseName = videoName.replace(/\\.[^.]+$/, '');"
   },
   {
     "type": "function",
     "name": "vtRenderSavedLinks",
     "file": "src/features-video.js",
-    "line": 1996,
+    "line": 1322,
     "desc": "vtUpdateHistoryDropdown();"
   },
   {
     "type": "function",
     "name": "vtWordSelect",
     "file": "src/features-video.js",
-    "line": 2007,
+    "line": 1333,
     "desc": "VideoState.pendingHistoryName → VideoState.pendingHistoryName"
   },
   {
     "type": "function",
     "name": "vtTranslateWord",
     "file": "src/features-video.js",
-    "line": 2020,
+    "line": 1346,
     "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;"
   },
   {
     "type": "function",
     "name": "strokeMagnify",
     "file": "src/features-video.js",
-    "line": 2120,
+    "line": 1446,
     "desc": "In browser we can't access filesystem — hint is shown instead"
   },
   {
     "type": "function",
     "name": "strokeGetReading",
     "file": "src/features-video.js",
-    "line": 2162,
+    "line": 1488,
     "desc": "const cp = ch.codePointAt(0);"
   },
   {
     "type": "function",
     "name": "strokeFetchReadings",
     "file": "src/features-video.js",
-    "line": 2171,
+    "line": 1497,
     "desc": "const kanji = chars.filter(ch => {"
   },
   {
     "type": "function",
     "name": "readSwitchTab",
     "file": "src/features-video.js",
-    "line": 2205,
+    "line": 1531,
     "desc": "═══════════════════════════════════════════════════════════════════════════"
   },
   {
     "type": "function",
     "name": "epubHandleDrop",
     "file": "src/features-video.js",
-    "line": 2247,
+    "line": 1573,
     "desc": "e.preventDefault();"
   },
   {
     "type": "function",
     "name": "epubLoadFile",
     "file": "src/features-video.js",
-    "line": 2254,
+    "line": 1580,
     "desc": "const dz = document.getElementById('epubDropZone');"
   },
   {
     "type": "function",
     "name": "epubParseOPF",
     "file": "src/features-video.js",
-    "line": 2283,
+    "line": 1609,
     "desc": "const containerXml = await EpubState.zip.file('META-INF/container.xml').async('string');"
   },
   {
     "type": "function",
     "name": "epubLoadChapter",
     "file": "src/features-video.js",
-    "line": 2347,
+    "line": 1673,
     "desc": "idx = parseInt(idx);"
   },
   {
     "type": "function",
     "name": "epubSetFontSize",
     "file": "src/features-video.js",
-    "line": 2426,
+    "line": 1752,
     "desc": "EpubState.fontSize = parseFloat(val);"
   },
   {
     "type": "function",
     "name": "epubToggleFuri",
     "file": "src/features-video.js",
-    "line": 2433,
+    "line": 1759,
     "desc": "EpubState.furi = !EpubState.furi;"
   },
   {
     "type": "function",
     "name": "epubApplyFuri",
     "file": "src/features-video.js",
-    "line": 2440,
+    "line": 1766,
     "desc": "const content = document.getElementById('epubContent');"
   },
   {
     "type": "function",
     "name": "epubRemoveFuri",
     "file": "src/features-video.js",
-    "line": 2464,
+    "line": 1790,
     "desc": "const sel = document.getElementById('epubChapterSel');"
   },
   {
     "type": "function",
     "name": "epubGetFurigana",
     "file": "src/features-video.js",
-    "line": 2471,
+    "line": 1797,
     "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();"
   },
   {
     "type": "function",
     "name": "epubWireWordTap",
     "file": "src/features-video.js",
-    "line": 2487,
+    "line": 1813,
     "desc": "const content = document.getElementById('epubContent');"
   },
   {
     "type": "function",
     "name": "epubOnWordSelect",
     "file": "src/features-video.js",
-    "line": 2493,
+    "line": 1819,
     "desc": "const sel = window.getSelection();"
   },
   {
     "type": "function",
     "name": "epubHidePopup",
     "file": "src/features-video.js",
-    "line": 2532,
+    "line": 1858,
     "desc": "const p = document.getElementById('epubWordPopup');"
   },
   {
     "type": "function",
     "name": "epubSpeak",
     "file": "src/features-video.js",
-    "line": 2538,
+    "line": 1864,
     "desc": "const btn = document.getElementById('epubTtsBtn');"
   },
   {
     "type": "function",
     "name": "epubClose",
     "file": "src/features-video.js",
-    "line": 2560,
+    "line": 1886,
     "desc": "EpubState.zip = null; EpubState.spine = []; EpubState.chapterIdx = 0;"
   },
   {
     "type": "function",
     "name": "listenModeChanged",
     "file": "src/features-video.js",
-    "line": 2572,
+    "line": 1898,
     "desc": "const comp = document.getElementById('compPanel');"
   },
   {
     "type": "function",
     "name": "vtClearTranslation",
     "file": "src/features-video.js",
-    "line": 2601,
+    "line": 1927,
     "desc": "const jpEl = document.getElementById('vtLineJp');"
   },
   {
     "type": "function",
     "name": "vtTranslateLine",
     "file": "src/features-video.js",
-    "line": 2611,
+    "line": 1937,
     "desc": "const panel = document.getElementById('vtLineTranslate');"
   },
   {
     "type": "function",
     "name": "vtBreakdownLine",
     "file": "src/features-video.js",
-    "line": 2676,
+    "line": 2002,
     "desc": "const jpEl = document.getElementById('vtLineJp');"
   },
   {
     "type": "function",
     "name": "vtGetVocabCacheKey",
     "file": "src/features-video.js",
-    "line": 2726,
+    "line": 2052,
     "desc": "VideoState.vocabListCache → VideoState.vocabListCache"
   },
   {
     "type": "function",
     "name": "vtShowVocabList",
     "file": "src/features-video.js",
-    "line": 2737,
+    "line": 2063,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');"
   },
   {
     "type": "function",
     "name": "vtCloseVocabList",
     "file": "src/features-video.js",
-    "line": 2760,
+    "line": 2086,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');"
   },
   {
     "type": "function",
     "name": "vtRegenerateVocabList",
     "file": "src/features-video.js",
-    "line": 2765,
+    "line": 2091,
     "desc": "const cacheKey = vtGetVocabCacheKey();"
   },
   {
     "type": "function",
     "name": "vtGenerateVocabList",
     "file": "src/features-video.js",
-    "line": 2776,
+    "line": 2102,
     "desc": "VideoState.currentVocab → VideoState.currentVocab"
   },
   {
     "type": "function",
     "name": "vtRenderVocabList",
     "file": "src/features-video.js",
-    "line": 2839,
+    "line": 2165,
     "desc": "const content = document.getElementById('vtVocabListContent');"
   },
   {
     "type": "function",
     "name": "vtDeleteVocabWord",
     "file": "src/features-video.js",
-    "line": 2876,
+    "line": 2202,
     "desc": "if (!VideoState.currentVocab || idx < 0 || idx >= VideoState.currentVocab.length) return;"
   },
   {
     "type": "function",
     "name": "vtJumpToTime",
     "file": "src/features-video.js",
-    "line": 2885,
+    "line": 2211,
     "desc": "const video = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "vtCloseLineTranslate",
     "file": "src/features-video.js",
-    "line": 2900,
+    "line": 2226,
     "desc": "const panel = document.getElementById('vtLineTranslate');"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-video.js",
-    "line": 738,
+    "line": 720,
     "desc": "Create a short Japanese listening comprehension exercise for ${…} learners on th"
   },
   {
@@ -8200,21 +8004,21 @@
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 432,
+    "line": 430,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');"
   },
   {
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 442,
+    "line": 440,
     "desc": "const list = document.getElementById('chatHistoryList');"
   },
   {
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 467,
+    "line": 465,
     "desc": "const reader = document.getElementById('qrReader');"
   },
   {

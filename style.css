@@ -2565,25 +2565,6 @@
     grid-column: 1;
     grid-row: 2;
   }
-  /* Shadow panel below controls - always visible in fullscreen */
-  #panel-video.vt-fullscreen #vtShadowPanel {
-    grid-column: 1;
-    grid-row: 3;
-    display: flex !important;
-    flex-direction: row;
-    gap: 12px;
-  }
-  #panel-video.vt-fullscreen #vtShadowPanel > div {
-    flex: 1;
-    padding: 8px 10px;
-  }
-  #panel-video.vt-fullscreen #vtShadowPanel canvas {
-    height: 32px !important;
-  }
-  #panel-video.vt-fullscreen #vtShadowHeader:hover {
-    border-color: var(--red) !important;
-    background: rgba(255,107,107,0.08) !important;
-  }
   /* Translation panel - fills space under transcript in fullscreen */
   #panel-video.vt-fullscreen #vtLineTranslate {
     display: flex !important;
@@ -2624,42 +2605,8 @@
     min-height: 0;
     overflow: hidden;
   }
-  /* Dictation panel in fullscreen - replaces translation panel area */
-  #panel-video.vt-fullscreen #vtDictatePanel {
-    display: none;
-    grid-column: 2;
-    grid-row: 2 / 4;
-    margin-top: 0;
-    align-self: stretch;
-    border-color: var(--border);
-    background: rgba(20,20,22,0.95);
-    padding: 10px 14px;
-  }
-  #panel-video.vt-fullscreen #vtDictatePanel[style*="block"],
-  #panel-video.vt-fullscreen #vtDictatePanel[style*="flex"] {
-    display: block !important;
-  }
-  #panel-video.vt-fullscreen #vtDictatePanel input {
-    font-size: 0.95rem;
-    padding: 8px 10px;
-  }
-  /* Hide translation when dictation is active */
-  #panel-video.vt-fullscreen.vt-dictation-active #vtLineTranslate {
-    display: none !important;
-  }
-  /* Hide transcript text in dictation mode */
-  #panel-video.vt-fullscreen.vt-dictation-active .vt-cue-text {
-    color: transparent !important;
-    background: var(--border);
-    border-radius: 3px;
-    user-select: none;
-  }
-  #panel-video.vt-fullscreen.vt-dictation-active .vt-cue.active .vt-cue-text {
-    background: var(--teal);
-    opacity: 0.3;
-  }
 
-  
+
 
 /* ── Button system ────────────────────────────────────────────────────────── */
 

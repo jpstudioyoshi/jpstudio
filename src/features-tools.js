@@ -381,13 +381,11 @@ try {
   window["vtClearLoop"] = vtClearLoop;
   window["vtClearMarkers"] = vtClearMarkers;
   window["vtClearTranslation"] = vtClearTranslation;
-  window["vtCloseBreakdown"] = vtCloseBreakdown;
   window["vtCloseVocabList"] = vtCloseVocabList;
   window["vtCueClick"] = vtCueClick;
   window["vtDeleteVocabWord"] = vtDeleteVocabWord;
   window["vtDropZoneClick"] = vtDropZoneClick;
   window["vtFullscreen"] = vtFullscreen;
-  window["vtFuriAll"] = vtFuriAll;
   window["vtFuriLine"] = vtFuriLine;
   window["vtJumpMarker"] = vtJumpMarker;
   window["vtJumpToTime"] = vtJumpToTime;
