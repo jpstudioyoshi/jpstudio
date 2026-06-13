@@ -888,17 +888,34 @@ function lessonNotesUpdatePanelHeader() {
       <select id="yoshiSessionSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()"
         style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:180px">
         <option value="-1">— Select lesson —</option>
-        ${sessions.map((s, i) => `<option value="${i}" ${i === _cur.currentIdx ? 'selected' : ''}>${s.title || 'Untitled ' + (i+1)}</option>`).join('')}
+        ${sessions.map((s, i) => `<option value="${i}" ${i === _cur.currentIdx ? 'selected' : ''}>${lnSessionDateLabel(s)}</option>`).join('')}
       </select>
-      <button class="btn-nav btn-sm" onclick="lessonNotesNewFromPanel()">+</button>
       ${currentSession ? `<button class="btn-icon btn-icon-del" onclick="lessonNotesDeleteFromPanel()">🗑</button>` : ''}
     </div>
-    <div style="display:flex;gap:6px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+      ${hasContent ? `
+        <div style="display:flex;gap:4px">
+          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="off" onclick="lnSearchKanaMode('off')">A</button>
+          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="hiragana" onclick="lnSearchKanaMode('hiragana')">あ</button>
+          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="katakana" onclick="lnSearchKanaMode('katakana')">ア</button>
+        </div>
+        <input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)"
+          style="padding:6px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.95rem;border-radius:4px;width:320px">
+      ` : ''}
       ${hasContent && _vm !== 'overview' ? `<button class="btn-nav btn-sm" onclick="lessonNotesSetView('overview')">\u2190 Overview</button>` : ''}
-      ${hasContent ? `<input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)"
-        style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:160px">` : ''}
     </div>
   `;
+}
+
+function lnSearchKanaMode(mode) {
+  const inp = document.getElementById('lnHeaderSearch');
+  if (!inp) return;
+  if (inp._kanaOn) kanaOff(inp);
+  if (mode !== 'off') {
+    kanaOn(inp);
+    inp._kanaMode = mode;
+  }
+  document.querySelectorAll('.ln-search-kana-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
 }
 
 function lnHeaderSearch(term) {
@@ -956,6 +973,13 @@ function lnFormatWaDate(raw) {
   return null;
 }
 
+function lnSessionDateLabel(session) {
+  const dc = session.docContent || [];
+  const first = dc.find(item => item.date);
+  if (!first) return session.date || session.title || 'Untitled';
+  return lnFormatWaDate(first.date) || first.date;
+}
+
 function lnFirstMessageDate(session) {
   const dc = LessonNotesState.docContent || [];
   const first = dc.find(item => item.date);
@@ -972,8 +996,7 @@ function lessonNotesRenderOverview(session) {
   const _summary = LessonNotesState.summary;
 
   let html = '<div style="max-width:760px;margin:0 auto">';
-  html += '<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:4px">' + (session.title || 'Lesson') + '</div>';
-  html += '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:16px">' + lnFirstMessageDate(session) + '</div>';
+  html += '<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:16px">' + lnFirstMessageDate(session) + '</div>';
 
   if (_summary) {
     html += '<div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">' + _summary + '</div>';
