@@ -25,6 +25,7 @@ let vocabIdx = 0;
 let vocabFlipped = false;
 let vcReadingVisible = false;
 let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
+let _vcLastAutoSpoken = null; // dedupe auto-TTS on redundant re-renders
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
 // Per-direction session state cache
@@ -463,11 +464,16 @@ function renderVocab() {
   }
 
   vocabCardEl.classList.remove('flipped');
-  // Auto-play TTS in speaking mode
+  // Auto-play TTS in speaking mode (dedupe redundant re-renders of same card)
   if (vcDirection === 'speaking' && word) {
-    setTimeout(() => {
-      if (typeof jpSpeak === 'function') jpSpeak(word, 0.85);
-    }, 400);
+    if (_vcLastAutoSpoken !== word) {
+      _vcLastAutoSpoken = word;
+      setTimeout(() => {
+        if (typeof jpSpeak === 'function') jpSpeak(word, 0.85);
+      }, 400);
+    }
+  } else {
+    _vcLastAutoSpoken = null;
   }
 
   const pos = deck.indexOf(vocabIdx);
