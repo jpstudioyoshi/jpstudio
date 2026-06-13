@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260614003757">
+<link rel="stylesheet" href="style.css?v=20260614005151">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260614003757"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260614003757"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260614003757"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260614005151"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260614005151"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260614005151"></script>
 </head>
 <body>
 
@@ -102,12 +102,6 @@
 <div id="listenPanelHeader" class="panel-header-lower" style="display:none">
   <div class="panel-section-title">
     <span class="panel-section-title-jp">聴解</span>
-    <select class="btn-nav btn-sm" id="listenModeSelect" onchange="listenModeChanged(this.value)">
-      <option value="">▶ Listen</option>
-      <option value="comprehension">🧠 Comprehension</option>
-      <option value="times">🕐 Times drill</option>
-      <option value="progress">📊 Progress</option>
-    </select>
   </div>
 </div>
 <div id="writingPanelHeader" class="panel-header-lower" style="display:none">
@@ -1361,106 +1355,6 @@
     </div>
 
 
-<div id="compPanel" style="display:none;margin-top:14px">
-  <div style="background:#141416;border:1px solid var(--border);border-radius:10px;padding:20px 24px">
-
-    <!-- Setup row -->
-    <div id="compSetup" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">TOPIC</span>
-        <input id="compTopic" type="text" placeholder="shopping, directions, weather…"
-          style="padding:7px 12px;background:var(--field);border:1px solid var(--field-border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;outline:none;width:220px">
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">LEVEL</span>
-        <select class="select-std" id="compLevel">
-          <option value="N5" selected>N5</option>
-          <option value="N4">N4</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">SPEED</span>
-        <select class="select-std" id="compSpeed">
-          <option value="0.7">Slow</option>
-          <option value="0.85" selected>Normal</option>
-          <option value="1.0">Fast</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">VOICE A</span>
-        <select class="select-std" id="compVoiceA">
-          <option value="">Loading…</option>
-        </select>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">VOICE B</span>
-        <select class="select-std" id="compVoiceB">
-          <option value="">Loading…</option>
-        </select>
-      </div>
-            <button class="btn-action" id="compGenerateBtn" onclick="compGenerate()">
-        Generate →
-      </button>
-      <span id="compGenStatus" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);align-self:center"></span>
-    </div>
-
-    <!-- Player area (hidden until generated) -->
-    <div id="compPlayer" style="display:none">
-
-      <!-- Voice legend -->
-      <div style="display:flex;gap:16px;margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:10px;height:10px;border-radius:50%;background:var(--teal)"></div>
-          <span id="compSpeakerALabel" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Speaker A</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:10px;height:10px;border-radius:50%;background:var(--gold)"></div>
-          <span id="compSpeakerBLabel" style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Speaker B</span>
-        </div>
-      </div>
-
-      <!-- Dialogue display -->
-      <div id="compDialogue" style="margin-bottom:18px;display:flex;flex-direction:column;gap:6px"></div>
-
-      <!-- Transport -->
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px">
-        <button class="btn-action" onclick="compPlay()" id="compPlayBtn">
-          ▶ Play
-        </button>
-        <button class="btn-action" onclick="compStop()">
-          ■ Stop
-        </button>
-        <button class="btn-action" onclick="compReplay()">
-          ↺ Replay
-        </button>
-        <label style="display:flex;align-items:center;gap:6px;font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);cursor:pointer;margin-left:8px">
-          <input type="checkbox" id="compShowScript" onchange="compToggleScript()" style="accent-color:var(--teal)"> Show script
-        </label>
-      </div>
-
-      <!-- Question -->
-      <div id="compQuestionArea" style="margin-bottom:14px">
-        <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:8px">QUESTION</div>
-        <div id="compQuestion" style="font-family:var(--jp);font-size:1.4rem;color:var(--ink);margin-bottom:12px;line-height:1.7"></div>
-        <div id="compChoices" style="display:flex;flex-direction:column;gap:6px"></div>
-      </div>
-
-      <!-- Answer reveal -->
-      <div id="compAnswerArea" style="display:none;padding:12px 16px;border-radius:8px;border-left:3px solid var(--teal);background:rgba(48,213,200,0.07)">
-        <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--teal);margin-bottom:6px">ANSWER</div>
-        <div id="compAnswer" style="font-family:var(--ui);font-size:0.88rem;color:var(--ink);line-height:1.6"></div>
-      </div>
-
-      <button class="btn-action" onclick="compGenerate()">
-        New dialogue →
-      </button>
-    </div>
-
-  </div>
-</div>
-
-
-<div id="listenProgressPanel" style="display:none;margin-top:12px;padding:14px 16px;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px"></div>
 <div id="dictationPanel" style="display:none;margin-top:14px">
 
           <!-- STANDALONE MODE (no audio loaded) -->
@@ -2449,16 +2343,16 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260614003757"></script>
-<script src="src/core-anki.js?v=20260614003757"></script>
-<script src="src/core-counters.js?v=20260614003757"></script>
-<script src="src/core-srs.js?v=20260614003757"></script>
-<script src="src/core-stt.js?v=20260614003757"></script>
-<script src="src/core-writing.js?v=20260614003757"></script>
-<script src="src/core-listen.js?v=20260614003757"></script>
-<script src="src/core-vocab.js?v=20260614003757"></script>
-<script src="src/features-db-qa.js?v=20260614003757"></script>
-<script src="src/core.js?v=20260614003757"></script>
+<script src="src/core-foundation.js?v=20260614005151"></script>
+<script src="src/core-anki.js?v=20260614005151"></script>
+<script src="src/core-counters.js?v=20260614005151"></script>
+<script src="src/core-srs.js?v=20260614005151"></script>
+<script src="src/core-stt.js?v=20260614005151"></script>
+<script src="src/core-writing.js?v=20260614005151"></script>
+<script src="src/core-listen.js?v=20260614005151"></script>
+<script src="src/core-vocab.js?v=20260614005151"></script>
+<script src="src/features-db-qa.js?v=20260614005151"></script>
+<script src="src/core.js?v=20260614005151"></script>
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- TIMES DRILL MODAL                                      -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -2587,26 +2481,26 @@
 
   </div>
 
-<script src="src/features-core.js?v=20260614003757"></script>
-<script src="src/features-kana.js?v=20260614003757"></script>
-<script src="src/features-times.js?v=20260614003757"></script>
-<script src="src/briefing-prompt.js?v=20260614003757"></script>
-<script src="src/GrammarModel.js?v=20260614003757"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260614003757"></script>
-<script src="src/AppEvents.js?v=20260614003757"></script>
-<script src="src/features-lesson-notes.js?v=20260614003757"></script>
-  <script src="src/features-ln-p2.js?v=20260614003757"></script>
-<script src="src/features-grammar.js?v=20260614003757"></script>
-<script src="src/features-reading.js?v=20260614003757"></script>
-<script src="src/features-video.js?v=20260614003757"></script>
-<script src="src/features-pictures.js?v=20260614003757"></script>
-<script src="src/features-progress.js?v=20260614003757"></script>
-  <script src="src/features-listen-log.js?v=20260614003757"></script>
-<script src="src/features-stroke.js?v=20260614003757"></script>
-<script src="src/features-tools.js?v=20260614003757"></script>
-<script src="src/features-voice.js?v=20260614003757"></script>
-<script src="src/features-voice-drill.js?v=20260614003757"></script>
-<script src="src/features-custom-drill.js?v=20260614003757"></script>
+<script src="src/features-core.js?v=20260614005151"></script>
+<script src="src/features-kana.js?v=20260614005151"></script>
+<script src="src/features-times.js?v=20260614005151"></script>
+<script src="src/briefing-prompt.js?v=20260614005151"></script>
+<script src="src/GrammarModel.js?v=20260614005151"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260614005151"></script>
+<script src="src/AppEvents.js?v=20260614005151"></script>
+<script src="src/features-lesson-notes.js?v=20260614005151"></script>
+  <script src="src/features-ln-p2.js?v=20260614005151"></script>
+<script src="src/features-grammar.js?v=20260614005151"></script>
+<script src="src/features-reading.js?v=20260614005151"></script>
+<script src="src/features-video.js?v=20260614005151"></script>
+<script src="src/features-pictures.js?v=20260614005151"></script>
+<script src="src/features-progress.js?v=20260614005151"></script>
+  <script src="src/features-listen-log.js?v=20260614005151"></script>
+<script src="src/features-stroke.js?v=20260614005151"></script>
+<script src="src/features-tools.js?v=20260614005151"></script>
+<script src="src/features-voice.js?v=20260614005151"></script>
+<script src="src/features-voice-drill.js?v=20260614005151"></script>
+<script src="src/features-custom-drill.js?v=20260614005151"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2617,20 +2511,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260614003757"></script>
-<script src="src/IssueTracker.js?v=20260614003757"></script>
-<script src="src/services/LessonSession.js?v=20260614003757"></script>
-<script src="src/services/AudioService.js?v=20260614003757"></script>
-<script src="src/services/PreflightService.js?v=20260614003757"></script>
-<script src="src/services/TranscriptionService.js?v=20260614003757"></script>
-<script src="src/services/AnalysisService.js?v=20260614003757"></script>
-<script src="src/services/StorageService.js?v=20260614003757"></script>
-<script src="src/Orchestrator.js?v=20260614003757"></script>
-<script src="src/ui/DrillCard.js?v=20260614003757"></script>
-<script src="src/ui/TextEntry.js?v=20260614003757"></script>
-<script src="src/ui/YoshiUI.js?v=20260614003757"></script>
+<script src="src/StudentModel.js?v=20260614005151"></script>
+<script src="src/IssueTracker.js?v=20260614005151"></script>
+<script src="src/services/LessonSession.js?v=20260614005151"></script>
+<script src="src/services/AudioService.js?v=20260614005151"></script>
+<script src="src/services/PreflightService.js?v=20260614005151"></script>
+<script src="src/services/TranscriptionService.js?v=20260614005151"></script>
+<script src="src/services/AnalysisService.js?v=20260614005151"></script>
+<script src="src/services/StorageService.js?v=20260614005151"></script>
+<script src="src/Orchestrator.js?v=20260614005151"></script>
+<script src="src/ui/DrillCard.js?v=20260614005151"></script>
+<script src="src/ui/TextEntry.js?v=20260614005151"></script>
+<script src="src/ui/YoshiUI.js?v=20260614005151"></script>
 
-<script src="src/design-overlay.js?v=20260614003757"></script>
+<script src="src/design-overlay.js?v=20260614005151"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 
