@@ -550,6 +550,31 @@ function lnRenderLinkedRecording(session) {
   html += '<audio id="lnAudioTeacher" src="file://' + tpath + '" controls style="flex:1;height:26px;accent-color:var(--gold)"></audio>';
   html += '</div></div>';
 
+  // Source notes with search
+  const _lnEsc = App.escHtml || window.escHtml || function(s){return s;};
+  const _lnParseWA = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
+  const _lnRaw = LessonNotesState.rawText || '';
+  let _lnDocHtml = '';
+  if (_lnRaw && _lnParseWA) {
+    const _lnMsgs = _lnParseWA(_lnRaw);
+    _lnDocHtml = _lnMsgs.length ? _lnSourceNotesHtml(_lnMsgs)
+      : '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No messages found</div>';
+  } else {
+    _lnDocHtml = '<pre style="font-family:var(--jp);font-size:inherit;line-height:1.7;white-space:pre-wrap">' + _lnEsc(_lnRaw) + '</pre>';
+  }
+  const _snCollapsed = !!LessonNotesState.sourceNotesCollapsed;
+  html += '<div style="padding-top:12px;border-top:1px solid var(--border)">';
+  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+  html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);cursor:pointer" onclick="lnToggleSourceNotes()">'
+    + (_snCollapsed ? '\u25B6' : '\u25BC') + ' SOURCE NOTES</span>';
+  html += '<input type="text" id="lnFullDocSearch" placeholder="Search\u2026" oninput="lnFullDocDoSearch(this.value)" '
+    + 'style="flex:1;padding:4px 8px;background:var(--field);border:1px solid var(--field-border);'
+    + 'border-radius:4px;font-family:var(--ui);font-size:inherit;color:var(--ink);max-width:200px;'
+    + (_snCollapsed ? 'display:none' : '') + '">';
+  html += '</div>';
+  html += '<div id="lnFullDocContent" style="max-height:250px;overflow-y:auto;' + (_snCollapsed ? 'display:none' : '') + '">' + _lnDocHtml + '</div>';
+  html += '</div>';
+
   if (!rec.processed_at) {
     html += '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:8px 0">Not yet transcribed. Click \u2699 Transcribe in the tab bar.</div>';
   } else {
@@ -578,28 +603,6 @@ function lnRenderLinkedRecording(session) {
     }
   }
 
-  // Source notes with search
-  const _lnEsc = App.escHtml || window.escHtml || function(s){return s;};
-  const _lnParseWA = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
-  const _lnRaw = LessonNotesState.rawText || '';
-  let _lnDocHtml = '';
-  if (_lnRaw && _lnParseWA) {
-    const _lnMsgs = _lnParseWA(_lnRaw);
-    _lnDocHtml = _lnMsgs.length ? _lnSourceNotesHtml(_lnMsgs)
-      : '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No messages found</div>';
-  } else {
-    _lnDocHtml = '<pre style="font-family:var(--jp);font-size:inherit;line-height:1.7;white-space:pre-wrap">' + _lnEsc(_lnRaw) + '</pre>';
-  }
-  html += '<div style="padding-top:12px;border-top:1px solid var(--border)">';
-  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-  html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">SOURCE NOTES</span>';
-  html += '<input type="text" id="lnFullDocSearch" placeholder="Search\u2026" oninput="lnFullDocDoSearch(this.value)" '
-    + 'style="flex:1;padding:4px 8px;background:var(--field);border:1px solid var(--field-border);'
-    + 'border-radius:4px;font-family:var(--ui);font-size:inherit;color:var(--ink);max-width:200px">';
-  html += '</div>';
-  html += '<div id="lnFullDocContent" style="max-height:250px;overflow-y:auto">' + _lnDocHtml + '</div>';
-  html += '</div>';
-
   html += '</div>';
   return html;
 }
@@ -613,6 +616,16 @@ function _lnSourceNotesHtml(messages) {
       + '<span style="font-family:var(--jp);font-size:inherit;line-height:1.7;color:' + (isYoshi ? 'var(--teal)' : 'var(--ink)') + '">' + esc(m.text) + '</span>'
       + '</div>';
   }).join('');
+}
+
+function lnToggleSourceNotes() {
+  LessonNotesState.sourceNotesCollapsed = !LessonNotesState.sourceNotesCollapsed;
+  const content = document.getElementById('lnFullDocContent');
+  const search = document.getElementById('lnFullDocSearch');
+  const label = event && event.target;
+  if (content) content.style.display = LessonNotesState.sourceNotesCollapsed ? 'none' : '';
+  if (search) search.style.display = LessonNotesState.sourceNotesCollapsed ? 'none' : '';
+  if (label) label.textContent = (LessonNotesState.sourceNotesCollapsed ? '\u25B6' : '\u25BC') + ' SOURCE NOTES';
 }
 
 function lnFullDocDoSearch(term) {
