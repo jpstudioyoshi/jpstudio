@@ -385,7 +385,7 @@ function _corpusWriteLookup(word, entry) {
     'INSERT INTO learning_events (created_at, panel, event_type, payload) VALUES (?,?,?,?)',
     [ts, 'translate', 'vocab:lookup', JSON.stringify({ word, context: ctx })]
   ).catch(() => {});
-  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.VOCAB_LOOKUP, { word, context: ctx, meaning: (entry.en || entry.meaning || entry.text || ''), reading: (entry.reading || entry.dictForm || '') }); } catch(e) {}
+  try { (App.AppEvents || window.AppEvents)?.emit(AppEvents.VOCAB_LOOKUP, { word, context: ctx, meaning: (entry.en || entry.meaning || entry.text || ''), reading: (entry.reading || ''), dictForm: (entry.dictForm || '') }); } catch(e) {}
 }
 
 function qtHistoryAdd(word) {
@@ -584,7 +584,7 @@ async function globalQuickTranslate() {
     if (hasJapanese) {
       prompt = `Translate this Japanese word/phrase to English. Reply in this exact format only:\nKANJI: [kanji/dictionary form — leave empty if input is already plain kana]\nREADING: [hiragana or katakana reading]\nMEANING: [brief English meaning, always in English]\n\n${word}`;
     } else {
-      prompt = `Translate this English word/phrase to Japanese. Reply in this exact format only:\nKANJI: [kanji form if applicable, otherwise leave empty]\nREADING: [hiragana or katakana reading, always]\nMEANING: [brief English meaning or gloss]\n\n${word}`;
+      prompt = `Translate this English word/phrase to Japanese. If multiple translations exist, prefer the N5-level word where one is appropriate for the meaning. Reply in this exact format only:\nKANJI: [kanji form if applicable, otherwise leave empty]\nREADING: [hiragana or katakana reading, always]\nMEANING: [brief English meaning or gloss]\n\n${word}`;
     }
     
     const data = await claudeAPI({

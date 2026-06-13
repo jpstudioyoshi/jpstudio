@@ -1735,6 +1735,8 @@ function initLookupVocabListener() {
         const weight = Math.min(0.6 + (count - threshold) * 0.05, 1.0);
         const _meaning = payload.meaning || '';
         const _reading = payload.reading || '';
+        // Use dictionary form if available (e.g. conjugated lookup → plain form)
+        const _vocabWord = (payload.dictForm && payload.dictForm !== word) ? payload.dictForm : word;
         await window.db.run(
           `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at)
            VALUES (?, ?, ?, 'lookup', 'corpus_lookups', 'word', ?, ?, ?)
@@ -1743,9 +1745,9 @@ function initLookupVocabListener() {
              reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
              encounter_at = excluded.encounter_at,
              entry_weight = excluded.entry_weight`,
-          [word, _reading, _meaning, now, weight, now]
+          [_vocabWord, _reading, _meaning, now, weight, now]
         );
-        console.log('[vocab] lookup promoted:', word, '(' + count + ' lookups)');
+        console.log('[vocab] lookup promoted:', _vocabWord, '(' + count + ' lookups, looked up as ' + word + ')');
       } catch(e) {
         console.warn('[vocab] lookup promotion error', e);
       }
