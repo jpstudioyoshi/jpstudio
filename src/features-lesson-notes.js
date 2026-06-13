@@ -246,8 +246,10 @@ async function lessonNotesPanelHandlePaste(event) {
   
   // Create new session from pasted text
   const sessions = lessonNotesGetSessions();
+  const _docContent = lessonNotesParseWithTimestamps(text);
+  const _firstDated = _docContent.find(item => item.date);
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
-  const title = firstLine + (firstLine.length >= 30 ? '...' : '');
+  const title = _firstDated ? (lnFormatWaDate(_firstDated.date) || 'Lesson') : (firstLine + (firstLine.length >= 30 ? '...' : ''));
   const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
@@ -256,7 +258,7 @@ async function lessonNotesPanelHandlePaste(event) {
 
   // Process pasted text
   LessonNotesState.rawText = text;
-  LessonNotesState.docContent = lessonNotesParseWithTimestamps(text);
+  LessonNotesState.docContent = _docContent;
   LessonNotesState.viewMode = 'overview';
   sessions[0].rawText = text;
   sessions[0].docContent = LessonNotesState.docContent;
@@ -308,6 +310,11 @@ async function lessonNotesPanelHandleFile(files) {
     LessonNotesState.rawText = text;
     LessonNotesState.docContent = lessonNotesParseWithTimestamps(text);
     LessonNotesState.viewMode = 'overview';
+    const _firstDated = LessonNotesState.docContent.find(item => item.date);
+    if (_firstDated) {
+      const _t = lnFormatWaDate(_firstDated.date);
+      if (_t) sessions[0].title = _t;
+    }
     sessions[0].rawText = text;
     sessions[0].docContent = LessonNotesState.docContent;
     lessonNotesSaveSessions(sessions);
@@ -612,6 +619,24 @@ function lnRenderLinkedRecording(session) {
   return html;
 }
 
+function lessonNotesRenderSourceNotes(session) {
+  const _lnEsc = App.escHtml || window.escHtml || function(s){return s;};
+  const _lnParseWA = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
+  const _lnRaw = LessonNotesState.rawText || '';
+  let _lnDocHtml = '';
+  if (_lnRaw && _lnParseWA) {
+    const _lnMsgs = _lnParseWA(_lnRaw);
+    _lnDocHtml = _lnMsgs.length ? _lnSourceNotesHtml(_lnMsgs)
+      : '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light)">No messages found</div>';
+  } else {
+    _lnDocHtml = '<pre style="font-family:var(--jp);font-size:inherit;line-height:1.7;white-space:pre-wrap">' + _lnEsc(_lnRaw) + '</pre>';
+  }
+  let html = '<div>';
+  html += '<div id="lnFullDocContent" style="max-height:calc(100vh - 180px);overflow-y:auto">' + _lnDocHtml + '</div>';
+  html += '</div>';
+  return html;
+}
+
 function _lnSourceNotesHtml(messages) {
   const esc = App.escHtml || window.escHtml || function(s){return s;};
   return messages.map(function(m) {
@@ -748,6 +773,11 @@ function lessonNotesGetHTML() {
     return lessonNotesRenderOverview(currentSession);
   }
 
+  // Source notes tab — full WhatsApp lesson notes
+  if (LessonNotesState.viewMode === 'sourcenotes') {
+    return lessonNotesRenderSourceNotes(currentSession);
+  }
+
   // Reading mode - show story with Quick Read style
   if (LessonNotesState.viewMode === 'reading' && LessonNotesState.currentStory) {
     return lessonNotesRenderReading();
@@ -799,10 +829,6 @@ function lessonNotesGetHTML() {
       + '<div style="overflow-y:auto;border:1px solid var(--border);border-radius:6px">' + _makeTable(_vocab.slice(_half)) + '</div>'
       + '</div>';
   }
-  if (LessonNotesState.viewMode === 'errors') {
-    return lessonNotesRenderErrors();
-  }
-  
   // Recording tab — linked recording player + transcript
   if (LessonNotesState.viewMode === 'recording') {
     return lnRenderLinkedRecording(currentSession);
@@ -857,21 +883,8 @@ function lessonNotesUpdatePanelHeader() {
   const currentSession = _cur.currentIdx !== null ? sessions[_cur.currentIdx] : null;
 
   hdr.innerHTML = `
-    <div class="panel-section-title" style="flex:1;gap:8px;flex-wrap:wrap">
+    <div class="panel-section-title" style="flex:1;gap:8px;flex-wrap:wrap;align-items:center">
       <span class="panel-section-title-jp">ヨシ</span>
-      ${hasContent ? `
-        <select class="btn-nav btn-sm" onchange="lessonNotesSetView(this.value)">
-          <option value="overview" ${_vm==='overview'?'selected':''}>📋 Overview</option>
-          <option value="allwords" ${_vm==='allwords'||_vm==='vocab'||_vm===''?'selected':''}>\u{1F4DA} Words (${_cur.vocab.length})</option>
-          <option value="stories" ${_vm==='stories'||_vm==='reading'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
-          <option value="keyphrases" ${_vm==='keyphrases'?'selected':''}>🔑 Phrases (${_cur.keyPhrases.length})</option>
-          <option value="grammar" ${_vm==='grammar'||_vm==='grammardetail'?'selected':''}>📝 Grammar (${_cur.grammar.length})</option>
-          <option value="errors" ${_vm==='errors'?'selected':''}>❌ Errors (${_cur.errors.length})</option>
-          ${currentSession ? `<option value="recording" ${_vm==='recording'?'selected':''}>▶ Recording</option>` : ''}
-        </select>
-      ` : ''}
-    </div>
-    <div style="display:flex;gap:6px;align-items:center">
       <select id="yoshiSessionSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()"
         style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:180px">
         <option value="-1">— Select lesson —</option>
@@ -880,7 +893,22 @@ function lessonNotesUpdatePanelHeader() {
       <button class="btn-nav btn-sm" onclick="lessonNotesNewFromPanel()">+</button>
       ${currentSession ? `<button class="btn-icon btn-icon-del" onclick="lessonNotesDeleteFromPanel()">🗑</button>` : ''}
     </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      ${hasContent && _vm !== 'overview' ? `<button class="btn-nav btn-sm" onclick="lessonNotesSetView('overview')">\u2190 Overview</button>` : ''}
+      ${hasContent ? `<input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)"
+        style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:160px">` : ''}
+    </div>
   `;
+}
+
+function lnHeaderSearch(term) {
+  if (LessonNotesState.viewMode !== 'sourcenotes') {
+    LessonNotesState.viewMode = 'sourcenotes';
+    lessonNotesRender();
+    setTimeout(function() { lnFullDocDoSearch(term); }, 60);
+  } else {
+    lnFullDocDoSearch(term);
+  }
 }
 
 function lessonNotesSetView(mode) {
@@ -916,6 +944,25 @@ function lessonNotesSetView(mode) {
   }
 }
 
+function lnFormatWaDate(raw) {
+  if (!raw) return null;
+  const parts = raw.split(/[.\/]/).map(p => p.trim());
+  if (parts.length === 3) {
+    let [d, m, y] = parts;
+    if (y.length === 2) y = '20' + y;
+    const dt = new Date(+y, +m - 1, +d);
+    if (!isNaN(dt.getTime())) return dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+  }
+  return null;
+}
+
+function lnFirstMessageDate(session) {
+  const dc = LessonNotesState.docContent || [];
+  const first = dc.find(item => item.date);
+  if (!first) return (session && session.date) || '';
+  return lnFormatWaDate(first.date) || first.date;
+}
+
 function lessonNotesRenderOverview(session) {
   if (!session) return '';
   const _vocabCount   = LessonNotesState.vocab.length;
@@ -926,7 +973,7 @@ function lessonNotesRenderOverview(session) {
 
   let html = '<div style="max-width:760px;margin:0 auto">';
   html += '<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:4px">' + (session.title || 'Lesson') + '</div>';
-  html += '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:16px">' + (session.date || '') + '</div>';
+  html += '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:16px">' + lnFirstMessageDate(session) + '</div>';
 
   if (_summary) {
     html += '<div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">' + _summary + '</div>';
@@ -936,11 +983,15 @@ function lessonNotesRenderOverview(session) {
       + '</div>';
   }
 
+  const _storyCount = LessonNotesState.stories.length;
+
   html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">';
   html += lnOverviewCard('\u{1F4DA}', 'Words', _vocabCount, "lessonNotesSetView('allwords')");
   html += lnOverviewCard('\u{1F4DD}', 'Grammar', _grammarCount, "lessonNotesSetView('grammar')");
   html += lnOverviewCard('\u{1F511}', 'Phrases', _phraseCount, "lessonNotesSetView('keyphrases')");
-  html += lnOverviewCard('\u25B6', 'Recording', _hasRecording ? '' : null, _hasRecording ? "lessonNotesSetView('recording')" : "lnShowLinkPicker()");
+  html += lnOverviewCard('\u{1F4D6}', 'Stories', _storyCount, "lessonNotesSetView('stories')");
+  html += lnOverviewCard('\u{1F4DC}', 'Notes', null, "lessonNotesSetView('sourcenotes')");
+  html += lnOverviewCard('\u25B6', _hasRecording ? 'Recording' : 'Link Recording', _hasRecording ? '' : null, _hasRecording ? "lessonNotesSetView('recording')" : "lnShowLinkPicker()");
   html += '</div>';
   html += '</div>';
   return html;
@@ -978,30 +1029,6 @@ function lessonNotesRenderStories() {
         </div>
       `).join('')}
     </div>
-  `;
-}
-
-function lessonNotesRenderErrors() {
-  return `
-    ${LessonNotesState.errors.length === 0 ? `
-      <div style="text-align:center;padding:40px;color:var(--ink-light);font-family:var(--ui)">
-        No errors found in this lesson
-      </div>
-    ` : `
-      <div style="display:flex;flex-direction:column;gap:12px">
-        ${LessonNotesState.errors.map((err, i) => `
-          <div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:16px">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
-              <span style="font-family:var(--jp);font-size:1.1rem;color:var(--red);text-decoration:line-through">${err.wrong}</span>
-              <span style="color:var(--ink-light)">→</span>
-              <span style="font-family:var(--jp);font-size:1.1rem;color:var(--teal)">${err.correct}</span>
-              <button class="btn-icon" onclick="jpSpeak('${(err.correct||'').replace(/'/g,"\\'")}')">🔊</button>
-            </div>
-            <div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);line-height:1.5;padding-left:4px;border-left:2px solid var(--border)">${err.note || ''}</div>
-          </div>
-        `).join('')}
-      </div>
-    `}
   `;
 }
 

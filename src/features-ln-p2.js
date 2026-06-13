@@ -710,6 +710,7 @@ function lessonNotesLoadSession(idx) {
     LessonNotesState.rawText = '';
     LessonNotesState.docImages = [];
     LessonNotesState.docContent = [];
+    LessonNotesState.summary = '';
   } else {
     const sessions = lessonNotesGetSessions();
     if (sessions[idx]) {
@@ -726,6 +727,8 @@ function lessonNotesLoadSession(idx) {
       LessonNotesState.rawText = sessions[idx].rawText || '';
       LessonNotesState.docImages = sessions[idx].images || [];
       LessonNotesState.docContent = sessions[idx].docContent || [];
+      LessonNotesState.summary = sessions[idx].summary || '';
+      LessonNotesState.viewMode = 'overview';
 
       // Resolve currentLessonId BEFORE any auto-extract so lesson_phrases /
       // extracted_grammar writes have a real lesson_id.
@@ -769,7 +772,6 @@ function lessonNotesLoadSession(idx) {
   LessonNotesState.drillRevealed = 0;
   LessonNotesState.shuffled = false;
   LessonNotesState.hiddenWords.clear();
-  LessonNotesState.viewMode = 'vocab';
   LessonNotesState.currentStory = null;
   LessonNotesState.grammarDetail = null;
   

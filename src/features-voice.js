@@ -1446,6 +1446,13 @@ function voiceNewChat() {
   VoiceState.sentenceIdx = 0;
   VoiceState.sentenceText = '';
 
+  VoiceState.analysisOnly = false;
+  const aoBtn = document.getElementById('voiceAnalysisOnlyBtn');
+  if (aoBtn) {
+    aoBtn.style.background = 'transparent';
+    aoBtn.style.color = 'var(--ink-light)';
+  }
+
   VoiceState.messages = [];
   VoiceState.currentConvoName = '';
   voiceUpdateConvoDropdown();
@@ -2370,6 +2377,15 @@ function voiceStopSentences() {
 }
 
 
+function voiceToggleAnalysisOnly() {
+  VoiceState.analysisOnly = !VoiceState.analysisOnly;
+  const btn = document.getElementById('voiceAnalysisOnlyBtn');
+  if (btn) {
+    btn.style.background = VoiceState.analysisOnly ? 'var(--teal)' : 'transparent';
+    btn.style.color = VoiceState.analysisOnly ? 'var(--paper)' : 'var(--ink-light)';
+  }
+}
+
 async function voiceToggleRecord() {
   const btn = document.getElementById('voiceRecordBtn');
   const { hasOpenAI } = voiceCheckKeys();
@@ -2391,6 +2407,12 @@ async function voiceToggleRecord() {
     }
     voiceUpdateStatus('Processing...');
   } else {
+    // Block mic while TTS is playing to avoid recording it
+    if (speechSynthesis.speaking || VoiceState.sentencePlaying) {
+      voiceShowError('Wait for the audio to finish');
+      return;
+    }
+
     // Start recording
     if (VoiceState.ftt_round >= 0 && !VoiceState.ftt_active && document.getElementById('vt-four-three-two')?.classList.contains('active')) {
       fttStartRound();
@@ -2499,12 +2521,62 @@ async function voiceProcessAudio(audioBlob) {
       VoiceState.ftt_transcript += (VoiceState.ftt_transcript ? '\n' : '') + userText;
       return;
     }
+
+    if (VoiceState.analysisOnly) {
+      await voiceAnalyzeOnly(userText, _gen);
+      return;
+    }
+
     // Send to Claude
     await voiceSendToClaude(userText);
     
   } catch (e) {
     console.error('Voice processing error:', e);
     voiceShowError('Error processing audio');
+  }
+}
+
+async function voiceAnalyzeOnly(userText, _gen) {
+  const apiKey = (App.getApiKey || window.getApiKey)?.();
+  if (!apiKey) { voiceShowError('No Claude API key'); return; }
+
+  voiceUpdateStatus('Analyzing...');
+
+  const systemPrompt = `You are reviewing a Japanese learner's spoken sentence, transcribed via speech-to-text. Check it for grammar, particle, conjugation, or vocabulary errors that would affect meaning or sound unnatural to a native speaker. Do NOT flag kanji/kana spelling choices or transcription artifacts (those are STT quirks, not learner mistakes).
+
+Respond with a JSON object only: {"correction": "brief English note on the error, including hiragana readings for any Japanese words mentioned"} — or {"correction": null} if the sentence is correct.`;
+
+  try {
+    const data = await (App.claudeAPI || window.claudeAPI)({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 150,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userText }],
+      track: 'speaking'
+    });
+
+    if (_gen !== (VoiceState.convoGen|0)) return;
+
+    const rawText = (data.content?.[0]?.text || '').trim();
+    let correction = null;
+    try {
+      const m = rawText.match(/\{[\s\S]*\}/);
+      if (m) correction = JSON.parse(m[0]).correction || null;
+    } catch {}
+
+    if (correction) {
+      VoiceState.messages.push({ role: 'correction', content: correction });
+      spokenErrorsAdd(correction, userText);
+      voiceRenderMessages();
+      voiceUpdateStatus('');
+    } else {
+      voiceUpdateStatus('\u2713 No errors');
+      setTimeout(() => voiceUpdateStatus(''), 2000);
+    }
+    try { drillLastCompletedWrite('speaking'); } catch(e) {}
+  } catch (e) {
+    console.error('[voiceAnalyzeOnly]', e);
+    voiceShowError('Error getting analysis');
   }
 }
 

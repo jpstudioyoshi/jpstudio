@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-11 (session 32 — schema v11, DB audit, dead code sweep)
+Last updated: 2026-06-12 (session 33 — panel-video2 rebuild, old panel-video deleted)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -30,7 +30,7 @@ Last updated: 2026-06-11 (session 32 — schema v11, DB audit, dead code sweep)
 - Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
 
 ## Current Mode
-STABILIZATION — data quality, schema clean-up, dead code removal. Core pipelines complete.
+ACTIVE DEVELOPMENT — stabilization phase ended several sessions ago. Currently: video panel rebuild, ongoing dead-code cleanup as found, feature work as planned.
 
 ## HTML Element Map
 `html-map.md` in project Knowledge.
@@ -242,9 +242,27 @@ All JSON files are static reference data — correct to stay as JSON. Key files:
   - Panel sequence patterns (leaving video → translate frequently)
   - Briefing recommendation follow-through tracking
 
+## Session 33 Changes — panel-video2 rebuild
+- Fixed: duplicate `vt*` ids (vtVideo, vtNoVideo, vtControls, etc.) between old panel-video and panel-video2 — old ids
+  were colliding and JS was targeting the wrong (hidden) elements
+- Removed furigana button (vtFuriAllBtn) from video panel — not relevant here
+- Fixed transcript column: dark background, height matches video, internal scroll (was pushing whole panel)
+- Grid container: height:calc(100vh - 240px) for full-height layout with bottom gap
+- Title row: simplified to just "動画", history/transcript/video selector dropdown+buttons moved to title row right side
+- Fixed title font: panel-section-title-jp class + font-weight:400 override (was inheriting bold from .section-title)
+- DELETED old panel-video HTML block (was lines ~1940-2054, dud/non-functional) — HTML only, JS/CSS refs left
+  (harmless via ?. and !panel guards) — flagged for dedicated cleanup pass
+- Added vtWatchTimer UI to panel-video2 title row (existing vtWatch* JS already wired)
+- Fixed _STRAND_MAP: added `video2: 1` — Watch panel now writes to panel_sessions + learning_events (was previously
+  completely untracked since nav uses data-panel="video2" but map only had "video")
+- Confirmed: multi-select video+transcript file load already works via vtVideoInput change handler — no change needed
+
 ## Pending — Priority Order
 
-1. **Grammar node display** — read `extracted_grammar` from `lesson_sessions`, show gold dots on Genki node pills in progress panel; backfill 3-4 sessions
+1. **Dead code cleanup — video.js duplication** — duplicate `vtTranslateWord` (lines ~2024 and ~2357) and surrounding IIFE block; dedicated pass needed (flagged session 33)
+2. **Old panel-video JS/CSS refs** — HTML block deleted (session 33) but JS refs (core.js, features-reading.js, core-foundation.js, features-tools.js, features-video.js) and CSS (#panel-video.vt-fullscreen in style.css) left in place — non-firing but should be cleaned
+3. **vtWatch* localStorage isolation** — vtWatchTime stored in localStorage only, separate from learning_events/panel_sessions; consider unifying
+4. **Grammar node display** — read `extracted_grammar` from `lesson_sessions`, show gold dots on Genki node pills in progress panel; backfill 3-4 sessions
 2. **Dead code deletion** — action dead-code-findings.md: delete 8 certain, review 14 likely; dedicated Claude Code session
 3. **Vocab weighting review** — confirm effective_weight calc behaves correctly post-v11 schema change
 4. **Sidebar strand mini-display** — #strandMini at top, settings button to bottom
