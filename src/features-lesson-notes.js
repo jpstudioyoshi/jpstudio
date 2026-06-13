@@ -13,6 +13,7 @@ const LessonNotesState = {
   standalone:          false,
   // View & content
   viewMode:            'vocab',
+  summary:             '',
   stories:             [],
   keyPhrases:          [],
   grammar:             [],
@@ -247,7 +248,7 @@ async function lessonNotesPanelHandlePaste(event) {
   const sessions = lessonNotesGetSessions();
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
   const title = firstLine + (firstLine.length >= 30 ? '...' : '');
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -256,6 +257,7 @@ async function lessonNotesPanelHandlePaste(event) {
   // Process pasted text
   LessonNotesState.rawText = text;
   LessonNotesState.docContent = lessonNotesParseWithTimestamps(text);
+  LessonNotesState.viewMode = 'overview';
   sessions[0].rawText = text;
   sessions[0].docContent = LessonNotesState.docContent;
   lessonNotesSaveSessions(sessions);
@@ -291,19 +293,21 @@ async function lessonNotesPanelHandleFile(files) {
   // Create new session
   const sessions = lessonNotesGetSessions();
   const title = file.name.replace(/\.(docx|txt|md)$/i, '');
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
   await lessonNotesEnsureDbRow(newSession, sessions);
 
   // Read file
+  LessonNotesState.viewMode = 'overview';
   if (file.name.endsWith('.docx')) {
     await lessonNotesReadDocxForPanel(file);
   } else {
     const text = await file.text();
     LessonNotesState.rawText = text;
     LessonNotesState.docContent = lessonNotesParseWithTimestamps(text);
+    LessonNotesState.viewMode = 'overview';
     sessions[0].rawText = text;
     sessions[0].docContent = LessonNotesState.docContent;
     lessonNotesSaveSessions(sessions);
@@ -371,7 +375,7 @@ async function lessonNotesNewFromPanel() {
   if (!title) return;
 
   const sessions = lessonNotesGetSessions();
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', lessonSessionDbId: null };
+  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -382,7 +386,8 @@ async function lessonNotesNewFromPanel() {
   LessonNotesState.grammar = [];
   LessonNotesState.errors = [];
   LessonNotesState.docContent = [];
-  LessonNotesState.viewMode = 'vocab';
+  LessonNotesState.summary = '';
+  LessonNotesState.viewMode = 'overview';
   lessonNotesRenderPanel();
 }
 
@@ -738,6 +743,11 @@ function lessonNotesGetHTML() {
   const hasVocab = LessonNotesState.vocab.length > 0;
   const hasStories = LessonNotesState.stories.length > 0;
 
+  // Overview tab — session summary + links to words/grammar/phrases/recording
+  if (LessonNotesState.viewMode === 'overview') {
+    return lessonNotesRenderOverview(currentSession);
+  }
+
   // Reading mode - show story with Quick Read style
   if (LessonNotesState.viewMode === 'reading' && LessonNotesState.currentStory) {
     return lessonNotesRenderReading();
@@ -764,7 +774,7 @@ function lessonNotesGetHTML() {
   }
   
   // Errors mode
-  if (LessonNotesState.viewMode === 'allwords') {
+  if (LessonNotesState.viewMode === 'allwords' || LessonNotesState.viewMode === 'vocab' || LessonNotesState.viewMode === '') {
     const _vocab = LessonNotesState.vocab;
     const _half = Math.ceil(_vocab.length / 2);
     function _makeTable(items) {
@@ -796,81 +806,6 @@ function lessonNotesGetHTML() {
   // Recording tab — linked recording player + transcript
   if (LessonNotesState.viewMode === 'recording') {
     return lnRenderLinkedRecording(currentSession);
-  }
-  
-  // If we have vocab, show drill view (card-centred, fixed footers)
-  if (hasVocab || hasStories || LessonNotesState.errors.length > 0) {
-    let revealLabel = 'Reveal';
-    let revealActive = false;
-    if (LessonNotesState.drillRevealed === 1) {
-      revealLabel = LessonNotesState.drillMode === 'en2jp' ? 'Reading' : 'Meaning';
-    } else if (LessonNotesState.drillRevealed === 2) {
-      revealLabel = 'Hide';
-      revealActive = true;
-    }
-    return `
-    <!-- Drill card (fills available space, centred) -->
-    <div class="vocab-counter">${LessonNotesState.vocab.length > 0 ? (LessonNotesState.drillIdx + 1) + ' / ' + LessonNotesState.vocab.length : ''}</div>
-    <div class="ln-drill-card-area">
-      <div class="ln-drill-card" id="lessonNotesDrillArea" onclick="lessonNotesDrillReveal()" style="cursor:pointer">
-        ${lessonNotesRenderDrillCard()}
-      </div>
-    </div>
-
-
-    <!-- Breakdown/Examples area (shown when requested) -->
-    <div id="lessonNotesBreakdownArea" style="display:none;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
-    </div>
-
-    <!-- Vocab table (hideable) -->
-    <div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;margin-bottom:22vh;${LessonNotesState.tableHidden?'display:none':''}">
-      <table style="width:100%;border-collapse:collapse;font-family:var(--jp);font-size:inherit">
-        <thead style="position:sticky;top:0;background:var(--paper-dark)">
-          <tr style="border-bottom:1px solid var(--border)">
-            <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">WORD</th>
-            <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">READING</th>
-            <th style="text-align:left;padding:8px 10px;font-family:var(--ui);font-size:0.7rem;letter-spacing:0.06em;color:var(--ink-light);font-weight:500">MEANING</th>
-            <th style="width:40px"></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${LessonNotesState.vocab.map((v,i) => `
-            <tr style="border-bottom:1px solid var(--border);${i===LessonNotesState.drillIdx?'background:rgba(48,213,200,0.1)':''}">
-              <td style="padding:6px 10px;color:var(--ink)">${v.word || ''}</td>
-              <td style="padding:6px 10px;color:var(--ink-light)">${v.reading || '—'}</td>
-              <td style="padding:6px 10px;color:var(--ink-light);font-size:inherit">${v.meaning || v.en || '—'}</td>
-              <td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak('${(v.word||'').replace(/'/g,"\\'")}')">🔊</button></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Upper footer: card actions -->
-    <!-- Card controls inline -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
-      <button class="btn-nav" onclick="lessonNotesDrillPrev()">Prev</button>
-      <button class="btn-rating btn-rating-red" onclick="lessonNotesDrillNext()">Again</button>
-      <button class="btn-rating btn-rating-teal" onclick="lessonNotesDrillReveal()">Got it</button>
-      <button class="btn-rating btn-rating-teal" onclick="lessonNotesHideCard()">Learned</button>
-      <button class="btn-nav" onclick="lessonNotesDrillNext()">Next</button>
-    </div>
-    <!-- Upper footer: mode toggles -->
-    <div class="footer-upper">
-      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='jp2reading'?'active':''}" onclick="lessonNotesSetMode('jp2reading')">JP → Reading</button>
-      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='jp2en'?'active':''}" onclick="lessonNotesSetMode('jp2en')">JP → Meaning</button>
-      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='en2jp'?'active':''}" onclick="lessonNotesSetMode('en2jp')">EN → JP</button>
-      <button class="btn-toggle btn-sm ${LessonNotesState.drillMode==='listening'?'active':''}" onclick="lessonNotesSetMode('listening')">Listen</button>
-      <button class="btn-toggle btn-sm ${LessonNotesState.shuffled?'active':''}" onclick="lessonNotesToggleShuffle()">Shuffle</button>
-    </div>
-    <!-- Lower footer: show/word list controls -->
-    <div class="footer-lower">
-      <div class="footer-lower-row">
-        <button class="btn-toggle btn-sm ${LessonNotesState.showReading?'active':''}" onclick="lessonNotesToggleShowReading()">+Reading</button>
-        <button class="btn-toggle btn-sm ${LessonNotesState.showMeaning?'active':''}" onclick="lessonNotesToggleShowMeaning()">+Meaning</button>
-      </div>
-    </div>
-    `;
   }
   
   // No vocab - show full import view
@@ -926,8 +861,8 @@ function lessonNotesUpdatePanelHeader() {
       <span class="panel-section-title-jp">ヨシ</span>
       ${hasContent ? `
         <select class="btn-nav btn-sm" onchange="lessonNotesSetView(this.value)">
-          <option value="vocab" ${_vm==='vocab'||_vm===''?'selected':''}>📚 Vocab Drill (${_cur.vocab.length})</option>
-          <option value="allwords" ${_vm==='allwords'?'selected':''}>📋 All Words (${_cur.vocab.length})</option>
+          <option value="overview" ${_vm==='overview'?'selected':''}>📋 Overview</option>
+          <option value="allwords" ${_vm==='allwords'||_vm==='vocab'||_vm===''?'selected':''}>\u{1F4DA} Words (${_cur.vocab.length})</option>
           <option value="stories" ${_vm==='stories'||_vm==='reading'?'selected':''}>📖 Stories (${_cur.stories.length})</option>
           <option value="keyphrases" ${_vm==='keyphrases'?'selected':''}>🔑 Phrases (${_cur.keyPhrases.length})</option>
           <option value="grammar" ${_vm==='grammar'||_vm==='grammardetail'?'selected':''}>📝 Grammar (${_cur.grammar.length})</option>
@@ -979,6 +914,54 @@ function lessonNotesSetView(mode) {
       });
     }, 50);
   }
+}
+
+function lessonNotesRenderOverview(session) {
+  if (!session) return '';
+  const _vocabCount   = LessonNotesState.vocab.length;
+  const _grammarCount = LessonNotesState.grammar.length;
+  const _phraseCount  = LessonNotesState.keyPhrases.length;
+  const _hasRecording = !!session.linked_recording_id;
+  const _summary = LessonNotesState.summary;
+
+  let html = '<div style="max-width:760px;margin:0 auto">';
+  html += '<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:4px">' + (session.title || 'Lesson') + '</div>';
+  html += '<div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:16px">' + (session.date || '') + '</div>';
+
+  if (_summary) {
+    html += '<div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">' + _summary + '</div>';
+  } else {
+    html += '<div style="text-align:center;padding:16px;margin-bottom:20px">'
+      + '<button class="yoshi-read-btn" onclick="lessonNotesGenerateSummary()">\u2728 Generate summary</button>'
+      + '</div>';
+  }
+
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">';
+  html += lnOverviewCard('\u{1F4DA}', 'Words', _vocabCount, "lessonNotesSetView('allwords')");
+  html += lnOverviewCard('\u{1F4DD}', 'Grammar', _grammarCount, "lessonNotesSetView('grammar')");
+  html += lnOverviewCard('\u{1F511}', 'Phrases', _phraseCount, "lessonNotesSetView('keyphrases')");
+  html += lnOverviewCard('\u25B6', 'Recording', _hasRecording ? '' : null, _hasRecording ? "lessonNotesSetView('recording')" : "lnShowLinkPicker()");
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function lnOverviewCard(icon, label, count, onclick) {
+  return '<div onclick="' + onclick + '" class="row-hover-border" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:18px;cursor:pointer;text-align:center">'
+    + '<div style="font-size:1.6rem;margin-bottom:6px">' + icon + '</div>'
+    + '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink)">' + label + (count !== null ? ' (' + count + ')' : '') + '</div>'
+    + '</div>';
+}
+
+function lessonNotesGenerateSummary() {
+  const apiKey = _fy_getApiKey();
+  if (!apiKey) { alert('Please set an API key first'); return; }
+  const docContent = lessonNotesCleanText(LessonNotesState.docContent);
+  if (!docContent) return;
+  lessonNotesExtractSummarySilent(docContent, apiKey).then(function() {
+    lessonNotesSaveCurrentSession();
+    lessonNotesRender();
+  });
 }
 
 function lessonNotesRenderStories() {
@@ -1434,6 +1417,11 @@ async function lessonNotesAutoExtractAll() {
   if (LessonNotesState.grammar.length === 0) {
     promises.push(lessonNotesExtractGrammarSilent(docContent, apiKey));
   }
+
+  // Summary
+  if (!LessonNotesState.summary) {
+    promises.push(lessonNotesExtractSummarySilent(docContent, apiKey));
+  }
   
   await Promise.all(promises);
   
@@ -1479,6 +1467,21 @@ function _lnParseJsonArray(text) {
     try { return JSON.parse(str.slice(0, lastClose + 1) + ']'); } catch(e) {}
   }
   return [];
+}
+
+async function lessonNotesExtractSummarySilent(docContent, apiKey) {
+  try {
+    const data = await _fy_claudeAPI({
+      max_tokens: 200,
+      messages: [{ role: 'user', content: `Write a brief 2-3 sentence summary in English of what was covered in this Japanese lesson, based on the notes below. Focus on topics discussed, vocabulary themes, and any grammar points practiced. Plain prose, no headers or lists, no preamble.
+
+Notes:
+${docContent.slice(0, 8000)}` }],
+      track: 'lesson'
+    });
+    LessonNotesState.summary = (_fy_claudeText(data) || '').trim();
+    console.log('[LN] summary extracted:', LessonNotesState.summary.slice(0, 60) + '...');
+  } catch (e) { console.error('Summary extraction error:', e); }
 }
 
 async function lessonNotesExtractVocabSilent(docContent, apiKey) {
@@ -1704,6 +1707,7 @@ function lessonNotesSaveCurrentSession() {
   sessions[LessonNotesState.currentIdx].keyPhrases = LessonNotesState.keyPhrases;
   sessions[LessonNotesState.currentIdx].grammar = LessonNotesState.grammar;
   sessions[LessonNotesState.currentIdx].errors = LessonNotesState.errors;
+  sessions[LessonNotesState.currentIdx].summary = LessonNotesState.summary;
   
   lessonNotesSaveSessions(sessions);
 }
