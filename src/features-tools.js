@@ -262,12 +262,6 @@ try {
   window["setChatInputMode"] = setChatInputMode;
   window["clearWritingFeedback"] = clearWritingFeedback;
   window["closeTimesDrill"] = closeTimesDrill;
-  window["compAnswer"] = compAnswer;
-  window["compGenerate"] = compGenerate;
-  window["compPlay"] = compPlay;
-  window["compPlayLine"] = compPlayLine;
-  window["compReplay"] = compReplay;
-  window["compStop"] = compStop;
   window["conjSpeak"] = conjSpeak;
   window["copyDictation"] = copyDictation;
   window["copySavedText"] = copySavedText;
@@ -304,7 +298,6 @@ try {
   window["newDictSentence"] = newDictSentence;
   window["nextTimesQuestion"] = nextTimesQuestion;
   window["nextVocab"] = nextVocab;
-  window["openTimesDrill"] = openTimesDrill;
   window["openTimesSettings"] = openTimesSettings;
   window["playDictSentence"] = playDictSentence;
   window["playSelected"] = playSelected;
@@ -347,7 +340,6 @@ try {
   window["submitWritingSentence"] = submitWritingSentence;
   window["testMicrophone"] = testMicrophone;
   window["toggleBlitzMode"] = toggleBlitzMode;
-  window["toggleComprehension"] = toggleComprehension;
   window["toggleConjListenMode"] = toggleConjListenMode;
   window["toggleDetail"] = toggleDetail;
   window["toggleDictationMode"] = toggleDictationMode;
