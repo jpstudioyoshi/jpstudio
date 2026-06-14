@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-14 (session 36 — old panel-video remnants cleanup + 2 bug fixes)
+Last updated: 2026-06-14 (session 37 — dead-code lookup tooling, 6 function removals, context file trim)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -42,8 +42,8 @@ Last updated: 2026-06-14 (session 36 — old panel-video remnants cleanup + 2 bu
 ## Current Mode
 ACTIVE DEVELOPMENT / ONGOING CLEANUP — no separate "stabilization phase". Dead-code cleanup,
 bug fixes found along the way, and feature work are all handled as routine, in whatever order
-makes sense. (A stale "STABILIZATION" custom instruction was identified and should be removed
-from Project settings if it resurfaces — it does not reflect this file's guidance.)
+makes sense. (Stale "STABILIZATION" Project instruction removed session 37 — was also the
+root cause of the Dashboard Q&A German-response bug via a cached briefing system prompt.)
 
 ## HTML Element Map
 `html-map.md` in project Knowledge — may be stale after session 35: #timesDrillOverlay,
@@ -84,6 +84,20 @@ deleted entirely.
 - Long conversations: use Claude Code for multi-line JS string replacements
 - DevTools console (Cmd+Option+I) for in-app JS — not terminal
 - window.db.run() returns {changes: 0} even on successful batch INSERTs — not an error indicator
+
+## Dead-Code Lookup Tooling — added session 37
+- check-syntax.js now computes per function: `callers` (word-frequency count across all
+  source files, minus the definition itself) and `exported` (true if in window[] or App
+  registry anywhere). Written to index.json alongside name/file/line/desc.
+- Audit file gains a "Likely dead candidates" section: functions with `callers=0` and
+  `exported=false`, grouped by file. Regenerates every commit (pre-commit hook), no extra
+  runs or API cost.
+- find.js shows `[callers=N exported=yes/no]` for function-type results.
+- Usage: `node find.js <name> function` → instant "is this dead?" answer, no grep needed.
+- As of session 37: 18 candidates remain (down from 24) — see latest audit-YYYY-MM-DD.md.
+  Note: indented/nested function declarations (e.g. teBuildQueue/teNext in
+  features-grammar.js) aren't captured by the extractor — a known blind spot, not worth
+  fixing (Claude Code's grep handles those natively when needed).
 
 ## Vocab System — Complete State
 
@@ -213,6 +227,22 @@ Design note at CONJ_SRS_DESIGN.md in project root.
   `#vtMarkerList` never existed in panel-video2, so `vtRenderMarkers` was always a no-op and
   the other 3 functions had zero callers.
 
+## Tooling + Cleanup — session 37 (2026-06-14)
+- Dead-code lookup tooling built (see "Dead-Code Lookup Tooling" above).
+- Removed 6 verified-dead functions (callers=0, not exported, app-tested clean):
+  `kanjiRefToggle` (core-foundation.js), `countStart2` (core-counters.js), `addMsg`
+  (features-reading.js), `vgOnInput` (features-pictures.js), `pauseDataClear`
+  (features-voice.js), `_devUpdatePanelBadge` (index.html). index.json: 1300→1294 entries.
+- 3 function pairs from the 18 remaining candidates look like parts of larger superseded
+  features — flagged for a Claude Code session alongside the ln-p2 cluster (Pending #5):
+  `teSetMode`/`teSetGroup` (features-grammar.js, TE-form drill), `_renderErrorPie`/
+  `_renderSubPie` (features-progress.js, old pie-chart panel), `lessonNotesRenderFullDoc`/
+  `lnRenderTopics` (features-lesson-notes.js, duplicate doc renderer).
+- Trimmed session 34/35 writeups from this file (~4500 chars) — carry-forwards already in
+  Pending #1/#13/#14.
+- Fixed stale "STABILIZATION" Project instruction directly in Project settings (was also
+  causing the Dashboard Q&A German-response bug — see Current Mode note above).
+
 ## Pending — Priority Order
 
 ### Dead code / cleanup
@@ -224,7 +254,10 @@ Design note at CONJ_SRS_DESIGN.md in project root.
    `toggleSrsTracking` turns out to be reachable — not addressed here.
 2. **vtWatch* localStorage isolation** — `vtWatchTime` stored in localStorage only
    (`VT_WATCH_KEY`), separate from `panel_sessions`/`learning_events`; consider unifying
-3. **dead-code-findings.md actions** — 8 certain + 14 likely, across ~8 files:
+3. **dead-code-findings.md actions** — 8 certain + 14 likely, across ~8 files. UPDATE
+   session 37: the "certain" category is superseded by the automated "Likely dead
+   candidates" audit section (18 remaining, regenerated every commit — see Dead-Code
+   Lookup Tooling above); use `node find.js <name> function` to check any item below.
    - certain: `isVoiced` (core-srs.js), `lnLoadTimeline` (features-lesson-notes.js),
      `rtStartRound2`/`rtCompare` (features-voice.js, orphaned buttons),
      `voiceUploadAudio` (features-voice.js), `_onRecord`/`_onStop` (ui/YoshiUI.js)

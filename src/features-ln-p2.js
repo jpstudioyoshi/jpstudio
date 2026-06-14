@@ -361,79 +361,6 @@ function lessonNotesToggleSpeak() {
   }
 }
 
-// Keep old function for compatibility
-function lessonNotesRenderDrillCard() {
-  if (LessonNotesState.vocab.length === 0) return '<div style="text-align:center;color:var(--ink-light);font-family:var(--ui)">No vocab extracted yet</div>';
-  
-  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
-  const progress = `${LessonNotesState.drillIdx + 1} / ${LessonNotesState.vocab.length}`;
-  const meaning = v.meaning || v.en || '';
-  const reading = v.reading || '';
-  const word = v.word || '';
-  
-  let prompt = '', hints = '';
-  
-  // Build the answer display based on reveal state
-  // For en2jp: show English, reveal Japanese word then reading
-  // For jp modes: show Japanese, reveal reading then meaning
-  let answerLine1 = '', answerLine2 = '';
-  
-  if (LessonNotesState.drillMode === 'en2jp') {
-    // EN → JP mode: show meaning, reveal word then reading
-    prompt = meaning || '(no meaning)';
-    answerLine1 = word || '(no word)';
-    answerLine2 = reading || '';
-    
-    // Show hints if enabled
-    if (LessonNotesState.showReading && reading && LessonNotesState.drillRevealed < 1) {
-      hints = `<div style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);margin-top:4px">${reading}</div>`;
-    }
-  } else if (LessonNotesState.drillMode === 'jp2reading' || LessonNotesState.drillMode === 'jp2en') {
-    prompt = word;
-    answerLine1 = reading || '(no reading)';
-    answerLine2 = meaning || '(no meaning)';
-    
-    // Show hints if enabled
-    if (LessonNotesState.showMeaning && meaning && LessonNotesState.drillRevealed < 2) {
-      hints = `<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);margin-top:4px">${meaning}</div>`;
-    }
-    if (LessonNotesState.showReading && reading && LessonNotesState.drillRevealed < 1) {
-      hints = `<div style="font-family:var(--jp);font-size:inherit;color:var(--ink-light);margin-top:4px">${reading}</div>`;
-    }
-  } else if (LessonNotesState.drillMode === 'listening') {
-    const safeWord = word.replace(/'/g, "\\'");
-    prompt = `🔊 <button class="btn-action" onclick="jpSpeak('${safeWord}')">Play</button>`;
-    answerLine1 = reading || '(no reading)';
-    answerLine2 = meaning || '(no meaning)';
-  }
-  
-  const hiddenCount = LessonNotesState.hiddenWords.size;
-
-  // For en2jp mode, first line is the Japanese word (in serif), second is reading
-  const line1Style = LessonNotesState.drillMode === 'en2jp'
-    ? "font-family:'Shippori Mincho',serif;font-size:2.8rem;color:var(--teal)"
-    : "font-family:var(--jp);font-size:1.8rem;color:var(--teal)";
-  const line2Style = LessonNotesState.drillMode === 'en2jp'
-    ? "font-family:var(--jp);font-size:1.4rem;color:var(--ink-light);margin-top:10px"
-    : "font-family:var(--ui);font-size:1.2rem;color:var(--ink-light);margin-top:10px";
-
-  // For en2jp, prompt is English so use UI font
-  const promptStyle = LessonNotesState.drillMode === 'en2jp'
-    ? "font-family:var(--ui);font-size:2rem;color:var(--ink);margin-bottom:6px"
-    : "font-family:'Shippori Mincho',serif;font-size:3.2rem;color:var(--ink);margin-bottom:6px";
-
-  return `
-    <div style="text-align:center;width:100%">
-      <div style="${promptStyle}">${prompt}</div>
-      ${hints}
-      <div id="lessonNotesDrillAnswer" style="min-height:100px;margin:24px 0">
-        <div style="${line1Style};${LessonNotesState.drillRevealed >= 1 ? '' : 'visibility:hidden'}">${answerLine1}</div>
-        <div style="${line2Style};${LessonNotesState.drillRevealed >= 2 ? '' : 'visibility:hidden'}">${answerLine2}</div>
-      </div>
-    </div>
-  `;
-}
-
 // LessonNotesState.hiddenWords — see declaration above
 
 const LEARNED_WORDS_KEY = 'lessonNotesLearnedWords';
@@ -449,50 +376,6 @@ function lessonNotesSaveLearnedWords() {
 }
 
 // LessonNotesState.permanentlyLearned — loaded in init
-
-function lessonNotesSaveHiddenPermanently() {
-  // Add all currently hidden words to permanent storage
-  LessonNotesState.hiddenWords.forEach(word => LessonNotesState.permanentlyLearned.add(word));
-  lessonNotesSaveLearnedWords();
-  LessonNotesState.hiddenWords.clear();
-  lessonNotesRender();
-}
-
-function lessonNotesShowMastered() {
-  const area = document.getElementById('lessonNotesBreakdownArea');
-  if (!area) return;
-  
-  const words = [...LessonNotesState.permanentlyLearned];
-  area.style.display = 'block';
-  area.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">MASTERED WORDS (${words.length})</span>
-      <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
-    </div>
-    <div style="font-family:var(--jp);font-size:inherit;line-height:2;color:var(--ink);max-height:200px;overflow-y:auto">
-      ${words.length > 0 ? words.map(w => `<span style="display:inline-block;background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:2px 8px;margin:2px">${w}</span>`).join('') : '<span style="color:var(--ink-light)">No mastered words yet</span>'}
-    </div>
-  `;
-}
-
-function lessonNotesClearMastered() {
-  if (!confirm('Clear all mastered words? They will appear in drills again.')) return;
-  LessonNotesState.permanentlyLearned.clear();
-  lessonNotesSaveLearnedWords();
-  lessonNotesRender();
-}
-
-function lessonNotesBreakdownCurrent() {
-  if (LessonNotesState.vocab.length === 0) return;
-  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
-  if (v && v.word) lessonNotesBreakdown(v.word);
-}
-
-function lessonNotesExamplesCurrent() {
-  if (LessonNotesState.vocab.length === 0) return;
-  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
-  if (v && v.word) lessonNotesExamples(v.word);
-}
 
 // Breakdown cache - separate from translations since it has different content
 const BREAKDOWN_CACHE_KEY = 'jpBreakdownCache';
@@ -611,81 +494,6 @@ Make sentences progressively more complex. Keep formatting clean and consistent.
   } catch (e) {
     area.innerHTML = `<div style="color:var(--red);font-family:var(--ui)">Error: ${e.message}</div>`;
   }
-}
-
-function lessonNotesHideCard() {
-  if (LessonNotesState.vocab.length === 0) return;
-  
-  const v = LessonNotesState.vocab[LessonNotesState.drillIdx];
-  if (v && v.word) {
-    LessonNotesState.hiddenWords.add(v.word);
-  }
-  
-  // Remove from current vocab array
-  LessonNotesState.vocab.splice(LessonNotesState.drillIdx, 1);
-  
-  // Also remove from original if it exists there
-  const origIdx = LessonNotesState.vocabOriginal.findIndex(w => w.word === v.word);
-  if (origIdx >= 0) {
-    LessonNotesState.vocabOriginal.splice(origIdx, 1);
-  }
-  
-  // Adjust index if needed
-  if (LessonNotesState.drillIdx >= LessonNotesState.vocab.length) {
-    LessonNotesState.drillIdx = Math.max(0, LessonNotesState.vocab.length - 1);
-  }
-  LessonNotesState.drillRevealed = 0;
-  lessonNotesRender();
-}
-
-function lessonNotesRestoreHidden() {
-  // Restore all hidden words from the session (but not permanently learned)
-  const sessions = lessonNotesGetSessions();
-  if (LessonNotesState.currentIdx !== null && sessions[LessonNotesState.currentIdx]) {
-    const allVocab = sessions[LessonNotesState.currentIdx].vocab || [];
-    // Filter out permanently learned words
-    LessonNotesState.vocab = allVocab.filter(v => !LessonNotesState.permanentlyLearned.has(v.word));
-    LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
-    LessonNotesState.hiddenWords.clear();
-    LessonNotesState.shuffled = false;
-    LessonNotesState.drillIdx = 0;
-    LessonNotesState.drillRevealed = 0;
-    lessonNotesRender();
-  }
-}
-
-function lessonNotesToggleTable() {
-  LessonNotesState.tableHidden = !LessonNotesState.tableHidden;
-  lessonNotesRender();
-}
-
-function lessonNotesToggleShowReading() {
-  LessonNotesState.showReading = !LessonNotesState.showReading;
-  lessonNotesRender();
-}
-
-function lessonNotesToggleShowMeaning() {
-  LessonNotesState.showMeaning = !LessonNotesState.showMeaning;
-  lessonNotesRender();
-}
-
-function lessonNotesToggleShuffle() {
-  if (LessonNotesState.shuffled) {
-    // Restore original order
-    LessonNotesState.vocab = [...LessonNotesState.vocabOriginal];
-    LessonNotesState.shuffled = false;
-  } else {
-    // Save original and shuffle
-    LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
-    for (let i = LessonNotesState.vocab.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [LessonNotesState.vocab[i], LessonNotesState.vocab[j]] = [LessonNotesState.vocab[j], LessonNotesState.vocab[i]];
-    }
-    LessonNotesState.shuffled = true;
-  }
-  LessonNotesState.drillIdx = 0;
-  LessonNotesState.drillRevealed = 0;
-  lessonNotesRender();
 }
 
 // LessonNotesState.rawText/docImages — see declaration above
@@ -830,11 +638,6 @@ function lessonNotesDelete() {
 
 // LessonNotesState.editMode — see declaration above
 
-function lessonNotesShowEdit() {
-  LessonNotesState.editMode = true;
-  lessonNotesRenderEditView();
-}
-
 function lessonNotesRenderEditView() {
   const el1 = document.getElementById('lessonNotesView');
   const el2 = document.getElementById('lessonNotesViewMain');
@@ -871,32 +674,6 @@ function lessonNotesRenderEditView() {
   if (el1) el1.innerHTML = html;
   if (el2) el2.innerHTML = html;
 }
-
-function lessonNotesSetMode(mode) {
-  LessonNotesState.drillMode = mode;
-  LessonNotesState.drillRevealed = 0;
-  lessonNotesRender();
-}
-
-function lessonNotesDrillReveal() {
-  // Cycle: 0 (hidden) -> 1 (reading) -> 2 (meaning) -> 0 (hidden)
-  LessonNotesState.drillRevealed = (LessonNotesState.drillRevealed + 1) % 3;
-  const area = document.getElementById('lessonNotesDrillArea');
-  if (area) area.innerHTML = lessonNotesRenderDrillCard();
-}
-
-function lessonNotesDrillNext() {
-  LessonNotesState.drillIdx = (LessonNotesState.drillIdx + 1) % LessonNotesState.vocab.length;
-  LessonNotesState.drillRevealed = 0;
-  lessonNotesRender();
-}
-
-function lessonNotesDrillPrev() {
-  LessonNotesState.drillIdx = (LessonNotesState.drillIdx - 1 + LessonNotesState.vocab.length) % LessonNotesState.vocab.length;
-  LessonNotesState.drillRevealed = 0;
-  lessonNotesRender();
-}
-
 
 async function lessonNotesExtract() {
   const titleEl = document.getElementById('lessonNotesTitle');
@@ -1361,10 +1138,6 @@ try {
     lessonNotesSetStoryTab,
     lessonNotesSaveStoryNotes,
     lessonNotesSaveStoryEdit,
-    lessonNotesSetMode,
-    lessonNotesDrillReveal,
-    lessonNotesDrillNext,
-    lessonNotesDrillPrev,
     renderRecordingsBrowser,
     recBrowserTranscribe,
     recBrowserDelete,
