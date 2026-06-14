@@ -209,11 +209,8 @@ Generated from index.html grep. Use this before touching any panel.
 
 | ID | Role |
 |---|---|
-| `listenModeSelect` / `srsToggleBtn` / `srsDueBadge` | Mode + SRS |
+| `srsToggleBtn` / `srsDueBadge` | SRS |
 | `listenFileInput` | File input |
-| `compPanel` / `compSetup` / `compTopic` / `compLevel` / `compSpeed` / `compVoiceA` / `compVoiceB` / `compGenerateBtn` / `compGenStatus` | Comprehension setup |
-| `compPlayer` / `compSpeakerALabel` / `compSpeakerBLabel` / `compDialogue` / `compPlayBtn` / `compShowScript` / `compQuestionArea` / `compQuestion` / `compChoices` / `compAnswerArea` / `compAnswer` | Comprehension player |
-| `listenProgressPanel` | Progress panel |
 | `dictationPanel` / `dictStandaloneMode` / `dictSaStatus` / `dictationText` / `dictSaHint` / `dictFeedback` / `dictReveal` | Dictation standalone |
 | `dictAudioMode` / `dictStatus` / `dictCountdown` / `dictTimeout` / `dictationTextAudio` | Dictation audio mode |
 | `listenDropzone` / `listenLayout` / `listenTrackCount` / `listenSelectAll` / `listenPlaylist` | Playlist area |
@@ -309,13 +306,6 @@ Generated from index.html grep. Use this before touching any panel.
 
 | ID | Role |
 |---|---|
-| `timesDrillOverlay` / `tdPanel` | Times drill (fixed overlay) |
-| `tdBlitzToggle` / `tdModeRow` / `tdBlitzSection` / `tdBlitzCount` / `tdBlitzTime` / `tdBlitzBar` | Blitz mode |
-| `tdScoreRow` / `tdCorrect` / `tdWrong` / `tdStreak` | Score |
-| `tdCard` / `tdDisplay` / `tdSubDisplay` / `tdTimerBarWrap` / `tdTimerBar` | Card |
-| `tdChoiceLabel` / `tdChoices` / `tdReveal` / `tdControls` / `tdPlayBtn` / `tdNextBtn` | Choices + controls |
-| `tdBlitzResult` / `tdBlitzFinal` / `tdBlitzSub` | Blitz result |
-| `tdSettings` / `tdVoiceSetting` / `tdVoiceHint` / `tdTimerSetting` / `tdAutoPlay` / `tdSpeedSetting` | Times settings |
 | `progressSidebarControls` | Sidebar progress controls |
 
 ---
