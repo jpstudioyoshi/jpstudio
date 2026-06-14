@@ -260,11 +260,12 @@ Listening-panel implementation:
 ## Pending — Priority Order
 
 ### Dead code / cleanup
-1. **Old panel-video refs, remainder** — session 35 cleaned features-video.js/style.css/
-   index.html; spot-check core.js, features-reading.js, core-foundation.js for any leftover
-   `#panel-video`/`vt-fullscreen` refs (session 33 flagged these files too, not yet grepped).
-   Also revisit `toggleProgress`/`#listenProgressPanel` null-getElementById (see session 35
-   commit 3 note) if `toggleSrsTracking` turns out to be reachable.
+1. ~~Old panel-video refs~~ — **DONE session 36 (2026-06-14)**: removed all dead
+   `#panel-video`/`vt-fullscreen` code from core.js, core-foundation.js, features-reading.js
+   (3 commits, ~115 lines net). `vtFullscreen`/`vtExitFullscreen` deleted entirely (zero live
+   callers — `panel-video` doesn't exist, only `panel-video2`). Remaining: revisit
+   `toggleProgress`/`#listenProgressPanel` null-getElementById (session 35 commit 3 note) if
+   `toggleSrsTracking` turns out to be reachable — not addressed here.
 2. **vtWatch* localStorage isolation** — `vtWatchTime` stored in localStorage only
    (`VT_WATCH_KEY`), separate from `panel_sessions`/`learning_events`; consider unifying
 3. **dead-code-findings.md actions** — 8 certain + 14 likely, across ~8 files:
@@ -278,6 +279,15 @@ Listening-panel implementation:
      (features-voice.js), `getCurrentSession`+`yoshiStartRecording`+`yoshiStopRecording`+
      `yoshiLoadLessonSessions`+`yoshiDeleteLessonSession`+`yoshiTranscribeCurrent`
      (Orchestrator.js), `TextEntry.val` (ui/TextEntry.js)
+   - newly orphaned (session 36): `setVtDictateMode` (features-kana.js:1029, export at
+     1056) — only caller was the dead `showPanel('video')` block just removed, status unknown
+     (may already be dead from session 35's dictation cluster removal)
+   - Watch markers cluster (session 36, found but NOT investigated — separate from above):
+     `vtAddMarker`/`vtClearMarkers`/`vtRenderMarkers`/`vtJumpMarker` + `VideoState.markers`
+     (features-reading.js ~1337-1380), exported via features-tools.js:371 and a registry
+     entry in features-video.js:1988. `#vtVideo` exists in panel-video2, but unknown whether
+     `#vtMarkerList` exists in index.html or whether any of these 4 functions have live
+     callers — needs its own grep-and-decide pass (keep/wire-up/delete) before touching
    - note: `rtStartRound2`/`rtCompare` may relate to FLUENCY_432 (Pending #18) — deliberate
      keep/delete decision, not an automatic sweep
 4. **Drop 4 dead DB tables** (`transcript_sentences`, `agent_decisions`, `conversation_sessions`,
