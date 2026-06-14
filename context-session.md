@@ -323,6 +323,19 @@ Design note at CONJ_SRS_DESIGN.md in project root.
 
 ## Pending — Priority Order
 
+### Documentation tidy-up (discrete project — run at start of next session)
+- **context-static.md**: file-size table stale (features-lesson-notes.js/features-ln-p2.js
+  line counts predate session 38's removals); "SQLite Schema (v9)" is 2 versions behind
+  current (v11); "Dead Files" entry for src/features.js — confirmed gone session 38, remove
+  the line; features-pictures.js "leave in place" note partially stale (vgOnInput removed
+  session 37).
+- **html-map.md**: stale since session 35 (#timesDrillOverlay/#compPanel/
+  #listenProgressPanel/#listenModeSelect don't exist, features-times.js deleted).
+- **context-handoff-2026-06-13.md**: open items now resolved/absorbed into this file
+  (session 38) — archive/remove from project Knowledge.
+- **audit-2026-05-30.md / vocab-audit-2026-06-05.md**: point-in-time snapshots, superseded
+  by session 38's changes — archive or regenerate.
+
 ### Dead code / cleanup
 1. **dead-code-findings.md (2026-06-11) reconciliation** — spot-check whether the 8
    certain + 14 likely items (isVoiced, lnLoadTimeline, rtStartRound2/rtCompare,
