@@ -408,11 +408,6 @@ function vgUpdateTimer(left, total) {
   txt.textContent = left;
 }
 
-function vgOnInput(e) {
-  const inp = document.getElementById('vg-input');
-  inp.className = ''; // just clear wrong flash
-}
-
 function vgCheckSilent() {
   if (!VehicleGameState.running) return;
   const inp = document.getElementById('vg-input');

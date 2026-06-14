@@ -1583,11 +1583,6 @@ function wordsSwitchSubRestore() {
   wordsSwitchSub(last);
 }
 
-function kanjiRefToggle() {
-  const p = document.getElementById('kanjiRefPanel');
-  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
-}
-
 function wordsSwitchSub(name) {
   ['vocab','anki','game','counters','days'].forEach(s => {
     const el = document.getElementById('words-sub-' + s);

@@ -671,10 +671,6 @@ function pauseDataAdd(pauses) {
   localStorage.setItem(PAUSE_DATA_KEY, JSON.stringify(stored));
 }
 
-function pauseDataClear() {
-  localStorage.removeItem(PAUSE_DATA_KEY);
-}
-
 // Extract intra-sentence pauses from Whisper verbose_json segments
 // Returns [{gapMs, before, after, lowConfidence}]
 function pauseAnalyse(segments) {

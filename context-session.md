@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-14 (session 35 — features-video.js / Listening panel dead-code cleanup)
+Last updated: 2026-06-14 (session 36 — old panel-video remnants cleanup + 2 bug fixes)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -257,6 +257,25 @@ Listening-panel implementation:
   `getElementById` returns null inside `toggleProgress`; app-check showed no errors, but
   revisit if `toggleSrsTracking` is ever confirmed live and the call is unguarded (see Pending #1)
 
+## Old panel-video remnants cleanup — session 36 (2026-06-14)
+5 commits, all syntax-checked clean, continuing session 35's panel-video2 rebuild cleanup.
+
+- Removed all dead `#panel-video`/`vt-fullscreen` code from core.js, core-foundation.js,
+  features-reading.js. `vtFullscreen`/`vtExitFullscreen` deleted entirely — zero live callers,
+  `panel-video` doesn't exist, only `panel-video2` does.
+- **Bug fix:** features-tools.js had an unguarded `window["vtFullscreen"] = vtFullscreen;`
+  export referencing the now-deleted function — threw ReferenceError on every app launch,
+  silently caught by `catch(e){}`, which skipped every `window[...]` export alphabetically
+  after it (vtLoadVideo, vtOnPlay, vtOnPause, vtTogglePlay, vtSetSpeed, vtWaveClick, etc.).
+  Removed the line; app-tested afterward, video controls confirmed working.
+- **Bug fix:** `vtAddSavedLink` (features-video.js) had a leftover `#vtLoadedBar` reference —
+  same pattern as session 35's `vtCollapseLoadBar`/`vtHandleDrop` fix, one instance missed.
+  Threw on every video load (after load completed, so playback unaffected). Removed.
+- Removed dead Watch markers cluster: `vtAddMarker`/`vtClearMarkers`/`vtRenderMarkers`/
+  `vtJumpMarker` + `VideoState.markers` state + all `window[...]`/App-registry exports.
+  `#vtMarkerList` never existed in panel-video2, so `vtRenderMarkers` was always a no-op and
+  the other 3 functions had zero callers.
+
 ## Pending — Priority Order
 
 ### Dead code / cleanup
@@ -282,12 +301,11 @@ Listening-panel implementation:
    - newly orphaned (session 36): `setVtDictateMode` (features-kana.js:1029, export at
      1056) — only caller was the dead `showPanel('video')` block just removed, status unknown
      (may already be dead from session 35's dictation cluster removal)
-   - Watch markers cluster (session 36, found but NOT investigated — separate from above):
-     `vtAddMarker`/`vtClearMarkers`/`vtRenderMarkers`/`vtJumpMarker` + `VideoState.markers`
-     (features-reading.js ~1337-1380), exported via features-tools.js:371 and a registry
-     entry in features-video.js:1988. `#vtVideo` exists in panel-video2, but unknown whether
-     `#vtMarkerList` exists in index.html or whether any of these 4 functions have live
-     callers — needs its own grep-and-decide pass (keep/wire-up/delete) before touching
+   - newly found (session 36, NOT addressed — safe/non-urgent): `vtCloseLineTranslate`
+     (features-video.js) checks `document.getElementById('panel-video')?.classList
+     .contains('vt-fullscreen')` — `#panel-video` doesn't exist, optional chaining makes
+     this always `undefined`/falsy, so the `isFullscreen` branch is dead. No error, just
+     simplify to `if (panel) panel.style.display = 'none';` when convenient
    - note: `rtStartRound2`/`rtCompare` may relate to FLUENCY_432 (Pending #18) — deliberate
      keep/delete decision, not an automatic sweep
 4. **Drop 4 dead DB tables** (`transcript_sentences`, `agent_decisions`, `conversation_sessions`,

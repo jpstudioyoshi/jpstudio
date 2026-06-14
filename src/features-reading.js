@@ -1327,10 +1327,6 @@ function qrPrintPage() {
   }
 
 }
-function addMsg(role, text) {
-  // Lightweight status message — reuses existing addMessage if available
-  try { addMessage(role, text); } catch(e) { console.log(text); }
-}
 
 const QR_SESSION_KEY = 'qrSession';
 

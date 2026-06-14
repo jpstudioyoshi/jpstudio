@@ -385,13 +385,6 @@ function countBuildPool2() {
   }
   return pool;
 }
-function countStart2() {
-  document.getElementById("countDrillArea2").style.display = "";
-  document.getElementById("countDrillActions2").style.display = "flex";
-  document.getElementById("countStartBtn2").style.display = "none";
-  document.getElementById("countNewBtn2").style.display = "";
-  countStartSession2();
-}
 
 function countStartSession2() {
   if (CounterDrillState.activeCounters.length === 0) {
