@@ -5195,58 +5195,44 @@
   },
   {
     "type": "function",
-    "name": "vtFullscreen",
-    "file": "src/features-reading.js",
-    "line": 1337,
-    "desc": "── Watch: layout modes ──────────────────────────────────────────────────"
-  },
-  {
-    "type": "function",
-    "name": "vtExitFullscreen",
-    "file": "src/features-reading.js",
-    "line": 1349,
-    "desc": "const panel = document.getElementById('panel-video');"
-  },
-  {
-    "type": "function",
     "name": "vtAddMarker",
     "file": "src/features-reading.js",
-    "line": 1400,
+    "line": 1337,
     "desc": "── Watch: markers ───────────────────────────────────────────────────────"
   },
   {
     "type": "function",
     "name": "vtClearMarkers",
     "file": "src/features-reading.js",
-    "line": 1410,
+    "line": 1347,
     "desc": "VideoState.markers = [];"
   },
   {
     "type": "function",
     "name": "vtRenderMarkers",
     "file": "src/features-reading.js",
-    "line": 1416,
+    "line": 1353,
     "desc": "const list = document.getElementById('vtMarkerList');"
   },
   {
     "type": "function",
     "name": "vtJumpMarker",
     "file": "src/features-reading.js",
-    "line": 1426,
+    "line": 1363,
     "desc": "const v = document.getElementById('vtVideo');"
   },
   {
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1434,
+    "line": 1371,
     "desc": "if (!QuickReadState.segments.length) return;"
   },
   {
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1446,
+    "line": 1383,
     "desc": ""
   },
   {

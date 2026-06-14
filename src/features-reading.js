@@ -1332,69 +1332,6 @@ function addMsg(role, text) {
   try { addMessage(role, text); } catch(e) { console.log(text); }
 }
 
-// ── Watch: layout modes ──────────────────────────────────────────────────
-// VideoState.layout → VideoState.layout
-function vtFullscreen() {
-  const panel = document.getElementById('panel-video');
-  if (!panel) return;
-  // Always enter fullscreen mode (Watch is always fullscreen now)
-  if (!panel.classList.contains('vt-fullscreen')) {
-    panel.classList.add('vt-fullscreen');
-    document.body.style.overflow = 'hidden';
-    // Blur any focused element to prevent spacebar triggering buttons
-    if (document.activeElement) document.activeElement.blur();
-  }
-}
-
-function vtExitFullscreen() {
-  const panel = document.getElementById('panel-video');
-  if (!panel) return;
-  panel.classList.remove('vt-fullscreen');
-  document.body.style.overflow = '';
-}
-
-// Global spacebar and Escape handler for fullscreen video mode
-document.addEventListener('keydown', e => {
-  const panel = document.getElementById('panel-video');
-  if (!panel || !panel.classList.contains('vt-fullscreen')) return;
-  
-  // Escape goes back to Questions panel
-  if (e.key === 'Escape') {
-    e.preventDefault();
-    e.stopPropagation();
-    vtExitFullscreen();
-    (App.showPanel || window.showPanel)?.('questions');
-    return;
-  }
-  
-  // Check if typing in an input
-  const tag = document.activeElement && document.activeElement.tagName;
-  const isTyping = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
-  if (isTyping) return;
-  
-  if (e.code === 'Space') {
-    e.preventDefault();
-    e.stopPropagation();
-    vtTogglePlay();
-  }
-}, true); // Use capture phase to intercept before other handlers
-
-// Also support native fullscreen API (F key triggers this)
-document.addEventListener('fullscreenchange', () => {
-  const panel = document.getElementById('panel-video');
-  if (!panel) return;
-  if (document.fullscreenElement) {
-    panel.classList.add('vt-fullscreen');
-  } else {
-    panel.classList.remove('vt-fullscreen');
-    const tc = document.getElementById('vtTranscript');
-    if (tc) tc.style.height = '280px';
-  }
-  // Update button state
-  const fsBtn = document.querySelector('#panel-video button[onclick="vtFullscreen()"]');
-  if (fsBtn) fsBtn.classList.toggle('active', panel.classList.contains('vt-fullscreen'));
-});
-
 // ── Watch: markers ───────────────────────────────────────────────────────
 // VideoState.markers → VideoState.markers
 function vtAddMarker() {
