@@ -65,12 +65,12 @@ src/core-foundation.js → core-anki → core-kana-drill → core-kana → core-
 | `src/features-grammar.js` | ~2,100 | Grammar Drill, Conjugation Drill, Particle Drill |
 | `src/features-reading.js` | ~1,376 | Quick Read, furigana, listen mode, Epub |
 | `src/features-video.js` | 3,316 | Video + Transcript, Watch Timer, Comprehension, Shadowing |
-| `src/features-pictures.js` | 521 | Pictures naming game (vg* dead code, harmless) |
+| `src/features-pictures.js` | 515 | Pictures naming game |
 | `src/features-progress.js` | ~1,550 | Progress panel — Four Strands, Mastery, Grammar Coverage, Weights |
 | `src/features-stroke.js` | 507 | Stroke order drill |
 | `src/features-tools.js` | ~1,280 | Lesson notes utils, recording link picker, Matching Pairs |
-| `src/features-lesson-notes.js` | ~2,553 | LN state, session CRUD, WhatsApp parser, recording helpers, story/reading render, sentence furigana |
-| `src/features-ln-p2.js` | ~1,959 | Sentence recording, drill, extraction, session load/new/delete, docx parser, timeline, recordings browser |
+| `src/features-lesson-notes.js` | 2,608 | LN state, session CRUD, WhatsApp parser, recording helpers, story/reading render, sentence furigana |
+| `src/features-ln-p2.js` | 1,330 | Sentence recording, drill, extraction, session load/new/delete, docx parser, timeline, recordings browser |
 | `src/features-voice.js` | ~2,866 | Agent Briefing, Voice Conversation |
 | `src/features-voice-drill.js` | 610 | Sentence drill subtab (練習) |
 | `src/features-corpus-seed.js` | ~380 | Transcript import pipeline |
@@ -89,12 +89,8 @@ src/core-foundation.js → core-anki → core-kana-drill → core-kana → core-
 | `src/services/StorageService.js` | 146 | lessonAPI + localStorage wrapper |
 | `src/ui/YoshiUI.js` | 217 | AppEvents listener for recording panel |
 
-## Dead Files — DO NOT EDIT
-- `src/features.js` — 19,035 lines, NOT in load order. Delete if still present.
-- `src/features-pictures.js` — vg* dead code, harmless, leave in place.
-
-## SQLite Schema (v9)
-Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data
+## SQLite Schema (v11)
+Tables: kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions, srs_items, error_history, lesson_sessions, words, lesson_phrases, pitch_data, writing_sessions, writing_sittings, drill_results, conversation_sessions, transcript_turns, failure_events, agent_decisions, panel_sessions, learning_events, grammar_mastery, transcript_vocab, vocab_items, vocab_srs, vocab_items_backup, kanji_ref, schema_version
 pitch_data: 124,137 entries
 
 ### lesson_sessions
