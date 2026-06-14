@@ -470,36 +470,6 @@ function customPrev() {
   customShowCard();
 }
 
-async function customToggleRecord() {
-  if (VoiceDrill.customRec) customStopRecord();
-  else await customStartRecord();
-}
-
-async function customStartRecord() {
-  const _VoiceState = App.VoiceState || window.VoiceState;
-  const _voiceToggleRecord = App.voiceToggleRecord || window.voiceToggleRecord;
-  if (_VoiceState && _VoiceState.recording && _voiceToggleRecord) await _voiceToggleRecord();
-  if (VoiceDrill.recording) drillStopRecord();
-
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    VoiceDrill._customChunks = [];
-    VoiceDrill._customRec = new MediaRecorder(stream);
-    VoiceDrill._customRec.ondataavailable = e => VoiceDrill._customChunks.push(e.data);
-    VoiceDrill._customRec.onstop = () => customTranscribe(stream);
-    VoiceDrill._customRec.start();
-    VoiceDrill.customRec = true;
-
-    const btn = document.getElementById('customRecordBtn');
-    if (btn) { btn.style.background='linear-gradient(135deg,var(--red),#c0392b)'; btn.style.animation='pulse 1s infinite'; }
-    const status = document.getElementById('customStatus');
-    if (status) status.textContent = 'Recording… tap again to stop';
-  } catch(e) {
-    const status = document.getElementById('customStatus');
-    if (status) status.textContent = 'Mic access denied.';
-  }
-}
-
 function customStopRecord() {
   if (VoiceDrill._customRec && VoiceDrill.customRec) {
     VoiceDrill._customRec.stop();
@@ -588,7 +558,6 @@ Object.assign(App, {
   customShowCard,
   customNext,
   customPrev,
-  customToggleRecord,
   customStopRecord,
   customScore,
 });

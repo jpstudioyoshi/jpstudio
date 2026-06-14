@@ -2778,27 +2778,6 @@ Or if no errors:
   }
 }
 
-async function voiceSendText() {
-  const input = document.getElementById('voiceTextInput');
-  const text = input?.value?.trim();
-  if (!text) return;
-  
-  const apiKey = (App.getApiKey || window.getApiKey)?.();
-  if (!apiKey) {
-    voiceUpdateStatus('Please set your Claude API key');
-    return;
-  }
-  
-  // Add user message
-  VoiceState.messages.push({ role: 'user', content: text });
-  if (VoiceState.rtRound >= 2) kanjiCorpusRecordChatProduction(text); // round-trip R2 production
-  voiceRenderMessages();
-  input.value = '';
-  
-  // Send to Claude
-  await voiceSendToClaude(text);
-}
-
 // Initialize voice panel when shown
 const _origShowPanelVoice = window.showPanel || function(){};
 window.showPanel = function(id) {
@@ -2865,7 +2844,6 @@ try {
     voiceSentenceTap,
     voiceStopSentences,
     voiceToggleRecord,
-    voiceSendText,
     voiceReviewErrors,
     voiceClearChat,
     voiceNewChat,

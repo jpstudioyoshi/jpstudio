@@ -226,42 +226,7 @@ const CtrDrillState = {
   current:  null,
   activeGroups:  new Set(['people','objects','animals','time']),
   selected:      new Set(),
-};function ctrToggle(idx) {
-  const ct = COUNTERS[idx];
-  if (!ct) return;
-  // Remove existing popup
-  document.querySelector('.ctr-popup-overlay')?.remove();
-
-  const rows = ct.nums.map(n => `
-    <tr class="${n.irreg ? 'irreg' : ''}">
-      <td>${n.n}</td>
-      <td>${n.n}${ct.kanji === 'つ' ? 'つ' : ct.kanji}</td>
-      <td>${n.r}</td>
-      <td>${n.irreg ? '⚡' : ''}</td>
-      <td><button class="tts-btn" onclick="event.stopPropagation();jpSpeak('${n.r}')">🔊</button></td>
-    </tr>`).join('');
-
-  const overlay = document.createElement('div');
-  overlay.className = 'ctr-popup-overlay';
-  overlay.innerHTML = `
-    <div class="ctr-popup">
-      <button class="ctr-popup-close" onclick="document.querySelector('.ctr-popup-overlay').remove()">✕</button>
-      <div class="ctr-popup-header">
-        <div class="ctr-popup-kanji">${ct.kanji}</div>
-        <div class="ctr-popup-meta">
-          <div class="ctr-popup-reading">${ct.reading}</div>
-          <div class="ctr-popup-what">${ct.what}</div>
-        </div>
-      </div>
-      <div class="ctr-popup-example">${ct.example}</div>
-      <table class="ctr-num-table">
-        <thead><tr><th>#</th><th>Written</th><th>Reading</th><th></th><th></th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`;
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
-}
+};
 
 // Active groups (max 4) — controls what's shown in reference AND available in drill
 

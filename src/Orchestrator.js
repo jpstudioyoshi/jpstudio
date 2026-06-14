@@ -271,35 +271,10 @@ const Orchestrator = (() => {
   };
 })();
 
-async function yoshiSaveWhatsapp(sessionId) {
-  const el  = document.getElementById('lessonWhatsappPaste');
-  const text = el?.value || '';
-  if (!text.trim()) return;
-
-  const btn = document.querySelector(`button[onclick*="yoshiSaveWhatsapp(${sessionId})"]`);
-  if (btn) { btn.textContent = 'Syncing…'; btn.disabled = true; }
-
-  try {
-    const _yoshiParseWhatsapp = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
-    if (!_yoshiParseWhatsapp) throw new Error('yoshiParseWhatsapp not available');
-    await Orchestrator.attachWhatsApp(sessionId, text);
-    if (btn) {
-      btn.textContent = 'Saved ✓';
-      setTimeout(() => { btn.textContent = 'Save & sync →'; btn.disabled = false; }, 1500);
-    }
-  } catch (e) {
-    console.error('WhatsApp save failed:', e);
-    if (btn) { btn.textContent = 'Error'; setTimeout(() => { btn.textContent = 'Save & sync →'; btn.disabled = false; }, 2000); }
-  }
-
-  (App.lessonNotesRenderPanel || window.lessonNotesRenderPanel)?.();
-}
-
 
 // ── App registry ─────────────────────────────────────────
 try {
   Object.assign(App, {
     Orchestrator,
-    yoshiSaveWhatsapp,
   });
 } catch(e) { console.error('[Orchestrator] App registry failed:', e); }

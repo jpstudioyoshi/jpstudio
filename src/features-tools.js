@@ -6,29 +6,6 @@
 
 // ── Render/utility functions (pure DOM or string parsing — not pipeline logic) ─
 
-async function yoshiSaveWhatsappInline(sessionId) {
-  const el = document.getElementById('waInput_' + sessionId);
-  if (!el || !el.value.trim()) return;
-  const btn = el.nextElementSibling;
-  if (btn) { btn.textContent = 'Syncing…'; btn.disabled = true; }
-  try {
-    await Orchestrator.attachWhatsApp(sessionId, el.value);
-    if (btn) { btn.textContent = 'Saved ✓'; setTimeout(() => { btn.textContent = 'Save & sync →'; btn.disabled = false; }, 1500); }
-  } catch(e) {
-    if (btn) { btn.textContent = 'Error'; setTimeout(() => { btn.textContent = 'Save & sync →'; btn.disabled = false; }, 2000); }
-  }
-}
-
-// Manually retranscribe a saved session
-async function yoshiRetranscribe(sessionId) {
-  try {
-    await Orchestrator.transcribeSession(sessionId);
-  } catch(e) {
-    console.error('[yoshiRetranscribe]', e);
-    alert('Retranscription failed: ' + e.message);
-  }
-}
-
 // ── Manual lesson notes (unrecorded sessions — WhatsApp threads) ──────────────
 
 
@@ -252,7 +229,6 @@ try {
   window["conjSpeak"] = conjSpeak;
   window["copyDictation"] = copyDictation;
   window["copySavedText"] = copySavedText;
-          window["ctrToggle"] = ctrToggle;
   window["cycleLoop"] = cycleLoop;
   window["deleteGramEntry"] = deleteGramEntry;
   window["deleteSavedText"] = deleteSavedText;
@@ -354,7 +330,6 @@ try {
   window["vgShowSetup"] = vgShowSetup;
   window["vgSpeak"] = vgSpeak;
   window["vgStart"] = vgStart;
-  window["vgToggleMic"] = vgToggleMic;
   window["vtBreakdownLine"] = vtBreakdownLine;
   window["vtClearLoop"] = vtClearLoop;
   window["vtClearTranslation"] = vtClearTranslation;
@@ -511,6 +486,6 @@ function qrPrintPage() {
 
 // ── App registry — features-tools.js exports ───────────────────────────
 Object.assign(App, {
-  yoshiSaveWhatsappInline, yoshiRetranscribe, yoshiOpenOverlay, yoshiOpenTeams,
+  yoshiOpenOverlay, yoshiOpenTeams,
   yoshiTestChannels, yoshiRunPreflight,
 });

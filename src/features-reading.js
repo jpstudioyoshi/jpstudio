@@ -449,66 +449,6 @@ function vgAutoSpeak() {
 
 // Vocab game uses custom stt handling
 
-async function vgToggleMic() {
-  if (VehicleGameState.sttRecording) {
-    // Stop recording
-    if (VehicleGameState.sttRecorder) VehicleGameState.sttRecorder.stop();
-    return;
-  }
-  
-  const btn = document.getElementById('vg-mic-btn');
-  
-  try {
-    VehicleGameState.sttStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    VehicleGameState.sttRecorder = new MediaRecorder(VehicleGameState.sttStream);
-    VehicleGameState.sttChunks = [];
-    
-    VehicleGameState.sttRecorder.ondataavailable = e => {
-      if (e.data.size > 0) VehicleGameState.sttChunks.push(e.data);
-    };
-    
-    VehicleGameState.sttRecorder.onstop = async () => {
-      if (VehicleGameState.sttStream) {
-        VehicleGameState.sttStream.getTracks().forEach(t => t.stop());
-        VehicleGameState.sttStream = null;
-      }
-      
-      if (VehicleGameState.sttChunks.length === 0) {
-        vgStopMic();
-        return;
-      }
-      
-      if (btn) btn.textContent = '⏳';
-      
-      const audioBlob = new Blob(VehicleGameState.sttChunks, { type: 'audio/webm' });
-      const transcript = await sttTranscribe(audioBlob, 'ja');
-      
-      if (transcript) {
-        const inp = document.getElementById('vg-input');
-        const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];
-        
-        if (inp) inp.value = transcript;
-        
-        // Auto-check if matches target
-        if (target && transcript === target.jp) {
-          vgCheck();
-        }
-      }
-      
-      vgStopMic();
-    };
-    
-    VehicleGameState.sttRecorder.start(100);
-    VehicleGameState.sttRecording = true;
-    VehicleGameState.micOn = true;
-    if (btn) { btn.textContent = '🔴'; btn.classList.add('btn-active-red'); }
-    
-  } catch (e) {
-    console.error('Mic error:', e);
-    vgStopMic();
-  }
-}
-
 function vgStopMic() {
   VehicleGameState.micOn = false;
   VehicleGameState.sttRecording = false;
