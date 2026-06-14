@@ -68,7 +68,9 @@ for (const [type, entries] of Object.entries(byType)) {
   for (const e of entries) {
     const loc  = e.line ? `${e.file}:${e.line}` : e.file;
     const desc = e.desc ? `  — ${e.desc}` : '';
-    console.log(`  ${e.name.padEnd(36)} ${loc}${desc}`);
+    const meta = (e.type === 'function' && e.callers !== undefined)
+      ? `  [callers=${e.callers}${e.exported ? ' exported' : ''}]` : '';
+    console.log(`  ${e.name.padEnd(36)} ${loc}${meta}${desc}`);
   }
 }
 

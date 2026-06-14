@@ -572,6 +572,9 @@ console.log(`Syntax: ${ok} OK, ${errors} error(s)`);
 // Used by find.js: node find.js <keyword>
 
 const index = [];
+const allSrc = [];
+const globalWindowExports = new Set();
+const globalAppRegistry = new Set();
 
 for (const rel of [...TARGETS, ...HTML_TARGETS]) {
   if (rel === 'check-syntax.js') continue;
@@ -580,6 +583,14 @@ for (const rel of [...TARGETS, ...HTML_TARGETS]) {
   const src   = fs.readFileSync(filepath, 'utf8');
   const lines = src.split('\n');
   const isHtml = rel.endsWith('.html');
+
+  allSrc.push(src);
+  if (isHtml) {
+    analyseHtml(src).windowExports.forEach(e => globalWindowExports.add(e));
+  } else {
+    extractWindowExports(src).forEach(e => globalWindowExports.add(e));
+    extractAppRegistry(src).forEach(e => globalAppRegistry.add(e));
+  }
 
   // Functions
   const funcs = isHtml ? analyseHtml(src).functions.map(name => ({ name, line: 0, desc: null }))
@@ -633,9 +644,41 @@ for (const rel of [...TARGETS, ...HTML_TARGETS]) {
   }
 }
 
+// Caller counts: single pass over combined source, word-frequency map
+const combinedSrc = allSrc.join('\n');
+const wordCounts = new Map();
+{
+  const wordRe = /[A-Za-z_$][A-Za-z0-9_$]*/g;
+  let wm;
+  while ((wm = wordRe.exec(combinedSrc)) !== null) {
+    wordCounts.set(wm[0], (wordCounts.get(wm[0]) || 0) + 1);
+  }
+}
+for (const entry of index) {
+  if (entry.type !== 'function') continue;
+  const total = wordCounts.get(entry.name) || 0;
+  entry.callers = Math.max(0, total - 1);
+  entry.exported = globalWindowExports.has(entry.name) || globalAppRegistry.has(entry.name);
+}
+
 const indexFile = path.join(ROOT, 'index.json');
 fs.writeFileSync(indexFile, JSON.stringify(index, null, 2), 'utf8');
 console.log(`Index written to: ${indexFile} (${index.length} entries)`);
+
+// Append "Likely dead candidates" to the audit file
+const deadCandidates = index.filter(e => e.type === 'function' && e.callers === 0 && !e.exported);
+if (deadCandidates.length) {
+  const dcLines = [`\n## Likely dead candidates (${deadCandidates.length})`,
+    'Zero references found anywhere, no window[]/App registry export. Verify before removing.', ''];
+  const byFile = {};
+  for (const e of deadCandidates) (byFile[e.file] ||= []).push(e);
+  for (const [file, entries] of Object.entries(byFile)) {
+    dcLines.push(`### ${file}`);
+    for (const e of entries) dcLines.push(`  ${e.name}() L${e.line}${e.desc ? ` — ${e.desc}` : ''}`);
+  }
+  fs.appendFileSync(outFile, dcLines.join('\n') + '\n', 'utf8');
+}
+console.log(`Likely dead candidates: ${deadCandidates.length}`);
 
 // ── Cache buster — update ?v= query strings in index.html ─────────────────────
 // Prevents Electron from serving stale cached JS after a deploy.
