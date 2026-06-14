@@ -371,10 +371,6 @@ function lessonNotesGetLearnedWords() {
   } catch { return new Set(); }
 }
 
-function lessonNotesSaveLearnedWords() {
-  localStorage.setItem(LEARNED_WORDS_KEY, JSON.stringify([...LessonNotesState.permanentlyLearned]));
-}
-
 // LessonNotesState.permanentlyLearned — loaded in init
 
 // Breakdown cache - separate from translations since it has different content
@@ -389,111 +385,6 @@ function breakdownCacheSave() {
     toRemove.forEach(k => delete LessonNotesState.breakdownCache[k]);
   }
   Storage.setJSON(BREAKDOWN_CACHE_KEY, LessonNotesState.breakdownCache);
-}
-
-async function lessonNotesBreakdown(word) {
-  const area = document.getElementById('lessonNotesBreakdownArea');
-  if (!area) return;
-  
-  area.style.display = 'block';
-  
-  // Check cache first
-  if (LessonNotesState.breakdownCache[word]) {
-    area.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">BREAKDOWN <span style="font-size:0.65rem">📋</span></span>
-        <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
-      </div>
-      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${LessonNotesState.breakdownCache[word]}</div>
-    `;
-    return;
-  }
-  
-  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Breaking down "${word}"...</div>`;
-  
-  const apiKey = _fy_getApiKey();
-  if (!apiKey) {
-    area.innerHTML = `<div style="color:var(--ink-light);font-family:var(--ui)">Set API key in settings first</div>`;
-    return;
-  }
-  
-  try {
-    const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 500,
-        messages: [{ role: 'user', content: `Break down this Japanese word into its components: ${word}
-
-For each kanji/component, give:
-- The character
-- Its reading (in this word)
-- Its individual meaning
-
-Then briefly explain how the parts combine to form the word's meaning.
-
-Keep it concise and formatted clearly.` }]
-    ,
-      track: 'lesson'
-    });
-    
-    const text = data.content?.[0]?.text || 'Could not break down';
-    
-    // Save to cache
-    LessonNotesState.breakdownCache[word] = text;
-    breakdownCacheSave();
-    
-    area.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">BREAKDOWN</span>
-        <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
-      </div>
-      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
-    `;
-  } catch (e) {
-    area.innerHTML = `<div style="color:var(--red);font-family:var(--ui)">Error: ${e.message}</div>`;
-  }
-}
-
-async function lessonNotesExamples(word) {
-  const area = document.getElementById('lessonNotesBreakdownArea');
-  if (!area) return;
-  
-  area.style.display = 'block';
-  area.innerHTML = `<div style="text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Finding examples for "${word}"...</div>`;
-  
-  const apiKey = _fy_getApiKey();
-  if (!apiKey) {
-    area.innerHTML = `<div style="color:var(--ink-light);font-family:var(--ui)">Set API key in settings first</div>`;
-    return;
-  }
-  
-  try {
-    const data = await _fy_claudeAPI({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 600,
-        messages: [{ role: 'user', content: `Give 4 example sentences using the Japanese word: ${word}
-
-For each sentence:
-1. Japanese sentence
-2. Reading in hiragana (for kanji words)
-3. English translation
-
-Make sentences progressively more complex. Keep formatting clean and consistent.` }]
-    ,
-      track: 'lesson'
-    });
-    
-    const text = data.content?.[0]?.text || 'Could not find examples';
-    
-    area.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--ink-light)">EXAMPLES</span>
-        <button class="btn-icon" onclick="document.getElementById('lessonNotesBreakdownArea').style.display='none'">✕</button>
-      </div>
-      <div style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap">${text}</div>
-    `;
-  } catch (e) {
-    area.innerHTML = `<div style="color:var(--red);font-family:var(--ui)">Error: ${e.message}</div>`;
-  }
 }
 
 // LessonNotesState.rawText/docImages — see declaration above
@@ -637,43 +528,6 @@ function lessonNotesDelete() {
 }
 
 // LessonNotesState.editMode — see declaration above
-
-function lessonNotesRenderEditView() {
-  const el1 = document.getElementById('lessonNotesView');
-  const el2 = document.getElementById('lessonNotesViewMain');
-  const sessions = lessonNotesGetSessions();
-  const currentSession = LessonNotesState.currentIdx !== null ? sessions[LessonNotesState.currentIdx] : null;
-  
-  const html = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <button class="yoshi-read-btn" onclick="LessonNotesState.editMode=false;lessonNotesRender()">← Back to Drill</button>
-      <span style="font-family:var(--ui);font-size:inherit;color:var(--ink)">${currentSession?.title || 'Untitled'}</span>
-    </div>
-    
-    <div id="lessonNotesDropZone" 
-      ondragover="event.preventDefault();this.style.borderColor='var(--teal)';this.style.background='rgba(48,213,200,0.05)'"
-      ondragleave="this.style.borderColor='var(--field-border)';this.style.background='none'"
-      ondrop="lessonNotesHandleDrop(event)"
-      style="border:2px dashed var(--field-border);border-radius:8px;padding:16px;transition:all 0.2s">
-      
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <input type="text" id="lessonNotesTitle" placeholder="Lesson title" 
-          value="${currentSession?.title || ''}"
-          style="flex:1;padding:8px 12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:inherit;border-radius:6px;outline:none">
-        <label style="padding:6px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);cursor:pointer">
-          📄 Browse
-          <input type="file" accept=".docx,.txt" onchange="lessonNotesHandleFile(this.files[0])" style="display:none">
-        </label>
-        <button class="yoshi-read-btn" onclick="lessonNotesExtract()">✨ Re-extract</button>
-      </div>
-      
-      <textarea id="lessonNotesInput" style="width:100%;min-height:200px;padding:12px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--jp);font-size:inherit;line-height:1.7;border-radius:6px;outline:none;resize:vertical">${currentSession?.rawText || ''}</textarea>
-    </div>
-  `;
-  
-  if (el1) el1.innerHTML = html;
-  if (el2) el2.innerHTML = html;
-}
 
 async function lessonNotesExtract() {
   const titleEl = document.getElementById('lessonNotesTitle');
