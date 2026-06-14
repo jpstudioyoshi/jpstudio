@@ -197,19 +197,6 @@ const EpubState = {
   fontSize:    1.35,
 };
 
-// ── Te-form drill state ──────────────────────────────────────────────────────
-const TeFormState = {
-  mode:             'form',
-  group:            'all',
-  current:          null,
-  queue:            [],
-  correct:          0,
-  wrong:            0,
-  answered:         false,
-  contextSentences: [],
-  contextIdx:       0,
-};
-
 // ── Grammar2 panel state ─────────────────────────────────────────────────────
 const Grammar2State = {
   lastSubtab: 'conj',
