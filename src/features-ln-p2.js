@@ -373,20 +373,6 @@ function lessonNotesGetLearnedWords() {
 
 // LessonNotesState.permanentlyLearned — loaded in init
 
-// Breakdown cache - separate from translations since it has different content
-const BREAKDOWN_CACHE_KEY = 'jpBreakdownCache';
-// LessonNotesState.breakdownCache — see declaration above
-try { LessonNotesState.breakdownCache = Storage.getJSON(BREAKDOWN_CACHE_KEY, {}); } catch(e) {}
-
-function breakdownCacheSave() {
-  const keys = Object.keys(LessonNotesState.breakdownCache);
-  if (keys.length > 200) {
-    const toRemove = keys.slice(0, keys.length - 200);
-    toRemove.forEach(k => delete LessonNotesState.breakdownCache[k]);
-  }
-  Storage.setJSON(BREAKDOWN_CACHE_KEY, LessonNotesState.breakdownCache);
-}
-
 // LessonNotesState.rawText/docImages — see declaration above
 
 // LessonNotesState.loadingSession — see declaration above
