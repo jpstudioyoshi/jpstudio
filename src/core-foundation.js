@@ -1648,14 +1648,7 @@ function showPanel(id) {
     (App.qrSaveSession || window.qrSaveSession)?.();
   }
 
-  // Exit video fullscreen if leaving video panel
-  const videoPanel = document.getElementById('panel-video');
-  if (videoPanel && videoPanel.classList.contains('vt-fullscreen') && id !== 'video') {
-    videoPanel.classList.remove('vt-fullscreen');
-    document.body.style.overflow = '';
-  }
-  
-  document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+    document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
   // Lock body scroll for dashboard (Q&A panel), allow for others
   document.body.style.overflow = (id === 'dashboard') ? 'hidden' : '';
   document.querySelectorAll('nav button, .sidebar button').forEach(b => b.classList.remove('active'));
@@ -1763,16 +1756,6 @@ function showPanel(id) {
     } else {
       _lnRestore();
     }
-  }
-  // Auto-activate fullscreen for Watch panel
-  if (id === 'video') {
-    setTimeout(() => {
-      const videoPanel = document.getElementById('panel-video');
-      if (videoPanel && !videoPanel.classList.contains('vt-fullscreen')) {
-        vtFullscreen();
-      }
-      setVtDictateMode('hiragana');
-    }, 50);
   }
   // Start panel session timer
   _panelSessionClose(id);

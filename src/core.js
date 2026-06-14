@@ -577,24 +577,6 @@ document.addEventListener('storageReady', function() {
 
 // waveformClick is wired via onclick in index.html — no addEventListener needed
 
-// Capture-phase space interceptor — fires before any focused element can act
-document.addEventListener('keydown', function(e) {
-  if (e.code !== 'Space') return;
-  const active = document.querySelector('.panel.active');
-  if (!active || active.id !== 'panel-video') return;
-  const tag = document.activeElement && document.activeElement.tagName;
-  // Only allow space in text inputs/textareas - everywhere else intercept it
-  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-  // Blur any focused element (buttons, selects, etc)
-  if (document.activeElement && document.activeElement !== document.body) {
-    document.activeElement.blur();
-  }
-  vtTogglePlay();
-}, true); // capture phase // true = capture phase
-
 // Blur buttons after click so spacebar doesn't re-trigger them
 document.addEventListener('click', function(e) {
   if (e.target && e.target.tagName === 'BUTTON') {
@@ -609,20 +591,6 @@ document.addEventListener('keydown', function(e) {
   const tag = document.activeElement && document.activeElement.tagName;
   const isTyping = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 
-  if (active.id === 'panel-video') {
-    if (e.code === 'Space' && !isTyping) { e.preventDefault(); e.stopPropagation(); vtTogglePlay(); return; }
-    if ((e.key === 'm' || e.key === 'M') && !isTyping) { e.preventDefault(); vtAddMarker(); return; }
-    if (e.key === 'f' || e.key === 'F') { e.preventDefault(); vtFullscreen(); return; }
-    if (e.key === 'Escape') {
-      const panel = document.getElementById('panel-video');
-      if (panel && panel.classList.contains('vt-fullscreen')) {
-        e.preventDefault();
-        vtFullscreen(); // Toggle off
-        return;
-      }
-    }
-    return;
-  }
   if (!active || active.id !== 'panel-listening') return;
   if (e.code === 'Space' && !isTyping) {
     e.preventDefault();

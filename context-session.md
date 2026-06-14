@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-12 (session 33 — panel-video2 rebuild, old panel-video deleted)
+Last updated: 2026-06-14 (session 35 — features-video.js / Listening panel dead-code cleanup)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -11,14 +11,24 @@ Last updated: 2026-06-12 (session 33 — panel-video2 rebuild, old panel-video d
 - Paul's eyesight is not great — prefer larger text, high contrast, bigger buttons in UI work.
 - Give commands one at a time — do not batch unrelated commands.
 - Core principle: system should look after itself — Paul learns, doesn't drive the system.
+- Claude has read-only filesystem access to ~/Documents/jpStudio (via filesystem MCP) — can read
+  source files, run audits, and cross-reference directly without terminal round-trips. No grep/
+  search across file contents via this route — use check-syntax.js's audit file + targeted reads,
+  or hand multi-file investigation to Claude Code (which has bash+grep).
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs
-- **Code:** anything touching multiple render paths, multi-line string replacements in JS, multi-file refactors
+- **Code:** anything touching multiple render paths, multi-line string replacements in JS,
+  multi-file refactors, or cross-file dead-code investigation (grep-and-decide). Verified-orphan
+  removals can be large (session 35 removed ~2270 lines in 3 Code passes) — size isn't the
+  deciding factor, "does it need grep across files" is.
 
 ## Context File Update Process
 - context-session.md lives at project root
-- At end of session: Claude writes full updated file, Paul runs it, uploads to project Knowledge.
+- At end of session: Claude writes the full updated file directly (via filesystem write access),
+  Paul reviews with `git diff context-session.md`, commits, then uploads to project Knowledge.
+- Older "Session N Changes" sections are trimmed/folded into "Current State" sections once their
+  content is reflected there, to keep this file from growing indefinitely.
 
 ## GitHub Workflow
 - Repo: https://github.com/jpstudioyoshi/jpstudio (private)
@@ -26,16 +36,21 @@ Last updated: 2026-06-12 (session 33 — panel-video2 rebuild, old panel-video d
 - Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
 
 ## Claude Code
-- Launch: jp && claude --model claude-fable-5
-- Start: "Read context-session.md and context-vocab.md from Knowledge only. Do not read any other files yet."
+- Launch: jp && claude --model claude-sonnet-4-6  (claude-fable-5 is no longer available)
+- Start: "Read context-session.md from Knowledge only. Do not read any other files yet."
 
 ## Current Mode
-ACTIVE DEVELOPMENT — stabilization phase ended several sessions ago. Currently: video panel rebuild, ongoing dead-code cleanup as found, feature work as planned.
+ACTIVE DEVELOPMENT / ONGOING CLEANUP — no separate "stabilization phase". Dead-code cleanup,
+bug fixes found along the way, and feature work are all handled as routine, in whatever order
+makes sense. (A stale "STABILIZATION" custom instruction was identified and should be removed
+from Project settings if it resurfaces — it does not reflect this file's guidance.)
 
 ## HTML Element Map
-`html-map.md` in project Knowledge.
+`html-map.md` in project Knowledge — may be stale after session 35: #timesDrillOverlay,
+#compPanel, #listenProgressPanel, and #listenModeSelect no longer exist; features-times.js
+deleted entirely.
 
-**Session 25-30 additions:**
+**Session 25-30 additions (still active):**
 - vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
 - vocabWtDirJpEn, vocabWtDirEnJp, vocabWtDirSpeaking
 - vocabIntYoshiPhrases/Vocab/Writing/Lookup/N5, vocabThreshLookup/Decay/SessionSize, vocabWeightsMsg
@@ -49,6 +64,13 @@ ACTIVE DEVELOPMENT — stabilization phase ended several sessions ago. Currently
 - .vocab-source-filter checkboxes (Yoshi/Writing/Lookup/N5) — ACTIVE, all checked by default, Reset button
 - .vocab-pos-filter checkboxes (Verbs/Nouns/い-adj/な-adj/Adverbs/Phrases) — ACTIVE, all checked by default, Reset button
 - conjPoolInfo span — shows "Pool: X known + Y frequency" on drill start
+
+## Sidebar — COMPLETE
+- #strandMini (4 live proportional coloured bars, S1 teal / S2 gold / S3 muted blue / S4 green)
+  replaces the old 進捗 sidebar button — clicking opens the progress panel
+- Settings button (⚙) moved to bottom of sidebar
+- Nav restructured: 翻訳 lives in the quick translate bar, ヨシ moved into the sidebar
+- renderStrandMini() in features-progress.js, called on app init and on progress panel update
 
 ## Terminal Workflow
 - python3 - << 'PYEOF' for multi-line edits
@@ -80,7 +102,7 @@ encounter_at, entry_weight, created_at
 UNIQUE(word, source)
 — direction and SRS columns removed; now in vocab_srs
 
-### vocab_srs schema (new — session 32)
+### vocab_srs schema (session 32)
 id, vocab_id (FK → vocab_items.id), direction, srs_interval, srs_ease, srs_due,
 srs_graduated, last_reviewed
 UNIQUE(vocab_id, direction)
@@ -98,7 +120,7 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Dynamic font scaling on card
 - Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
 - Strand tile: updates immediately on markVocab (window._vocabDrillUsedToday flag)
-- List view now works in all directions (EN→JP, Speaking) — side effect of v11 refactor
+- List view works in all directions (EN→JP, Speaking)
 
 ### SRS — SM-2 (corrected session 30)
 - Known: srs_interval = floor(interval × ease), ease +0.1 (if graduated), due pushed out
@@ -112,7 +134,6 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
 - Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
 - Stored in VOCAB_WEIGHTS kvAPI key
-- NOTE: weighting behaviour may differ subtly post-v11 — review flagged
 
 ### Filter logic
 - Source: all checked = no filter; partial = filter to checked sources; none = empty deck
@@ -134,7 +155,7 @@ id, lesson_id, phrase, reading, meaning, example, type, created_at
 - verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
 - Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
 - Null verb_class words skipped (not guessed)
-- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — can be removed later
+- conjAddFreqVerbs / conjResetFreqVerbs left in code, unused — folded into dead-code-findings pass
 
 ### Conjugation SRS — future build
 Design note at CONJ_SRS_DESIGN.md in project root.
@@ -149,131 +170,151 @@ Design note at CONJ_SRS_DESIGN.md in project root.
 - loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
 - Fully automatic
 
-## Sidebar — Planned (not yet built)
-- Settings button to move to bottom of sidebar
-- Top of sidebar: #strandMini — 4 horizontal coloured stripes, no text, proportional to 7-day strand totals
-- Clicking strandMini opens progress panel
-- Colours: S1 teal, S2 gold, S3 muted blue, S4 green
-- renderStrandMini() to be added to features-progress.js
-- Called on app init and on progress panel update
+## Grammar Node Mapping Pipeline — COMPLETE (extraction + display)
 
-## Grammar Node Mapping Pipeline — Session 31 (COMPLETE, display pending)
+### Extraction (session 31)
+- Lesson notes grammar extraction (`lessonNotesExtractGrammar`) calls `lessonNotesExtractGrammarSilent`
+- Silent function awaits `GrammarModel.load()`, builds node list from all 55 nodes
+- Node list injected into Claude prompt BEFORE lesson content
+- Claude returns `grammarNodeIds` array per grammar point (exact node IDs only)
+- Batch INSERT to `lesson_phrases` (type='grammar', lesson_id set)
+- Unique node IDs collected → `UPDATE lesson_sessions SET extracted_grammar=?`
+- Example: session 69 → 19 node IDs, 24 grammar patterns
 
-### Design
-- Purpose: highlight which Genki grammar nodes were foregrounded in each Yoshi session
-- NOT mastery tracking — focus view only ("here's what to work on from this lesson")
-- Per-session, not cumulative — viewing an old session shows only that session's nodes
-- No writes to grammar_mastery table
+### Display (built, session unknown — confirmed live via memory)
+- Gold dot indicators on Genki grammar node pills in progress panel show
+  session-contextual coverage (renderGrammarCoverage / grammarNodeClick in features-progress.js)
+- Annotation layer only — no mastery colour change
+- Per-session, not cumulative
 
-### Data flow (now working)
-1. Lesson notes grammar extraction (`lessonNotesExtractGrammar`) calls `lessonNotesExtractGrammarSilent`
-2. Silent function awaits `GrammarModel.load()`, builds node list from all 55 nodes
-3. Node list injected into Claude prompt BEFORE lesson content
-4. Claude returns `grammarNodeIds` array per grammar point (exact node IDs only)
-5. Batch INSERT to `lesson_phrases` (type='grammar', lesson_id set)
-6. Unique node IDs collected → `UPDATE lesson_sessions SET extracted_grammar=?`
-7. Example: session 69 → 19 node IDs, 24 grammar patterns
+### Remaining work
+- Gold dot detail panel (source sentence display) blocked — `lesson_phrases` has no `node_id`
+  column linking a phrase back to the grammar node it was tagged with
+- Dismiss button for gold dots (hide until next lesson) not yet built
+- Lesson session DB linking: `lessonSessionDbId` stored on kvAPI session object;
+  `lessonNotesEnsureDbRow()` finds-or-creates `lesson_sessions` row (session 31)
 
-### Lesson session DB linking (fixed session 31)
-- `lessonSessionDbId` stored on kvAPI session object at creation time
-- Helper `lessonNotesEnsureDbRow()` finds-or-creates `lesson_sessions` row, stores ID back to kvAPI
-- Date-match kept as fallback for old sessions
+## Yoshi Panel Restructure — session 34 (2026-06-13)
+- Overview tab is now the default landing view: prose summary (5th Claude extraction call,
+  `lessonNotesExtractSummarySilent`, persisted once, never regenerated) + tile grid
+  (Words/Grammar/Phrases/Stories/Notes/Recording-or-"Link Recording")
+- Removed: old vocab drill UI, Errors tab (extraction never ran in current pipeline), redundant
+  dropdown view-selector (replaced by tiles + back button), the `+` new-lesson button
+- Header restructured: ヨシ + session selector + delete on left; kana-mode search bar
+  (A/あ/ア) + "← Overview" back button on right, stacked
+- New lessons get title from first WhatsApp message's date (`lnFormatWaDate`); session
+  dropdown shows this date via `lnSessionDateLabel`
+- Open items carried forward: `lnHeaderSearch` is notes-only (not whole-lesson search);
+  first-keystroke focus-drop bug in header search when not on Notes view; lesson-notes drill
+  dead code (see Pending #5)
 
-### Display — NEXT
-- Progress panel `renderGrammarCoverage()` to read `extracted_grammar` from all recent `lesson_sessions`
-- Show gold dot on Genki node pills that appear in any session's `extracted_grammar`
-- Tooltip: which session date(s) covered this node
-- No mastery colour change — annotation layer only
-- Backfill: delete and re-extract 3-4 recent sessions after display is wired
+## Watch / Listening Panel Dead-Code Cleanup — session 35 (2026-06-14)
+3 commits, ~2270 lines removed total from src/features-video.js, src/features-tools.js,
+src/features-times.js (deleted entirely), index.html, and style.css. Everything removed was
+confirmed orphaned via grep before deletion — no loss of any UI-reachable feature.
 
-## Session 32 Changes
-- **Schema v11** — vocab_items split into word data + vocab_srs; one row per (word, source); SRS state separated by direction
-- **Migration** — 1126 word rows, 3378 SRS rows, 0 orphans, backup kept as vocab_items_backup
-- **markVocab** — now uses INSERT ... ON CONFLICT DO UPDATE upserts; SRS rows created lazily
-- **Duplicate initLookupVocabListener** — removed from core.js
-- **lnLastSessionId** — added to LOCAL_ONLY_KEYS in core-foundation.js
-- **Dead code sweep** — 8 certain + 14 likely dead functions identified; saved to dead-code-findings.md; no deletions yet
-- **Claude Code model** — updated to claude-fable-5
+**Commit 1 — duplicate code + 2 live bug fixes (7f154f9)**
+- features-video.js had `vtAddSavedLink`, `vtSaveHistory`, `vtLoadHistory`,
+  `vtUpdateHistoryDropdown`, `vtLoadFromHistory`, `vtTryLoadMatchingTranscript`,
+  `vtRenderSavedLinks`, `vtWordSelect`, `vtTranslateWord`, plus the `wireVtInputs` IIFE,
+  duplicated verbatim (252 lines) — caused double event-listener registration on
+  vtVideoInput/vtTransInput/vtFolderInput (every video/transcript load fired vtLoadFile/
+  vtLoadTransFile twice, including a double `corpusCheckAndImport` call per transcript)
+- `strokeMagnify`/`strokeGetReading`/`strokeFetchReadings` also duplicated (82 lines), same pattern
+- **Bug fix:** `vtCollapseLoadBar` and `vtHandleDrop` referenced `#vtDropZone`/`#vtLoadedBar`/
+  `#vtMainLayout` — element IDs from the old deleted panel-video, not present in panel-video2.
+  `vtCollapseLoadBar` threw on its first line, so `#vtControls` (play/timeline/speed bar) never
+  showed after loading a video — black frame, no controls. Drag-and-drop was broken the same
+  way via `vtHandleDrop`. Both fixed by removing the dead-ID lines.
 
-## DB Audit — Session 32
+**Commit 2 — dead Watch-panel feature clusters (e21d075)**
+panel-video2 (session 33 rebuild) never wired these up; each was superseded by a separate
+Listening-panel implementation:
+- Dictation: `vtToggleDictation` + 7 `vtDictate*` functions + keydown listener (222 lines) —
+  superseded by Listening panel's `#dictationPanel`/`checkDictation`/etc.
+- Shadowing: `vtToggleShadow` + 16 `vtSh*` functions + mic helpers + 5 window exports + pause
+  listener (~334 lines) — superseded by Listening panel's `#shadowPanel`/`toggleShadowing`/`listenSh*`
+- Breakdown popup: `vtShowBreakdown`/`vtCloseBreakdown` + Escape listener (88 lines) — no popup
+  element in panel-video2
+- `vtFuriAll` (18 lines) — `vtFuriAllBtn` removed in session 33; `vtFuriLine` (per-cue button)
+  kept, still used in `vtRenderTranscript`
+- Plus 2 stale window[] exports in features-tools.js and 10 CSS rule blocks (all scoped to
+  `#panel-video.vt-fullscreen`)
 
-### Storage layers
-- **kvAPI** — config, preferences, small UI state (backed by kv_store SQL table)
-- **SQLite** — all structured learning data (24 tables)
-- **localStorage** — legacy only; no new writes; intentional LOCAL_ONLY_KEYS documented in core-foundation.js
-
-### localStorage — assessed clean
-All remaining keys are intentional: device preferences (mic, TTS voice), caches (translate, breakdown — rebuild naturally), UI state (lnLastSessionId). Nothing to migrate.
-
-### Data files (src/data/)
-All JSON files are static reference data — correct to stay as JSON. Key files:
-- grammar_nodes.json (57K) — 55 Genki I nodes, loaded by GrammarModel at runtime
-- jlpt_words.json — source for words table (already in SQL) 
-- conjugation_data.json, kana_data.json, counter_data.json — static reference, JSON fine
-- **Future consideration:** grammar_nodes → SQL if joining node definitions with lesson_sessions.extracted_grammar becomes awkward in app code
-
-### Table row counts
-| Table | Count | Status |
-|---|---|---|
-| vocab_items | 1126 | ✅ active |
-| vocab_srs | 3378 | ✅ active (new v11) |
-| learning_events | 1648 | ✅ active |
-| corpus_lookups | 1219 | ✅ active |
-| corpus_productions | 1405 | ✅ active |
-| corpus_entries | 879 | ✅ active |
-| panel_sessions | 341 | ✅ active |
-| pitch_data | 124137 | ✅ fully loaded |
-| transcript_vocab | 0 | ⚠ pipeline deprioritised — transcript noise |
-| agent_decisions | 0 | ⚠ recommendation tracking never wired |
-| conversation_sessions | 0 | ⚠ waiting for FLUENCY_432 emitter |
-| failure_events | 0 | ✅ hopefully just no failures |
-
-### panel_sessions — behavioural analytics available
-- Has started_at, ended_at, duration_s — panel sequence queries possible at zero API cost
-- Can answer: "how often do I leave video to translate within 2 minutes" — pure SQL
-- Speaker balance deferred — waiting for two-channel recording / diarization
-- **Future:** surface panel sequence insights in progress panel ("How you're learning" tab)
-
-### agent_decisions — future feedback loop
-- Designed to record briefing recommendations + whether acted on
-- Currently: system is descriptive (records what you did) but not prescriptive with memory
-- **Future priority:** progress panel second view — "How you're learning" alongside "What you've learned"
-  - Strand imbalance detection (e.g. 15% time on counters → flag low variety)
-  - Panel sequence patterns (leaving video → translate frequently)
-  - Briefing recommendation follow-through tracking
-
-## Session 33 Changes — panel-video2 rebuild
-- Fixed: duplicate `vt*` ids (vtVideo, vtNoVideo, vtControls, etc.) between old panel-video and panel-video2 — old ids
-  were colliding and JS was targeting the wrong (hidden) elements
-- Removed furigana button (vtFuriAllBtn) from video panel — not relevant here
-- Fixed transcript column: dark background, height matches video, internal scroll (was pushing whole panel)
-- Grid container: height:calc(100vh - 240px) for full-height layout with bottom gap
-- Title row: simplified to just "動画", history/transcript/video selector dropdown+buttons moved to title row right side
-- Fixed title font: panel-section-title-jp class + font-weight:400 override (was inheriting bold from .section-title)
-- DELETED old panel-video HTML block (was lines ~1940-2054, dud/non-functional) — HTML only, JS/CSS refs left
-  (harmless via ?. and !panel guards) — flagged for dedicated cleanup pass
-- Added vtWatchTimer UI to panel-video2 title row (existing vtWatch* JS already wired)
-- Fixed _STRAND_MAP: added `video2: 1` — Watch panel now writes to panel_sessions + learning_events (was previously
-  completely untracked since nav uses data-panel="video2" but map only had "video")
-- Confirmed: multi-select video+transcript file load already works via vtVideoInput change handler — no change needed
+**Commit 3 — Listening panel dropdown cut (latest)**
+- `#listenModeSelect` (Listen/Comprehension/Times drill/Progress) removed — Listening panel
+  now shows only the main player + direct children (transcribe, shadow recording, vocab
+  bookmarks, track notes, SRS rate panel)
+- `listenModeChanged` (features-video.js) removed entirely — had zero remaining callers once
+  the dropdown was gone
+- `comp*` cluster removed (`ComprehensionState` + 13 functions, ~240 lines) — its only entry
+  point was `#compPanel`, shown via this dropdown
+- `openTimesDrill`'s only caller was inside `listenModeChanged` → `src/features-times.js`
+  (521 lines) deleted entirely, `#timesDrillOverlay` modal removed from index.html, script
+  tag removed
+- `SRS.toggleProgress` / `#listenProgressPanel` left in place — `toggleProgress` has an active
+  caller (`toggleSrsTracking` in core-srs.js). `#listenProgressPanel` div is gone from HTML so
+  `getElementById` returns null inside `toggleProgress`; app-check showed no errors, but
+  revisit if `toggleSrsTracking` is ever confirmed live and the call is unguarded (see Pending #1)
 
 ## Pending — Priority Order
 
-1. **Dead code cleanup — video.js duplication** — duplicate `vtTranslateWord` (lines ~2024 and ~2357) and surrounding IIFE block; dedicated pass needed (flagged session 33)
-2. **Old panel-video JS/CSS refs** — HTML block deleted (session 33) but JS refs (core.js, features-reading.js, core-foundation.js, features-tools.js, features-video.js) and CSS (#panel-video.vt-fullscreen in style.css) left in place — non-firing but should be cleaned
-3. **vtWatch* localStorage isolation** — vtWatchTime stored in localStorage only, separate from learning_events/panel_sessions; consider unifying
-4. **Grammar node display** — read `extracted_grammar` from `lesson_sessions`, show gold dots on Genki node pills in progress panel; backfill 3-4 sessions
-2. **Dead code deletion** — action dead-code-findings.md: delete 8 certain, review 14 likely; dedicated Claude Code session
-3. **Vocab weighting review** — confirm effective_weight calc behaves correctly post-v11 schema change
-4. **Sidebar strand mini-display** — #strandMini at top, settings button to bottom
-5. **"How you're learning" panel view** — panel sequence analytics + agent_decisions wiring; progress panel second tab
-6. **Book vocab import** — 18 pages, OCR artifact (deferred)
-7. **Layer 6 downstream** — grammar drill + writing prompt with top-N words
-8. **Counter suffix population** — counter_suffix column exists, needs tagging
-9. **FLUENCY_432 emitter** — 4/3/2 speaking session wiring → populates conversation_sessions
-10. **corpus_productions extraction fix** — currently single-kanji, needs word-level
-11. **Conjugation SRS deck** — see CONJ_SRS_DESIGN.md, after basic forms scoring well
-12. **Transcript statistics** — word count per session derivable from transcript_turns at zero API cost; query only, no new tables
+### Dead code / cleanup
+1. **Old panel-video refs, remainder** — session 35 cleaned features-video.js/style.css/
+   index.html; spot-check core.js, features-reading.js, core-foundation.js for any leftover
+   `#panel-video`/`vt-fullscreen` refs (session 33 flagged these files too, not yet grepped).
+   Also revisit `toggleProgress`/`#listenProgressPanel` null-getElementById (see session 35
+   commit 3 note) if `toggleSrsTracking` turns out to be reachable.
+2. **vtWatch* localStorage isolation** — `vtWatchTime` stored in localStorage only
+   (`VT_WATCH_KEY`), separate from `panel_sessions`/`learning_events`; consider unifying
+3. **dead-code-findings.md actions** — 8 certain + 14 likely, across ~8 files:
+   - certain: `isVoiced` (core-srs.js), `lnLoadTimeline` (features-lesson-notes.js),
+     `rtStartRound2`/`rtCompare` (features-voice.js, orphaned buttons),
+     `voiceUploadAudio` (features-voice.js), `_onRecord`/`_onStop` (ui/YoshiUI.js)
+   - likely (App/window registry only): `vcFetch`+`vcFetchSelectAll`+`vcFetchAdd` (core-vocab.js),
+     `ctrToggle` (features-core.js), `vgToggleMic` (features-reading.js), `customToggleRecord`
+     (features-voice-drill.js), `lnCreateFromPaste`+`lnDeleteRecording` (features-lesson-notes.js),
+     `yoshiSaveWhatsappInline`+`yoshiRetranscribe` (features-tools.js), `voiceSendText`
+     (features-voice.js), `getCurrentSession`+`yoshiStartRecording`+`yoshiStopRecording`+
+     `yoshiLoadLessonSessions`+`yoshiDeleteLessonSession`+`yoshiTranscribeCurrent`
+     (Orchestrator.js), `TextEntry.val` (ui/TextEntry.js)
+   - note: `rtStartRound2`/`rtCompare` may relate to FLUENCY_432 (Pending #18) — deliberate
+     keep/delete decision, not an automatic sweep
+4. **Drop 4 dead DB tables** (`transcript_sentences`, `agent_decisions`, `conversation_sessions`,
+   `frames`) + dead StudentModel.js transcript→srs_items block (~30 lines)
+5. **Lesson-notes drill dead code** (session 34 handoff): `lessonNotesRenderDrillCard`,
+   `lessonNotesDrillPrev/Next/Reveal`, `lessonNotesSetMode`, `lessonNotesToggleShuffle`,
+   `lessonNotesToggleShowReading/Meaning`, `lessonNotesHideCard`, `lessonNotesToggleTable`,
+   `lessonNotesRestoreHidden` + state fields (`drillIdx`, `drillMode`, `drillRevealed`,
+   `tableHidden`, `showReading`, `showMeaning`, `shuffled`, `vocabOriginal`, `hiddenWords`).
+   Caution: `lessonNotesHideCard` touches `permanentlyLearned`, used by
+   `lessonNotesLoadSession`'s vocab filter — check before removing.
+
+### Grammar coverage
+6. `node_id` column on `lesson_phrases` — unblocks gold-dot detail panel (source sentence display)
+7. Dismiss button for gold dots (hide until next lesson)
+8. Genki II node integration into grammar coverage grid
+
+### Vocab pipeline
+9. Yoshi extraction pipeline → populate `reading` at insert time
+10. Counter suffix population (`counter_suffix` column exists, needs tagging)
+11. `corpus_productions` extraction fix — currently single-kanji, needs word-level
+
+### UI bugs
+12. Direction toggle — returning to a previously visited direction loads a fresh deck rather
+    than restoring position (session/idx/sessionPos)
+13. Header search focus-drop on first keystroke (lesson notes, session 34)
+14. `lnHeaderSearch` scope — notes-only vs whole-lesson search (session 34)
+
+### Future / larger features
+15. Conjugation SRS deck — see CONJ_SRS_DESIGN.md, after basic forms scoring well
+16. "How you're learning" panel + strand imbalance notification (designed, not built)
+17. Layer 6 — grammar drill + writing prompt with top-N words
+18. FLUENCY_432 emitter — 4/3/2 speaking session wiring → populates conversation_sessions
+    (see Pending #3 note re: rt* cluster)
+19. Book vocab import — 18 pages, OCR artifact (deferred)
+20. Transcript statistics — word count per session derivable from transcript_turns at zero
+    API cost; query only, no new tables
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
