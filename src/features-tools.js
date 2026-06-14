@@ -377,7 +377,6 @@ try {
   window["vtCueClick"] = vtCueClick;
   window["vtDeleteVocabWord"] = vtDeleteVocabWord;
   window["vtDropZoneClick"] = vtDropZoneClick;
-  window["vtFullscreen"] = vtFullscreen;
   window["vtFuriLine"] = vtFuriLine;
   window["vtJumpMarker"] = vtJumpMarker;
   window["vtJumpToTime"] = vtJumpToTime;

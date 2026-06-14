@@ -968,8 +968,6 @@ function vtAddSavedLink(name, type, url) {
   // Set name label to current video
   const nameEl = document.getElementById('vtLoadedName');
   if (nameEl) nameEl.textContent = name;
-  // Show the loaded bar
-  document.getElementById('vtLoadedBar').style.display = 'flex';
 }
 
 function vtSaveHistory() {
