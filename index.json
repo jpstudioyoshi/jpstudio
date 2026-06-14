@@ -7646,7 +7646,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 123,
     "desc": "const el3 = document.getElementById('lessonNotesPanelContent');",
-    "callers": 43,
+    "callers": 41,
     "exported": false
   },
   {
@@ -8648,28 +8648,10 @@
   },
   {
     "type": "function",
-    "name": "lessonNotesFullDocDoSearch",
+    "name": "lessonNotesParseDocxXmlWithImages",
     "file": "src/features-ln-p2.js",
     "line": 830,
     "desc": "LessonNotesState.docContent/fullDocSearch — see declaration above",
-    "callers": 0,
-    "exported": false
-  },
-  {
-    "type": "function",
-    "name": "lessonNotesFullDocClearSearch",
-    "file": "src/features-ln-p2.js",
-    "line": 836,
-    "desc": "LessonNotesState.fullDocSearch = '';",
-    "callers": 0,
-    "exported": false
-  },
-  {
-    "type": "function",
-    "name": "lessonNotesParseDocxXmlWithImages",
-    "file": "src/features-ln-p2.js",
-    "line": 841,
-    "desc": "const parser = new DOMParser();",
     "callers": 1,
     "exported": false
   },
@@ -8677,7 +8659,7 @@
     "type": "function",
     "name": "yoshiTranscribeNow",
     "file": "src/features-ln-p2.js",
-    "line": 925,
+    "line": 914,
     "desc": "const btn = document.getElementById('yoshiTranscribeNowBtn');",
     "callers": 1,
     "exported": false
@@ -8686,7 +8668,7 @@
     "type": "function",
     "name": "lnAlignTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 993,
+    "line": 982,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 2,
     "exported": false
@@ -8695,7 +8677,7 @@
     "type": "function",
     "name": "lnLoadTwoColumnTimeline",
     "file": "src/features-ln-p2.js",
-    "line": 1099,
+    "line": 1088,
     "desc": "to wall-clock positioning.",
     "callers": 1,
     "exported": false
@@ -8704,7 +8686,7 @@
     "type": "function",
     "name": "lnTtsAndPause",
     "file": "src/features-ln-p2.js",
-    "line": 1236,
+    "line": 1225,
     "desc": "const student = document.getElementById('lnAudioStudent');",
     "callers": 2,
     "exported": false
@@ -8713,7 +8695,7 @@
     "type": "function",
     "name": "renderRecordingsBrowser",
     "file": "src/features-ln-p2.js",
-    "line": 1252,
+    "line": 1241,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 5,
     "exported": true
@@ -8722,7 +8704,7 @@
     "type": "function",
     "name": "recBrowserTranscribe",
     "file": "src/features-ln-p2.js",
-    "line": 1319,
+    "line": 1308,
     "desc": "const btn = event.target;",
     "callers": 2,
     "exported": true
@@ -8731,7 +8713,7 @@
     "type": "function",
     "name": "recBrowserDelete",
     "file": "src/features-ln-p2.js",
-    "line": 1332,
+    "line": 1321,
     "desc": "if (!confirm('Delete this recording and audio files from disk?')) return;",
     "callers": 2,
     "exported": true
@@ -8747,7 +8729,7 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-ln-p2.js",
-    "line": 1039,
+    "line": 1028,
     "desc": "You are aligning Yoshi\\'s WhatsApp messages to a Japanese lesson audio transcrip"
   },
   {

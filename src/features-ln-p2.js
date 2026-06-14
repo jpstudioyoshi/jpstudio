@@ -827,17 +827,6 @@ async function lessonNotesHandleFile(file) {
 
 // LessonNotesState.docContent/fullDocSearch — see declaration above
 
-function lessonNotesFullDocDoSearch() {
-  const input = document.getElementById('lessonNotesFullDocSearchInput');
-  LessonNotesState.fullDocSearch = input?.value?.trim() || '';
-  lessonNotesRender();
-}
-
-function lessonNotesFullDocClearSearch() {
-  LessonNotesState.fullDocSearch = '';
-  lessonNotesRender();
-}
-
 function lessonNotesParseDocxXmlWithImages(xml, imageMap, imageData) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, 'application/xml');
