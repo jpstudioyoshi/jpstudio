@@ -1332,40 +1332,6 @@ function addMsg(role, text) {
   try { addMessage(role, text); } catch(e) { console.log(text); }
 }
 
-// ── Watch: markers ───────────────────────────────────────────────────────
-// VideoState.markers → VideoState.markers
-function vtAddMarker() {
-  const v = document.getElementById('vtVideo');
-  if (!v) return;
-  const t = v.currentTime;
-  VideoState.markers.push(t);
-  VideoState.markers.sort((a,b) => a - b);
-  vtRenderMarkers();
-  vtDrawWaveform();
-}
-
-function vtClearMarkers() {
-  VideoState.markers = [];
-  vtRenderMarkers();
-  vtDrawWaveform();
-}
-
-function vtRenderMarkers() {
-  const list = document.getElementById('vtMarkerList');
-  if (!list) return;
-  list.innerHTML = VideoState.markers.map((t, i) =>
-    `<button class="btn-action" onclick="vtJumpMarker(${i})" title="Jump to ${vtFmtTime(t)}">
-      ◆ ${vtFmtTime(t)}
-    </button>`
-  ).join('');
-}
-
-function vtJumpMarker(i) {
-  const v = document.getElementById('vtVideo');
-  if (v && VideoState.markers[i] !== undefined) v.currentTime = VideoState.markers[i];
-}
-
-
 const QR_SESSION_KEY = 'qrSession';
 
 function qrSaveSession() {

@@ -28,7 +28,6 @@ const VideoState = {
   watchStartTime:   null,
   // Layout & UI
   layout:           'half',   // 'half' | 'wide'
-  markers:          [],
   savedFiles:       [],       // {name, type, url, transcript?, transcriptName?}
   pendingHistoryName: null,
   pendingHistoryEntry: null,   // stored while waiting for file re-select
@@ -1982,8 +1981,7 @@ try {
     vtWatchStart, vtWatchStop, vtOnPlay, vtOnPause, vtOnLoaded,
     vtAnimLoop, vtSetSpeed, vtUpdateDisplay, vtFmtTime,
     vtSetLoopA, vtClearLoop, vtSetLoopPause, vtWaveClick,
-    vtDrawWaveform, vtFullscreen: typeof vtFullscreen !== 'undefined' ? vtFullscreen : undefined,
-    vtAddMarker: typeof vtAddMarker !== 'undefined' ? vtAddMarker : undefined,
+    vtDrawWaveform,
     // History / vocab / epub / resources
     vtSaveHistory, vtLoadHistory, vtUpdateHistoryDropdown,
     vtLoadFromHistory, vtTryLoadMatchingTranscript, vtRenderSavedLinks,

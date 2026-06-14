@@ -368,17 +368,14 @@ try {
   window["vgSpeak"] = vgSpeak;
   window["vgStart"] = vgStart;
   window["vgToggleMic"] = vgToggleMic;
-  window["vtAddMarker"] = vtAddMarker;
   window["vtBreakdownLine"] = vtBreakdownLine;
   window["vtClearLoop"] = vtClearLoop;
-  window["vtClearMarkers"] = vtClearMarkers;
   window["vtClearTranslation"] = vtClearTranslation;
   window["vtCloseVocabList"] = vtCloseVocabList;
   window["vtCueClick"] = vtCueClick;
   window["vtDeleteVocabWord"] = vtDeleteVocabWord;
   window["vtDropZoneClick"] = vtDropZoneClick;
   window["vtFuriLine"] = vtFuriLine;
-  window["vtJumpMarker"] = vtJumpMarker;
   window["vtJumpToTime"] = vtJumpToTime;
   window["vtLoadTranscript"] = vtLoadTranscript;
   window["vtLoadVideo"] = vtLoadVideo;
