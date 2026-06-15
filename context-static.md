@@ -116,7 +116,6 @@ srs_interval, srs_ease, srs_due, last_score, created_at
 - **Central wrapper:** `claudeAPI(opts)` in `core-foundation.js` — all calls route through this
 - **Local wrappers:** `_fy_claudeAPI`, `_fv_claudeAPI`, `_fvid_claudeAPI` — thin pass-throughs to `App.claudeAPI`, legitimate, do not remove
 - **Streaming exception:** `_agentStream()` in `features-voice.js` uses raw fetch (required for streaming) — logged manually
-- **Raw fetch exception:** `lnCreateFromPaste()` in `features-tools.js` uses raw fetch — logged manually
 - **All calls tracked:** `opts.track` present on all call sites across all three feature files
 - **Whisper:** via `TranscriptionService.transcribe()` and `transcribeFile()` — all calls logged
 
