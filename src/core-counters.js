@@ -1092,6 +1092,7 @@ function conjugate(word, form, pol, reg) {
       'past-neg-polite':'きませんでした','past-neg-plain':'こなかった',
       'te-aff-polite':'きて','te-aff-plain':'きて',
       'volitional-aff-polite':'きましょう','volitional-aff-plain':'こよう',
+      'potential-aff-polite':'こられます','potential-aff-plain':'こられる',
     };
     const key = `${form}-${pol}-${reg}`;
     return {answer: map[key] || '—', badge: form};
