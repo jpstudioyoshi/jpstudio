@@ -1,6 +1,6 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-14 (session 38 — major dead-code purge: 8 commits, net −1768 lines,
-18→0 dead candidates, including a 35-function orphaned duplicate lesson-notes panel)
+Last updated: 2026-06-14 (session 39 — documentation tidy-up + dead-code-findings.md
+reconciliation: 7 functions + 1 cascade removed, net −261 lines, commit fa97564)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -55,11 +55,13 @@ bug fixes found along the way, and feature work are all handled as routine, in w
 makes sense.
 
 ## HTML Element Map
-`html-map.md` in project Knowledge — may be stale after session 35: #timesDrillOverlay,
-#compPanel, #listenProgressPanel, and #listenModeSelect no longer exist; features-times.js
-deleted entirely. Also confirmed in session 38: #panel-teform never existed (TE-form drill was
-already-orphaned JS only); the session-38 35-function duplicate panel had no corresponding
-HTML container either — purely orphaned JS, no HTML cleanup needed from this session.
+`html-map.md` in project Knowledge — updated session 39: removed the stale
+#timesDrillOverlay/#compPanel/#listenProgressPanel/#listenModeSelect entries (session 35
+leftovers, features-times.js deleted entirely); `progressSidebarControls` and
+`srsToggleBtn`/`srsDueBadge` confirmed live and kept. Also confirmed in session 38:
+#panel-teform never existed (TE-form drill was already-orphaned JS only); the session-38
+35-function duplicate panel had no corresponding HTML container either — purely orphaned
+JS, no HTML cleanup needed from that session.
 
 **Session 25-30 additions (still active):**
 - vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
@@ -117,18 +119,20 @@ HTML container either — purely orphaned JS, no HTML cleanup needed from this s
   real callers is still dead (found 5 such functions this session: lessonNotesRenderDrillCard,
   lessonNotesSetMode, lessonNotesDrillReveal/Next/Prev, plus the entire 35-function ln*
   cluster's lnSwitchTab export).
-- **Open question carried forward:** the original dead-code-findings.md (2026-06-11, 8
-  certain + 14 likely items: isVoiced, lnLoadTimeline, rtStartRound2/rtCompare,
-  voiceUploadAudio, _onRecord/_onStop, vcFetch+family, ctrToggle, vgToggleMic,
-  customToggleRecord, lnCreateFromPaste, lnDeleteRecording, yoshiSaveWhatsappInline/
-  yoshiRetranscribe, voiceSendText, Orchestrator yoshi* shims, TextEntry.val) has ZERO
-  overlap with either the original 18 or the final 0 from the automated audit. Either
-  these were already removed in sessions 32-36 (before the tooling existed), or they're a
-  genuine tool-coverage gap the audit can't see (plausible — this session found the
-  extractor misses nested functions and orphaned-but-exported functions both). Worth a
-  spot-check next session: `grep -rn "isVoiced\|rtStartRound2\|lnLoadTimeline" src/` — if
-  these are truly gone, dead-code-findings.md can be archived/deleted; if they're still
-  present, the automated tooling has a real gap to document.
+- **dead-code-findings.md (2026-06-11) reconciliation — RESOLVED session 39.** Of the 8
+  certain + 14 likely items: 10 confirmed already gone (isVoiced, lnLoadTimeline,
+  rtStartRound2, voiceUploadAudio, _onRecord, _onStop, vcFetch+family, lnCreateFromPaste,
+  lnDeleteRecording, TextEntry.val). The remaining 7 were the SAME blind spot as the
+  session-38 lessonNotes* finds — exported (window[] or App registry) but zero real
+  callers — and were removed via Claude Code (commit fa97564): ctrToggle, vgToggleMic,
+  customToggleRecord, yoshiSaveWhatsappInline, yoshiRetranscribe, voiceSendText, and
+  Orchestrator's `yoshiSaveWhatsapp` (a separate dead shim, distinct from
+  yoshiSaveWhatsappInline — its onclick target doesn't exist in current HTML).
+  Removing `customToggleRecord` cascaded: `customStartRecord` (its only caller) removed
+  too. `rtCompare` (function) is gone; `rtCompareBtn` (element, 4 refs) remains — see
+  Pending #13 (FLUENCY_432). `dead-code-findings.md` itself is now fully reconciled and
+  safe to delete from the repo. **New finding:** `customTranscribe` is the resulting sole
+  audit candidate (1) — see Pending #1.
 
 ## Session 38 — Major dead-code purge (2026-06-14)
 8 commits, net −1768 lines, all syntax-checked clean (40/40), 18→0 dead candidates.
@@ -197,6 +201,28 @@ HTML container either — purely orphaned JS, no HTML cleanup needed from this s
 (a giant HTML template literal inside lessonNotesRenderFullDoc) that the `view` tool fails
 even at 1-3 line ranges. Scoped via grep (function-definition line numbers) instead, then
 handed to Claude Code for the actual removal.
+
+## Session 39 — Documentation tidy-up + dead-code-findings.md reconciliation (2026-06-14)
+
+**Documentation tidy-up** (all 4 items resolved):
+- context-static.md: schema bumped to v11 (full current table list), file-size table
+  corrected (features-lesson-notes.js 2,608 / features-ln-p2.js 1,330 /
+  features-pictures.js 515), "Dead Files" section removed (src/features.js gone;
+  features-pictures.js vg* confirmed to be the live Pictures game, not dead code), stale
+  `lnCreateFromPaste()` API Architecture entry removed.
+- html-map.md: removed dead #timesDrillOverlay/#compPanel/#listenProgressPanel/
+  #listenModeSelect entries (session 35 leftovers); `progressSidebarControls` and
+  `srsToggleBtn`/`srsDueBadge` confirmed live and kept.
+- context-handoff-2026-06-13.md, vocab-audit-2026-06-05.md, audit-2026-05-30.md removed
+  from project Knowledge (manual).
+- Local audit-*.md pile (21 gitignored daily snapshots, 05-25 to 06-14) deleted, only
+  06-14 kept. Root cause (check-syntax.js writes a new dated file every commit, no
+  cleanup) not yet fixed — see Pending.
+
+**dead-code-findings.md reconciliation** — see Dead-Code Lookup Tooling section above for
+full detail. 10 items confirmed already gone, 7 removed (+1 cascade) via Claude Code,
+commit fa97564 (8 files, net −261 lines), pushed. dead-code-findings.md itself now safe
+to delete. New finding: Custom Drill recording pipeline likely dead (Pending #1).
 
 ## Vocab pipeline status check (session 38)
 Ran direct SQLite queries (read-only, app running):
@@ -323,33 +349,21 @@ Design note at CONJ_SRS_DESIGN.md in project root.
 
 ## Pending — Priority Order
 
-### Documentation tidy-up (discrete project — run at start of next session)
-- **context-static.md**: file-size table stale (features-lesson-notes.js/features-ln-p2.js
-  line counts predate session 38's removals); "SQLite Schema (v9)" is 2 versions behind
-  current (v11); "Dead Files" entry for src/features.js — confirmed gone session 38, remove
-  the line; features-pictures.js "leave in place" note partially stale (vgOnInput removed
-  session 37).
-- **html-map.md**: stale since session 35 (#timesDrillOverlay/#compPanel/
-  #listenProgressPanel/#listenModeSelect don't exist, features-times.js deleted).
-- **context-handoff-2026-06-13.md**: open items now resolved/absorbed into this file
-  (session 38) — archive/remove from project Knowledge.
-- **audit-2026-05-30.md / vocab-audit-2026-06-05.md**: point-in-time snapshots, superseded
-  by session 38's changes — archive or regenerate.
-
 ### Dead code / cleanup
-1. **dead-code-findings.md (2026-06-11) reconciliation** — spot-check whether the 8
-   certain + 14 likely items (isVoiced, lnLoadTimeline, rtStartRound2/rtCompare,
-   voiceUploadAudio, _onRecord/_onStop, vcFetch+family, ctrToggle, vgToggleMic,
-   customToggleRecord, lnCreateFromPaste, lnDeleteRecording, yoshiSaveWhatsappInline/
-   yoshiRetranscribe, voiceSendText, Orchestrator yoshi* shims, TextEntry.val) still exist.
-   Zero overlap with the automated audit (now at 0 candidates) — either already gone, or a
-   tool-coverage gap. `grep -rn "isVoiced\|rtStartRound2\|lnLoadTimeline" src/` as a start.
-   Note: `rtStartRound2`/`rtCompare` may relate to FLUENCY_432 (Pending #16) — deliberate
-   keep/delete decision if still present, not an automatic sweep.
+1. **Custom Drill recording pipeline** (features-voice-drill.js) — `customTranscribe`
+   (Whisper STT) is the sole remaining audit-flagged dead candidate; its only caller
+   (`customStartRecord`) was removed in session 39's dead-code-findings.md reconciliation.
+   `customTranscribe` calls `customScore`, suggesting the whole record→transcribe→score
+   chain may be dead. Investigate: deprecated feature (remove the chain) vs. missing UI
+   wire-up (restore it)? Not auto-swept.
 2. **vtWatch* localStorage isolation** — `vtWatchTime` stored in localStorage only
    (`VT_WATCH_KEY`), separate from `panel_sessions`/`learning_events`; consider unifying
 3. **Drop 4 dead DB tables** (`transcript_sentences`, `agent_decisions`, `conversation_sessions`,
    `frames`) + dead StudentModel.js transcript→srs_items block (~30 lines)
+- **check-syntax.js audit filename** — writes a new dated `audit-YYYY-MM-DD.md` every
+  commit with no cleanup; 21 piled up (05-25 to 06-14) and were deleted session 39
+  (gitignored, harmless). Consider switching to a single overwritten `audit-latest.md` to
+  prevent recurrence.
 
 ### Grammar coverage
 4. `node_id` column on `lesson_phrases` — unblocks gold-dot detail panel (source sentence display)
@@ -367,11 +381,47 @@ Design note at CONJ_SRS_DESIGN.md in project root.
    word-level; recency not checked
 
 ### Future / larger features
-10. Conjugation SRS deck — see CONJ_SRS_DESIGN.md, after basic forms scoring well
-11. "How you're learning" panel + strand imbalance notification (designed, not built)
+10. **Conjugation SRS deck (session 39 — Phase 2 design revised, in progress)** —
+    Phase 1 prerequisite confirmed solid, proceeding with Phase 2.
+    **Revised architecture** (supersedes CONJ_SRS_DESIGN.md's word-level item design): SRS
+    applies only to a fixed set of 13 conjugation-form items (`CONJ_FORMS`), NOT to
+    (word, source_form, target_form) triples. Verbs are randomly drawn from a fixed
+    50-verb pool at drill time — not SRS-tracked themselves. Closed system: no dependency
+    on vocab_items growth or Yoshi data (deferred until lessons produce a larger, more
+    stable vocabulary).
+    - **Verb pool**: top 50 verbs by frequency — `SELECT word, reading, meaning,
+      verb_class, frequency FROM words WHERE pos='verb' AND frequency IS NOT NULL ORDER BY
+      frequency ASC LIMIT 50` — clean, all 50 have verb_class, frequency range 1-385. No
+      new data needed.
+    - **conj_srs items (13, fixed)**: Present Plain (dict-identity, kept as a deliberate
+      learning goal per discussion), Present Negative Plain, Present Polite, Present
+      Negative Polite, Past Plain, Past Negative Plain, Past Polite, Past Negative Polite,
+      て-form, Volitional Plain, Volitional Polite, Potential Plain, Potential Polite. Each
+      maps to `conjugate(word, form, pol, reg)` (in core-counters.js) via a `CONJ_FORMS`
+      array (id/label/form/pol/reg) — drafted in chat, not yet written to a file.
+      Passive/Causative excluded — `conjugate()` doesn't implement a negative variant for
+      these (pol ignored) and badges don't distinguish polite/plain; revisit separately if
+      wanted.
+    - **Toggle**: switches drill-item selection between "random dictionary item" mode and
+      "SRS-due form" mode (form picked via SM-2 due-ness from conj_srs, then a random verb
+      from the 50 applied to it) — SR2 only applies to the conjugation-form item, never to
+      the word.
+    - **Fixed along the way**: 来る was missing potential-form entries in `conjugate()` —
+      added こられる/こられます in core-counters.js (edit applied, **not yet committed**).
+    - **Next**: conj_srs table schema — check `vocab_srs` schema + existing SM-2 update
+      function in core-vocab.js, mirror column names (srs_interval/srs_ease/srs_due/
+      srs_graduated) and reuse the SM-2 function rather than a parallel implementation
+      (was about to do this when parked). Then seed the 13 rows, build drill UI toggle +
+      wiring.
+11. ~~Strand imbalance notification~~ — struck (session 39): #strandMini sidebar already
+    gives an always-visible imbalance signal, no separate alert needed. "How you're
+    learning" panel (broader summary concept, if distinct from the notification) — status
+    TBD.
 12. Layer 6 — grammar drill + writing prompt with top-N words
-13. FLUENCY_432 emitter — 4/3/2 speaking session wiring → populates conversation_sessions
-    (see Pending #1 note re: rt* cluster)
+13. FLUENCY_432 emitter — 4/3/2 speaking session wiring → populates conversation_sessions.
+    `rtCompareBtn` (4 refs in features-voice.js — `rtCompare`/`rtStartRound2` functions are
+    gone) is the remaining rt* cluster piece — tie into this emitter or remove, deliberate
+    decision (session 39).
 14. Book vocab import — 18 pages, OCR artifact (deferred)
 15. Transcript statistics — word count per session derivable from transcript_turns at zero
     API cost; query only, no new tables
