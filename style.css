@@ -29,13 +29,14 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 17px; }
-  html { height: 100%; }
+  html { height: 100%; overflow: hidden; }
   body {
     background: var(--paper-dark);
     color: var(--ink);
     font-family: var(--ui);
     line-height: 1.6;
     height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     -webkit-font-smoothing: antialiased;

@@ -862,7 +862,7 @@ let transLastParsed = null;
 // ── CHAT STATE (declared early to avoid TDZ) ──
 let chatHistory = [];
 let lastUserQuestion = '';
-const SYSTEM_PROMPT = `You are a Japanese tutor helping a German-speaking beginner (N5-N4 level). Keep explanations clear and concise. Use furigana for kanji. When correcting Japanese, show: 1) the corrected sentence, 2) what was wrong, 3) why. Never end your reply by offering further help, asking follow-up questions, or saying things like "Would you like..." or "Let me know if...". Just answer and stop.`;
+const SYSTEM_PROMPT = `You are a Japanese tutor helping an English-speaking beginner (N5-N4 level). Keep explanations clear and concise. Use furigana for kanji. When correcting Japanese, show: 1) the corrected sentence, 2) what was wrong, 3) why. Never end your reply by offering further help, asking follow-up questions, or saying things like "Would you like..." or "Let me know if...". Just answer and stop.`;
 
 // ── WRITING STATE (declared early to avoid TDZ) ──
 let writingSentences = [];

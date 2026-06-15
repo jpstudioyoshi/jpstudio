@@ -484,3 +484,45 @@ VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N
 - **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in vocab_srs for both directions)
 
 Speaking direction graduation tracked separately — can lag behind recognition.
+
+## Session 41 — Dashboard Q&A language bug fix + overlap investigation (2026-06-16)
+
+### Fixed
+- **Dashboard Q&A wrong-language bug — root cause found, fixed.** `SYSTEM_PROMPT` in
+  `src/core-foundation.js:865` hardcoded "You are a Japanese tutor helping a
+  German-speaking beginner" — not a locale/cache issue as previously suspected (session
+  38's "Dashboard Q&A German-language response bug" note, now resolved and removed from
+  Pending). Changed "German-speaking" → "English-speaking" (one-line edit, committed).
+
+### Investigated, not resolved — dashboard toolbar/header overlap on long Q&A answers
+- **Symptom**: in panel-dashboard, when a long chat answer renders in `#chatMessages`,
+  the kana-selection toolbar (`data-kana-for="chatInput"`, Send/History row) ends up
+  partially under the fixed `#dashboardPanelHeader` (質問/Questions title, `position:
+  fixed; top:98px; z-index:48`).
+- **Ruled out**: `panel-dashboard`'s `padding-top: 164px` is correct and intact
+  (computed = 164px). `panel-dashboard.scrollTop = 0` — no internal scroll.
+  `window.scrollY` / `document.documentElement.scrollTop` both = 45.5, unaffected by
+  adding `overflow:hidden` to both `html` and `body` (edits applied and kept — harmless,
+  but did not fix the issue, **not yet reverted**).
+- **Confirmed**: `panel-dashboard.getBoundingClientRect().top = -13.5` (should be 0 given
+  no transform/margin on body or panel — `body.top=0`, no transform, margin-top=0,
+  panel transform=none). The 13.5px discrepancy is unexplained — investigation paused
+  before checking parent-element margin/transform.
+- **Candidate culprit, not tested**: `src/core-vocab.js:828`,
+  `target.scrollIntoView({behavior:'smooth', block:'start'})` in `sendChat()` — scrolls
+  the previous user-question message into view after a reply renders. `block:'start'`
+  could be escaping `#chatMessages`'s own scroll container if `#chatMessages` isn't
+  properly height-constrained inside `panel-dashboard`'s `overflow:hidden`. Untried fix:
+  `block:'nearest'` (lower-risk, matches pattern used in features-voice.js).
+- **Next session**: either (a) revert the html/body `overflow:hidden` additions (style.css
+  lines ~32/39, no effect, adds risk) and retry from the `scrollIntoView` angle, or (b) a
+  pragmatic non-layout fix — give the input/toolbar wrapper (`index.html` ~line 518) a
+  higher `z-index`/`position:relative` than `dashboardPanelHeader` (z-index:48) so the
+  header renders behind the toolbar regardless of the underlying shift. Not committed.
+
+### Noted, no action
+- VoiceVox `ERR_CONNECTION_REFUSED` on `localhost:50021/version` (`vvCheck` in
+  features-core.js) is expected when VoiceVox isn't running — one-shot feature-detection
+  check, harmless. Discussed auto-starting VoiceVox from Electron main process (spawn
+  external app) — declined as scope expansion; smaller alternative (status dot/notice in
+  Settings, mentioned in html-map as already partially planned) not implemented.
