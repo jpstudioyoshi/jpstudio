@@ -381,9 +381,9 @@ Design note at CONJ_SRS_DESIGN.md in project root.
    word-level; recency not checked
 
 ### Future / larger features
-10. **Conjugation SRS deck (session 39 — Phase 2 design revised, in progress)** —
+10. **Conjugation SRS deck (sessions 39-40 — Phase 2 design, in progress)** —
     Phase 1 prerequisite confirmed solid, proceeding with Phase 2.
-    **Revised architecture** (supersedes CONJ_SRS_DESIGN.md's word-level item design): SRS
+    **Architecture** (supersedes CONJ_SRS_DESIGN.md's word-level item design): SRS
     applies only to a fixed set of 13 conjugation-form items (`CONJ_FORMS`), NOT to
     (word, source_form, target_form) triples. Verbs are randomly drawn from a fixed
     50-verb pool at drill time — not SRS-tracked themselves. Closed system: no dependency
@@ -393,30 +393,66 @@ Design note at CONJ_SRS_DESIGN.md in project root.
       verb_class, frequency FROM words WHERE pos='verb' AND frequency IS NOT NULL ORDER BY
       frequency ASC LIMIT 50` — clean, all 50 have verb_class, frequency range 1-385. No
       new data needed.
-    - **conj_srs items (13, fixed)**: Present Plain (dict-identity, kept as a deliberate
+    - **CONJ_FORMS items (13, fixed)**: Present Plain (dict-identity, kept as a deliberate
       learning goal per discussion), Present Negative Plain, Present Polite, Present
       Negative Polite, Past Plain, Past Negative Plain, Past Polite, Past Negative Polite,
       て-form, Volitional Plain, Volitional Polite, Potential Plain, Potential Polite. Each
-      maps to `conjugate(word, form, pol, reg)` (in core-counters.js) via a `CONJ_FORMS`
-      array (id/label/form/pol/reg) — drafted in chat, not yet written to a file.
-      Passive/Causative excluded — `conjugate()` doesn't implement a negative variant for
-      these (pol ignored) and badges don't distinguish polite/plain; revisit separately if
-      wanted.
+      maps to `conjugate(word, form, pol, reg)` (core-counters.js) via id/label/form/pol/reg
+      — drafted in chat, to be written to features-grammar.js (NOT core-counters.js —
+      that file is about to grow with a separate Japanese-counter-words feature
+      extension). Passive/Causative excluded — `conjugate()` doesn't implement a negative
+      variant for these (pol ignored) and badges don't distinguish polite/plain; revisit
+      separately if wanted.
+    - **SRS storage — MAJOR PIVOT (session 40)**: originally created a new `conj_srs`
+      table (schema v12) mirroring vocab_srs — **reverted** (DROP TABLE, schema_version
+      back to 11, before the app ever reopened — no data impact). Discovered `DrillSRS`
+      (core-srs.js) + the existing `srs_items` table (item_key, drill_type, interval,
+      ease, due_date, history, seen, last_reviewed, UNIQUE(item_key, drill_type)) is
+      ALREADY the generic SM-2 engine used by counters/conjugation/times drills —
+      `DrillSRS.record()` does SM-2 scheduling, `DrillSRS.buildPool()` does due/fresh/
+      wrong-weighted pool selection (exactly what the "SRS-due form" toggle mode needs),
+      `DrillSRS.stats()` gives totals for free. No new table or SM-2 code needed.
+      **New plan**: add `STORAGE_KEYS.DRILL_SRS_CONJ_FORMS` (core-foundation.js, next to
+      `DRILL_SRS_CONJ` ~line 1101) + one entry in `DrillSRS._drillType`'s map
+      (core-srs.js ~line 42): `[STORAGE_KEYS.DRILL_SRS_CONJ_FORMS]: 'conj_forms'`. The 13
+      `CONJ_FORMS[i].id` values become `item_key`s under `drill_type='conj_forms'` — a
+      NEW, separate drill_type from the existing word-level `'conjugation'` drill_type
+      (untouched). Form-only tracking preserved: item_key is just the form id, never
+      includes the word.
     - **Toggle**: switches drill-item selection between "random dictionary item" mode and
-      "SRS-due form" mode (form picked via SM-2 due-ness from conj_srs, then a random verb
-      from the 50 applied to it) — SR2 only applies to the conjugation-form item, never to
-      the word.
+      "SRS-due form" mode (form picked via `DrillSRS.buildPool(DRILL_SRS_CONJ_FORMS, ...)`,
+      then a random verb from the 50 applied to it) — SRS only applies to the
+      conjugation-form item, never to the word.
     - **Fixed along the way**: 来る was missing potential-form entries in `conjugate()` —
       added こられる/こられます in core-counters.js (edit applied, **not yet committed**).
-    - **Next**: conj_srs table schema — check `vocab_srs` schema + existing SM-2 update
-      function in core-vocab.js, mirror column names (srs_interval/srs_ease/srs_due/
-      srs_graduated) and reuse the SM-2 function rather than a parallel implementation
-      (was about to do this when parked). Then seed the 13 rows, build drill UI toggle +
-      wiring.
+    - **Next**: add the 2 STORAGE_KEYS/DrillSRS lines, write `CONJ_FORMS` to
+      features-grammar.js, build drill UI toggle + wiring. **DONE (session 40)**:
+      `STORAGE_KEYS.DRILL_SRS_CONJ_FORMS` added + hydration entry (core-foundation.js),
+      `DrillSRS._drillType` map entry → `'conj_forms'` (core-srs.js), `CONJ_FORMS` (13
+      items) written to features-grammar.js, right before the DB-driven conjugation verb
+      pool section. `node check-syntax.js`: 40 OK, 0 errors, dead-candidate count
+      unchanged (still just customTranscribe). All additive, nothing existing touched —
+      not yet committed (bundle with the still-uncommitted 来る potential-form fix).
+      **Remaining**: 50-verb pool query (drafted, not yet in code), drill UI + toggle
+      (random-dict-item mode vs SRS-due-form mode via `DrillSRS.buildPool`), wiring
+      `DrillSRS.record()` after each answer.
 11. ~~Strand imbalance notification~~ — struck (session 39): #strandMini sidebar already
     gives an always-visible imbalance signal, no separate alert needed. "How you're
     learning" panel (broader summary concept, if distinct from the notification) — status
     TBD.
+
+12. **Session 40 wrap-up items — DONE**:
+    - `optIrrG` (Irregular verb-type checkbox, conjugation drill) now `checked` by default
+      in index.html, alongside optUG/optRuG.
+    - Settings "Context" tab removed entirely (`stTabContext`/`stPaneContext`/
+      `stContextDisplay` in index.html; `stRenderContext`/`stCopyContext` +
+      `context` entries in `stSwitchTab`'s panes/tabs maps + App registry export, in
+      core-foundation.js). Root cause: read from a `#claudeContext` script tag that was
+      never added to index.html, so the panel rendered fully empty ("undefined ·
+      undefined", blank sections) — vestigial, superseded by context-session.md /
+      ARCHITECTURE_HUB.md. `node check-syntax.js`: 40 OK, 0 errors, dead-candidate count
+      unchanged (still just customTranscribe), index.json 1221→1219 entries (2 functions
+      removed). All changes verified, ready to commit.
 12. Layer 6 — grammar drill + writing prompt with top-N words
 13. FLUENCY_432 emitter — 4/3/2 speaking session wiring → populates conversation_sessions.
     `rtCompareBtn` (4 refs in features-voice.js — `rtCompare`/`rtStartRound2` functions are

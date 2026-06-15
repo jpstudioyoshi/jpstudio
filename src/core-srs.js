@@ -40,6 +40,7 @@ const DrillSRS = {
       [STORAGE_KEYS.DRILL_SRS_WORDS]:    'words',
       [STORAGE_KEYS.DRILL_SRS_COUNTERS]: 'counters',
       [STORAGE_KEYS.DRILL_SRS_CONJ]:     'conjugation',
+      [STORAGE_KEYS.DRILL_SRS_CONJ_FORMS]: 'conj_forms',
       [STORAGE_KEYS.DRILL_SRS_TIMES]:    'times',
     };
     return map[storageKey] || storageKey;

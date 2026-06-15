@@ -289,6 +289,7 @@ Promise.all([
       STORAGE_KEYS.DRILL_SRS_WORDS,
       STORAGE_KEYS.DRILL_SRS_COUNTERS,
       STORAGE_KEYS.DRILL_SRS_CONJ,
+      STORAGE_KEYS.DRILL_SRS_CONJ_FORMS,
       STORAGE_KEYS.DRILL_SRS_TIMES,
     ];
     for (const key of srsKeys) {
@@ -1099,6 +1100,7 @@ const STORAGE_KEYS = {
   KANA_SESSION:         'kanaDailySession',
   WORDS_SESSION:        'wordsDailySession',
   DRILL_SRS_CONJ:     'drillSrs_conjugation',
+  DRILL_SRS_CONJ_FORMS: 'drillSrs_conjForms',
   CONJ_SESSION:        'conjDailySession',
   GRAMMAR_ERRORS:      'grammarDrillErrors',
   DRILL_SRS_TIMES:    'drillSrs_times',
@@ -1788,8 +1790,8 @@ window.showPanel = showPanel;
 
 // ── Settings tab switcher ─────────────────────────────────────────────────────
 function stSwitchTab(tab) {
-  const panes = { settings: 'stPaneSettings', context: 'stPaneContext', grammar: 'stPaneGrammar' };
-  const tabs  = { settings: 'stTabSettings',  context: 'stTabContext',  grammar: 'stTabGrammar' };
+  const panes = { settings: 'stPaneSettings', grammar: 'stPaneGrammar' };
+  const tabs  = { settings: 'stTabSettings',  grammar: 'stTabGrammar' };
 
   Object.entries(panes).forEach(([key, id]) => {
     const el = document.getElementById(id);
@@ -1805,51 +1807,7 @@ function stSwitchTab(tab) {
   if (tab === 'issues') {
     if (typeof issueTrackerRenderFull === 'function') issueTrackerRenderFull();
   }
-  if (tab === 'context') stRenderContext();
   if (tab === 'grammar') stRenderGrammarOverride();
-}
-
-function stRenderContext() {
-  const el = document.getElementById('stContextDisplay');
-  if (!el) return;
-
-  let ctx = {};
-  try {
-    const script = document.getElementById('claudeContext');
-    if (script) ctx = JSON.parse(script.textContent);
-  } catch(e) {
-    el.innerHTML = '<div style="color:var(--red);font-family:var(--ui);padding:20px">Could not parse context block.</div>';
-    return;
-  }
-
-  const section = (title, content) =>
-    `<div style="margin-bottom:20px">
-      <div style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:8px">${title}</div>
-      <div style="font-family:var(--ui);font-size:0.8rem;color:var(--ink);line-height:1.7">${content}</div>
-    </div>`;
-
-  const list = (items) => items.map(i => `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">• ${i}</div>`).join('');
-  const kv = (obj) => Object.entries(obj).map(([k,v]) => `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:var(--teal)">${k}</span> — ${typeof v === 'object' ? JSON.stringify(v) : v}</div>`).join('');
-
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light)">Last updated: ${ctx.version || '—'}</div>
-      <button class="btn-action btn-xs" onclick="stCopyContext()">Copy JSON</button>
-    </div>
-    ${section('APP', `<b>${ctx.app}</b> · ${ctx.runtime}<br>Launch: <code style="font-size:0.75rem;color:var(--teal)">${ctx.launch}</code>`)}
-    ${section('FILES', kv(ctx.fileStructure || {}))}
-    ${section('STATE OBJECTS', Object.entries(ctx.stateObjects || {}).map(([f,arr]) => `<div style="margin-bottom:4px"><span style="color:var(--teal)">${f}</span>: ${arr.join(', ')}</div>`).join(''))}
-    ${section('CRITICAL RULES', list(ctx.criticalRules || []))}
-    ${section('PENDING WORK', list(ctx.pendingWork || []))}
-    ${section('DEPENDENCIES', kv(ctx.dependencies || {}))}
-  `;
-}
-
-function stCopyContext() {
-  try {
-    const script = document.getElementById('claudeContext');
-    if (script) navigator.clipboard.writeText(script.textContent.trim());
-  } catch(e) {}
 }
 window['stSwitchTab'] = stSwitchTab;
 
@@ -2036,7 +1994,7 @@ Object.assign(App, {
   // Settings
   stSwitchTab, openDevWindow,
   stRenderGrammarOverride, stGrammarSetOverride,
-  stRenderContext, stCopyContext, setButtonGroupActive,
+  setButtonGroupActive,
   // Navigation
   showPanel,
   // Core utilities

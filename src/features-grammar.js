@@ -1167,6 +1167,26 @@ function conjUpdateFreqCount() {
 window['conjAddFreqVerbs']  = conjAddFreqVerbs;
 window['conjResetFreqVerbs'] = conjResetFreqVerbs;
 
+// ── Conjugation-form SRS items (conj_forms drill_type) ──────────────────────────────
+// 13 fixed transformation types. SRS (via DrillSRS / srs_items, drill_type='conj_forms')
+// tracks these items themselves — never the word. form/pol/reg map directly to
+// conjugate(word, form, pol, reg) in core-counters.js.
+const CONJ_FORMS = [
+  { id: 'pres-plain-aff',  label: 'Present Plain',           form: 'present',    pol: 'aff', reg: 'plain'  },
+  { id: 'pres-plain-neg',  label: 'Present Negative Plain',  form: 'present',    pol: 'neg', reg: 'plain'  },
+  { id: 'pres-polite-aff', label: 'Present Polite',          form: 'present',    pol: 'aff', reg: 'polite' },
+  { id: 'pres-polite-neg', label: 'Present Negative Polite', form: 'present',    pol: 'neg', reg: 'polite' },
+  { id: 'past-plain-aff',  label: 'Past Plain',              form: 'past',       pol: 'aff', reg: 'plain'  },
+  { id: 'past-plain-neg',  label: 'Past Negative Plain',     form: 'past',       pol: 'neg', reg: 'plain'  },
+  { id: 'past-polite-aff', label: 'Past Polite',             form: 'past',       pol: 'aff', reg: 'polite' },
+  { id: 'past-polite-neg', label: 'Past Negative Polite',    form: 'past',       pol: 'neg', reg: 'polite' },
+  { id: 'te',              label: 'て-form',                  form: 'te',         pol: 'aff', reg: 'plain'  },
+  { id: 'vol-plain',       label: 'Volitional Plain',        form: 'volitional', pol: 'aff', reg: 'plain'  },
+  { id: 'vol-polite',      label: 'Volitional Polite',       form: 'volitional', pol: 'aff', reg: 'polite' },
+  { id: 'pot-plain',       label: 'Potential Plain',         form: 'potential',  pol: 'aff', reg: 'plain'  },
+  { id: 'pot-polite',      label: 'Potential Polite',        form: 'potential',  pol: 'aff', reg: 'polite' },
+];
+
 // ── DB-driven conjugation verb pool ──────────────────────────────────────────
 // Group/rule are display-only; derive godan group from the dict-form ending.
 function _conjGodanGroupRule(dict) {
