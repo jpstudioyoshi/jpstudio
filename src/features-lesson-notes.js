@@ -1597,7 +1597,7 @@ ${docContent.slice(0, 10000)}` }]
         await window.db.run(
           `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, type, pos, encounter_at, entry_weight, created_at)
            VALUES (?, ?, ?, 'yoshi_vocab', ?, 'word', ?, ?, 1.0, ?)`,
-          [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, v.pos || null, now, now]
+          [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, (v.word.includes('〜') || v.word.includes('~')) ? 'fragment' : (v.pos || null), now, now]
         );
       }
       console.log('[LN] vocab written to vocab_items:', LessonNotesState.vocab.length, 'words');
