@@ -414,7 +414,7 @@ const date = new Date().toLocaleDateString('en-GB', {
   day: '2-digit', month: '2-digit', year: 'numeric'
 }).split('/').reverse().join('-');
 
-const outFile = path.join(ROOT, `audit-${date}.md`);
+const outFile = path.join(ROOT, "audit-latest.md");
 const out = [];
 let errors = 0;
 let ok = 0;
