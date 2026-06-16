@@ -1,16 +1,7 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-14 (session 39 — documentation tidy-up + dead-code-findings.md
-reconciliation: 7 functions + 1 cascade removed, net −261 lines, commit fa97564)
-
-## Environment — Fixed Facts (read this first)
-- **Project root**: `~/Documents/jpStudio/` (jp alias: `cd ~/Documents/jpStudio`)
-- **index.html**: at project root — `~/Documents/jpStudio/index.html` (NOT src/renderer/index.html)
-- **All terminal commands**: must be prefixed `jp &&` to avoid directory drift
-- **Filesystem MCP**: Claude has read-only access at `/Users/paulandres/Documents/jpStudio/` — read source files directly without asking Paul to grep. Use this before asking for terminal output.
-- **MCP cannot grep across files** — use audit file + targeted reads, or hand to Claude Code
-- **Sidebar nav**: two zones — `<aside>` (strandMini, ヨシ, 質問, 筆順, 資料, ⚙) and secondary nav bar (文法, 語彙, 読む, 書く, 聞く, 見る, 話す)
-- **Claude Code launch**: `jp && claude --model claude-sonnet-4-6`
-- **"done"** means command ran OK
+Last updated: 2026-06-16 (session 40 — 集中 focus sprint panel built; conjugation SRS
+foundations laid; Settings Context tab removed; optIrrG default-checked;
+dead-code-findings.md reconciliation complete; commit bundle pending)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -32,6 +23,11 @@ reconciliation: 7 functions + 1 cascade removed, net −261 lines, commit fa9756
   ranges for these. Use grep (with line-number context) instead of view for anything near such
   functions; hand removals to Claude Code rather than python heredoc when the exact text can't
   be read.
+
+## Environment — Fixed Facts
+- index.html is at project root (~/Documents/jpStudio/index.html), NOT in src/renderer/
+- DB: ~/Library/Application Support/japanese-studio/jpstudio.db
+- App alias: jpstart
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs,
@@ -72,6 +68,10 @@ leftovers, features-times.js deleted entirely); `progressSidebarControls` and
 #panel-teform never existed (TE-form drill was already-orphaned JS only); the session-38
 35-function duplicate panel had no corresponding HTML container either — purely orphaned
 JS, no HTML cleanup needed from that session.
+
+**Session 40 additions (集中 panel):**
+- `panel-shuchu` — Focus Sprint panel container
+- Sidebar button between 質問 and 筆順
 
 **Session 25-30 additions (still active):**
 - vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
@@ -120,134 +120,90 @@ JS, no HTML cleanup needed from that session.
   runs or API cost.
 - find.js shows `[callers=N exported=yes/no]` for function-type results.
   Usage: `node find.js <name> function` → instant "is this dead?" answer, no grep needed.
-- **Session 38 result: 18 → 0 candidates** (see Session 38 writeup below). index.json:
-  1294 → 1228 entries (−66).
-- Known blind spot (confirmed again this session): indented/nested function declarations
-  (e.g. teBuildQueue/teNext in features-grammar.js, which turned out to not even exist —
-  already-deleted functions still being *called* by dead code) aren't captured by the
-  extractor. "exported=true" also doesn't mean "reachable" — an App-registry entry with zero
-  real callers is still dead (found 5 such functions this session: lessonNotesRenderDrillCard,
-  lessonNotesSetMode, lessonNotesDrillReveal/Next/Prev, plus the entire 35-function ln*
-  cluster's lnSwitchTab export).
-- **dead-code-findings.md (2026-06-11) reconciliation — RESOLVED session 39.** Of the 8
-  certain + 14 likely items: 10 confirmed already gone (isVoiced, lnLoadTimeline,
-  rtStartRound2, voiceUploadAudio, _onRecord, _onStop, vcFetch+family, lnCreateFromPaste,
-  lnDeleteRecording, TextEntry.val). The remaining 7 were the SAME blind spot as the
-  session-38 lessonNotes* finds — exported (window[] or App registry) but zero real
-  callers — and were removed via Claude Code (commit fa97564): ctrToggle, vgToggleMic,
-  customToggleRecord, yoshiSaveWhatsappInline, yoshiRetranscribe, voiceSendText, and
-  Orchestrator's `yoshiSaveWhatsapp` (a separate dead shim, distinct from
-  yoshiSaveWhatsappInline — its onclick target doesn't exist in current HTML).
-  Removing `customToggleRecord` cascaded: `customStartRecord` (its only caller) removed
-  too. `rtCompare` (function) is gone; `rtCompareBtn` (element, 4 refs) remains — see
-  Pending #13 (FLUENCY_432). `dead-code-findings.md` itself is now fully reconciled and
-  safe to delete from the repo. **New finding:** `customTranscribe` is the resulting sole
-  audit candidate (1) — see Pending #1.
+- **Session 38 result: 18 → 0 candidates** (index.json 1294 → 1228 entries, −66).
+- Known blind spot: indented/nested function declarations not captured by extractor.
+  "exported=true" also doesn't mean "reachable" — an App-registry entry with zero real
+  callers is still dead.
+- **dead-code-findings.md reconciliation — RESOLVED session 39.** 10 items confirmed already
+  gone, 7 removed (+1 cascade) via Claude Code (commit fa97564). `rtCompare` (function) gone;
+  `rtCompareBtn` (element, 4 refs) remains — see Pending #17. `dead-code-findings.md` now
+  safe to delete. **Sole remaining audit candidate:** `customTranscribe` — see Pending #1.
 
 ## Session 38 — Major dead-code purge (2026-06-14)
 8 commits, net −1768 lines, all syntax-checked clean (40/40), 18→0 dead candidates.
 
-1. **ln-p2 lesson-notes drill cluster** (3 commits, −559 lines, 22 functions): the old
-   flashcard-style vocab drill on the lesson-notes panel — superseded by the Overview-tab
-   restructure (context-handoff-2026-06-13.md). Removed in cascading passes as each removal
-   orphaned its helpers:
-   - Pass 1 (17 functions + 4 App-registry entries): lessonNotesSaveHiddenPermanently,
-     lessonNotesShowMastered, lessonNotesClearMastered, lessonNotesBreakdownCurrent,
-     lessonNotesExamplesCurrent, lessonNotesHideCard, lessonNotesRestoreHidden,
-     lessonNotesToggleTable, lessonNotesToggleShowReading/ShowMeaning, lessonNotesToggleShuffle,
-     lessonNotesRenderDrillCard, lessonNotesSetMode, lessonNotesDrillReveal/Next/Prev,
-     lessonNotesShowEdit (the last 5 were exported-but-unreachable, same pattern as the
-     vtFullscreen bug from session 36).
-   - Pass 2 (4 functions, cascade): lessonNotesSaveLearnedWords, lessonNotesBreakdown,
-     lessonNotesExamples, lessonNotesRenderEditView — confirmed by Paul: the word
-     breakdown/examples-via-Claude feature and the raw-notes edit view were both
-     intentionally dropped in the June 13 restructure, not regressions.
-   - Pass 3 (1 function, cascade): breakdownCacheSave + BREAKDOWN_CACHE_KEY/breakdownCache
-     init (only caller was the removed lessonNotesBreakdown).
-   - `LessonNotesState.permanentlyLearned` / `lessonNotesGetLearnedWords` kept — still
-     load-bearing in lessonNotesLoadSession's vocab filter (reads existing localStorage
-     data; just has no remaining UI path to add new entries, which was already true before
-     this session).
-   - Orphaned state fields (drillIdx, drillMode, drillRevealed, tableHidden, showReading,
-     showMeaning, shuffled, vocabOriginal, hiddenWords, breakdownCache) and their resets in
-     lessonNotesLoadSession/New/Delete deliberately left alone — harmless, separate tidy-up.
-
-2. **TE-form drill** (1 commit, −150 lines): confirmed by Paul as dead for months,
-   superseded by the conjugation drill's `optTeG` option. Removed TE_VERBS (~76-entry data
-   array), teSetMode/teSetGroup (features-grammar.js), and TeFormState (features-tools.js —
-   a different file, only ever referenced from the two removed functions). teSetMode/
-   teSetGroup called teBuildQueue/teNext/teShowContext/teShowContextPrompt, which had NO
-   definitions anywhere — already-deleted in an earlier cleanup, doubly dead.
-
-3. **Error-pie-chart cluster** (1 commit, −136 lines): _renderErrorPie/_renderSubPie were
-   an old pie-chart renderer superseded by _renderErrorPieRight (live, called from
-   progressRenderErrors). _pieSliceColors cascaded in too (only caller was _renderSubPie).
-
-4. **Orphaned duplicate lesson-notes panel — "ln* cluster"** (1 commit, −820 lines, 35
-   functions — the big one): an entire parallel implementation of the lesson-notes panel
-   (own tabs, own vocab drill, own session CRUD, own file handling) under the `ln*` prefix,
-   lines ~2658-3170 of features-lesson-notes.js. Per Paul: a duplicate created when the
-   panel was moved, whose entry point (lnSwitchTab/lnRenderTab) got cut and never removed.
-   Internally self-consistent (functions called each other fine) but zero external callers
-   except one dead registry export — same "orphaned but exported" pattern as #1 above, at
-   30x the scale. Removed: lnRecordSentence, lnSaveSentenceRecording, lnPlaySentence,
-   lessonNotesUpdateDropdown, lnGetSessions/SaveSessions/CurrentSession, lnRenderTab,
-   lnSwitchTab, lnRenderVocab + drill subs (lnSetDrillMode/DrillReveal/DrillNext/DrillPrev/
-   DrillJump/RefreshTab), lnRenderStories/OpenStory, lnRenderKeyPhrases/StartPhraseDrill,
-   lnRenderCorrections, lnRenderGrammar + ToggleGrammarHide/ToggleShowHidden, lnRenderTopics,
-   lnRenderFullDoc/RenderRecording/FilterTranscript, lnToggleRecPlayer/DeleteRecording,
-   lnNewSession/LoadSession/DeleteSession/HandleFile/HandleDrop, IMPORTED_DOC_SESSIONS_PANEL_KEY.
-   **Kept: yoshiParseWhatsapp** (physically inside this line range but has 4 live external
-   callers — lnAlignTimeline/lnLoadTwoColumnTimeline in features-ln-p2.js).
-
-5. **lessonNotesRenderFullDoc + cascade** (2 commits, −103 lines): a third, separate
-   "full doc" renderer (yet another one — distinct from both the live lnFullDocDoSearch/
-   #lnFullDocContent system at L661 and the ln* cluster's lnRenderFullDoc above), zero
-   external references. Cascaded into lessonNotesFullDocDoSearch/ClearSearch
-   (features-ln-p2.js), whose only callers were inside lessonNotesRenderFullDoc's own
-   generated HTML.
-
-**New tooling learning:** features-lesson-notes.js contains at least one line so long
-(a giant HTML template literal inside lessonNotesRenderFullDoc) that the `view` tool fails
-even at 1-3 line ranges. Scoped via grep (function-definition line numbers) instead, then
-handed to Claude Code for the actual removal.
+1. **ln-p2 lesson-notes drill cluster** (3 commits, −559 lines, 22 functions)
+2. **TE-form drill** (1 commit, −150 lines)
+3. **Error-pie-chart cluster** (1 commit, −136 lines)
+4. **Orphaned duplicate lesson-notes panel — "ln* cluster"** (1 commit, −820 lines, 35 functions)
+   Kept: yoshiParseWhatsapp (4 live external callers in features-ln-p2.js)
+5. **lessonNotesRenderFullDoc + cascade** (2 commits, −103 lines)
 
 ## Session 39 — Documentation tidy-up + dead-code-findings.md reconciliation (2026-06-14)
 
-**Documentation tidy-up** (all 4 items resolved):
-- context-static.md: schema bumped to v11 (full current table list), file-size table
-  corrected (features-lesson-notes.js 2,608 / features-ln-p2.js 1,330 /
-  features-pictures.js 515), "Dead Files" section removed (src/features.js gone;
-  features-pictures.js vg* confirmed to be the live Pictures game, not dead code), stale
-  `lnCreateFromPaste()` API Architecture entry removed.
-- html-map.md: removed dead #timesDrillOverlay/#compPanel/#listenProgressPanel/
-  #listenModeSelect entries (session 35 leftovers); `progressSidebarControls` and
-  `srsToggleBtn`/`srsDueBadge` confirmed live and kept.
-- context-handoff-2026-06-13.md, vocab-audit-2026-06-05.md, audit-2026-05-30.md removed
-  from project Knowledge (manual).
-- Local audit-*.md pile (21 gitignored daily snapshots, 05-25 to 06-14) deleted, only
-  06-14 kept. Root cause (check-syntax.js writes a new dated file every commit, no
-  cleanup) not yet fixed — see Pending.
+- context-static.md: schema bumped to v11, file-size table corrected, stale entries removed.
+- html-map.md: removed dead overlay/panel entries from session 35.
+- Stale knowledge files removed from project Knowledge (manual).
+- Local audit-*.md pile (21 gitignored daily snapshots) deleted; only 06-14 kept.
+- dead-code-findings.md: 10 already gone, 7 removed (+1 cascade), commit fa97564 (8 files,
+  net −261 lines). See Dead-Code Lookup Tooling above for full detail.
 
-**dead-code-findings.md reconciliation** — see Dead-Code Lookup Tooling section above for
-full detail. 10 items confirmed already gone, 7 removed (+1 cascade) via Claude Code,
-commit fa97564 (8 files, net −261 lines), pushed. dead-code-findings.md itself now safe
-to delete. New finding: Custom Drill recording pipeline likely dead (Pending #1).
+## Session 40 — Conjugation SRS foundations + 集中 focus sprint panel (2026-06-16)
+
+### Misc fixes (committed)
+- `optIrrG` (Irregular verb-type checkbox) now `checked` by default in index.html.
+- Settings "Context" tab removed entirely: `stTabContext`/`stPaneContext`/`stContextDisplay`
+  in index.html; `stRenderContext`/`stCopyContext` + `context` entries in `stSwitchTab`'s
+  panes/tabs maps + App registry export, in core-foundation.js. Was vestigial — read from a
+  `#claudeContext` script tag never added to index.html (rendered "undefined · undefined").
+  check-syntax.js: 40 OK, 0 errors, index.json 1221→1219 (2 functions removed).
+
+### Conjugation SRS foundations (uncommitted — bundle with next commit)
+- **Storage pivot**: `conj_srs` table (schema v12) created then reverted (DROP TABLE,
+  schema back to v11) before app reopened. `DrillSRS` (core-srs.js) + `srs_items` table
+  already the generic SM-2 engine — no new table needed.
+- `STORAGE_KEYS.DRILL_SRS_CONJ_FORMS` added (core-foundation.js ~line 1101)
+- `DrillSRS._drillType` map entry: `'conj_forms'` (core-srs.js ~line 42)
+- **来る potential-form fix**: こられる/こられます added in core-counters.js
+- **CONJ_FORMS (13 items)** written to features-grammar.js: Present Plain, Present Negative
+  Plain, Present/Negative Polite, Past Plain/Negative Plain/Polite/Negative Polite, て-form,
+  Volitional Plain/Polite, Potential Plain/Polite. Passive/Causative excluded.
+- check-syntax.js: 40 OK, 0 errors, dead-candidate count unchanged.
+- **Next steps**: 50-verb pool query → code; drill UI toggle; wire DrillSRS.record()
+
+### 集中 Focus Sprint panel (committed)
+- Files: `src/features-shuchu.js` + panel HTML in `index.html` (id: `panel-shuchu`)
+- Sidebar button added between 質問 and 筆順
+- Self-contained, designed to be removable with minimal effort
+
+**Flow:**
+1. Topic string → Start
+2. API call 1: generate sprint JSON (intro card, 10 activities, 8-item round 2 pool; max_tokens: 6000)
+3. Intro card (key forms + examples with furigana)
+4. 10 activities: `multiple_choice`, `gap_fill`, `translate_to_jp`, `error_correct`
+5. Wrong answers / `translate_to_jp` → per-item analysis call (max_tokens: 300)
+6. Round 2: up to 6 items from pre-generated pool targeting weak points
+7. Free write: kana-enabled compose input → API feedback (max_tokens: 800)
+8. Results summary with score and review list
+
+**Key decisions:**
+- `translate_to_jp` / `error_correct` always go to round 2 pool — no self-assess buttons
+- "Further question" widget on every feedback item (one Q, one A, inline; max_tokens: 300)
+- Sprint JSON persisted via `Storage.setJSON('shuchu_last_sprint')` — survives restart
+- 参考 button: shows intro card overlay without losing place
+- New Sprint button with confirm dialog
+
+**Transcript → sprint suggestion pipeline (designed, not yet built):**
+- Use `yoshiByOffset` + `audioByOffset` from `lnLoadTwoColumnTimeline` (features-ln-p2.js)
+  to build `[teacher note + surrounding transcript]` blocks → Claude → 4 topic suggestions
+- Prerequisite: add timestamps to grammar node extraction (unlocks this pipeline + "why is
+  this in my grammar list?" feature)
 
 ## Vocab pipeline status check (session 38)
-Ran direct SQLite queries (read-only, app running):
 - **Lookup-source meaning backfill: 0 missing** — fully done.
-- **Reading backfill: 181 missing** (down from 567). Checked recency: the 3 most recent
-  lookup-source entries (all from 2026-06-14) all have readings populated; the latest
-  *missing*-reading entry is from 2026-06-13 18:18. So the lookup/translate pipeline now
-  correctly populates `reading` at insert (fixed sometime 06-13/06-14) — the 181-item
-  backlog (06-06 to 06-13) is pre-fix legacy, harmless: will self-populate if those words
-  are re-encountered, no problem if not. **Pending #9 (lookup portion) resolved.**
-- **counter_suffix: 639 missing** — no recency check done yet, total noun/verb population
-  not checked. Still open (#10 below).
-- **corpus_productions: still single-kanji** in the sample checked (5 rows, all from
-  2026-05-15) — but these are old rows; didn't check whether recent rows are word-level.
-  Still open (#11 below).
+- **Reading backfill: 181 missing** — pre-fix legacy (pipeline fixed 06-13/14), harmless.
+- **counter_suffix: 639 missing** — open (Pending #10).
+- **corpus_productions: single-kanji** in old rows — open (Pending #11).
 
 ## Vocab System — Complete State
 
@@ -260,217 +216,93 @@ Ran direct SQLite queries (read-only, app running):
 | lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
 | n5 | one-time backfill | vocab_items |
 
-### vocab_items schema (v11 — session 32)
+### vocab_items schema (v11)
 id, word, reading, meaning, example, source, source_ref, type, pos, counter_suffix,
-encounter_at, entry_weight, created_at
-UNIQUE(word, source)
-— direction and SRS columns removed; now in vocab_srs
+encounter_at, entry_weight, created_at — UNIQUE(word, source)
 
-### vocab_srs schema (session 32)
+### vocab_srs schema (v11)
 id, vocab_id (FK → vocab_items.id), direction, srs_interval, srs_ease, srs_due,
-srs_graduated, last_reviewed
-UNIQUE(vocab_id, direction)
-— SRS rows created lazily on first review via INSERT ... ON CONFLICT DO UPDATE
+srs_graduated, last_reviewed — UNIQUE(vocab_id, direction)
+SRS rows created lazily on first review via INSERT ... ON CONFLICT DO UPDATE
 
 ### lesson_phrases schema
 id, lesson_id, phrase, reading, meaning, example, type, created_at
 
 ### Drill UI — working
-- Direction toggle: JP→EN / EN→JP / Speaking
-- Type toggle: switches between flip card and text entry
-- Text entry: correct → auto-advance after 800ms, wrong → show answer, wait for Next tap
-- Source filters: active, all checked by default, Reset button
-- POS filters: ACTIVE, all checked by default, Reset button
-- Dynamic font scaling on card
-- Writing sitting boost: 5+ sentences → 3 day weight boost on lookup words
-- Strand tile: updates immediately on markVocab (window._vocabDrillUsedToday flag)
-- List view works in all directions (EN→JP, Speaking)
+- Direction toggle: JP→EN / EN→JP / Speaking; Type toggle: flip card / text entry
+- Text entry: correct → auto-advance 800ms, wrong → show answer, wait for Next
+- Source + POS filters: active, all checked by default, Reset button
+- Dynamic font scaling; writing sitting boost; strand tile updates immediately
 
-### SRS — SM-2 (corrected session 30)
-- Known: srs_interval = floor(interval × ease), ease +0.1 (if graduated), due pushed out
-- Got it: srs_interval = floor(interval × max(1.3, ease - 0.10)), ease unchanged
-- Again: srs_interval = 1, due tomorrow, ease -0.15 (if graduated, min 1.3)
-- srs_ease starts 2.5, srs_graduated per direction in vocab_srs
+### SRS — SM-2
+- Known: interval = floor(interval × ease), ease +0.1
+- Got it: interval = floor(interval × max(1.3, ease − 0.10))
+- Again: interval = 1, due tomorrow, ease −0.15 (min 1.3)
+- ease starts 2.5, graduated per direction in vocab_srs
 
 ### Weighting
 - effective_weight = entry_weight × source_weight × direction_weight × prep_boost(1.5×)
-- Fetches 200, sorts by effective_weight, slices to 50
+- Fetches 200, sorts, slices to 50
 - Source weights: yoshi_phrases=1.0, yoshi_vocab=1.0, writing=0.9, lookup=0.6, n5=0.3
 - Direction weights: jp_en=1.0, en_jp=0.8, speaking=0.9
-- Stored in VOCAB_WEIGHTS kvAPI key
-
-### Filter logic
-- Source: all checked = no filter; partial = filter to checked sources; none = empty deck
-- POS: all checked or none = no filter; partial = filter to pos column + type='phrase' for Phrases
-- NULL pos items excluded when POS filter active and Phrases not checked
-
-### POS Tagging — COMPLETE
-- yoshi_vocab: dictionary form + POS extracted via Claude at lesson notes extraction time ✅
-- writing words: dictionary form + POS extracted via Claude at writing submission time ✅
-- N5 words: POS inherited from words table ✅
-- lookup words: inherited from words table where match exists; remainder batch-tagged ✅
-- POS enum: noun, verb, i-adj, na-adj, adverb, expression
 
 ## Conjugation Drill — DB-driven pool (session 30)
-
-### Pool logic
-- Step 1: vocab_items WHERE pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY MAX(srs_ease) DESC, MAX(srs_graduated) DESC across directions — up to 60
-- Step 2: top up to 100 from words table ORDER BY frequency DESC, excluding step 1 words
+- Step 1: vocab_items pos IN (verb/i-adj/na-adj), joined to words for verb_class, ORDER BY
+  MAX(srs_ease)/MAX(srs_graduated) DESC — up to 60
+- Step 2: top up to 100 from words ORDER BY frequency DESC, excluding step 1 words
 - verb_class mapping: godan→u, ichidan→ru, irregular/suru→irr
-- Pool info shown in conjPoolInfo span: "Pool: X known + Y frequency"
-- Null verb_class words skipped (not guessed)
 
-### Conjugation SRS — future build
-Design note at CONJ_SRS_DESIGN.md in project root.
-- SRS unit = (word, source_form, target_form)
-- Direction toggle: forward (dict→form) and reverse (conjugated→dict)
-- Rule-level mastery via grammar_mastery table
-- Prerequisite: basic dict→all-forms scoring well first
+### Conjugation SRS — in progress (session 40)
+- 13 fixed CONJ_FORMS items as srs_items item_keys under drill_type='conj_forms'
+- Verbs drawn randomly from 50-verb frequency pool at drill time
+- 50-verb query: `SELECT word, reading, meaning, verb_class, frequency FROM words
+  WHERE pos='verb' AND frequency IS NOT NULL ORDER BY frequency ASC LIMIT 50`
+- See CONJ_SRS_DESIGN.md for original design reference (superseded by above architecture)
 
 ## Writing Sitting Boost — Complete
-- writing_sittings table: id, started_at, saved_at, sentence_count, expires_at
-- On save with ≥5 sentences → INSERT with expires_at = +3 days
+- On save with ≥5 sentences → INSERT writing_sittings with expires_at = +3 days
 - loadVocabItemsDeck boosts lookup words ±2 hours from sitting by 1.5×
-- Fully automatic
 
 ## Grammar Node Mapping Pipeline — COMPLETE (extraction + display)
-
-### Extraction (session 31)
-- Lesson notes grammar extraction (`lessonNotesExtractGrammar`) calls `lessonNotesExtractGrammarSilent`
-- Silent function awaits `GrammarModel.load()`, builds node list from all 55 nodes
-- Node list injected into Claude prompt BEFORE lesson content
-- Claude returns `grammarNodeIds` array per grammar point (exact node IDs only)
-- Batch INSERT to `lesson_phrases` (type='grammar', lesson_id set)
-- Unique node IDs collected → `UPDATE lesson_sessions SET extracted_grammar=?`
-- Example: session 69 → 19 node IDs, 24 grammar patterns
-
-### Display (built, session unknown — confirmed live via memory)
-- Gold dot indicators on Genki grammar node pills in progress panel show
-  session-contextual coverage (renderGrammarCoverage / grammarNodeClick in features-progress.js)
-- Annotation layer only — no mastery colour change
-- Per-session, not cumulative
-
-### Remaining work
-- Gold dot detail panel (source sentence display) blocked — `lesson_phrases` has no `node_id`
-  column linking a phrase back to the grammar node it was tagged with
-- Dismiss button for gold dots (hide until next lesson) not yet built
-- Lesson session DB linking: `lessonSessionDbId` stored on kvAPI session object;
-  `lessonNotesEnsureDbRow()` finds-or-creates `lesson_sessions` row (session 31)
+- `lessonNotesExtractGrammarSilent` injects node list into Claude prompt, returns
+  `grammarNodeIds`, batch-INSERTs to `lesson_phrases`, writes to `lesson_sessions.extracted_grammar`
+- Gold dot indicators on Genki node pills in progress panel (per-session, not cumulative)
+- Remaining: `node_id` column on `lesson_phrases` (unblocks detail panel); dismiss button;
+  grammar node timestamps (prerequisite for sprint suggestion pipeline)
 
 ## Pending — Priority Order
 
 ### Dead code / cleanup
-1. **Custom Drill recording pipeline** (features-voice-drill.js) — `customTranscribe`
-   (Whisper STT) is the sole remaining audit-flagged dead candidate; its only caller
-   (`customStartRecord`) was removed in session 39's dead-code-findings.md reconciliation.
-   `customTranscribe` calls `customScore`, suggesting the whole record→transcribe→score
-   chain may be dead. Investigate: deprecated feature (remove the chain) vs. missing UI
-   wire-up (restore it)? Not auto-swept.
-2. **vtWatch* localStorage isolation** — `vtWatchTime` stored in localStorage only
-   (`VT_WATCH_KEY`), separate from `panel_sessions`/`learning_events`; consider unifying
-3. **Drop 4 dead DB tables** (`transcript_sentences`, `agent_decisions`, `conversation_sessions`,
-   `frames`) + dead StudentModel.js transcript→srs_items block (~30 lines)
-- **check-syntax.js audit filename** — writes a new dated `audit-YYYY-MM-DD.md` every
-  commit with no cleanup; 21 piled up (05-25 to 06-14) and were deleted session 39
-  (gitignored, harmless). Consider switching to a single overwritten `audit-latest.md` to
-  prevent recurrence.
+1. **customTranscribe** (features-voice-drill.js) — sole audit candidate; investigate:
+   deprecated (remove) or missing wire-up (restore)?
+2. **vtWatch* localStorage isolation** — consider unifying with panel_sessions/learning_events
+3. **Drop 4 dead DB tables**: transcript_sentences, agent_decisions, conversation_sessions,
+   frames + dead StudentModel.js transcript→srs_items block (~30 lines)
+4. **check-syntax.js audit filename** — consider `audit-latest.md` (single overwritten file)
+5. **dead-code-findings.md** — safe to delete from repo
 
 ### Grammar coverage
-4. `node_id` column on `lesson_phrases` — unblocks gold-dot detail panel (source sentence display)
-5. Dismiss button for gold dots (hide until next lesson)
-6. Genki II node integration into grammar coverage grid
+6. `node_id` column on `lesson_phrases` — unblocks gold-dot detail panel
+7. Dismiss button for gold dots (hide until next lesson)
+8. Genki II node integration
+9. Grammar node timestamps → transcript → sprint suggestion pipeline
+
+### Conjugation SRS
+10. **Commit pending**: 来る fix + CONJ_FORMS + STORAGE_KEYS + DrillSRS entry
+11. 50-verb pool query → write into features-grammar.js
+12. Drill UI toggle (random-dict-item vs SRS-due-form) + wire DrillSRS.record()
 
 ### Vocab pipeline
-7. ~~Yoshi extraction pipeline → populate `reading` at insert time~~ — **lookup portion
-   confirmed working session 38** (see "Vocab pipeline status check" above). 181-item
-   legacy backlog is harmless. If yoshi_phrases/yoshi_vocab sources show a similar
-   pattern, this can be closed entirely — not checked yet.
-8. Counter suffix population (`counter_suffix` column exists, 639 missing as of session 38,
-   needs total-count context to assess)
-9. `corpus_productions` extraction fix — currently single-kanji in older rows, needs
-   word-level; recency not checked
+13. counter_suffix population (639 missing)
+14. corpus_productions extraction fix (single-kanji in old rows)
 
 ### Future / larger features
-10. **Conjugation SRS deck (sessions 39-40 — Phase 2 design, in progress)** —
-    Phase 1 prerequisite confirmed solid, proceeding with Phase 2.
-    **Architecture** (supersedes CONJ_SRS_DESIGN.md's word-level item design): SRS
-    applies only to a fixed set of 13 conjugation-form items (`CONJ_FORMS`), NOT to
-    (word, source_form, target_form) triples. Verbs are randomly drawn from a fixed
-    50-verb pool at drill time — not SRS-tracked themselves. Closed system: no dependency
-    on vocab_items growth or Yoshi data (deferred until lessons produce a larger, more
-    stable vocabulary).
-    - **Verb pool**: top 50 verbs by frequency — `SELECT word, reading, meaning,
-      verb_class, frequency FROM words WHERE pos='verb' AND frequency IS NOT NULL ORDER BY
-      frequency ASC LIMIT 50` — clean, all 50 have verb_class, frequency range 1-385. No
-      new data needed.
-    - **CONJ_FORMS items (13, fixed)**: Present Plain (dict-identity, kept as a deliberate
-      learning goal per discussion), Present Negative Plain, Present Polite, Present
-      Negative Polite, Past Plain, Past Negative Plain, Past Polite, Past Negative Polite,
-      て-form, Volitional Plain, Volitional Polite, Potential Plain, Potential Polite. Each
-      maps to `conjugate(word, form, pol, reg)` (core-counters.js) via id/label/form/pol/reg
-      — drafted in chat, to be written to features-grammar.js (NOT core-counters.js —
-      that file is about to grow with a separate Japanese-counter-words feature
-      extension). Passive/Causative excluded — `conjugate()` doesn't implement a negative
-      variant for these (pol ignored) and badges don't distinguish polite/plain; revisit
-      separately if wanted.
-    - **SRS storage — MAJOR PIVOT (session 40)**: originally created a new `conj_srs`
-      table (schema v12) mirroring vocab_srs — **reverted** (DROP TABLE, schema_version
-      back to 11, before the app ever reopened — no data impact). Discovered `DrillSRS`
-      (core-srs.js) + the existing `srs_items` table (item_key, drill_type, interval,
-      ease, due_date, history, seen, last_reviewed, UNIQUE(item_key, drill_type)) is
-      ALREADY the generic SM-2 engine used by counters/conjugation/times drills —
-      `DrillSRS.record()` does SM-2 scheduling, `DrillSRS.buildPool()` does due/fresh/
-      wrong-weighted pool selection (exactly what the "SRS-due form" toggle mode needs),
-      `DrillSRS.stats()` gives totals for free. No new table or SM-2 code needed.
-      **New plan**: add `STORAGE_KEYS.DRILL_SRS_CONJ_FORMS` (core-foundation.js, next to
-      `DRILL_SRS_CONJ` ~line 1101) + one entry in `DrillSRS._drillType`'s map
-      (core-srs.js ~line 42): `[STORAGE_KEYS.DRILL_SRS_CONJ_FORMS]: 'conj_forms'`. The 13
-      `CONJ_FORMS[i].id` values become `item_key`s under `drill_type='conj_forms'` — a
-      NEW, separate drill_type from the existing word-level `'conjugation'` drill_type
-      (untouched). Form-only tracking preserved: item_key is just the form id, never
-      includes the word.
-    - **Toggle**: switches drill-item selection between "random dictionary item" mode and
-      "SRS-due form" mode (form picked via `DrillSRS.buildPool(DRILL_SRS_CONJ_FORMS, ...)`,
-      then a random verb from the 50 applied to it) — SRS only applies to the
-      conjugation-form item, never to the word.
-    - **Fixed along the way**: 来る was missing potential-form entries in `conjugate()` —
-      added こられる/こられます in core-counters.js (edit applied, **not yet committed**).
-    - **Next**: add the 2 STORAGE_KEYS/DrillSRS lines, write `CONJ_FORMS` to
-      features-grammar.js, build drill UI toggle + wiring. **DONE (session 40)**:
-      `STORAGE_KEYS.DRILL_SRS_CONJ_FORMS` added + hydration entry (core-foundation.js),
-      `DrillSRS._drillType` map entry → `'conj_forms'` (core-srs.js), `CONJ_FORMS` (13
-      items) written to features-grammar.js, right before the DB-driven conjugation verb
-      pool section. `node check-syntax.js`: 40 OK, 0 errors, dead-candidate count
-      unchanged (still just customTranscribe). All additive, nothing existing touched —
-      not yet committed (bundle with the still-uncommitted 来る potential-form fix).
-      **Remaining**: 50-verb pool query (drafted, not yet in code), drill UI + toggle
-      (random-dict-item mode vs SRS-due-form mode via `DrillSRS.buildPool`), wiring
-      `DrillSRS.record()` after each answer.
-11. ~~Strand imbalance notification~~ — struck (session 39): #strandMini sidebar already
-    gives an always-visible imbalance signal, no separate alert needed. "How you're
-    learning" panel (broader summary concept, if distinct from the notification) — status
-    TBD.
-
-12. **Session 40 wrap-up items — DONE**:
-    - `optIrrG` (Irregular verb-type checkbox, conjugation drill) now `checked` by default
-      in index.html, alongside optUG/optRuG.
-    - Settings "Context" tab removed entirely (`stTabContext`/`stPaneContext`/
-      `stContextDisplay` in index.html; `stRenderContext`/`stCopyContext` +
-      `context` entries in `stSwitchTab`'s panes/tabs maps + App registry export, in
-      core-foundation.js). Root cause: read from a `#claudeContext` script tag that was
-      never added to index.html, so the panel rendered fully empty ("undefined ·
-      undefined", blank sections) — vestigial, superseded by context-session.md /
-      ARCHITECTURE_HUB.md. `node check-syntax.js`: 40 OK, 0 errors, dead-candidate count
-      unchanged (still just customTranscribe), index.json 1221→1219 entries (2 functions
-      removed). All changes verified, ready to commit.
-12. Layer 6 — grammar drill + writing prompt with top-N words
-13. FLUENCY_432 emitter — 4/3/2 speaking session wiring → populates conversation_sessions.
-    `rtCompareBtn` (4 refs in features-voice.js — `rtCompare`/`rtStartRound2` functions are
-    gone) is the remaining rt* cluster piece — tie into this emitter or remove, deliberate
-    decision (session 39).
-14. Book vocab import — 18 pages, OCR artifact (deferred)
-15. Transcript statistics — word count per session derivable from transcript_turns at zero
-    API cost; query only, no new tables
+15. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
+16. Layer 6 — grammar drill + writing prompt with top-N words
+17. FLUENCY_432 emitter — 4/3/2 speaking session wiring
+18. Book vocab import (18 pages, OCR artifact, deferred)
+19. Transcript statistics — word count from transcript_turns at zero API cost
+20. Sight-reading feature (to be built from scratch)
 
 ## SQLite Schema (current tables)
 kv_store, frames, transcript_sentences, corpus_entries, corpus_lookups, corpus_productions,
@@ -487,52 +319,8 @@ STRAND_WEIGHTS, VOCAB_WEIGHTS, VOCAB_THRESHOLDS, VOCAB_INTERVALS,
 VOCAB_MIGRATION_V1, VOCAB_LESSON_BACKFILL_V1, VOCAB_LOOKUPS_BACKFILL_V1, VOCAB_N5_BACKFILL_V1
 
 ## Vocabulary Model — Canonical Definition
-
-### Three tiers
 - **Horizon** — in `words` table (N5 reference), not yet in `vocab_items`
 - **Target** — in `vocab_items`, not yet graduated in both jp_en AND en_jp
-- **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in vocab_srs for both directions)
+- **Active** — graduated in both jp_en AND en_jp (`srs_graduated=1` in vocab_srs for both)
 
 Speaking direction graduation tracked separately — can lag behind recognition.
-
-## Session 41 — Dashboard Q&A language bug fix + overlap investigation (2026-06-16)
-
-### Fixed
-- **Dashboard Q&A wrong-language bug — root cause found, fixed.** `SYSTEM_PROMPT` in
-  `src/core-foundation.js:865` hardcoded "You are a Japanese tutor helping a
-  German-speaking beginner" — not a locale/cache issue as previously suspected (session
-  38's "Dashboard Q&A German-language response bug" note, now resolved and removed from
-  Pending). Changed "German-speaking" → "English-speaking" (one-line edit, committed).
-
-### Investigated, not resolved — dashboard toolbar/header overlap on long Q&A answers
-- **Symptom**: in panel-dashboard, when a long chat answer renders in `#chatMessages`,
-  the kana-selection toolbar (`data-kana-for="chatInput"`, Send/History row) ends up
-  partially under the fixed `#dashboardPanelHeader` (質問/Questions title, `position:
-  fixed; top:98px; z-index:48`).
-- **Ruled out**: `panel-dashboard`'s `padding-top: 164px` is correct and intact
-  (computed = 164px). `panel-dashboard.scrollTop = 0` — no internal scroll.
-  `window.scrollY` / `document.documentElement.scrollTop` both = 45.5, unaffected by
-  adding `overflow:hidden` to both `html` and `body` (edits applied and kept — harmless,
-  but did not fix the issue, **not yet reverted**).
-- **Confirmed**: `panel-dashboard.getBoundingClientRect().top = -13.5` (should be 0 given
-  no transform/margin on body or panel — `body.top=0`, no transform, margin-top=0,
-  panel transform=none). The 13.5px discrepancy is unexplained — investigation paused
-  before checking parent-element margin/transform.
-- **Candidate culprit, not tested**: `src/core-vocab.js:828`,
-  `target.scrollIntoView({behavior:'smooth', block:'start'})` in `sendChat()` — scrolls
-  the previous user-question message into view after a reply renders. `block:'start'`
-  could be escaping `#chatMessages`'s own scroll container if `#chatMessages` isn't
-  properly height-constrained inside `panel-dashboard`'s `overflow:hidden`. Untried fix:
-  `block:'nearest'` (lower-risk, matches pattern used in features-voice.js).
-- **Next session**: either (a) revert the html/body `overflow:hidden` additions (style.css
-  lines ~32/39, no effect, adds risk) and retry from the `scrollIntoView` angle, or (b) a
-  pragmatic non-layout fix — give the input/toolbar wrapper (`index.html` ~line 518) a
-  higher `z-index`/`position:relative` than `dashboardPanelHeader` (z-index:48) so the
-  header renders behind the toolbar regardless of the underlying shift. Not committed.
-
-### Noted, no action
-- VoiceVox `ERR_CONNECTION_REFUSED` on `localhost:50021/version` (`vvCheck` in
-  features-core.js) is expected when VoiceVox isn't running — one-shot feature-detection
-  check, harmless. Discussed auto-starting VoiceVox from Electron main process (spawn
-  external app) — declined as scope expansion; smaller alternative (status dot/notice in
-  Settings, mentioned in html-map as already partially planned) not implemented.
