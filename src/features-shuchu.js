@@ -22,6 +22,8 @@
     }
     const beginBtn = document.getElementById('shuchuBeginBtn');
     if (beginBtn) beginBtn.style.display = (id === 'shuchu-intro') ? '' : 'none';
+    const refBtn = document.getElementById('shuchuRefBtn');
+    if (refBtn) refBtn.style.display = (id === 'shuchu-setup') ? 'none' : (_sprint ? '' : 'none');
   }
 
   function apiKey() {
@@ -195,8 +197,7 @@ Requirements:
     if (act.type === 'multiple_choice' && act.options) {
       act.options.forEach((opt, i) => {
         const btn = document.createElement('button');
-        btn.className = 'btn-action';
-        btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:8px;font-family:var(--jp);font-size:1.1rem;padding:12px 16px';
+        btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:8px;font-family:var(--jp);font-size:1.1rem;padding:12px 16px;background:#1a1a1a;border:1px solid var(--border);color:var(--ink);border-radius:8px;cursor:pointer';
         btn.textContent = ['A','B','C','D'][i] + '.  ' + opt;
         btn.onclick = () => checkAnswer(act, opt, isR2);
         card.appendChild(btn);
@@ -222,23 +223,119 @@ Requirements:
     }
   }
 
+  function addFurtherQuestion(feedback, act) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:16px;border-top:1px solid var(--border);padding-top:12px';
+    const btn = document.createElement('button');
+    btn.className = 'btn-action';
+    btn.textContent = 'Further question';
+    btn.style.cssText = 'font-size:0.85rem;padding:6px 14px';
+    wrap.appendChild(btn);
+    const inputWrap = document.createElement('div');
+    inputWrap.style.cssText = 'display:none;margin-top:10px';
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = 'Ask a question about this…';
+    inp.style.cssText = 'width:100%;max-width:500px;padding:8px 12px;font-family:var(--jp);font-size:1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:8px';
+    const kanaSpan = document.createElement('div');
+    const kanaId = 'shuchuFQInput_' + Date.now();
+    inp.id = kanaId;
+    kanaSpan.setAttribute('data-kana-for', kanaId);
+    kanaSpan.style.marginBottom = '8px';
+    const replyEl = document.createElement('div');
+    replyEl.style.cssText = 'font-family:var(--ui);font-size:1rem;color:var(--ink);line-height:1.7;margin-top:8px;min-height:1em';
+    inputWrap.appendChild(inp);
+    inputWrap.appendChild(kanaSpan);
+    inputWrap.appendChild(replyEl);
+    wrap.appendChild(inputWrap);
+    feedback.appendChild(wrap);
+
+    btn.onclick = () => {
+      inputWrap.style.display = inputWrap.style.display === 'none' ? '' : 'none';
+      if (inputWrap.style.display !== 'none') {
+        setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar(kanaId); inp.focus(); }, 50);
+      }
+    };
+
+    async function submitFQ() {
+      const q = inp.value.trim();
+      if (!q) return;
+      replyEl.textContent = 'Thinking…';
+      inp.value = '';
+      const key = typeof getApiKey === 'function' ? getApiKey() : '';
+      if (!key) { replyEl.textContent = 'No API key.'; return; }
+      const prompt = 'Japanese tutor. Topic: "' + (_sprint ? _sprint.topic : '') + '". Activity: ' + act.question + '. Answer: ' + act.answer + '. Student asks: ' + q + '. Answer in 2-3 sentences max. Direct and clear. Use Japanese examples inline if helpful.';
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+          body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:prompt}]})
+        });
+        const data = await res.json();
+        replyEl.textContent = (data.content && data.content[0] && data.content[0].text) || '';
+      } catch(e) { replyEl.textContent = 'Error: ' + e.message; }
+    }
+
+    inp.onkeydown = e => { if (e.key === 'Enter') submitFQ(); };
+  }
+
+  async function fetchAnalysis(act, given) {
+    const key = typeof getApiKey === 'function' ? getApiKey() : '';
+    if (!key) return null;
+    const prompt = 'You are a Japanese tutor. Topic: "' + (_sprint ? _sprint.topic : '') + '".\nQuestion: ' + act.question + '\nCorrect answer: ' + act.answer + '\nLearner wrote: ' + given + '\n\nIn 2-3 sentences, explain specifically what was wrong and what rule to remember. Be direct. Use Japanese examples inline if helpful. No preamble.';
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+        body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:prompt}]})
+      });
+      const data = await res.json();
+      return data.content && data.content[0] && data.content[0].text;
+    } catch(e) { return null; }
+  }
+
+  function addNextBtn(btns, isR2) {
+    btns.innerHTML = '';
+    const next = document.createElement('button');
+    next.className = 'btn-action';
+    next.textContent = 'Next →';
+    next.onclick = () => { if (isR2) { _r2Idx++; shuchuRenderR2(); } else { _actIdx++; shuchuRenderActivity(); } };
+    btns.appendChild(next);
+  }
+
   function checkAnswer(act, given, isR2) {
     const feedback = document.getElementById(isR2 ? 'shuchuR2Feedback' : 'shuchuActivityFeedback');
     const btns     = document.getElementById(isR2 ? 'shuchuR2Btns'     : 'shuchuActivityBtns');
-    // Normalize: strip kanji and keep only kana from furigana brackets e.g. 見(み)せる → みせる
+    feedback.innerHTML = '';
+    btns.innerHTML = '';
+
+    // translate_to_jp and error_correct: always show model answer + analysis, always add to round 2
+    if (act.type === 'translate_to_jp' || act.type === 'error_correct') {
+      if (!isR2) _wrong.push(act);
+      const result = jpEl('div', {marginBottom:'10px'});
+      result.innerHTML = '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px">Model answer: ' + act.answer + '</div>'
+        + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:4px;line-height:1.6">' + act.explanation + '</div>';
+      feedback.appendChild(result);
+      const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
+      feedback.appendChild(analysisEl);
+      addNextBtn(btns, isR2);
+      fetchAnalysis(act, given).then(text => { analysisEl.textContent = text || ''; addFurtherQuestion(feedback, act); });
+      return;
+    }
+
+    // multiple_choice and gap_fill: kana-normalized match
     function stripToKana(str) {
-      // Replace kanji(reading) patterns with just the reading
-      return str.replace(/[一-鿿々〆〤]+\(([^)]+)\)/g, '$1')
-                // Remove any remaining kanji with no furigana
-                .replace(/[一-鿿々〆〤]+/g, '')
-                .replace(/[。、．，\s]/g, '')
-                .trim().toLowerCase();
+      let s = str;
+      s = s.replace(/[一-鿿㐀-䶿]+\(([^\)]+)\)/g, '$1');
+      s = s.replace(/[一-鿿㐀-䶿]+/g, '');
+      s = s.replace(/[。、．，「」\s]/g, '');
+      return s.trim().toLowerCase();
     }
     const givenN  = stripToKana(given.trim());
     const answerN = stripToKana(act.answer.trim());
+    console.log('[shuchu] given:', givenN, '| answer:', answerN);
     const correct = givenN === answerN || given.trim() === act.answer.trim();
 
-    feedback.innerHTML = '';
     const result = jpEl('div', {marginBottom:'10px'});
     result.innerHTML = (correct
       ? '<span style="color:var(--teal);font-size:1.1rem">✓ Correct</span>'
@@ -246,20 +343,17 @@ Requirements:
     ) + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:6px;line-height:1.6">' + act.explanation + '</div>';
     feedback.appendChild(result);
 
-    if (!correct && !isR2) _wrong.push(act);
+    if (!correct) {
+      if (!isR2) _wrong.push(act);
+      const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
+      feedback.appendChild(analysisEl);
+      fetchAnalysis(act, given).then(text => { console.log('[shuchu] analysis:', text); analysisEl.textContent = text || ''; addFurtherQuestion(feedback, act); });
+    }
 
-    btns.innerHTML = '';
-    const next = document.createElement('button');
-    next.className = 'btn-action';
-    next.textContent = 'Next →';
-    next.onclick = () => {
-      if (isR2) { _r2Idx++; shuchuRenderR2(); }
-      else      { _actIdx++; shuchuRenderActivity(); }
-    };
-    btns.appendChild(next);
+    addNextBtn(btns, isR2);
   }
 
-  // ── Round 2 ─────────────────────────────────────────────────────────────────
+    // ── Round 2 ─────────────────────────────────────────────────────────────────
   function shuchuBeginRound2() {
     // Pick from round2_pool based on wrong items (match by index, cycle if needed)
     const pool = _sprint.round2_pool || [];
@@ -295,6 +389,21 @@ Requirements:
     document.getElementById('shuchuWriteInput').value = '';
     document.getElementById('shuchuWriteFeedback').innerHTML = '';
     show('shuchu-write');
+    setTimeout(() => {
+      if (typeof kanaToolbar === 'function') kanaToolbar('shuchuWriteCompose');
+      const compose = document.getElementById('shuchuWriteCompose');
+      const area = document.getElementById('shuchuWriteInput');
+      compose.onkeydown = e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = compose.value.trim();
+          if (val) {
+            area.value = (area.value + (area.value ? '\n' : '') + val);
+            compose.value = '';
+          }
+        }
+      };
+    }, 50);
   }
 
   window.shuchuSubmitWrite = async function() {
@@ -366,6 +475,30 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
   }
 
   // ── Reset ────────────────────────────────────────────────────────────────────
+  window.shuchuToggleRef = function() {
+    const overlay = document.getElementById('shuchuRefOverlay');
+    if (!overlay) return;
+    if (overlay.style.display !== 'none') {
+      overlay.style.display = 'none';
+      return;
+    }
+    if (!_sprint) return;
+    // Copy intro content into overlay
+    const refContent = document.getElementById('shuchuRefContent');
+    const introContent = document.getElementById('shuchuIntroContent');
+    if (introContent) refContent.innerHTML = introContent.innerHTML;
+    overlay.style.display = '';
+    overlay.scrollTop = 0;
+  };
+
+  window.shuchuConfirmReset = function() {
+    if (_sprint && confirm('Start a new sprint? Your current sprint will be lost.')) {
+      shuchuReset();
+    } else if (!_sprint) {
+      shuchuReset();
+    }
+  };
+
   window.shuchuReset = function() {
     Storage.set('shuchu_sprint', null);
     _sprint = null; _actIdx = 0; _wrong = []; _r2Idx = 0;
