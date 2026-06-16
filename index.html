@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260616001224">
+<link rel="stylesheet" href="style.css?v=20260616142012">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260616001224"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260616001224"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260616001224"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260616142012"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260616142012"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260616142012"></script>
 </head>
 <body>
 
@@ -41,6 +41,7 @@
   <div id="strandMini" onclick="showPanel('progress')" title="進捗 — click to open" style="cursor:pointer;padding:6px 8px;display:flex;flex-direction:column;gap:3px"></div>
   <button data-panel="lessonnotes" data-reading="よし">ヨシ</button>
   <button class="active" data-panel="dashboard" data-reading="しつもん">質問</button>
+  <button data-panel="shuchu" data-reading="しゅうちゅう">集中</button>
   <button onclick="showPanel('kana')" data-reading="ひつじゅん" title="Stroke order">筆順</button>
   <button data-panel="resources" data-reading="しりょう">資料</button>
     <div id="progressSidebarControls" style="display:none;padding:8px 6px;border-top:1px solid var(--border);margin-top:8px;flex-direction:column;gap:6px">
@@ -533,6 +534,77 @@
     <div class="chat-messages" id="chatMessages" style="flex:1;overflow-y:auto;min-height:0"></div>
   </div>
 
+
+  <!-- 集中 FOCUS SPRINT -->
+  <div id="panel-shuchu" class="panel">
+    <div class="panel-header-lower" style="display:flex">
+      <div class="panel-section-title">
+        <span class="panel-section-title-jp">集中</span>
+        <span class="panel-section-title-en">Focus Sprint</span>
+      </div>
+      <button class="btn-action" id="shuchuBeginBtn" onclick="shuchuBeginActivities()" style="display:none;margin-left:auto;margin-right:16px">Activities →</button>
+    </div>
+
+    <!-- Setup screen -->
+    <div id="shuchu-setup">
+      <div style="max-width:800px;margin:20px auto;text-align:center;padding-top:16px">
+        <div style="font-family:var(--jp);font-size:2rem;color:var(--ink);margin-bottom:8px">集中学習</div>
+        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-bottom:32px">Enter a topic to generate a focused 30-minute sprint</div>
+        <input type="text" id="shuchuTopicInput"
+          placeholder="e.g. seeing/watching/showing　or　comparatives"
+          style="width:100%;padding:12px 16px;font-family:var(--jp);font-size:1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:16px">
+        <button class="btn-action" id="shuchuStartBtn" onclick="shuchuStart()"
+          style="padding:12px 32px;font-size:1rem">Start →</button>
+        <div id="shuchuSetupStatus" style="font-family:var(--ui);font-size:0.8rem;color:var(--ink-light);margin-top:16px;min-height:1.2em"></div>
+      </div>
+    </div>
+
+    <!-- Sprint screen (hidden until generated) -->
+    <div id="shuchu-sprint" style="display:none;overflow-y:auto;max-height:calc(100vh - 200px);padding-top:36px">
+
+      <!-- Intro card -->
+      <div id="shuchu-intro" style="display:none">
+        <div id="shuchuIntroContent" style="max-width:900px"></div>
+
+      </div>
+
+      <!-- Activity area -->
+      <div id="shuchu-activity" style="display:none">
+        <div id="shuchuActivityHeader" style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-bottom:16px"></div>
+        <div id="shuchuActivityCard" style="max-width:900px"></div>
+        <div id="shuchuActivityFeedback" style="margin-top:16px;min-height:2em"></div>
+        <div style="margin-top:16px;display:flex;gap:10px" id="shuchuActivityBtns"></div>
+      </div>
+
+      <!-- Round 2 -->
+      <div id="shuchu-round2" style="display:none">
+        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--gold);margin-bottom:16px">Round 2 — reviewing weak points</div>
+        <div id="shuchuR2Card" style="max-width:900px"></div>
+        <div id="shuchuR2Feedback" style="margin-top:16px;min-height:2em"></div>
+        <div style="margin-top:16px;display:flex;gap:10px" id="shuchuR2Btns"></div>
+      </div>
+
+      <!-- Free write -->
+      <div id="shuchu-write" style="display:none">
+        <div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);margin-bottom:12px">Write 3–5 sentences using what you've learned. No prompts.</div>
+        <textarea id="shuchuWriteInput" rows="6"
+          style="width:100%;max-width:600px;padding:12px;font-family:var(--jp);font-size:1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;resize:vertical;box-sizing:border-box"></textarea>
+        <div style="margin-top:12px">
+          <button class="btn-action" onclick="shuchuSubmitWrite()">Submit for feedback</button>
+        </div>
+        <div id="shuchuWriteFeedback" style="margin-top:16px;max-width:900px;font-family:var(--ui);font-size:0.88rem;line-height:1.7"></div>
+      </div>
+
+      <!-- Results summary -->
+      <div id="shuchu-results" style="display:none">
+        <div id="shuchuResultsSummary" style="max-width:480px"></div>
+        <div style="margin-top:24px">
+          <button class="btn-action" onclick="shuchuReset()">New topic</button>
+        </div>
+      </div>
+
+    </div><!-- end shuchu-sprint -->
+  </div><!-- end panel-shuchu -->
 
   <!-- VOCAB -->
   <div id="panel-words" class="panel">
@@ -2337,36 +2409,37 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260616001224"></script>
-<script src="src/core-anki.js?v=20260616001224"></script>
-<script src="src/core-counters.js?v=20260616001224"></script>
-<script src="src/core-srs.js?v=20260616001224"></script>
-<script src="src/core-stt.js?v=20260616001224"></script>
-<script src="src/core-writing.js?v=20260616001224"></script>
-<script src="src/core-listen.js?v=20260616001224"></script>
-<script src="src/core-vocab.js?v=20260616001224"></script>
-<script src="src/features-db-qa.js?v=20260616001224"></script>
-<script src="src/core.js?v=20260616001224"></script>
+<script src="src/core-foundation.js?v=20260616142012"></script>
+<script src="src/core-anki.js?v=20260616142012"></script>
+<script src="src/core-counters.js?v=20260616142012"></script>
+<script src="src/core-srs.js?v=20260616142012"></script>
+<script src="src/core-stt.js?v=20260616142012"></script>
+<script src="src/core-writing.js?v=20260616142012"></script>
+<script src="src/core-listen.js?v=20260616142012"></script>
+<script src="src/core-vocab.js?v=20260616142012"></script>
+<script src="src/features-db-qa.js?v=20260616142012"></script>
+<script src="src/core.js?v=20260616142012"></script>
 
-<script src="src/features-core.js?v=20260616001224"></script>
-<script src="src/features-kana.js?v=20260616001224"></script>
-<script src="src/briefing-prompt.js?v=20260616001224"></script>
-<script src="src/GrammarModel.js?v=20260616001224"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260616001224"></script>
-<script src="src/AppEvents.js?v=20260616001224"></script>
-<script src="src/features-lesson-notes.js?v=20260616001224"></script>
-  <script src="src/features-ln-p2.js?v=20260616001224"></script>
-<script src="src/features-grammar.js?v=20260616001224"></script>
-<script src="src/features-reading.js?v=20260616001224"></script>
-<script src="src/features-video.js?v=20260616001224"></script>
-<script src="src/features-pictures.js?v=20260616001224"></script>
-<script src="src/features-progress.js?v=20260616001224"></script>
-  <script src="src/features-listen-log.js?v=20260616001224"></script>
-<script src="src/features-stroke.js?v=20260616001224"></script>
-<script src="src/features-tools.js?v=20260616001224"></script>
-<script src="src/features-voice.js?v=20260616001224"></script>
-<script src="src/features-voice-drill.js?v=20260616001224"></script>
-<script src="src/features-custom-drill.js?v=20260616001224"></script>
+<script src="src/features-core.js?v=20260616142012"></script>
+<script src="src/features-kana.js?v=20260616142012"></script>
+<script src="src/briefing-prompt.js?v=20260616142012"></script>
+<script src="src/GrammarModel.js?v=20260616142012"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260616142012"></script>
+<script src="src/AppEvents.js?v=20260616142012"></script>
+<script src="src/features-lesson-notes.js?v=20260616142012"></script>
+  <script src="src/features-ln-p2.js?v=20260616142012"></script>
+<script src="src/features-grammar.js?v=20260616142012"></script>
+<script src="src/features-reading.js?v=20260616142012"></script>
+<script src="src/features-video.js?v=20260616142012"></script>
+<script src="src/features-pictures.js?v=20260616142012"></script>
+<script src="src/features-progress.js?v=20260616142012"></script>
+  <script src="src/features-listen-log.js?v=20260616142012"></script>
+<script src="src/features-stroke.js?v=20260616142012"></script>
+<script src="src/features-tools.js?v=20260616142012"></script>
+<script src="src/features-voice.js?v=20260616142012"></script>
+<script src="src/features-voice-drill.js?v=20260616142012"></script>
+<script src="src/features-custom-drill.js?v=20260616142012"></script>
+<script src="src/features-shuchu.js?v=20260616142012"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2377,20 +2450,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260616001224"></script>
-<script src="src/IssueTracker.js?v=20260616001224"></script>
-<script src="src/services/LessonSession.js?v=20260616001224"></script>
-<script src="src/services/AudioService.js?v=20260616001224"></script>
-<script src="src/services/PreflightService.js?v=20260616001224"></script>
-<script src="src/services/TranscriptionService.js?v=20260616001224"></script>
-<script src="src/services/AnalysisService.js?v=20260616001224"></script>
-<script src="src/services/StorageService.js?v=20260616001224"></script>
-<script src="src/Orchestrator.js?v=20260616001224"></script>
-<script src="src/ui/DrillCard.js?v=20260616001224"></script>
-<script src="src/ui/TextEntry.js?v=20260616001224"></script>
-<script src="src/ui/YoshiUI.js?v=20260616001224"></script>
+<script src="src/StudentModel.js?v=20260616142012"></script>
+<script src="src/IssueTracker.js?v=20260616142012"></script>
+<script src="src/services/LessonSession.js?v=20260616142012"></script>
+<script src="src/services/AudioService.js?v=20260616142012"></script>
+<script src="src/services/PreflightService.js?v=20260616142012"></script>
+<script src="src/services/TranscriptionService.js?v=20260616142012"></script>
+<script src="src/services/AnalysisService.js?v=20260616142012"></script>
+<script src="src/services/StorageService.js?v=20260616142012"></script>
+<script src="src/Orchestrator.js?v=20260616142012"></script>
+<script src="src/ui/DrillCard.js?v=20260616142012"></script>
+<script src="src/ui/TextEntry.js?v=20260616142012"></script>
+<script src="src/ui/YoshiUI.js?v=20260616142012"></script>
 
-<script src="src/design-overlay.js?v=20260616001224"></script>
+<script src="src/design-overlay.js?v=20260616142012"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 

@@ -2,6 +2,16 @@
 Last updated: 2026-06-14 (session 39 — documentation tidy-up + dead-code-findings.md
 reconciliation: 7 functions + 1 cascade removed, net −261 lines, commit fa97564)
 
+## Environment — Fixed Facts (read this first)
+- **Project root**: `~/Documents/jpStudio/` (jp alias: `cd ~/Documents/jpStudio`)
+- **index.html**: at project root — `~/Documents/jpStudio/index.html` (NOT src/renderer/index.html)
+- **All terminal commands**: must be prefixed `jp &&` to avoid directory drift
+- **Filesystem MCP**: Claude has read-only access at `/Users/paulandres/Documents/jpStudio/` — read source files directly without asking Paul to grep. Use this before asking for terminal output.
+- **MCP cannot grep across files** — use audit file + targeted reads, or hand to Claude Code
+- **Sidebar nav**: two zones — `<aside>` (strandMini, ヨシ, 質問, 筆順, 資料, ⚙) and secondary nav bar (文法, 語彙, 読む, 書く, 聞く, 見る, 話す)
+- **Claude Code launch**: `jp && claude --model claude-sonnet-4-6`
+- **"done"** means command ran OK
+
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
 - Management window deprioritised — terminal approach preferred for all edits.

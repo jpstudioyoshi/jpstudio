@@ -1676,6 +1676,7 @@ function showPanel(id) {
   if (id === 'words') renderVocab();
   if (id === 'grammar2') { gram2Switch((typeof Grammar2State !== 'undefined' ? Grammar2State.lastSubtab : null) || 'conj'); }
   if (id === 'vocab-corpus') { vcRender(); }
+  if (id === 'shuchu') { (App.shuchuOnOpen || window.shuchuOnOpen)?.(); }
   if (id === 'recordings') { (App.renderRecordingsBrowser || window.renderRecordingsBrowser)?.(); }
   if (id === 'gramnotes') {
     try { drillLastCompletedWrite('gramnotes'); } catch(e) {}
