@@ -1729,10 +1729,10 @@ ${docContent.slice(0, 10000)}`;
       const _lessonId = LessonNotesState.currentLessonId || null;
       const _rows = LessonNotesState.grammar.filter(g => g.pattern && g.explanation).slice(0, 50);
       if (_rows.length) {
-        const _params = _rows.flatMap(g => [_lessonId, g.pattern, g.explanation, g.example || null, 'grammar']);
-        const _values = _rows.map(() => '(?,?,?,?,?)').join(',');
+        const _params = _rows.flatMap(g => [(g.grammarNodeIds && g.grammarNodeIds[0]) || null, _lessonId, g.pattern, g.explanation, g.example || null, 'grammar']);
+        const _values = _rows.map(() => '(?,?,?,?,?,?)').join(',');
         await window.db.run(
-          'INSERT INTO lesson_phrases (lesson_id, phrase, meaning, example, type) VALUES ' + _values,
+          'INSERT INTO lesson_phrases (node_id, lesson_id, phrase, meaning, example, type) VALUES ' + _values,
           _params
         );
       }
