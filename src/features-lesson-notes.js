@@ -1682,6 +1682,7 @@ Content: ${docContent.slice(0, 6000)}` }]
 }
 
 async function lessonNotesExtractGrammarSilent(docContent, apiKey) {
+  (App.Storage || window.Storage).setJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);
   try {
     let nodeList = '';
     try {

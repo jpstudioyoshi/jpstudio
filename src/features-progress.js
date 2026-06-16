@@ -941,7 +941,8 @@ async function renderGrammarCoverage() {
       ? await window.db.query('SELECT extracted_grammar FROM lesson_sessions WHERE id = ?', [_lessonId])
       : await window.db.query('SELECT extracted_grammar FROM lesson_sessions WHERE extracted_grammar IS NOT NULL AND extracted_grammar != ? ORDER BY id DESC LIMIT 1', ['[]']);
     if (_egRows.length && _egRows[0].extracted_grammar) {
-      JSON.parse(_egRows[0].extracted_grammar).forEach(id => activeGrammarIds.add(id));
+      const _dismissed = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);
+      JSON.parse(_egRows[0].extracted_grammar).forEach(id => { if (!_dismissed.includes(id)) activeGrammarIds.add(id); });
     }
   } catch(e) {}
 
@@ -1010,7 +1011,7 @@ async function renderGrammarCoverage() {
       // Gold dot — node touched in active Yoshi session
       let goldDot = '';
       if (activeGrammarIds.has(node.id)) {
-        goldDot = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffe600;margin-left:6px;box-shadow:0 0 4px #ffe600;flex-shrink:0" title="covered in this lesson"></span>';
+        goldDot = '<span onclick="event.stopPropagation();grammarDismissGold(\'' + node.id + '\')" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ffe600;margin-left:6px;box-shadow:0 0 4px #ffe600;flex-shrink:0;cursor:pointer" title="covered in this lesson — click to dismiss"></span>';
       }
       const _badge = goldDot ? '<span style="position:absolute;top:-4px;right:-4px;width:9px;height:9px;border-radius:50%;background:#ffe600;box-shadow:0 0 4px #ffe600;pointer-events:none"></span>' : '';
       html += '<div style="position:relative;display:inline-flex">'
@@ -1142,6 +1143,16 @@ async function grammarDismissEncounter(nodeId) {
     await GM.setOverride(nodeId, 1, 'dismissed');
     (App.renderGrammarCoverage || window.renderGrammarCoverage)();
   } catch(e) {}
+}
+
+function grammarDismissGold(nodeId) {
+  const S = App.Storage || window.Storage;
+  const dismissed = S.getJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);
+  if (!dismissed.includes(nodeId)) {
+    dismissed.push(nodeId);
+    S.setJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, dismissed);
+  }
+  (App.renderGrammarCoverage || window.renderGrammarCoverage)();
 }
 
 
@@ -1606,4 +1617,5 @@ Object.assign(App, {
   progressRenderErrors, progressRenderCost, _renderErrorPieRight, writtenErrorShowPopup,
   renderErrorList, errorShowPopup,
   apiUsageReset, apiUsageTrack, gramSentPracticeError,
+  grammarDismissEncounter, grammarDismissGold,
 });

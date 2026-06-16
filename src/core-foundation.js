@@ -1078,6 +1078,7 @@ const STORAGE_KEYS = {
   GRAMMAR_POINTS:     'jpGrammarPoints',
   GRAM_SENT_HISTORY:  'gramSentHistory',
   GRAM_SENT_SESSIONS: 'gramSentSessions',
+  GRAMMAR_GOLD_DISMISSED: 'grammarGoldDismissed',
   VOICE_CONVOS:       'jpVoiceConversations',
   VOICE_CONVOS_ALT:   'jpStudioVoiceConvos',
   // Progress
