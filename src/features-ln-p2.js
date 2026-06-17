@@ -970,6 +970,7 @@ try {
     renderRecordingsBrowser,
     recBrowserTranscribe,
     recBrowserDelete,
+    recBrowserCopyData,
   });
 } catch(e) { console.error('[features-yoshi] App registry failed:', e); }
 
@@ -1285,6 +1286,8 @@ async function renderRecordingsBrowser() {
           ${rec.processed_at ? 'title="Re-transcribe"' : 'title="Transcribe"'}>
           ${rec.processed_at ? '↺ Re-transcribe' : '⚙ Transcribe'}
         </button>
+        <button class="btn-action btn-sm" style="color:var(--ink-light);border-color:var(--border)"
+          onclick="recBrowserCopyData(${rec.id})" id="recDataBtn_${rec.id}">📋 Data</button>
         <button class="btn-action btn-sm" style="color:var(--red);border-color:var(--red)"
           onclick="recBrowserDelete(${rec.id}, '${esc(apath)}', '${esc(tpath)}')">🗑 Delete</button>
       </div>
@@ -1325,6 +1328,46 @@ async function recBrowserDelete(sessionId, audioPath, teacherPath) {
     renderRecordingsBrowser();
   } catch(e) {
     alert('Delete failed: ' + e.message);
+  }
+}
+
+async function recBrowserCopyData(sessionId) {
+  const btn = document.getElementById('recDataBtn_' + sessionId);
+  try {
+    const turns = window.db.query(
+      'SELECT timestamp_offset, speaker, content FROM transcript_turns WHERE session_id = ? ORDER BY id',
+      [sessionId]
+    );
+    const sessionRows = window.db.query(
+      'SELECT notes_text, extracted_grammar FROM lesson_sessions WHERE id = ?',
+      [sessionId]
+    );
+    const sess = sessionRows[0] || {};
+
+    let grammarLines = '';
+    try {
+      const nodes = JSON.parse(sess.extracted_grammar || '[]');
+      grammarLines = nodes.map(n => n.node_id || JSON.stringify(n)).join('\n');
+    } catch(_) { grammarLines = sess.extracted_grammar || ''; }
+
+    const turnsText = turns.map(t => `[${t.timestamp_offset}] ${t.speaker}: ${t.content}`).join('\n');
+
+    const blob = [
+      'TRANSCRIPT TURNS',
+      turnsText || '(none)',
+      '---',
+      'WHATSAPP NOTES',
+      sess.notes_text || '(none)',
+      '---',
+      'GRAMMAR NODES',
+      grammarLines || '(none)',
+    ].join('\n');
+
+    await navigator.clipboard.writeText(blob);
+    if (btn) { btn.textContent = '✓'; setTimeout(() => { btn.textContent = '📋 Data'; }, 1500); }
+  } catch(e) {
+    console.error('[recBrowser] copyData failed:', e);
+    if (btn) { btn.textContent = '✗'; setTimeout(() => { btn.textContent = '📋 Data'; }, 1500); }
   }
 }
 
