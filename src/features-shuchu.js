@@ -282,7 +282,7 @@ Requirements:
   async function fetchAnalysis(act, given) {
     const key = typeof getApiKey === 'function' ? getApiKey() : '';
     if (!key) return null;
-    const prompt = 'You are a Japanese tutor. Topic: "' + (_sprint ? _sprint.topic : '') + '".\nQuestion: ' + act.question + '\nCorrect answer: ' + act.answer + '\nLearner wrote: ' + given + '\n\nIn 2-3 sentences, explain specifically what was wrong and what rule to remember. Be direct. Use Japanese examples inline if helpful. No preamble.';
+    const prompt = 'Reply with CORRECT or INCORRECT on the first line, then a blank line, then your 2-3 sentence explanation. Judge leniently — accept reasonable kana variations, minor punctuation differences, and semantically equivalent answers.\n\nYou are a Japanese tutor. Topic: "' + (_sprint ? _sprint.topic : '') + '".\nQuestion: ' + act.question + '\nCorrect answer: ' + act.answer + '\nLearner wrote: ' + given;
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -290,7 +290,12 @@ Requirements:
         body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:prompt}]})
       });
       const data = await res.json();
-      return data.content && data.content[0] && data.content[0].text;
+      const raw = data.content && data.content[0] && data.content[0].text;
+      if (!raw) return null;
+      const lines = raw.split('\n');
+      const correct = lines[0].trim().toUpperCase() === 'CORRECT';
+      const text = lines.slice(2).join('\n').trim();
+      return { correct, text };
     } catch(e) { return null; }
   }
 
@@ -319,38 +324,27 @@ Requirements:
       const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
       feedback.appendChild(analysisEl);
       addNextBtn(btns, isR2);
-      fetchAnalysis(act, given).then(text => { analysisEl.textContent = text || ''; addFurtherQuestion(feedback, act); });
+      fetchAnalysis(act, given).then(result => { analysisEl.textContent = (result && result.text) || ''; addFurtherQuestion(feedback, act); });
       return;
     }
 
-    // multiple_choice and gap_fill: kana-normalized match
-    function stripToKana(str) {
-      let s = str;
-      s = s.replace(/[一-鿿㐀-䶿]+\(([^\)]+)\)/g, '$1');
-      s = s.replace(/[一-鿿㐀-䶿]+/g, '');
-      s = s.replace(/[。、．，「」\s]/g, '');
-      return s.trim().toLowerCase();
-    }
-    const givenN  = stripToKana(given.trim());
-    const answerN = stripToKana(act.answer.trim());
-    console.log('[shuchu] given:', givenN, '| answer:', answerN);
-    const correct = givenN === answerN || given.trim() === act.answer.trim();
-
-    const result = jpEl('div', {marginBottom:'10px'});
-    result.innerHTML = (correct
-      ? '<span style="color:var(--teal);font-size:1.1rem">✓ Correct</span>'
-      : '<span style="color:var(--red,#e05);font-size:1.1rem">✗  Answer: <span style="font-family:var(--jp)">' + act.answer + '</span></span>'
-    ) + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:6px;line-height:1.6">' + act.explanation + '</div>';
-    feedback.appendChild(result);
-
-    if (!correct) {
-      if (!isR2) _wrong.push(act);
-      const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
-      feedback.appendChild(analysisEl);
-      fetchAnalysis(act, given).then(text => { console.log('[shuchu] analysis:', text); analysisEl.textContent = text || ''; addFurtherQuestion(feedback, act); });
-    }
-
+    // multiple_choice and gap_fill: API-based lenient match
+    const checkingEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink-light)'}, 'Checking…');
+    feedback.appendChild(checkingEl);
     addNextBtn(btns, isR2);
+    fetchAnalysis(act, given).then(result => {
+      if (!result) { checkingEl.textContent = ''; return; }
+      if (!result.correct && !isR2) _wrong.push(act);
+      checkingEl.innerHTML = (result.correct
+        ? '<span style="color:var(--teal);font-size:1.1rem">✓ Correct</span>'
+        : '<span style="color:var(--red,#e05);font-size:1.1rem">✗  Answer: <span style="font-family:var(--jp)">' + act.answer + '</span></span>'
+      ) + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:6px;line-height:1.6">' + act.explanation + '</div>';
+      if (result.text) {
+        const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, result.text);
+        feedback.appendChild(analysisEl);
+      }
+      addFurtherQuestion(feedback, act);
+    });
   }
 
     // ── Round 2 ─────────────────────────────────────────────────────────────────
