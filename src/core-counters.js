@@ -1065,6 +1065,19 @@ function conjugate(word, form, pol, reg) {
     return {answer: '—', badge: form};
   }
 
+  // Shared badge map for irregulars
+  const _irrBadgeMap = {
+    'present-aff-polite':'Present Polite','present-aff-plain':'Present Plain',
+    'present-neg-polite':'Present Negative Polite','present-neg-plain':'Present Negative Plain',
+    'past-aff-polite':'Past Polite','past-aff-plain':'Past Plain',
+    'past-neg-polite':'Past Negative Polite','past-neg-plain':'Past Negative Plain',
+    'te-aff-polite':'て-form','te-aff-plain':'て-form',
+    'volitional-aff-polite':'Volitional Polite','volitional-aff-plain':'Volitional Plain',
+    'passive-aff-polite':'Passive Polite','passive-aff-plain':'Passive Plain',
+    'potential-aff-polite':'Potential Polite','potential-aff-plain':'Potential Plain',
+    'causative-aff-polite':'Causative Polite','causative-aff-plain':'Causative Plain',
+  };
+
   // Irregular する
   if (t === 'irr' && word.dict === 'する') {
     const map = {
@@ -1080,7 +1093,7 @@ function conjugate(word, form, pol, reg) {
     };
     const key = `${form}-${pol}-${reg}`;
     const answer = map[key] || '—';
-    return {answer, badge: form};
+    return {answer, badge: _irrBadgeMap[key] || form};
   }
 
   // Irregular くる
@@ -1095,7 +1108,7 @@ function conjugate(word, form, pol, reg) {
       'potential-aff-polite':'こられます','potential-aff-plain':'こられる',
     };
     const key = `${form}-${pol}-${reg}`;
-    return {answer: map[key] || '—', badge: form};
+    return {answer: map[key] || '—', badge: _irrBadgeMap[key] || form};
   }
 
   // Compound する verbs (勉強する etc)
