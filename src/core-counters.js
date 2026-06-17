@@ -1084,7 +1084,7 @@ function conjugate(word, form, pol, reg) {
   }
 
   // Irregular くる
-  if (t === 'irr' && word.dict === '来る') {
+  if (t === 'irr' && (word.dict === '来る' || word.dict === 'くる')) {
     const map = {
       'present-aff-polite':'きます','present-aff-plain':'くる',
       'present-neg-polite':'きません','present-neg-plain':'こない',
@@ -1103,7 +1103,19 @@ function conjugate(word, form, pol, reg) {
     const prefix = word.dict.slice(0,-2); // remove する
     const suruResult = conjugate({dict:'する',read:'する',en:'',type:'irr'}, form, pol, reg);
     if (suruResult.answer === '—') return suruResult;
-    return {answer: prefix + suruResult.answer, badge: suruResult.badge};
+    // Build a proper badge (same labels as CONJ_FORMS) instead of just form name
+    const _badgeMap = {
+      'present-aff-polite':'Present Polite','present-aff-plain':'Present Plain',
+      'present-neg-polite':'Present Negative Polite','present-neg-plain':'Present Negative Plain',
+      'past-aff-polite':'Past Polite','past-aff-plain':'Past Plain',
+      'past-neg-polite':'Past Negative Polite','past-neg-plain':'Past Negative Plain',
+      'te-aff-polite':'て-form','te-aff-plain':'て-form',
+      'volitional-aff-polite':'Volitional Polite','volitional-aff-plain':'Volitional Plain',
+      'potential-aff-polite':'Potential Polite','potential-aff-plain':'Potential Plain',
+      'causative-aff-polite':'Causative Polite','causative-aff-plain':'Causative Plain',
+    };
+    const _badge = _badgeMap[`${form}-${pol}-${reg}`] || suruResult.badge;
+    return {answer: prefix + suruResult.answer, badge: _badge};
   }
 
   // る-verbs

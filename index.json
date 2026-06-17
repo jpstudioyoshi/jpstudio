@@ -1863,7 +1863,7 @@
     "type": "function",
     "name": "goalsLoad",
     "file": "src/core-counters.js",
-    "line": 1157,
+    "line": 1169,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -1872,7 +1872,7 @@
     "type": "function",
     "name": "goalsSave",
     "file": "src/core-counters.js",
-    "line": 1164,
+    "line": 1176,
     "desc": "const g = {",
     "callers": 6,
     "exported": false
@@ -1881,7 +1881,7 @@
     "type": "function",
     "name": "goalsRestoreUI",
     "file": "src/core-counters.js",
-    "line": 1179,
+    "line": 1191,
     "desc": "const g = goalsLoad();",
     "callers": 1,
     "exported": false
@@ -1890,7 +1890,7 @@
     "type": "function",
     "name": "getConjOptions",
     "file": "src/core-counters.js",
-    "line": 1198,
+    "line": 1210,
     "desc": "const verbTypes = [];",
     "callers": 1,
     "exported": false
@@ -1899,7 +1899,7 @@
     "type": "function",
     "name": "startConjDrill",
     "file": "src/core-counters.js",
-    "line": 1222,
+    "line": 1234,
     "desc": "const {verbTypes, forms, polarities, registers} = getConjOptions();",
     "callers": 4,
     "exported": true
@@ -1908,7 +1908,7 @@
     "type": "function",
     "name": "renderConjDrill",
     "file": "src/core-counters.js",
-    "line": 1245,
+    "line": 1257,
     "desc": "const area = document.getElementById('conjDrillArea');",
     "callers": 5,
     "exported": false
@@ -1917,7 +1917,7 @@
     "type": "function",
     "name": "handleConjKey",
     "file": "src/core-counters.js",
-    "line": 1294,
+    "line": 1306,
     "desc": "if (e.key === 'Enter') {",
     "callers": 1,
     "exported": false
@@ -1926,7 +1926,7 @@
     "type": "function",
     "name": "conjAutoConvert",
     "file": "src/core-counters.js",
-    "line": 1304,
+    "line": 1316,
     "desc": "if (!conjCurrentAnswer) return;",
     "callers": 1,
     "exported": false
@@ -1935,7 +1935,7 @@
     "type": "function",
     "name": "liveCheckConj",
     "file": "src/core-counters.js",
-    "line": 1328,
+    "line": 1340,
     "desc": "conjAutoConvert();",
     "callers": 1,
     "exported": false
@@ -1958,7 +1958,7 @@
     "type": "storage",
     "name": "GOALS",
     "file": "src/core-counters.js",
-    "line": 1173,
+    "line": 1185,
     "desc": "Storage.set"
   },
   {

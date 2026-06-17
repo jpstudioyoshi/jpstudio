@@ -1708,7 +1708,7 @@ function renderConjDrillG() {
   conjCurrentAnswer = item;
   // Pre-fill kanji stem to reduce typos — user types the ending only
   const _t = item.word.type;
-  const _stem = _t === 'na-adj' ? item.word.dict : item.word.dict.slice(0, -1);
+  const _stem = _t === 'na-adj' ? item.word.dict : (_t === 'irr-suru' ? item.word.dict.slice(0, -2) : item.word.dict.slice(0, -1));
   _conjHintUsed = !!_stem;
   if (_stem) { inp.value = _stem; }
   inp.focus();
