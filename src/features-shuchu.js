@@ -1,14 +1,15 @@
 // features-shuchu.js — 集中 Focus Sprint panel
-// Two API calls per session: (1) generate sprint JSON on start, (2) feedback on free write
+// API calls per session: (1) fast — intro + activity 1, (2) background — activities 2-10 + round2_pool, (3) feedback on free write
 
 (function() {
 
   // ── State ──────────────────────────────────────────────────────────────────
-  let _sprint = null;       // full generated sprint object
-  let _actIdx = 0;          // current activity index (round 1)
-  let _wrong  = [];         // items answered incorrectly → round 2 pool
-  let _r2Idx  = 0;          // round 2 index
-  let _phase  = 'setup';    // setup | intro | activity | round2 | write | results
+  let _sprint      = null;  // full generated sprint object
+  let _actIdx      = 0;     // current activity index (round 1)
+  let _wrong       = [];    // items answered incorrectly → round 2 pool
+  let _r2Idx       = 0;     // round 2 index
+  let _phase       = 'setup'; // setup | intro | activity | round2 | write | results
+  let _sprintReady = null;  // Promise for background call 2 (activities 2-10 + round2_pool)
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function show(id) {
@@ -37,7 +38,7 @@
     return el;
   }
 
-  // ── Start: generate sprint via Claude API ───────────────────────────────────
+  // ── Start: call 1 (fast) — intro + activity 1 ──────────────────────────────
   window.shuchuStart = async function() {
     const topic = document.getElementById('shuchuTopicInput').value.trim();
     if (!topic) return;
@@ -73,6 +74,66 @@ Generate a JSON object with this exact structure (no markdown, no backticks, raw
       "answer": "string — correct answer",
       "explanation": "string — brief explanation of why"
     }
+  ]
+}
+
+Requirements:
+- 1 activity only (id: 1)
+- Vocabulary at N5/N4 level, kanji with furigana in brackets
+- multiple_choice must have exactly 4 options
+- gap_fill uses ___ in the question
+- All Japanese text must include reading in brackets e.g. 食(た)べる
+- Keep it practical and contextual — real situations, not abstract drills`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content && data.content[0] && data.content[0].text;
+      if (!text) throw new Error('Empty response');
+      _sprint = JSON.parse(text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim());
+      _actIdx = 0;
+      _wrong  = [];
+      _r2Idx  = 0;
+      shuchuShowIntro();
+      _sprintReady = shuchuFetchRemainder(topic, _sprint.intro, _sprint.activities[0]);
+    } catch(e) {
+      status.textContent = 'Error: ' + e.message;
+      btn.disabled = false;
+    }
+  };
+
+  // ── Background call 2 — activities 2-10 + round2_pool ──────────────────────
+  async function shuchuFetchRemainder(topic, intro, act1) {
+    const key = apiKey();
+    if (!key) { _sprintReady = null; return; }
+
+    const prompt = `You are a Japanese language tutor continuing a focused study sprint for an adult learner at JLPT N5/N4 level.
+
+Topic: "${topic}"
+
+The sprint already has this intro and first activity:
+${JSON.stringify({ intro, activities: [act1] }, null, 2)}
+
+Now generate the remaining content as a JSON object (no markdown, no backticks, raw JSON only):
+{
+  "activities": [
+    {
+      "id": 2,
+      "type": "multiple_choice" | "gap_fill" | "translate_to_jp" | "error_correct",
+      "prompt": "string — instruction in English",
+      "question": "string — the question or sentence (use ___ for gaps)",
+      "options": ["A", "B", "C", "D"] or null,
+      "answer": "string — correct answer",
+      "explanation": "string — brief explanation of why"
+    }
   ],
   "round2_pool": [
     (same structure as activities, 8 items — varied versions of the same concepts)
@@ -80,7 +141,7 @@ Generate a JSON object with this exact structure (no markdown, no backticks, raw
 }
 
 Requirements:
-- 10 activities total, mix of all 4 types
+- 9 activities (ids 2-10), mix of all 4 types, building naturally on activity 1
 - Vocabulary at N5/N4 level, kanji with furigana in brackets
 - multiple_choice must have exactly 4 options
 - gap_fill uses ___ in the question
@@ -94,24 +155,24 @@ Requirements:
         headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 6000,
+          max_tokens: 5000,
           messages: [{ role: 'user', content: prompt }]
         })
       });
       const data = await res.json();
       const text = data.content && data.content[0] && data.content[0].text;
-      if (!text) throw new Error('Empty response');
-      _sprint = JSON.parse(text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim());
-      _actIdx = 0;
-      _wrong  = [];
-      _r2Idx  = 0;
-      Storage.setJSON('shuchu_last_sprint', _sprint);
-      shuchuShowIntro();
+      if (text) {
+        const remainder = JSON.parse(text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim());
+        if (remainder.activities) _sprint.activities = _sprint.activities.concat(remainder.activities);
+        if (remainder.round2_pool) _sprint.round2_pool = remainder.round2_pool;
+        Storage.setJSON('shuchu_last_sprint', _sprint);
+      }
     } catch(e) {
-      status.textContent = 'Error: ' + e.message;
-      btn.disabled = false;
+      // silent fail — user proceeds with activity 1 only
+    } finally {
+      _sprintReady = null;
     }
-  };
+  }
 
   // ── Intro card ──────────────────────────────────────────────────────────────
   function shuchuShowIntro() {
@@ -165,6 +226,18 @@ Requirements:
   function shuchuRenderActivity() {
     const acts = _sprint.activities;
     if (_actIdx >= acts.length) {
+      if (_sprintReady) {
+        // Call 2 still in flight — show loading and retry when it resolves
+        document.getElementById('shuchuActivityHeader').textContent = '';
+        const card = document.getElementById('shuchuActivityCard');
+        card.innerHTML = '';
+        document.getElementById('shuchuActivityFeedback').innerHTML = '';
+        document.getElementById('shuchuActivityBtns').innerHTML = '';
+        card.appendChild(jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink-light)',padding:'24px 0'}, 'Loading next activities…'));
+        show('shuchu-activity');
+        _sprintReady.then(() => shuchuRenderActivity());
+        return;
+      }
       // Round 1 done — go to round 2 if there are wrong items
       if (_wrong.length > 0) {
         shuchuBeginRound2();
@@ -495,7 +568,7 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
 
   window.shuchuReset = function() {
     Storage.set('shuchu_sprint', null);
-    _sprint = null; _actIdx = 0; _wrong = []; _r2Idx = 0;
+    _sprint = null; _actIdx = 0; _wrong = []; _r2Idx = 0; _sprintReady = null;
     Storage.set('shuchu_last_sprint', null);
     document.getElementById('shuchuTopicInput').value = '';
     document.getElementById('shuchuSetupStatus').textContent = '';
