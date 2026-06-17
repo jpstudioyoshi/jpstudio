@@ -598,6 +598,7 @@ function lnRenderLinkedRecording(session) {
     html += '<button class="yoshi-read-btn' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
     html += '<button class="yoshi-read-btn' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
     html += '<button id="lnAlignBtn" class="yoshi-read-btn" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
+    html += '<button id="lnDataCopyBtn" class="yoshi-read-btn" onclick="recBrowserCopyData(LessonNotesState._transcriptRecId)" style="font-size:0.72rem;padding:3px 10px;opacity:0.7">\uD83D\uDCCB Data</button>';
     html += '</div>';
 
     // Transcript area — preserve content across re-renders

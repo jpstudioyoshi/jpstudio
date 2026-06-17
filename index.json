@@ -7761,7 +7761,7 @@
     "type": "function",
     "name": "lessonNotesRenderSourceNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 622,
+    "line": 623,
     "desc": "const _lnEsc = App.escHtml || window.escHtml || function(s){return s;};",
     "callers": 1,
     "exported": false
@@ -7770,7 +7770,7 @@
     "type": "function",
     "name": "_lnSourceNotesHtml",
     "file": "src/features-lesson-notes.js",
-    "line": 640,
+    "line": 641,
     "desc": "const esc = App.escHtml || window.escHtml || function(s){return s;};",
     "callers": 3,
     "exported": false
@@ -7779,7 +7779,7 @@
     "type": "function",
     "name": "lnToggleSourceNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 651,
+    "line": 652,
     "desc": "LessonNotesState.sourceNotesCollapsed = !LessonNotesState.sourceNotesCollapsed;",
     "callers": 1,
     "exported": false
@@ -7788,7 +7788,7 @@
     "type": "function",
     "name": "lnFullDocDoSearch",
     "file": "src/features-lesson-notes.js",
-    "line": 661,
+    "line": 662,
     "desc": "const el = document.getElementById('lnFullDocContent');",
     "callers": 3,
     "exported": false
@@ -7797,7 +7797,7 @@
     "type": "function",
     "name": "lnLoadTranscript",
     "file": "src/features-lesson-notes.js",
-    "line": 683,
+    "line": 684,
     "desc": "const el = document.getElementById('lnTranscriptArea');",
     "callers": 5,
     "exported": true
@@ -7806,7 +7806,7 @@
     "type": "function",
     "name": "lnShowTranscriptContainer",
     "file": "src/features-lesson-notes.js",
-    "line": 738,
+    "line": 739,
     "desc": "LessonNotesState._transcriptRecId = recId;",
     "callers": 1,
     "exported": false
@@ -7815,7 +7815,7 @@
     "type": "function",
     "name": "lnSetTranscriptMode",
     "file": "src/features-lesson-notes.js",
-    "line": 744,
+    "line": 745,
     "desc": "LessonNotesState.transcriptMode = mode;",
     "callers": 2,
     "exported": false
@@ -7824,7 +7824,7 @@
     "type": "function",
     "name": "lnSeekToTime",
     "file": "src/features-lesson-notes.js",
-    "line": 756,
+    "line": 757,
     "desc": "const student = document.getElementById('lnAudioStudent');",
     "callers": 4,
     "exported": true
@@ -7833,7 +7833,7 @@
     "type": "function",
     "name": "lessonNotesGetHTML",
     "file": "src/features-lesson-notes.js",
-    "line": 765,
+    "line": 766,
     "desc": "const sessions = lessonNotesGetSessions();",
     "callers": 1,
     "exported": false
@@ -7842,7 +7842,7 @@
     "type": "function",
     "name": "lessonNotesUpdatePanelHeader",
     "file": "src/features-lesson-notes.js",
-    "line": 876,
+    "line": 877,
     "desc": "const hdr = document.getElementById('yoshiPanelHeader');",
     "callers": 3,
     "exported": false
@@ -7851,7 +7851,7 @@
     "type": "function",
     "name": "lnSearchKanaMode",
     "file": "src/features-lesson-notes.js",
-    "line": 910,
+    "line": 911,
     "desc": "const inp = document.getElementById('lnHeaderSearch');",
     "callers": 3,
     "exported": false
@@ -7860,7 +7860,7 @@
     "type": "function",
     "name": "lnHeaderSearch",
     "file": "src/features-lesson-notes.js",
-    "line": 921,
+    "line": 922,
     "desc": "if (LessonNotesState.viewMode !== 'sourcenotes') {",
     "callers": 3,
     "exported": false
@@ -7869,7 +7869,7 @@
     "type": "function",
     "name": "lessonNotesSetView",
     "file": "src/features-lesson-notes.js",
-    "line": 931,
+    "line": 932,
     "desc": "LessonNotesState.viewMode = mode;",
     "callers": 13,
     "exported": true
@@ -7878,7 +7878,7 @@
     "type": "function",
     "name": "lnFormatWaDate",
     "file": "src/features-lesson-notes.js",
-    "line": 964,
+    "line": 965,
     "desc": "if (!raw) return null;",
     "callers": 4,
     "exported": false
@@ -7887,7 +7887,7 @@
     "type": "function",
     "name": "lnSessionDateLabel",
     "file": "src/features-lesson-notes.js",
-    "line": 976,
+    "line": 977,
     "desc": "const dc = session.docContent || [];",
     "callers": 1,
     "exported": false
@@ -7896,7 +7896,7 @@
     "type": "function",
     "name": "lnFirstMessageDate",
     "file": "src/features-lesson-notes.js",
-    "line": 983,
+    "line": 984,
     "desc": "const dc = LessonNotesState.docContent || [];",
     "callers": 1,
     "exported": false
@@ -7905,7 +7905,7 @@
     "type": "function",
     "name": "lessonNotesRenderOverview",
     "file": "src/features-lesson-notes.js",
-    "line": 990,
+    "line": 991,
     "desc": "if (!session) return '';",
     "callers": 1,
     "exported": false
@@ -7914,7 +7914,7 @@
     "type": "function",
     "name": "lnOverviewCard",
     "file": "src/features-lesson-notes.js",
-    "line": 1023,
+    "line": 1024,
     "desc": "return '<div onclick=\"' + onclick + '\" class=\"row-hover-border\" style=\"background:var(--paper-dark);",
     "callers": 6,
     "exported": false
@@ -7923,7 +7923,7 @@
     "type": "function",
     "name": "lessonNotesGenerateSummary",
     "file": "src/features-lesson-notes.js",
-    "line": 1030,
+    "line": 1031,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 1,
     "exported": false
@@ -7932,7 +7932,7 @@
     "type": "function",
     "name": "lessonNotesRenderStories",
     "file": "src/features-lesson-notes.js",
-    "line": 1041,
+    "line": 1042,
     "desc": "return `",
     "callers": 1,
     "exported": false
@@ -7941,7 +7941,7 @@
     "type": "function",
     "name": "lessonNotesRenderKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1058,
+    "line": 1059,
     "desc": "return `",
     "callers": 1,
     "exported": false
@@ -7950,7 +7950,7 @@
     "type": "function",
     "name": "lessonNotesRenderGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1107,
+    "line": 1108,
     "desc": "const visibleGrammar = LessonNotesState.grammar.map((g, i) => ({...g, _idx: i})).filter((g, i) => Le",
     "callers": 1,
     "exported": false
@@ -7959,7 +7959,7 @@
     "type": "function",
     "name": "lessonNotesToggleGrammarHide",
     "file": "src/features-lesson-notes.js",
-    "line": 1167,
+    "line": 1168,
     "desc": "if (LessonNotesState.grammarHidden.has(idx)) {",
     "callers": 2,
     "exported": true
@@ -7968,7 +7968,7 @@
     "type": "function",
     "name": "lessonNotesToggleShowHidden",
     "file": "src/features-lesson-notes.js",
-    "line": 1177,
+    "line": 1178,
     "desc": "LessonNotesState.showHiddenGrammar = !LessonNotesState.showHiddenGrammar;",
     "callers": 2,
     "exported": true
@@ -7977,7 +7977,7 @@
     "type": "function",
     "name": "lessonNotesEditGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1184,
+    "line": 1185,
     "desc": "const g = LessonNotesState.grammar[idx];",
     "callers": 2,
     "exported": true
@@ -7986,7 +7986,7 @@
     "type": "function",
     "name": "lessonNotesSaveGrammarEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 1235,
+    "line": 1236,
     "desc": "const pattern = document.getElementById('grammarEditPattern').value.trim();",
     "callers": 2,
     "exported": true
@@ -7995,7 +7995,7 @@
     "type": "function",
     "name": "lessonNotesDeleteGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1259,
+    "line": 1260,
     "desc": "const g = LessonNotesState.grammar[idx];",
     "callers": 2,
     "exported": true
@@ -8004,7 +8004,7 @@
     "type": "function",
     "name": "lessonNotesExtractKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1280,
+    "line": 1281,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": true
@@ -8013,7 +8013,7 @@
     "type": "function",
     "name": "lessonNotesExtractGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1323,
+    "line": 1324,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": true
@@ -8022,7 +8022,7 @@
     "type": "function",
     "name": "lessonNotesPushToGramNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 1343,
+    "line": 1344,
     "desc": "if (!grammarItems || !grammarItems.length) return;",
     "callers": 1,
     "exported": false
@@ -8031,7 +8031,7 @@
     "type": "function",
     "name": "lessonNotesClassifyGramTab",
     "file": "src/features-lesson-notes.js",
-    "line": 1378,
+    "line": 1379,
     "desc": "const text = ((item.pattern || '') + ' ' + (item.explanation || '')).toLowerCase();",
     "callers": 1,
     "exported": false
@@ -8040,7 +8040,7 @@
     "type": "function",
     "name": "lessonNotesParseWithTimestamps",
     "file": "src/features-lesson-notes.js",
-    "line": 1393,
+    "line": 1394,
     "desc": "Parses lines like: [DD/MM/YYYY, HH:MM:SS] Name: message",
     "callers": 2,
     "exported": false
@@ -8049,7 +8049,7 @@
     "type": "function",
     "name": "lessonNotesCleanText",
     "file": "src/features-lesson-notes.js",
-    "line": 1425,
+    "line": 1426,
     "desc": "return docContent",
     "callers": 3,
     "exported": false
@@ -8058,7 +8058,7 @@
     "type": "function",
     "name": "lessonNotesAutoExtractAll",
     "file": "src/features-lesson-notes.js",
-    "line": 1432,
+    "line": 1433,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 4,
     "exported": false
@@ -8067,7 +8067,7 @@
     "type": "function",
     "name": "_lnParseJsonArray",
     "file": "src/features-lesson-notes.js",
-    "line": 1507,
+    "line": 1508,
     "desc": "const raw = text || '[]';",
     "callers": 4,
     "exported": false
@@ -8076,7 +8076,7 @@
     "type": "function",
     "name": "lessonNotesExtractSummarySilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1522,
+    "line": 1523,
     "desc": "",
     "callers": 2,
     "exported": false
@@ -8085,7 +8085,7 @@
     "type": "function",
     "name": "lessonNotesExtractVocabSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1537,
+    "line": 1538,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8094,7 +8094,7 @@
     "type": "function",
     "name": "lessonNotesExtractStoriesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1608,
+    "line": 1609,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8103,7 +8103,7 @@
     "type": "function",
     "name": "lessonNotesExtractKeyPhrasesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1651,
+    "line": 1652,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8112,7 +8112,7 @@
     "type": "function",
     "name": "lessonNotesExtractGrammarSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1684,
+    "line": 1685,
     "desc": "(App.Storage || window.Storage).setJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);",
     "callers": 2,
     "exported": false
@@ -8121,7 +8121,7 @@
     "type": "function",
     "name": "lessonNotesSaveCurrentSession",
     "file": "src/features-lesson-notes.js",
-    "line": 1751,
+    "line": 1752,
     "desc": "if (LessonNotesState.currentIdx === null) return;",
     "callers": 3,
     "exported": false
@@ -8130,7 +8130,7 @@
     "type": "function",
     "name": "lessonNotesOpenGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1767,
+    "line": 1768,
     "desc": "if (idx < 0 || idx >= LessonNotesState.grammar.length) return;",
     "callers": 4,
     "exported": true
@@ -8139,7 +8139,7 @@
     "type": "function",
     "name": "lessonNotesCloseGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1778,
+    "line": 1779,
     "desc": "LessonNotesState.grammarDetail = null;",
     "callers": 2,
     "exported": true
@@ -8148,7 +8148,7 @@
     "type": "function",
     "name": "lessonNotesGrammarGenerateDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1784,
+    "line": 1785,
     "desc": "if (LessonNotesState.grammarDetail === null) return;",
     "callers": 3,
     "exported": true
@@ -8157,7 +8157,7 @@
     "type": "function",
     "name": "lessonNotesGrammarCheckDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1852,
+    "line": 1853,
     "desc": "const inp = document.getElementById('lnGrammarDrillInput');",
     "callers": 3,
     "exported": true
@@ -8166,7 +8166,7 @@
     "type": "function",
     "name": "lessonNotesGrammarNextDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1921,
+    "line": 1922,
     "desc": "toggleLnGrammarKanaType replaced by kanaSetMode",
     "callers": 2,
     "exported": true
@@ -8175,7 +8175,7 @@
     "type": "function",
     "name": "lessonNotesGrammarPrevDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1940,
+    "line": 1941,
     "desc": "if (LessonNotesState.grammarDrillIdx > 0) {",
     "callers": 2,
     "exported": true
@@ -8184,7 +8184,7 @@
     "type": "function",
     "name": "lessonNotesGrammarAsk",
     "file": "src/features-lesson-notes.js",
-    "line": 1959,
+    "line": 1960,
     "desc": "if (LessonNotesState.grammarDetail === null) return;",
     "callers": 3,
     "exported": true
@@ -8193,7 +8193,7 @@
     "type": "function",
     "name": "lessonNotesRenderGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 2003,
+    "line": 2004,
     "desc": "if (LessonNotesState.grammarDetail === null) return '';",
     "callers": 1,
     "exported": false
@@ -8202,7 +8202,7 @@
     "type": "function",
     "name": "lessonNotesOpenStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2111,
+    "line": 2112,
     "desc": "LessonNotesState.currentStory = LessonNotesState.stories[idx];",
     "callers": 2,
     "exported": true
@@ -8211,7 +8211,7 @@
     "type": "function",
     "name": "lessonNotesParseStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2122,
+    "line": 2123,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": false
@@ -8220,7 +8220,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryText",
     "file": "src/features-lesson-notes.js",
-    "line": 2169,
+    "line": 2170,
     "desc": "const container = document.getElementById('lnStoryReader');",
     "callers": 4,
     "exported": false
@@ -8229,7 +8229,7 @@
     "type": "function",
     "name": "lessonNotesSetStoryTab",
     "file": "src/features-lesson-notes.js",
-    "line": 2205,
+    "line": 2206,
     "desc": "LessonNotesState.storyTab = tab;",
     "callers": 7,
     "exported": true
@@ -8238,7 +8238,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryVocab",
     "file": "src/features-lesson-notes.js",
-    "line": 2217,
+    "line": 2218,
     "desc": "const all = LessonNotesState.vocab || [];",
     "callers": 1,
     "exported": false
@@ -8247,7 +8247,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 2253,
+    "line": 2254,
     "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');",
     "callers": 1,
     "exported": false
@@ -8256,7 +8256,7 @@
     "type": "function",
     "name": "lessonNotesSaveStoryNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 2265,
+    "line": 2266,
     "desc": "const story = LessonNotesState.currentStory;",
     "callers": 2,
     "exported": true
@@ -8265,7 +8265,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 2279,
+    "line": 2280,
     "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');",
     "callers": 1,
     "exported": false
@@ -8274,7 +8274,7 @@
     "type": "function",
     "name": "lessonNotesSaveStoryEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 2297,
+    "line": 2298,
     "desc": "const titleEl = document.getElementById('lnStoryEditTitle');",
     "callers": 2,
     "exported": true
@@ -8283,7 +8283,7 @@
     "type": "function",
     "name": "lessonNotesRenderReading",
     "file": "src/features-lesson-notes.js",
-    "line": 2323,
+    "line": 2324,
     "desc": "const story = LessonNotesState.currentStory;",
     "callers": 1,
     "exported": false
@@ -8292,7 +8292,7 @@
     "type": "function",
     "name": "lnSetRecordMode",
     "file": "src/features-lesson-notes.js",
-    "line": 2447,
+    "line": 2448,
     "desc": "LessonNotesState.ln* — see declaration above",
     "callers": 2,
     "exported": false
@@ -8301,7 +8301,7 @@
     "type": "function",
     "name": "lnShowCurrentSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2459,
+    "line": 2460,
     "desc": "const display = document.getElementById('lnSentenceDisplay');",
     "callers": 5,
     "exported": false
@@ -8310,7 +8310,7 @@
     "type": "function",
     "name": "lessonNotesSplitSentences",
     "file": "src/features-lesson-notes.js",
-    "line": 2476,
+    "line": 2477,
     "desc": "if (!text) return [];",
     "callers": 5,
     "exported": false
@@ -8319,7 +8319,7 @@
     "type": "function",
     "name": "lnPrevSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2484,
+    "line": 2485,
     "desc": "if (LessonNotesState.lnCurrentSentence > 0) {",
     "callers": 1,
     "exported": false
@@ -8328,7 +8328,7 @@
     "type": "function",
     "name": "lnNextSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2493,
+    "line": 2494,
     "desc": "const sentences = lessonNotesSplitSentences(LessonNotesState.currentStory?.text || '');",
     "callers": 1,
     "exported": false
@@ -8337,7 +8337,7 @@
     "type": "function",
     "name": "lnGoToSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2503,
+    "line": 2504,
     "desc": "LessonNotesState.lnCurrentSentence = idx;",
     "callers": 1,
     "exported": false
@@ -8346,7 +8346,7 @@
     "type": "function",
     "name": "lnParseSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2513,
+    "line": 2514,
     "desc": "LessonNotesState.lnSentenceFuriganaCache — see declaration above",
     "callers": 5,
     "exported": false
@@ -8355,7 +8355,7 @@
     "type": "function",
     "name": "lnRenderSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2579,
+    "line": 2580,
     "desc": "const display = document.getElementById('lnSentenceDisplay');",
     "callers": 3,
     "exported": false
@@ -8364,7 +8364,7 @@
     "type": "function",
     "name": "yoshiParseWhatsapp",
     "file": "src/features-lesson-notes.js",
-    "line": 2594,
+    "line": 2595,
     "desc": "const lines = raw.split('\\n');",
     "callers": 12,
     "exported": true
@@ -8401,42 +8401,42 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1580,
+    "line": 1581,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1597,
+    "line": 1598,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1673,
+    "line": 1674,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1735,
+    "line": 1736,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/features-lesson-notes.js",
-    "line": 1742,
+    "line": 1743,
     "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-lesson-notes.js",
-    "line": 1696,
+    "line": 1697,
     "desc": "Analyze these Japanese lesson notes and identify grammatical patterns that a lea"
   },
   {
@@ -8706,7 +8706,7 @@
     "file": "src/features-ln-p2.js",
     "line": 1334,
     "desc": "const btn = document.getElementById('recDataBtn_' + sessionId);",
-    "callers": 2,
+    "callers": 3,
     "exported": true
   },
   {
