@@ -1334,11 +1334,11 @@ async function recBrowserDelete(sessionId, audioPath, teacherPath) {
 async function recBrowserCopyData(sessionId) {
   const btn = document.getElementById('recDataBtn_' + sessionId);
   try {
-    const turns = window.db.query(
+    const turns = await window.db.query(
       'SELECT timestamp_offset, speaker, content FROM transcript_turns WHERE session_id = ? ORDER BY id',
       [sessionId]
     );
-    const sessionRows = window.db.query(
+    const sessionRows = await window.db.query(
       'SELECT notes_text, extracted_grammar FROM lesson_sessions WHERE id = ?',
       [sessionId]
     );
