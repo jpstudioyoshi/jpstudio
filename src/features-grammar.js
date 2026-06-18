@@ -463,6 +463,7 @@ async function _gramSentGenerateOne(target, level, theme, avoidJp) {
     ? `Use only vocabulary the learner already knows. Prefer words from this list where natural — do not force it:\n${knownVocab}`
     : '';
   const avoidNote = avoidJp && avoidJp.length ? `Avoid repeating these sentences: ${avoidJp.join(' / ')}` : '';
+  const seed = Math.floor(Math.random() * 9000) + 1000;
   const themeNote = theme ? `Set the sentence in the context of: ${theme}.` : '';
   const prompt = `Generate 1 Japanese sentence for a ${level} learner practising: "${target}".\n${themeNote}\n${vocabNote}\n${avoidNote}\nThe sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).\nReply ONLY with a JSON object, no markdown:\n{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}`;
   const data = await claudeAPI({
