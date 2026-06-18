@@ -625,6 +625,9 @@ function kajiPickerClose() {
   });
 }
 
+// Session cache — API results remembered for the lifetime of the app session
+const _kanjiSessionCache = {};
+
 // Common kana-to-kanji conversions (instant, no API needed)
 const _kanaToKanjiLocal = {
   // Pronouns
@@ -782,10 +785,15 @@ async function kanaToKanji(el, btn) {
   el._kanjiConvertEnd = convertEnd;
   el._kanjiConvertHasSelection = hasSelection;
   
-  // Check local cache first (instant, no API needed)
+  // Check local table first (instant, no API needed)
   const localResult = _kanaToKanjiLocal[kana];
   if (localResult && localResult.length) {
     kanjiPickerShow(localResult, el, btn);
+    return;
+  }
+  // Check session cache (API results from earlier in this session)
+  if (_kanjiSessionCache[kana]) {
+    kanjiPickerShow(_kanjiSessionCache[kana], el, btn);
     return;
   }
   
@@ -827,6 +835,7 @@ Text: ${kana}` }]
       try { candidates = m ? JSON.parse(m[0]) : []; } catch(e2) { candidates = []; }
     }
     if (candidates && candidates.length) {
+      _kanjiSessionCache[kana] = candidates;
       kanjiPickerShow(candidates, el, btn);
     }
   } catch(e) {
@@ -970,19 +979,20 @@ function kanaToolbar(inputId, opts = {}) {
     }
   })();
 
-  // On focus: sync button highlight to current mode.
-  // kanaOn() already handles snapshot reset and handler re-attachment.
+  // On focus: read which button is highlighted (ground truth) and sync kana engine to it.
   inp.addEventListener('focus', () => {
-    const currentMode = inp._kanaMode || (_kanaLastMode && _kanaLastMode[inputId]) || mode;
-    const activeBtn = currentMode === 'romaji' ? btnIds.romaji
-                    : currentMode === 'hiragana' ? btnIds.hira
-                    : btnIds.kata;
-    setButtonGroupActive(grp, activeBtn);
-    // Re-apply kana engine if it got switched off (e.g. after kanaOff from mode switch)
-    if (currentMode !== 'romaji' && !inp._kanaOn) {
-      inp._modeSwitchPending = true;
-      kanaSetMode(inputId, currentMode, grp, btnIds);
-    }
+    if (inp._modeSwitchPending) { inp._modeSwitchPending = false; return; }
+    // Determine active mode from button state (not _kanaMode which can drift)
+    const romajiEl = document.getElementById(btnIds.romaji);
+    const hiraEl   = document.getElementById(btnIds.hira);
+    const kataEl   = document.getElementById(btnIds.kata);
+    let activeMode = inp._kanaMode || mode;
+    if (romajiEl && romajiEl.classList.contains('btn-active')) activeMode = 'romaji';
+    else if (kataEl && (kataEl.classList.contains('btn-active-gold') || kataEl.classList.contains('btn-active'))) activeMode = 'katakana';
+    else if (hiraEl && hiraEl.classList.contains('btn-active')) activeMode = 'hiragana';
+    // Re-sync engine without moving cursor
+    inp._modeSwitchPending = true;
+    kanaSetMode(inputId, activeMode, grp, btnIds);
   });
 
   return wrap;
