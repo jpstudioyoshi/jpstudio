@@ -628,7 +628,7 @@ async function gramSentCheck() {
     try {
       const prompt = `English: "${s.en}". Target grammar: "${GramSentState.target}" (hint: ${s.hint}). ` +
         `Correct Japanese: "${s.jp}". Student wrote: "${val}". ` +
-        `Grade this. Accept natural variations. When mentioning Japanese words with kanji in feedback, add reading in brackets, e.g. 食べる(たべる). ` +
+        `Grade this. Accept natural variations. IMPORTANT: if the student wrote hiragana where kanji would normally be used (e.g. たべる instead of 食べる), count it as CORRECT — kana-only writing is valid Japanese. When mentioning Japanese words with kanji in feedback, add reading in brackets, e.g. 食べる(たべる). ` +
         `Reply ONLY with JSON: {"correct":true/false,"feedback":"one sentence","correctAnswer":"${s.jp}"}`;
 
       const data = await claudeAPI({
