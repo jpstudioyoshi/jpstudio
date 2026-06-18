@@ -1724,7 +1724,7 @@ function showPanel(id) {
     GRAM_TABS.forEach(t => renderGramEntries(t));
   }
   if (id === 'kanji') { showPanel('words'); wordsSwitchSub('kanji'); return; }
-  if (id === 'writing') { renderSavedTexts(); setTimeout(() => { setWritingMode('hiragana'); }, 0); }
+  if (id === 'writing') { renderSavedTexts(); setTimeout(() => { setWritingMode('hiragana'); document.getElementById('writingInput')?.focus(); }, 150); }
   if (id === 'progress') {
     updateProgressPanel();
     const _yBtn = document.getElementById('strandYoshiToggle');
@@ -1978,10 +1978,10 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
     btn.addEventListener('mousedown', e => e.preventDefault());
     btn.addEventListener('click', fn);
   }
-  wireWritingBtn('writingRomajiBtn', () => setWritingMode('romaji'));
+  wireWritingBtn('writingRomajiBtn', () => { setWritingMode('romaji');   document.getElementById('writingInput')?.focus(); });
   // hfBtn removed (diarization removed)
-  wireWritingBtn('writingHiraBtn',   () => setWritingMode('hiragana'));
-  wireWritingBtn('writingKataBtn',   () => setWritingMode('katakana'));
+  wireWritingBtn('writingHiraBtn',   () => { setWritingMode('hiragana'); document.getElementById('writingInput')?.focus(); });
+  wireWritingBtn('writingKataBtn',   () => { setWritingMode('katakana'); document.getElementById('writingInput')?.focus(); });
   wireWritingBtn('writingKanjiBtn',  () => kanaToKanji(document.getElementById('writingInput'), document.getElementById('writingKanjiBtn')));
   wireWritingBtn('writingSpeechBtn', () => sttStart('writingInput', 'writingSpeechBtn', 'ja'));
 })();
