@@ -669,6 +669,14 @@ document.addEventListener('keydown', e => {
       (App.showPanel || window.showPanel)?.(_currentPanel);
     }
   }
+  // Spacebar: toggle play/pause when video panel is active and focus not in a text input
+  if (e.code === 'Space' && document.getElementById('panel-video2')?.classList.contains('active')) {
+    const tag = document.activeElement?.tagName;
+    if (!['INPUT','TEXTAREA','SELECT'].includes(tag)) {
+      e.preventDefault();
+      vtTogglePlay();
+    }
+  }
 }, true);
 
 
