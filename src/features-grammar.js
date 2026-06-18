@@ -522,9 +522,8 @@ async function gramSentGenerate() {
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
   area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Generating…</div>';
   try {
-    const s1 = await _gramSentGenerateOne(target, level, theme, _gramSentAvoidList());
-    if (!s1 || !s1.jp) throw new Error('No sentence returned');
-    GramSentState.sentences  = [s1];
+    const avoidList = _gramSentAvoidList(); // capture BEFORE resetting state
+    GramSentState.sentences  = [];
     GramSentState.target     = target;
     GramSentState.idx        = 0;
     GramSentState.ok         = 0;
@@ -533,6 +532,9 @@ async function gramSentGenerate() {
     GramSentState.checked    = false;
     GramSentState.nextSentence = null;
     GramSentState.generating = false;
+    const s1 = await _gramSentGenerateOne(target, level, theme, avoidList);
+    if (!s1 || !s1.jp) throw new Error('No sentence returned');
+    GramSentState.sentences  = [s1];
     gramSentHistorySave(target);
     gramSentPopulateHistory();
     gramSentRenderCard();
