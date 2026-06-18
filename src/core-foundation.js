@@ -437,6 +437,7 @@ function selectQTHistory(word) {
   if (input) input.value = word;
   if (menu) menu.style.display = 'none';
   globalQTSelectHistory(word);
+  globalQuickTranslate();
 }
 
 // Close menu when clicking outside
