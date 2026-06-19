@@ -2602,7 +2602,7 @@
     "file": "src/core-writing.js",
     "line": 415,
     "desc": "const n = writingSentences.length;",
-    "callers": 4,
+    "callers": 5,
     "exported": true
   },
   {
@@ -2726,7 +2726,7 @@
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 562,
+    "line": 573,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }",
     "callers": 3,
     "exported": true
@@ -2735,7 +2735,7 @@
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 582,
+    "line": 593,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": false
@@ -2744,7 +2744,7 @@
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 602,
+    "line": 613,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2753,7 +2753,7 @@
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 619,
+    "line": 630,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2762,7 +2762,7 @@
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 631,
+    "line": 642,
     "desc": "const tLen = token.length;",
     "callers": 2,
     "exported": false
@@ -2771,7 +2771,7 @@
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 645,
+    "line": 656,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);",
     "callers": 2,
     "exported": true
@@ -2794,7 +2794,7 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 572,
+    "line": 583,
     "desc": "db.run"
   },
   {
