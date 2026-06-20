@@ -7869,7 +7869,7 @@
     "type": "function",
     "name": "lnSearchKanaMode",
     "file": "src/features-lesson-notes.js",
-    "line": 911,
+    "line": 912,
     "desc": "const inp = document.getElementById('lnHeaderSearch');",
     "callers": 3,
     "exported": false
@@ -7878,7 +7878,7 @@
     "type": "function",
     "name": "lnHeaderSearch",
     "file": "src/features-lesson-notes.js",
-    "line": 922,
+    "line": 923,
     "desc": "if (LessonNotesState.viewMode !== 'sourcenotes') {",
     "callers": 3,
     "exported": false
@@ -7887,7 +7887,7 @@
     "type": "function",
     "name": "lessonNotesSetView",
     "file": "src/features-lesson-notes.js",
-    "line": 932,
+    "line": 933,
     "desc": "LessonNotesState.viewMode = mode;",
     "callers": 13,
     "exported": true
@@ -7896,7 +7896,7 @@
     "type": "function",
     "name": "lnFormatWaDate",
     "file": "src/features-lesson-notes.js",
-    "line": 965,
+    "line": 966,
     "desc": "if (!raw) return null;",
     "callers": 4,
     "exported": false
@@ -7905,7 +7905,7 @@
     "type": "function",
     "name": "lnSessionDateLabel",
     "file": "src/features-lesson-notes.js",
-    "line": 977,
+    "line": 978,
     "desc": "const dc = session.docContent || [];",
     "callers": 1,
     "exported": false
@@ -7914,7 +7914,7 @@
     "type": "function",
     "name": "lnFirstMessageDate",
     "file": "src/features-lesson-notes.js",
-    "line": 984,
+    "line": 985,
     "desc": "const dc = LessonNotesState.docContent || [];",
     "callers": 1,
     "exported": false
@@ -7923,7 +7923,7 @@
     "type": "function",
     "name": "lessonNotesRenderOverview",
     "file": "src/features-lesson-notes.js",
-    "line": 991,
+    "line": 992,
     "desc": "if (!session) return '';",
     "callers": 1,
     "exported": false

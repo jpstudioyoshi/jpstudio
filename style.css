@@ -348,8 +348,9 @@
   #panel-kana,
   #panel-game,
   #panel-voice,
-  #panel-yoshi,
-  #panel-resources { max-width: 1200px; margin: 0 auto; }
+  #panel-yoshi { max-width: 1200px; margin: 0 auto; }
+  #panel-resources { max-width: none; }
+  #panel-resources.active { height: calc(100vh - 32px); overflow-y: auto; }
   /* Full width panels */
   #panel-dashboard { overflow: hidden; box-sizing: border-box; }
   #panel-read { padding-bottom: 20vh; }
@@ -357,7 +358,6 @@
   #panel-writing { padding-bottom: 20vh; overflow-y: auto; }
   #panel-writing.active { height: calc(100vh - 32px); }
   #panel-listening { padding-bottom: 20vh; }
-  #panel-voice { padding-bottom: 20vh; }
   #panel-read,
   #panel-listening,
   #panel-progress,

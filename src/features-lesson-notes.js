@@ -891,6 +891,7 @@ function lessonNotesUpdatePanelHeader() {
         <option value="-1">— Select lesson —</option>
         ${sessions.map((s, i) => `<option value="${i}" ${i === _cur.currentIdx ? 'selected' : ''}>${lnSessionDateLabel(s)}</option>`).join('')}
       </select>
+      ${currentSession ? `<span style="font-family:var(--ui);font-size:1.15rem;color:var(--ink)">${lnFirstMessageDate(currentSession)}</span>` : ''}
       ${currentSession ? `<button class="btn-icon btn-icon-del" onclick="lessonNotesDeleteFromPanel()">🗑</button>` : ''}
     </div>
     <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
@@ -997,7 +998,6 @@ function lessonNotesRenderOverview(session) {
   const _summary = LessonNotesState.summary;
 
   let html = '<div style="max-width:760px;margin:0 auto">';
-  html += '<div style="font-family:var(--ui);font-size:1.1rem;color:var(--ink);margin-bottom:16px">' + lnFirstMessageDate(session) + '</div>';
 
   if (_summary) {
     html += '<div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">' + _summary + '</div>';

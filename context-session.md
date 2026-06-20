@@ -568,3 +568,60 @@ on identical failures — needs live DevTools investigation, handed to Claude Co
 15. Book vocab import (18 pages, OCR artifact, deferred)
 16. Sight-reading feature (to be built from scratch)
 17. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
+
+---
+
+## Session 2026-06-20 — Video panel transcript scroll fix
+
+**Status: RESOLVED**
+
+### Problem
+Video panel's transcript box would expand to its full content height instead of
+matching the video column's height and scrolling internally. Two earlier attempts
+(documented in video-panel-handoff.md) using flex and grid layouts failed identically.
+
+### Root causes (two, layered)
+1. **`vtLoadTransFile()` (the manual file-load path, ~line 140) set
+   `vtTranscriptWrap.style.display = 'block'` instead of `'flex'`.** Since the wrap
+   is `display:flex;flex-direction:column`, a `block` wrap meant its child
+   `#vtTranscript` was never a flex item — `flex:1;min-height:0` on it did nothing,
+   so it auto-sized to full content height. The only clipping was `overflow:hidden`
+   on the wrap one level up, with no scrollbar — explains "visible window updates
+   with playback position but doesn't scroll" symptom exactly.
+2. **Underneath that**, a genuine nested-flexbox quirk: even with `display:flex`
+   correct everywhere, the row wrapping `vtVideoCol` + `vtTranscriptCol` would still
+   balloon to match transcript content height in some cases, dragging the video
+   column up to match via `align-items:stretch`. This is a known gnarly class of
+   Chromium flexbox bug (intrinsic content sizing leaking through `min-height:0`
+   in nested flex contexts) — not something fixable by CSS attribute tweaking alone.
+
+### Fix
+- Fixed the `'block'` → `'flex'` typo at the `vtLoadTransFile` call site.
+- Added `id="vtRow"` to the row wrapping `vtVideoCol`/`vtTranscriptCol` (index.html).
+- Added `vtPinRowHeight()` (features-video.js) — a small reusable function that:
+  - temporarily hides `vtTranscriptWrap`
+  - clears any previous explicit height/overflow on `vtRow`
+  - forces reflow and measures `vtRow`'s natural height (transcript-content-free,
+    so never polluted regardless of load order)
+  - restores the wrap's previous display state
+  - pins `vtRow.style.height` + `overflow:hidden` to that clean measurement
+  - Called from: `vtOnLoaded()` (video metadata loaded) AND all 3
+    transcript-display call sites — so whichever (video or transcript) loads
+    second still gets a correct, order-independent measurement.
+- Confirmed combined video+transcript file loading (`vtVideoInput` already accepts
+  `multiple` + transcript extensions) already works — no change needed there.
+
+### Key learning
+**Nested flex `min-height:0` is not reliably trustworthy alone when one descendant
+has very large intrinsic content**, even when every level in the chain looks
+textbook-correct. When a flex/grid scroll-containment bug resists 2+ correctly-applied
+CSS approaches, stop iterating on CSS and switch to a JS height-pinning pattern that
+does a clean, content-isolated remeasurement at each relevant lifecycle event
+(content shown, content loaded) rather than relying on the browser to self-constrain.
+
+### Files changed
+- `index.html` — added `id="vtRow"` to the video/transcript row div
+- `src/features-video.js` — added `vtPinRowHeight()`, wired into `vtOnLoaded()`
+  and 3 transcript-display sites; fixed `'block'`→`'flex'` typo
+
+Committed: `dc5656c` — "fix video panel: row height pinning, transcript scroll, display flex typo"

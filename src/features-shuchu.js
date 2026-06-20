@@ -176,15 +176,23 @@ Requirements:
     }
   }
 
+  function shuchuUpdateHeaderSubject() {
+    const el = document.getElementById('shuchuHeaderSubject');
+    if (!el) return;
+    if (_sprint && _sprint.topic_jp) {
+      el.innerHTML = _sprint.topic_jp + ' <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">(' + _sprint.topic + ')</span>';
+    } else {
+      el.innerHTML = '';
+    }
+  }
+
   // ── Intro card ──────────────────────────────────────────────────────────────
   function shuchuShowIntro() {
     const intro = _sprint.intro;
     const box = document.getElementById('shuchuIntroContent');
     box.innerHTML = '';
 
-    const title = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.8rem',color:'var(--ink)',marginBottom:'8px'});
-    title.innerHTML = _sprint.topic_jp + ' <span style="font-family:var(--ui);font-size:0.9rem;color:var(--ink-light)">(' + _sprint.topic + ')</span>';
-    box.appendChild(title);
+    shuchuUpdateHeaderSubject();
 
     const summary = jpEl('p', {fontFamily:'var(--ui)',fontSize:'1rem',lineHeight:'1.8',color:'var(--ink)',marginBottom:'20px'}, intro.summary);
     box.appendChild(summary);
@@ -209,7 +217,7 @@ Requirements:
       box.appendChild(label);
       intro.examples.forEach(ex => {
         const row = jpEl('div', {marginBottom:'10px',paddingLeft:'12px',borderLeft:'2px solid var(--border)'});
-        row.appendChild(jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.15rem',color:'var(--ink)'}, ex.jp));
+        row.appendChild(jpEl('div', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--ink)'}, ex.jp));
         row.appendChild(jpEl('div', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--teal)',margin:'2px 0'}, ex.reading));
         row.appendChild(jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink-light)'}, ex.en));
         box.appendChild(row);
@@ -222,6 +230,7 @@ Requirements:
   // ── Begin activities ────────────────────────────────────────────────────────
   window.shuchuBeginActivities = function() {
     _actIdx = 0;
+    shuchuUpdateHeaderSubject();
     shuchuRenderActivity();
   };
 
@@ -573,6 +582,7 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
   window.shuchuReset = function() {
     Storage.set('shuchu_sprint', null);
     _sprint = null; _actIdx = 0; _wrong = []; _r2Idx = 0; _sprintReady = null;
+    shuchuUpdateHeaderSubject();
     Storage.set('shuchu_last_sprint', null);
     document.getElementById('shuchuTopicInput').value = '';
     document.getElementById('shuchuSetupStatus').textContent = '';
