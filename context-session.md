@@ -1,8 +1,12 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-20 (session 45 — kana input root-cause fix: single cursor-sync mechanism
-across focus/click/arrow-keys, replacing the two uncoordinated/partial fixes from sessions 43-44;
-dead code removed; 集中 Focus Sprint UI polish: Next button moved to panel header, MC option
-label de-duplication, wider sentence-entry inputs)
+Last updated: 2026-06-20 (session 45, full session — four parts: (1) kana input
+root-cause fix, (2) 集中 Focus Sprint UI polish + dead-code cleanup, (3) SQL-aware
+Q&A chat in the Home/質問 panel, (4) panel scroll/layout architecture overhaul —
+nav, quick-translate bar, and every `.panel-header-lower` bar converted from
+position:fixed to real flex-flow siblings of `main`, eliminating every
+manually-guessed `padding-top` value app-wide. One open item carried forward:
+video panel (`panel-video2`) transcript overflow — handed to Claude Code, see
+`video-panel-handoff.md` in repo root.)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -14,37 +18,55 @@ label de-duplication, wider sentence-entry inputs)
 - Paul's eyesight is not great — prefer larger text, high contrast, bigger buttons in UI work.
 - Give commands one at a time — do not batch unrelated commands.
 - Core principle: system should look after itself — Paul learns, doesn't drive the system.
-- Claude has read-only filesystem access to ~/Documents/jpStudio (via filesystem MCP) — can read
-  source files, run audits, and cross-reference directly without terminal round-trips. No grep/
-  search across file contents via this route — use check-syntax.js's audit file + targeted reads,
-  or hand multi-file investigation to Claude Code (which has bash+grep). Exception: at end of
-  session Claude writes context-session.md directly (see Context File Update Process). Session 45:
-  Claude also had write access (filesystem:edit_file/write_file) and applied edits directly,
-  verified each with check-syntax.js after every change.
+- Claude has read/write filesystem access to ~/Documents/jpStudio (via filesystem MCP) —
+  can read source files, run audits, and apply edits directly (filesystem:edit_file /
+  write_file), verifying each with check-syntax.js after every change. No grep/search
+  across file contents via this route — use check-syntax.js's audit file + targeted reads,
+  or hand multi-file investigation to Claude Code (which has bash+grep+live app access).
 - Some files contain extremely long single lines (giant HTML template-literal strings, e.g.
   features-lesson-notes.js). The `view` tool fails ("Tool result too large") even at 1-3 line
-  ranges for these. Use grep (with line-number context) instead of view for anything near such
-  functions; hand removals to Claude Code rather than python heredoc when the exact text can't
-  be read.
+  ranges for these — and critically, `view_range` does NOT actually restrict what's read for
+  some files (returns the full file regardless, then hits a size limit). Use terminal
+  `sed -n 'N,Mp' file`/grep for anything where exact line ranges matter; hand removals to
+  Claude Code rather than python heredoc when the exact text can't be read this way.
 - When a bug is described as recurring/systemic, investigate for duplicate/uncoordinated
-  implementations before patching the visible symptom again — see session 45 kana fix below
-  for a concrete example of why a third "fix" was needed after two earlier ones.
+  implementations before patching the visible symptom again — see "Kana Input System" below
+  for a concrete example of why a third "fix" was needed after two earlier ones, and the
+  "Panel Scroll Architecture" section for the same pattern at the layout level.
+- **When deep CSS layout debugging stalls (3+ rounds of fix→test→still broken with no new
+  insight), stop and hand off to Claude Code with a written diagnostic summary** rather than
+  continuing to guess in chat. Code can actually run the app and iterate against live
+  DevTools state; chat-based debugging from pasted console output hits a ceiling. See the
+  video panel transcript bug below for the concrete example — two structurally different
+  CSS fixes attempted in chat produced byte-identical failures, which was itself a clue
+  (rules out the layer either fix touched) but needed live inspection to take further.
+- **CSS diagnostic discipline**: before changing any CSS for a "this looks wrong" report,
+  get `el.scrollHeight` vs `el.clientHeight` (and `getBoundingClientRect()`) for the actual
+  element first. Don't assume "user says X looks off" means "suppress overflow" — it can
+  mean real content is being clipped instead (happened twice this session: listening/video/
+  lessonnotes were briefly given `overflow:hidden` based on assumption, which turned out to
+  be hiding real content, not masking empty slack — caught via a screenshot, reverted).
 
 ## Environment — Fixed Facts
 - index.html is at project root (~/Documents/jpStudio/index.html), NOT in src/renderer/
 - DB: ~/Library/Application Support/japanese-studio/jpstudio.db
 - App alias: jpstart
-- Video panel ID: `panel-video2` (not `panel-video`)
+- Video panel ID: `panel-video2` (not `panel-video`). The fullscreen-mode CSS block
+  (`#panel-video.vt-fullscreen { ... }` and its descendant selectors) still uses the WRONG
+  id and currently matches nothing in any mode — confirmed dead CSS, pre-existing, not
+  touched this session. Low priority cleanup candidate.
 
 ## Chat vs Claude Code — Decision Rule
 - **Chat:** single-line fixes, config changes, version bumps, CSS tweaks, grep/sed one-offs,
-  small same-file contiguous removals where the exact text is readable (python heredoc).
+  small same-file contiguous removals where the exact text is readable (python heredoc or
+  filesystem:edit_file with verified old_str).
 - **Code:** anything touching multiple render paths, multi-line string replacements in JS,
-  multi-file refactors, cross-file dead-code investigation (grep-and-decide), or removals
-  inside files with unreadable giant single lines. Verified-orphan removals can be large
-  (session 35 removed ~2270 lines in 3 Code passes; session 38 removed 35 functions / ~820
-  lines in one pass) — size isn't the deciding factor, "does it need grep across files /
-  can the text be read" is.
+  multi-file refactors, cross-file dead-code investigation (grep-and-decide), removals
+  inside files with unreadable giant single lines, OR layout/CSS bugs that have survived
+  2-3 fix attempts in chat without new diagnostic insight (see video panel handoff).
+  Verified-orphan removals can be large (session 35 removed ~2270 lines in 3 Code passes;
+  session 38 removed 35 functions / ~820 lines in one pass) — size isn't the deciding
+  factor, "does it need grep across files / live app interaction / can the text be read" is.
 
 ## Context File Update Process
 - context-session.md lives at project root
@@ -61,16 +83,129 @@ label de-duplication, wider sentence-entry inputs)
 ## Claude Code
 - Launch: jp && claude --model claude-sonnet-4-6  (claude-fable-5 is no longer available)
 - Start: "Read context-session.md from Knowledge only. Do not read any other files yet."
+- **Open handoff**: `video-panel-handoff.md` (repo root) — transcript overflow bug in
+  panel-video2, see "Video Panel — Open Issue" section below for summary.
 
 ## Current Mode
 ACTIVE DEVELOPMENT / ONGOING CLEANUP — no separate "stabilization phase". Dead-code cleanup,
 bug fixes found along the way, and feature work are all handled as routine, in whatever order
 makes sense.
 
+## Panel Scroll/Layout Architecture — Complete State (session 45)
+Supersedes the "PRIORITY — Panel scroll/layout consolidation" item from sessions 44 (now
+resolved, see below). This was the deepest architectural fix of the session.
+
+### Root cause (confirmed, now fixed)
+`nav`, `#globalQuickTranslate`, and all nine `.panel-header-lower` bar variants
+(voicePanelHeader, yoshiPanelHeader, progressPanelHeader, listenPanelHeader,
+writingPanelHeader, readPanelHeader, kanaPanelHeader, wordsPanelHeader, grammarPanelHeader,
+plus dashboardPanelHeader which is nested differently — see below) were all
+`position:fixed`. Fixed-position elements reserve zero space in their flex parent, so every
+panel had to manually guess a `padding-top` to avoid being hidden under that chrome:
+`98px` (nav+QT only), `158px` (nav+QT+header-lower, assuming the header bar is ~60px tall),
+`110px` (grammar2 — an unexplained outlier, never matching the documented 158px formula),
+`164px` (dashboard). These were hand-maintained magic numbers, never re-verified against
+real rendered heights — `readPanelHeader`'s actual height turned out to be ~101px, not the
+assumed ~60px, causing a real ~9px content/header overlap that had been silently present
+for an unknown number of sessions (only became visible once panels actually started
+scrolling — previously `main` wasn't `display:flex` at all, so `.panel.active { flex:1;
+min-height:0 }` was a complete no-op and panels just silently clipped content past the
+viewport with no scrollbar, so a several-px header overlap was invisible).
+
+### The fix
+1. `main` is now `display:flex; flex-direction:column; flex:1; min-height:0;` — was a
+   plain block before, meaning `.panel.active`'s flex properties were inert.
+2. `.panel.active` gained `overflow-y: auto` — the actual missing piece; previously this
+   rule had flex properties but no overflow handling at all.
+3. `nav` and `#globalQuickTranslate` converted from `position:fixed` to `flex-shrink:0`
+   real flex-flow siblings of `main` within `.main-area` (itself already a proper flex
+   column). Visually pixel-identical to before (nav/QT occupy the exact same space) —
+   the difference is `main` now genuinely starts where they end, instead of `main`
+   starting at y=0 behind them and relying on panel-level padding to compensate.
+4. `.panel-header-lower` (the shared class used by all nine bars) converted the same way:
+   `position:fixed; top:98px; left:52px; right:0; z-index:48` → `flex-shrink:0`. Since
+   only one bar is ever `display:flex` at a time (the rest stay `display:none`, JS-toggled,
+   unchanged), this correctly reserves real space for whichever one is active, sized to
+   its own true content — no guessing required, ever, regardless of how tall any given
+   bar's content is or becomes.
+5. Every per-panel `padding-top` value was removed entirely (not just zeroed) — `main`'s
+   own children now automatically start exactly where the real chrome stack ends.
+6. `dashboardPanelHeader` is structurally different from the other eight (nested *inside*
+   `panel-dashboard` rather than a `main`-level sibling) — this needed no special handling,
+   since `panel-dashboard` is itself a flex column (`.panel.active`) and the header bar
+   becomes a real flex child of it under the same CSS class change.
+
+### Per-panel overflow exceptions (panels that manage their own internal scroll region
+and should NOT also scroll at the panel level)
+```css
+#panel-words.active { ... overflow: hidden; }      /* fixed-viewport flashcard layout,
+                                                        pre-existing, untouched */
+#panel-shuchu.active,
+#panel-listening.active { overflow: hidden; }
+```
+**`#panel-video2.active` is deliberately NOT in this list** — see "Video Panel — Open
+Issue" below; adding it back now would mask the real bug rather than fix it.
+
+**Lesson learned mid-session**: don't add a panel to this exception list based on "user
+says there's a pointless-looking scrollbar" alone — verify with `el.scrollHeight` vs
+`el.clientHeight` first. `panel-listening`/`panel-video2`/`panel-lessonnotes` were briefly
+added based on assumption, which turned out to be wrong for two of the three (real content
+was being clipped, confirmed via a screenshot showing cut-off tiles in lesson notes) —
+reverted, then `panel-listening` alone was re-confirmed correct via direct testing.
+`panel-shuchu` was correctly identified via measurement showing genuinely zero overflow
+(`scrollHeight === clientHeight`) before being added.
+
+### Inner-content magic numbers also found and fixed (same root-cause category)
+- Video panel's video/transcript grid had `height: calc(100vh - 240px)` — a separate stale
+  magic number, unrelated to the panel-padding numbers but the same underlying mistake
+  (guessed pixel value assuming old layout proportions). Changed to `flex:1; min-height:0`
+  since the grid's parent (`panel-video2`) is now properly bounded. This part of the fix
+  is confirmed correct (video-only loading works perfectly) — but exposed a *separate*,
+  still-unresolved bug when a transcript is also loaded. See next section.
+
+## Video Panel — Open Issue (handed to Claude Code)
+**File**: `video-panel-handoff.md` (repo root) — read this for full diagnostic history
+before touching this again, in chat or in Code.
+
+**Symptom**: loading a video alone works perfectly (correctly sized, no scroll). Loading a
+transcript (with video already loaded) breaks everything: the transcript's container chain
+grows to its full content height (~13,250px measured) instead of staying bounded with
+internal scroll, and the unrelated video column grows to match it too (via
+`align-items:stretch`), so the actual `<video>` element ends up rendered ~6600px down the
+page — invisible, off-screen.
+
+**What's confirmed**: `panel-video2` itself IS correctly bounded (`clientHeight: 706`,
+matches the real visible panel). The failure starts at the very next level down — an
+unnamed flex-row div directly wrapping `vtVideoCol`/`vtTranscriptCol` — despite that div
+having the identical `flex:1; min-height:0` pattern that correctly bounds `panel-video2`
+one level up. Two structurally different fixes were tried (CSS Grid with
+`grid-template-rows:minmax(0,1fr)`, then a full rewrite to `display:flex;
+flex-direction:row`) — **both produced byte-identical failure numbers**, which rules out
+the specific layout mechanism as the cause and points at something else (possibly a real
+Electron/Chromium layout-engine edge case with extreme content-height differentials
+between flex siblings — untested hypothesis: does a short transcript stay bounded while
+only long ones break?).
+
+**Ruled out**: no duplicate/leftover old video panel in the DOM (no `id="panel-video"`,
+all `vt*` ids unique), no `!important` CSS override reaching the row (the only candidates
+target the dead `#panel-video.vt-fullscreen` selector, which can't match), no JS setting
+inline `style.height`/`style.flex`/`cssText` on any element in the chain, no
+ResizeObserver/MutationObserver involved.
+
+**Do not** re-add `#panel-video2.active { overflow: hidden }` until the actual row-sizing
+bug is fixed — it would hide the symptom (header stays put) while leaving the real problem
+(video rendered off-screen) merely invisible instead of visibly broken.
+
 ## HTML Element Map
 `html-map.md` in project Knowledge — updated session 39: removed stale overlay/panel entries.
 Session 40: added `panel-shuchu` + sidebar button between 質問 and 筆順. Session 45: added
-`shuchuHeaderNextBtn` to panel-shuchu's `.panel-header-lower` row (see 集中 section below).
+`shuchuHeaderNextBtn` to panel-shuchu's `.panel-header-lower` row. Session 45 (panel scroll
+work): all nine `.panel-header-lower` divs and `nav`/`#globalQuickTranslate` changed from
+position:fixed to flex-flow — same elements/ids, different CSS positioning strategy, no
+HTML structural changes needed except the video panel's internal grid (see above).
+**Not yet updated for session 45's panel-scroll work or SQL Q&A feature** — do this next
+session if html-map.md needs to stay current for documentation purposes (low priority,
+nothing here changed actual element ids/structure outside what's noted above).
 
 **Session 25-30 additions (still active):**
 - vocabWtYoshiPhrases, vocabWtYoshiVocab, vocabWtWriting, vocabWtLookup, vocabWtN5
@@ -96,7 +231,7 @@ Session 40: added `panel-shuchu` + sidebar button between 質問 and 筆順. Ses
 - window.db.query() requires explicit [] params
 - Close Electron before SQLite writes
 - window.db.run() returns {changes: 0} even on successful batch INSERTs — not an error indicator
-- Files with giant single lines break `view` even at 1-3 lines — use grep, hand edits to Code
+- Files with giant single lines break `view` even at 1-3 lines — use grep/sed, hand edits to Code
 
 ## Dead-Code Lookup Tooling
 - check-syntax.js: callers + exported per function, written to index.json
@@ -107,11 +242,39 @@ Session 40: added `panel-shuchu` + sidebar button between 質問 and 筆順. Ses
 - **Sole audit candidate, unchanged through session 45: customTranscribe — confirmed NOT dead,
   ticket closed**
 
+## SQL-aware Q&A Chat — Complete State (session 45)
+The Home/質問 panel's chat (`sendChat()` in `core-vocab.js`) can now answer questions that
+require the learner's own study data (lesson counts, scores, dates, progress, error
+patterns — anything from personal usage history rather than general Japanese knowledge),
+by reusing the same NL→SQL→answer pipeline the Progress panel's "Ask your data" feature
+already had.
+
+### How it works
+- `dbqaQuery(question, historyContext)` — extracted from `dbqaAsk()` in
+  `features-db-qa.js` as a reusable, DOM-free function. Does schema lookup → Claude writes
+  a read-only SQL query → query runs against the local SQLite DB → Claude summarizes the
+  result rows in plain English. Returns `{ sql, answer, error }`.
+- `dbqaAsk()` (Progress panel's "Ask your data" UI) now just calls `dbqaQuery()` and
+  handles its own DOM updates — no behavior change there.
+- `SYSTEM_PROMPT` (core-foundation.js) gained one instruction: if a question needs the
+  learner's own data, reply with ONLY `NEED_SQL: <plain-English restatement>` instead of
+  guessing from memory.
+- `sendChat()` checks the reply for that `NEED_SQL:` marker. If present, it calls
+  `dbqaQuery()` with the extracted sub-question and swaps in the real, data-backed answer
+  before displaying or saving to chat history (the literal marker is never shown to the
+  user or persisted in history).
+
+### Cost note
+Ordinary questions still cost 1 Claude API call (unchanged). Questions needing personal
+data go from 1 call to 3 (routing call + SQL generation + summary) — same per-question
+cost the "Ask your data" feature already had on its own, just now reachable from the main
+chat too.
+
 ## Kana Input System — Complete State (session 45)
 Authoritative description of the kana/romaji input engine in `features-kana.js`. Supersedes
 the session 43 "Kana focus desync fix" and session 44 "Kana focus/snapshot timing fix" notes
 below, both of which were genuine but incomplete fixes to the same underlying bug class — see
-"Session 45" writeup for why two prior attempts didn't fully resolve it.
+"Why a third kana fix was needed" below for why two prior attempts didn't fully resolve it.
 
 ### Architecture — single source of truth
 - **`kanaOn(el)`** is the one place that wires up input handling for a kana-enabled element:
@@ -167,8 +330,6 @@ below, both of which were genuine but incomplete fixes to the same underlying bu
   CSS in style.css — nothing creates elements with these classes anymore.
   (`.kanji-picker` / `.kanji-picker-item` are still live — used by `kanjiPickerShow()`.)
 
-## Session 45 — Kana input root-cause fix + 集中 UI polish (2026-06-20)
-
 ### Why a third kana fix was needed
 Reported symptom: in a field already set to hiragana, clicking into the **middle** of existing
 text and typing romaji would render literal romaji for a few characters, then "snap" to
@@ -178,31 +339,14 @@ hiragana. Sessions 43 and 44 each fixed a real bug in this area but both were pa
 - Session 44 deferred that read with `setTimeout(...,0)` — correct, but **only fixed
   `kanaToolbar`'s separate listener**. `kanaOn()` had its *own*, older, internal focus
   listener (not deferred) that every kana-enabled input goes through regardless of whether
-  it also has a toolbar. Two independent listeners were firing on focus for toolbar-managed
-  inputs (mostly masked by timing luck — the deferred one usually won before a human could
-  type), and Path-B inputs (raw `kanaOn()` callers, including `core-writing.js` — the
-  writing panel) had **only** the unfixed listener.
-- Root cause investigation (this session) found the actual remaining bug: `focus` only fires
+  it also has a toolbar.
+- Root cause investigation (session 45) found the actual remaining bug: `focus` only fires
   when a field *gains* focus. Clicking to a new position **inside a field that's already
   focused** fires no `focus` event at all, so `_modeSnapshot` was never re-anchored for that
-  click — it stayed at its previous (larger) value. New romaji typed at the new, earlier
-  cursor position fell inside the stale "preserved" zone and was left unconverted until
-  enough characters were typed to catch up to the stale snapshot index — exactly the
-  reported "romaji for a few characters, then snaps to hiragana."
+  click. Fixed by extracting `_kanaSyncCursor` as a single function wired to `focus` +
+  `click` + arrow/Home/End `keyup` — see "Architecture" above.
 
-### Clean fix (not a third patch — consolidation)
-Extracted `_kanaSyncCursor(el)` as the single shared cursor/mode-resync function, wired to
-`focus` + `click` + arrow/Home/End `keyup`, replacing both the duplicate listener in
-`kanaToolbar()` and the unfixed internal listener in `kanaOn()`. See "Kana Input System —
-Complete State" above for full architecture. Verified fixed in the writing panel
-(`core-writing.js`'s raw `kanaOn()` path, the clearest unfixed case).
-
-### Dead code removed (same investigation, see "Kana Input System" section for details)
-- Duplicate/shadowed `kanaAddToggle()` definition
-- Orphaned `+`-to-kanji-picker block in `kanaInputHandler` (was silently eating `+`)
-- Dead `.kana-toggle` and `.kanji-btn` CSS rules in style.css
-
-### 集中 Focus Sprint — UI fixes (features-shuchu.js, index.html)
+## 集中 Focus Sprint — UI fixes (session 45, features-shuchu.js, index.html)
 1. **Next button moved to panel header**: added `#shuchuHeaderNextBtn` (hidden by default)
    to panel-shuchu's `.panel-header-lower` row, next to New Sprint / 参考 / Activities.
    `addNextBtn()` now shows/wires this header button instead of creating one in the
@@ -230,43 +374,26 @@ Complete State" above for full architecture. Verified fixed in the writing panel
    - Check order: local table → session cache → API call
    - Subsequent 漢字 conversions of the same kana are instant
 
-3. **Kana focus desync fix** — superseded by session 45, see "Kana Input System — Complete
-   State" above. (Original note: focus listener in `kanaToolbar()` made to read active
-   button state as ground truth. Real fix, but incomplete — see session 45.)
-
-4. **Video spacebar play/pause** (features-video.js):
+3. **Video spacebar play/pause** (features-video.js):
    - Spacebar handler added to existing keydown listener
    - Guards: `panel-video2` must have `active` class; focus not in INPUT/TEXTAREA/SELECT
    - Also fixed 2 stale `panel-video` refs → `panel-video2` in fullscreen checks
 
-5. **gramSent: hiragana-for-kanji accepted as correct** (features-grammar.js):
+4. **gramSent: hiragana-for-kanji accepted as correct** (features-grammar.js):
    - Grading prompt now explicitly instructs Claude to count kana-only as correct
    - e.g. たべる accepted same as 食べる
 
-6. **gramSent: sentence variety seed** (features-grammar.js):
+5. **gramSent: sentence variety seed** (features-grammar.js):
    - Random 4-digit seed injected into `_gramSentGenerateOne` prompt
    - Reduces repetition of "canonical" example sentences on reset
 
 ## Session 44 — Writing panel bug fixes (2026-06-19)
 
-1. **Kana focus/snapshot timing fix** — superseded by session 45, see "Kana Input System —
-   Complete State" above. (Original note: deferred `kanaToolbar`'s focus-listener read of
-   `selectionStart` with `setTimeout(...,0)`. Real fix, but only covered `kanaToolbar`'s own
-   listener, not `kanaOn`'s separate internal one — see session 45 for the full fix.)
-
-2. **Writing panel saved-texts scroll bug** (style.css):
-   - `#savedTextsList` had no `overflow-y`/`max-height` of its own; relied on `#panel-writing`
-     to scroll, but `#panel-writing` never had a scroll mechanism in its history (confirmed
-     via `git log -S` — original omission, not a regression)
-   - Underlying cause: `.panel.active { flex:1; min-height:0 }` is currently INERT for every
-     panel — `main` has no `display:flex`, so flex properties on its children do nothing.
-     `#panel-progress` is the only panel that actually scrolls, via an unrelated explicit-height
-     special case (`height: calc(100vh - 32px)` + `overflow-y:auto`)
-   - Fix applied: `#panel-writing { overflow-y: auto; }` +
-     `#panel-writing.active { height: calc(100vh - 32px); }` (matches panel-progress's pattern)
-   - **Flagged priority by Paul for next session** — see "PRIORITY — Panel scroll/layout
-     consolidation" in Pending list below. Same dead-flex problem will silently affect any
-     future panel whose content grows past viewport height.
+1. **Writing panel saved-texts scroll bug** (style.css) — superseded by session 45's full
+   panel scroll architecture fix, see above. (Original interim patch: explicit
+   `height: calc(100vh - 32px)` + `overflow-y:auto` on `#panel-writing`, matching
+   `#panel-progress`'s pattern. This interim fix is now redundant/removed — the real fix
+   applies uniformly to every panel.)
 
 ## 集中 Focus Sprint Panel — Complete
 Panel ID: `panel-shuchu`. Full flow:
@@ -285,6 +412,9 @@ UI details (session 45):
 - Next button lives in the panel header (`#shuchuHeaderNextBtn`), not per-activity
 - Multiple-choice labels are de-duplicated against API-supplied option text
 - translate_to_jp / error_correct answer inputs are 960px max-width; gap_fill stays 480px
+- Panel scroll managed via `#panel-shuchu.active { overflow: hidden }` — confirmed correct,
+  the panel's own content never overflows; the internal `#shuchu-sprint` element handles
+  its own scroll via inline `max-height:calc(100vh - 200px)` (pre-existing, untouched)
 
 API calls per session:
 - Call 1: max_tokens 1500 (intro + act 1)
@@ -397,60 +527,44 @@ GRAMMAR_GOLD_DISMISSED (cleared on new lesson import)
 
 ## Pending — Priority Order
 
-### PRIORITY — Panel scroll/layout consolidation
-0. **Root cause (confirmed session 44):** `main` has no `display:flex` — it's a plain block
-   (`main { padding: 32px 44px; }`). `.panel.active { flex:1; min-height:0 }` therefore does
-   NOTHING (flex properties are inert unless the parent is a flex container) even though it
-   reads like the standard scrollable-flex-column pattern. Each panel that actually scrolls
-   does so via its own unrelated, duplicated mechanism instead:
-   - `#panel-progress.active { height: calc(100vh - 32px); }` + `overflow-y:auto` (explicit height)
-   - `#panel-words.active { max-height: calc(100vh - 98px); overflow:hidden }` (different pattern again)
-   - some panels rely on an inner section having its own `flex:1;overflow-y:auto`
-     (e.g. `.feedback-entries`)
-   - `#panel-writing` had NONE of these until the session-43 bug fix (added explicit
-     `height: calc(100vh - 32px)` + `overflow-y:auto`, matching panel-progress's pattern)
-   This is why the writing-panel saved-texts scroll bug happened and was non-obvious to
-   fix: `html`/`body` have `overflow:hidden` (intentional, keeps sidebar/nav fixed), so a
-   panel that loses its height rule doesn't error or look broken — it just clips silently.
-   Flagged by Paul as a priority: "these kind of issues make for repeated roadblocks and
-   probably several idiosyncratic solutions." Still open as of session 45 — not touched
-   this session (kana input system took priority once investigation revealed it was the
-   deeper, actively-reproducing bug; same "duplicate/uncoordinated mechanism" failure
-   pattern as this scroll issue, worth keeping in mind when this is tackled).
-   **Fix plan (consolidate to ONE mechanism):**
-   a. Make `main` `display:flex; flex-direction:column;` with a definite height context
-      (isolated CSS commit — touches a shared base selector, so check every panel visually
-      after, not just panel-writing/progress/words).
-   b. Once `main` is flex, `.panel.active { flex:1; min-height:0 }` becomes live and is the
-      one working scroll mechanism for all panels.
-   c. Remove the now-redundant per-panel special cases: `#panel-progress.active { height:... }`,
-      `#panel-words.active { max-height:...; overflow:hidden }`, `#panel-writing.active { height:... }`.
-   d. Re-verify each of those three panels scrolls correctly, plus spot-check a few others
-      (kana, voice, listening) for regressions.
-   Do step (a) alone first as its own commit before touching (c) — confirm nothing regresses
-   before removing the old special cases.
+### PRIORITY — Video panel transcript overflow (open, handed to Code)
+See "Video Panel — Open Issue" section above and `video-panel-handoff.md` in repo root.
+Loading a transcript breaks the panel's layout (video renders off-screen, transcript
+unbounded). Video-only viewing is unaffected. Multiple chat-based fix attempts converged
+on identical failures — needs live DevTools investigation, handed to Claude Code.
+
+### Bugs found, not yet fixed
+1. `ReferenceError: _rtkMnemonicCache is not defined` at `features-stroke.js:405`, in
+   `strokeFetchKoohii()`, triggered from `showBtn.onclick` (`features-stroke.js:323`).
+   Found during session 45 unrelated testing. Likely an undeclared/out-of-scope variable.
 
 ### Grammar coverage
-1. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
-2. turn_id population — match phrases to transcript_turns at extraction time
-3. "Play from here" button — turn_id → audio seek
-4. Genki II node integration
-5. Grammar node timestamps → transcript → sprint suggestion pipeline
+2. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
+3. turn_id population — match phrases to transcript_turns at extraction time
+4. "Play from here" button — turn_id → audio seek
+5. Genki II node integration
+6. Grammar node timestamps → transcript → sprint suggestion pipeline
 
 ### Dead code / cleanup
-6. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
-7. `vtWatch*` localStorage — low priority, working fine
-8. `customTranscribe` — confirmed NOT dead, ticket closed
-9. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
-   since session 45 moved the Next button to the panel header. Low priority; only worth
-   removing if nothing else ever gets added to them.
+7. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
+8. `vtWatch*` localStorage — low priority, working fine
+9. `customTranscribe` — confirmed NOT dead, ticket closed
+10. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
+    since session 45 moved the Next button to the panel header. Low priority; only worth
+    removing if nothing else ever gets added to them.
+11. Dead fullscreen-video CSS block (`#panel-video.vt-fullscreen` and descendants in
+    style.css) — uses the wrong id (`#panel-video` not `#panel-video2`), matches nothing
+    in any mode. Pre-existing, found during session 45's video panel investigation.
+    Low priority — fullscreen mode presumably hasn't worked via this CSS for a while;
+    confirm with Paul whether fullscreen video is actually used before deciding to fix
+    vs. remove the dead block entirely.
 
 ### Vocab pipeline
-10. corpus_productions extraction fix (single-kanji in old rows)
+12. corpus_productions extraction fix (single-kanji in old rows)
 
 ### Future / larger features
-11. FLUENCY_432 emitter — 4/3/2 speaking session wiring
-12. Layer 6 — grammar drill + writing prompt with top-N words
-13. Book vocab import (18 pages, OCR artifact, deferred)
-14. Sight-reading feature (to be built from scratch)
-15. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
+13. FLUENCY_432 emitter — 4/3/2 speaking session wiring
+14. Layer 6 — grammar drill + writing prompt with top-N words
+15. Book vocab import (18 pages, OCR artifact, deferred)
+16. Sight-reading feature (to be built from scratch)
+17. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
