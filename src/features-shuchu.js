@@ -23,6 +23,8 @@
     }
     const beginBtn = document.getElementById('shuchuBeginBtn');
     if (beginBtn) beginBtn.style.display = (id === 'shuchu-intro') ? '' : 'none';
+    const headerNextBtn = document.getElementById('shuchuHeaderNextBtn');
+    if (headerNextBtn) headerNextBtn.style.display = 'none';
     const refBtn = document.getElementById('shuchuRefBtn');
     if (refBtn) refBtn.style.display = (id === 'shuchu-setup') ? 'none' : (_sprint ? '' : 'none');
   }
@@ -271,7 +273,8 @@ Requirements:
       act.options.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:8px;font-family:var(--jp);font-size:1.1rem;padding:12px 16px;background:#1a1a1a;border:1px solid var(--border);color:var(--ink);border-radius:8px;cursor:pointer';
-        btn.textContent = ['A','B','C','D'][i] + '.  ' + opt;
+        const cleanOpt = String(opt).replace(/^[A-D][\.\)\uff0e\uff09:\uff1a]\s*/, '');
+        btn.textContent = ['A','B','C','D'][i] + '.  ' + cleanOpt;
         btn.onclick = () => checkAnswer(act, opt, isR2);
         card.appendChild(btn);
       });
@@ -280,7 +283,8 @@ Requirements:
       const inp = document.createElement('input');
       inp.type = 'text';
       inp.id = 'shuchuAnswerInput';
-      inp.style.cssText = 'width:100%;max-width:480px;padding:10px 14px;font-family:var(--jp);font-size:1.1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:12px';
+      const _wideEntry = (act.type === 'translate_to_jp' || act.type === 'error_correct');
+      inp.style.cssText = 'width:100%;max-width:' + (_wideEntry ? '960px' : '480px') + ';padding:10px 14px;font-family:var(--jp);font-size:1.1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:12px';
       inp.onkeydown = e => { if (e.key === 'Enter') checkAnswer(act, inp.value.trim(), isR2); };
       const kanaSpan = document.createElement('div');
       kanaSpan.setAttribute('data-kana-for', 'shuchuAnswerInput');
@@ -374,11 +378,11 @@ Requirements:
 
   function addNextBtn(btns, isR2) {
     btns.innerHTML = '';
-    const next = document.createElement('button');
-    next.className = 'btn-action';
-    next.textContent = 'Next →';
-    next.onclick = () => { if (isR2) { _r2Idx++; shuchuRenderR2(); } else { _actIdx++; shuchuRenderActivity(); } };
-    btns.appendChild(next);
+    const next = document.getElementById('shuchuHeaderNextBtn');
+    if (next) {
+      next.style.display = '';
+      next.onclick = () => { if (isR2) { _r2Idx++; shuchuRenderR2(); } else { _actIdx++; shuchuRenderActivity(); } };
+    }
   }
 
   function checkAnswer(act, given, isR2) {

@@ -815,7 +815,19 @@ async function sendChat() {
       track: 'chat'
     });
     
-    const reply = (App.claudeText || window.claudeText)(data) || 'Sorry, I had trouble responding.';
+    let reply = (App.claudeText || window.claudeText)(data) || 'Sorry, I had trouble responding.';
+
+    // If the question needs the learner's own study data, run it through the
+    // same NL→SQL→answer pipeline the Progress panel's "Ask your data" uses.
+    const needSqlMatch = reply.match(/^NEED_SQL:\s*(.+)$/is);
+    if (needSqlMatch) {
+      const dbQuestion = needSqlMatch[1].trim();
+      updateChatMsg(thinkingId, '<span class="thinking-dots">Checking your data</span>');
+      const dbqaQueryFn = App.dbqaQuery || window.dbqaQuery;
+      const result = dbqaQueryFn ? await dbqaQueryFn(dbQuestion).catch(e => ({ error: e.message })) : { error: 'Database lookup unavailable.' };
+      reply = result.error ? "I couldn't look that up: " + result.error : result.answer;
+    }
+
     chatHistory.push({role: 'assistant', content: reply});
     updateChatMsg(thinkingId, reply);
     if (typeof drillLastCompletedWrite === 'function') drillLastCompletedWrite('chat');

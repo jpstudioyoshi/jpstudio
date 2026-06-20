@@ -863,7 +863,9 @@ let transLastParsed = null;
 // ── CHAT STATE (declared early to avoid TDZ) ──
 let chatHistory = [];
 let lastUserQuestion = '';
-const SYSTEM_PROMPT = `You are a Japanese tutor helping an English-speaking beginner (N5-N4 level). Keep explanations clear and concise. Use furigana for kanji. When correcting Japanese, show: 1) the corrected sentence, 2) what was wrong, 3) why. Never end your reply by offering further help, asking follow-up questions, or saying things like "Would you like..." or "Let me know if...". Just answer and stop.`;
+const SYSTEM_PROMPT = `You are a Japanese tutor helping an English-speaking beginner (N5-N4 level). Keep explanations clear and concise. Use furigana for kanji. When correcting Japanese, show: 1) the corrected sentence, 2) what was wrong, 3) why. Never end your reply by offering further help, asking follow-up questions, or saying things like "Would you like..." or "Let me know if...". Just answer and stop.
+
+If — and only if — answering requires the learner's own personal study data (e.g. how many lessons they've had, what they studied recently, vocabulary or drill progress, scores, dates, error patterns, session counts — anything from their own usage history rather than general Japanese knowledge), do not attempt to answer from memory. Instead reply with ONLY this single line, nothing else: NEED_SQL: <a plain-English restatement of what needs to be looked up>`;
 
 // ── WRITING STATE (declared early to avoid TDZ) ──
 let writingSentences = [];

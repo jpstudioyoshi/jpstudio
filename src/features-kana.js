@@ -205,12 +205,6 @@ function kanaInputHandler(e) {
   // If mode is explicitly romaji/null, don't convert
   if (el._kanaMode === null || el._kanaMode === 'romaji') return;
   
-  if (el.value.endsWith('+')) {
-    el.value = el.value.slice(0, -1);
-    const btn = el.parentNode?.querySelector('.kanji-btn[data-el-id="'+el.id+'"]');
-    if (btn) kanaToKanji(el, btn);
-    return;
-  }
   const pos = el.selectionStart;
   const raw = el.value;
   
@@ -305,6 +299,56 @@ function hiraganaToKatakana(str) {
   }).join('');
 }
 
+// ── Cursor sync — SINGLE SOURCE OF TRUTH for every kana input ────────────
+// _modeSnapshot marks the boundary kanaInputHandler treats as "already
+// settled" vs. "fresh text to convert". It must be re-anchored to the real
+// cursor position every time the cursor moves — not just on focus. A plain
+// click INSIDE an already-focused field does not fire 'focus' at all, so
+// relying on focus alone leaves a stale (too-high) snapshot: newly typed
+// romaji before that stale boundary is left unconverted until the cursor
+// types far enough to catch up to it — which looks like "romaji for a few
+// characters, then it snaps to hiragana". Arrow/Home/End keys move the
+// cursor the same way without focus or click firing either.
+// Used identically by every kana input, toolbar or not.
+function _kanaSyncCursor(el) {
+  if (!el._kanaOn) return;
+  // If a mode switch just set _modeSnapshot (button click → kanaSetMode →
+  // inp.focus()), don't touch it — it's already correct.
+  if (el._modeSwitchPending) {
+    el._modeSwitchPending = false;
+    if (el._kanaMode === 'hiragana') el.style.caretColor = 'var(--teal)';
+    else if (el._kanaMode === 'katakana') el.style.caretColor = 'var(--gold)';
+    return;
+  }
+  // Defer one tick: focus/click fire before the browser finishes
+  // repositioning the caret, so selectionStart read synchronously here
+  // would still reflect the OLD cursor position.
+  setTimeout(() => {
+    // If this input has a kana toolbar (kanaToolbar sets el._kanaBtnIds),
+    // the highlighted button is ground truth for mode. Inputs with no
+    // toolbar keep whatever mode was already set.
+    let activeMode = el._kanaMode;
+    const ids = el._kanaBtnIds;
+    if (ids) {
+      const romajiEl = document.getElementById(ids.romaji);
+      const hiraEl   = document.getElementById(ids.hira);
+      const kataEl   = document.getElementById(ids.kata);
+      if (romajiEl && romajiEl.classList.contains('btn-active')) activeMode = 'romaji';
+      else if (kataEl && (kataEl.classList.contains('btn-active-gold') || kataEl.classList.contains('btn-active'))) activeMode = 'katakana';
+      else if (hiraEl && hiraEl.classList.contains('btn-active')) activeMode = 'hiragana';
+    }
+    el._kanaMode = activeMode;
+    el._modeSnapshot = (el.selectionStart != null) ? el.selectionStart : el.value.length;
+    if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
+    else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
+    else el.style.caretColor = '';
+    // Re-apply kana handler in case it was lost
+    el.removeEventListener('input', kanaInputHandler);
+    el.addEventListener('input', kanaInputHandler);
+  }, 0);
+}
+const _KANA_NAV_KEYS = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+
 function kanaOn(el) {
   if (!el || el._kanaOn) return;
   el._kanaOn = true;
@@ -363,31 +407,20 @@ function kanaOn(el) {
   }
   el.placeholder = el.dataset.placeholderJp || el.placeholder;
 
-  // Focus restoration: when user clicks back into the field, re-apply the current
-  // mode and reset _modeSnapshot to cursor position so conversion starts correctly.
+  // Cursor sync: every way the cursor can move into a different position
+  // must re-anchor _modeSnapshot, or stale state causes the "romaji for a
+  // few characters then snaps to hiragana" bug. See _kanaSyncCursor above.
   // Guard against re-entry from programmatic focus calls.
   if (!el._kanaFocusListener) {
     el._kanaFocusListener = true;
-    el.addEventListener('focus', () => {
-      if (!el._kanaOn) return;
-      // If a mode switch just set _modeSnapshot, don't reset it.
-      // _modeSwitchPending is set by kanaSetMode and cleared after one focus.
-      if (el._modeSwitchPending) {
-        el._modeSwitchPending = false;
-        // Restore caret colour only
-        if (el._kanaMode === 'hiragana') el.style.caretColor = 'var(--teal)';
-        else if (el._kanaMode === 'katakana') el.style.caretColor = 'var(--gold)';
-        return;
-      }
-      // Normal focus (user clicked in) — reset snapshot to 0 so conversion
-      // applies from cursor. Existing Japanese chars are protected by character-type check.
-      el._modeSnapshot = 0;
-      // Re-apply kana handler in case it was lost
-      el.removeEventListener('input', kanaInputHandler);
-      el.addEventListener('input', kanaInputHandler);
-      // Restore caret colour
-      if (el._kanaMode === 'hiragana') el.style.caretColor = 'var(--teal)';
-      else if (el._kanaMode === 'katakana') el.style.caretColor = 'var(--gold)';
+    el.addEventListener('focus', () => _kanaSyncCursor(el));
+    // Clicking inside an ALREADY-focused field repositions the caret
+    // without firing 'focus' again — this is the actual cause of the bug
+    // when editing mid-text in a field you're already in.
+    el.addEventListener('click', () => _kanaSyncCursor(el));
+    // Arrow/Home/End also move the caret without a focus or click event.
+    el.addEventListener('keyup', (e) => {
+      if (_KANA_NAV_KEYS.includes(e.key)) _kanaSyncCursor(el);
     });
   }
 }
@@ -432,92 +465,6 @@ function kanaToggle(btn, el) {
     btn.title = 'Romaji mode (click for hiragana)';
   }
   el.focus();
-}
-
-function kanaAddToggle(el, startOn) {
-  if (!el) return;
-  // Remove existing toggles for this element
-  el.parentNode?.querySelectorAll('[data-el-id="'+el.id+'"]').forEach(b => b.remove());
-
-  // For inputs that are always hiragana — enable kana mode without adding toggle buttons
-  if (el.id === 'conjInputG' || el.id === 'countAnswer2') {
-    if (startOn) kanaOn(el);
-    return;
-  }
-
-  // A (romaji) button
-  const romajiBtn = document.createElement('button');
-  romajiBtn.type = 'button';
-  romajiBtn.className = 'kana-toggle';
-  romajiBtn.dataset.elId = el.id;
-  romajiBtn.dataset.mode = 'romaji';
-  romajiBtn.title = 'Romaji mode (no conversion)';
-  romajiBtn.innerHTML = 'A';
-  if (!startOn) romajiBtn.classList.add('on');
-  romajiBtn.onclick = () => {
-    kanaOff(el);
-    romajiBtn.classList.add('on');
-    kanaBtn.style.borderColor = '';
-    kanaBtn.style.color = '';
-    kanaBtn.innerHTML = 'あ';
-    el.focus();
-  };
-  el.parentNode.insertBefore(romajiBtn, el);
-
-  // ひ/ア (kana) toggle button
-  const kanaBtn = document.createElement('button');
-  kanaBtn.type = 'button';
-  kanaBtn.className = 'kana-toggle';
-  kanaBtn.dataset.elId = el.id;
-  kanaBtn.dataset.mode = 'kana';
-  kanaBtn.title = startOn ? 'Hiragana mode (click for katakana)' : 'Click for hiragana mode';
-  kanaBtn.innerHTML = startOn ? 'ひ' : 'あ';
-  kanaBtn.style.cssText = startOn ? 'border-color:var(--teal);color:var(--teal)' : '';
-  kanaBtn.onclick = () => {
-    // Deactivate romaji button
-    romajiBtn.classList.remove('on');
-
-    // Toggle between hiragana and katakana
-    if (!el._kanaOn || el._kanaMode === 'katakana') {
-      kanaOn(el);
-      el._kanaMode = 'hiragana';
-      kanaBtn.innerHTML = 'ひ';
-      kanaBtn.style.borderColor = 'var(--teal)';
-      kanaBtn.style.color = 'var(--teal)';
-      kanaBtn.title = 'Hiragana mode (click for katakana)';
-      el.style.caretColor = 'var(--teal)';
-    } else {
-      el._kanaMode = 'katakana';
-      kanaBtn.innerHTML = 'ア';
-      kanaBtn.style.borderColor = 'var(--gold)';
-      kanaBtn.style.color = 'var(--gold)';
-      kanaBtn.title = 'Katakana mode (click for hiragana)';
-      el.style.caretColor = 'var(--gold)';
-    }
-    // Use setTimeout to ensure focus is set after click event completes
-    setTimeout(() => {
-      el.focus();
-      // Move cursor to end of text
-      el.setSelectionRange(el.value.length, el.value.length);
-    }, 0);
-  };
-  el.parentNode.insertBefore(kanaBtn, el);
-
-  // 漢字 button
-  const kanjiBtn = document.createElement('button');
-  kanjiBtn.type = 'button';
-  kanjiBtn.className = 'kanji-btn';
-  kanjiBtn.dataset.elId = el.id;
-  kanjiBtn.title = 'Convert kana to kanji';
-  kanjiBtn.innerHTML = '漢字';
-  kanjiBtn.onclick = () => kanaToKanji(el, kanjiBtn);
-  el.parentNode.insertBefore(kanjiBtn, el);
-
-  if (startOn) {
-    kanaOn(el);
-    el._kanaMode = 'hiragana';
-    el.style.caretColor = 'var(--teal)';
-  }
 }
 
 function kanjiPickerShow(candidates, el, btn) {
@@ -904,6 +851,9 @@ function kanaToolbar(inputId, opts = {}) {
   const cls     = opts.btnClass    || 'btn-kana';
   const grp     = inputId + 'Kana';
   const btnIds  = { romaji: inputId+'RomajiBtn', hira: inputId+'HiraBtn', kata: inputId+'KataBtn' };
+  // Tells kanaOn's single focus listener where to find this input's mode
+  // buttons, so it can use them as ground truth on focus.
+  inp._kanaBtnIds = btnIds;
 
   const wrap = document.createElement('span');
   wrap.dataset.kanaToolbar = inputId;
@@ -979,21 +929,10 @@ function kanaToolbar(inputId, opts = {}) {
     }
   })();
 
-  // On focus: read which button is highlighted (ground truth) and sync kana engine to it.
-  inp.addEventListener('focus', () => {
-    if (inp._modeSwitchPending) { inp._modeSwitchPending = false; return; }
-    // Determine active mode from button state (not _kanaMode which can drift)
-    const romajiEl = document.getElementById(btnIds.romaji);
-    const hiraEl   = document.getElementById(btnIds.hira);
-    const kataEl   = document.getElementById(btnIds.kata);
-    let activeMode = inp._kanaMode || mode;
-    if (romajiEl && romajiEl.classList.contains('btn-active')) activeMode = 'romaji';
-    else if (kataEl && (kataEl.classList.contains('btn-active-gold') || kataEl.classList.contains('btn-active'))) activeMode = 'katakana';
-    else if (hiraEl && hiraEl.classList.contains('btn-active')) activeMode = 'hiragana';
-    // Re-sync engine without moving cursor
-    inp._modeSwitchPending = true;
-    kanaSetMode(inputId, activeMode, grp, btnIds);
-  });
+  // Focus handling for this input is owned entirely by kanaOn's single
+  // listener (attached the first time kanaOn(inp) runs, just above via
+  // kanaSetMode). It reads el._kanaBtnIds — set above — to use button
+  // highlight state as ground truth. No separate listener needed here.
 
   return wrap;
 }

@@ -24,6 +24,56 @@ function dbqaIsSafeSelect(sql) {
   return trimmed;
 }
 
+async function dbqaQuery(question, historyContext) {
+  const schema = await dbqaGetSchema();
+
+  const historyBlock = (historyContext && historyContext.length)
+    ? '\n\nPrevious questions in this session (for context, most recent last):\n' +
+      historyContext.slice(-3).map(h => `Q: ${h.question}\nSQL: ${h.sql}\nA: ${h.answer}`).join('\n\n')
+    : '';
+
+  // Step 1 — ask Claude to write a read-only SQL query
+  const sqlPrompt = `You have access to a SQLite database for a Japanese learning app. Here is the schema:\n\n${schema}${historyBlock}\n\nWrite ONE read-only SQL query (SELECT or WITH only, no semicolons, single statement) to answer this question:\n\n"${question}"\n\nIf the question refers back to a previous question (e.g. "following on from that"), use the previous context to understand what is being asked.\n\nRespond with ONLY the SQL query, no explanation, no markdown formatting, no code fences.`;
+
+  const sqlData = await (App.claudeAPI || window.claudeAPI)({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 400,
+    messages: [{ role: 'user', content: sqlPrompt }],
+    track: 'db-qa'
+  });
+
+  let sql = (sqlData.content?.[0]?.text || '').trim();
+  sql = sql.replace(/^```[a-z]*\n?/i, '').replace(/```$/, '').trim();
+
+  const safeSql = dbqaIsSafeSelect(sql);
+  if (!safeSql) {
+    return { sql, answer: null, error: 'Could not form a safe query for that question.' };
+  }
+
+  // Step 2 — run the query
+  let rows;
+  try {
+    rows = await window.db.query(safeSql);
+  } catch (e) {
+    return { sql: safeSql, answer: null, error: 'Query error: ' + e.message };
+  }
+
+  // Step 3 — summarize the result in plain English
+  const rowsArr = Array.isArray(rows) ? rows : Array.from(rows || []);
+  const rowsJson = JSON.stringify(rowsArr.slice(0, 200));
+  const summaryPrompt = `Question: "${question}"\n\nSQL query used: ${safeSql}\n\nResult rows (JSON, possibly truncated to 200):\n${rowsJson}\n\nAnswer the question in 1-3 sentences, in plain English, based on these results. If the result is empty, say so plainly. Always write hiragana readings in parentheses after any Japanese words you mention.`;
+
+  const summaryData = await (App.claudeAPI || window.claudeAPI)({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 300,
+    messages: [{ role: 'user', content: summaryPrompt }],
+    track: 'db-qa'
+  });
+
+  const summary = (summaryData.content?.[0]?.text || '').trim();
+  return { sql: safeSql, answer: summary, error: null };
+}
+
 async function dbqaAsk() {
   const input  = document.getElementById('dbqaInput');
   const answer = document.getElementById('dbqaAnswer');
@@ -48,57 +98,13 @@ async function dbqaAsk() {
   if (sqlEl) sqlEl.textContent = '';
 
   try {
-    const schema = await dbqaGetSchema();
-
-    const historyBlock = DbQaState.history.length
-      ? '\n\nPrevious questions in this session (for context, most recent last):\n' +
-        DbQaState.history.slice(-3).map(h => `Q: ${h.question}\nSQL: ${h.sql}\nA: ${h.answer}`).join('\n\n')
-      : '';
-
-    // Step 1 — ask Claude to write a read-only SQL query
-    const sqlPrompt = `You have access to a SQLite database for a Japanese learning app. Here is the schema:\n\n${schema}${historyBlock}\n\nWrite ONE read-only SQL query (SELECT or WITH only, no semicolons, single statement) to answer this question:\n\n"${question}"\n\nIf the question refers back to a previous question (e.g. "following on from that"), use the previous context to understand what is being asked.\n\nRespond with ONLY the SQL query, no explanation, no markdown formatting, no code fences.`;
-
-    const sqlData = await (App.claudeAPI || window.claudeAPI)({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 400,
-      messages: [{ role: 'user', content: sqlPrompt }],
-      track: 'db-qa'
-    });
-
-    let sql = (sqlData.content?.[0]?.text || '').trim();
-    sql = sql.replace(/^```[a-z]*\n?/i, '').replace(/```$/, '').trim();
-
-    const safeSql = dbqaIsSafeSelect(sql);
-    if (!safeSql) {
-      answer.innerHTML = '<span style="color:var(--red)">Could not form a safe query for that question.</span>';
-      if (sqlEl) sqlEl.textContent = sql;
+    const result = await dbqaQuery(question, DbQaState.history);
+    if (sqlEl) sqlEl.textContent = result.sql || '';
+    if (result.error) {
+      answer.innerHTML = '<span style="color:var(--red)">' + result.error + '</span>';
       return;
     }
-    if (sqlEl) sqlEl.textContent = safeSql;
-
-    // Step 2 — run the query
-    let rows;
-    try {
-      rows = await window.db.query(safeSql);
-    } catch (e) {
-      answer.innerHTML = '<span style="color:var(--red)">Query error: ' + e.message + '</span>';
-      return;
-    }
-
-    // Step 3 — summarize the result in plain English
-    const rowsArr = Array.isArray(rows) ? rows : Array.from(rows || []);
-    const rowsJson = JSON.stringify(rowsArr.slice(0, 200));
-    const summaryPrompt = `Question: "${question}"\n\nSQL query used: ${safeSql}\n\nResult rows (JSON, possibly truncated to 200):\n${rowsJson}\n\nAnswer the question in 1-3 sentences, in plain English, based on these results. If the result is empty, say so plainly. Always write hiragana readings in parentheses after any Japanese words you mention.`;
-
-    const summaryData = await (App.claudeAPI || window.claudeAPI)({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 300,
-      messages: [{ role: 'user', content: summaryPrompt }],
-      track: 'db-qa'
-    });
-
-    const summary = (summaryData.content?.[0]?.text || '').trim();
-    DbQaState.history.push({ question, sql: safeSql, answer: summary });
+    DbQaState.history.push({ question, sql: result.sql, answer: result.answer });
     dbqaRenderThread();
 
   } catch (e) {
@@ -142,7 +148,7 @@ function dbqaClear() {
 
 // Export
 (function() {
-  const fns = { dbqaAsk, dbqaToggleSql, dbqaClear };
+  const fns = { dbqaAsk, dbqaQuery, dbqaToggleSql, dbqaClear };
   Object.assign((window.App = window.App || {}), fns);
   Object.keys(fns).forEach(k => { window[k] = fns[k]; });
 })();
