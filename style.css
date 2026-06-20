@@ -244,9 +244,7 @@
     border-bottom: 1px solid var(--border);
     padding: 0 20px;
     overflow: visible;
-    position: fixed;
-    top: 0; left: 52px; right: 0;
-    z-index: 100;
+    flex-shrink: 0;
   }
   nav button {
     position: relative;
@@ -291,13 +289,9 @@
     opacity: 1;
   }
   
-  /* Quick translate bar sticky below nav */
+  /* Quick translate bar — real flex-flow sibling of main, sits above it */
   #globalQuickTranslate {
-    position: fixed;
-    top: 50px;
-    left: 52px;
-    right: 0;
-    z-index: 99;
+    flex-shrink: 0;
     background: var(--paper-dark);
     height: 48px;
     display: flex;
@@ -328,42 +322,47 @@
     color: var(--ink);
   }
 
-  /* ── LAYOUT ── */
-  main { padding: 32px 44px; }
-  .panel { display: none; padding-top: 98px; }
+  /* ── LAYOUT ──
+     nav, #globalQuickTranslate, AND every .panel-header-lower bar are now
+     real flex-flow siblings of main (flex-shrink:0), not position:fixed.
+     They reserve real space automatically, sized to their own actual
+     content — so NO panel ever needs a manually-guessed padding-top again,
+     regardless of how tall any given header bar is or becomes. (Previously
+     each panel hard-coded a padding-top assuming a uniform ~60px header
+     height; readPanelHeader's real height turned out to be ~101px, which
+     is exactly the kind of drift this eliminates for good.) */
+  main { padding: 32px 44px; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .panel { display: none; padding-top: 0; }
   #panel-progress { overflow-y: auto; }
   #panel-progress.active { height: calc(100vh - 32px); }
-  .panel.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  #panel-words.active { display: flex; flex-direction: column; max-height: calc(100vh - 98px); padding-top: 158px; padding-bottom: 20vh; overflow: hidden; }
+  .panel.active { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
+  #panel-words.active { display: flex; flex-direction: column; max-height: calc(100vh - 98px); padding-bottom: 20vh; overflow: hidden; }
+  #panel-shuchu.active,
+  #panel-listening.active,
+  #panel-video2.active { overflow: hidden; }
   #words-sub-vocab { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
   #words-sub-vocab .vocab-card-area { flex: 1; overflow: hidden; }
   
   /* Panels with max-width constraints, centered */
   #panel-settings { max-width: 700px; margin: 0 auto; }
-  #panel-grammar2,
-  #panel-words,
-  #panel-writing,
-  #panel-kana { padding-top: 158px; }
   #panel-kana,
   #panel-game,
   #panel-voice,
   #panel-yoshi,
   #panel-resources { max-width: 1200px; margin: 0 auto; }
   /* Full width panels */
-  #panel-dashboard { padding-top: 164px; overflow: hidden; box-sizing: border-box; }
-  #panel-read { padding-top: 158px; padding-bottom: 20vh; }
-  #panel-grammar2 { padding-top: 110px; overflow: hidden; }
-  #panel-writing { padding-top: 158px; padding-bottom: 20vh; overflow-y: auto; }
+  #panel-dashboard { overflow: hidden; box-sizing: border-box; }
+  #panel-read { padding-bottom: 20vh; }
+  #panel-grammar2 { overflow: hidden; }
+  #panel-writing { padding-bottom: 20vh; overflow-y: auto; }
   #panel-writing.active { height: calc(100vh - 32px); }
-  #panel-listening { padding-top: 158px; padding-bottom: 20vh; }
-  #panel-voice { padding-top: 98px; padding-bottom: 20vh; }
+  #panel-listening { padding-bottom: 20vh; }
+  #panel-voice { padding-bottom: 20vh; }
   #panel-read,
   #panel-listening,
   #panel-progress,
   #panel-translate,
   #panel-video { max-width: none; }
-  #panel-progress { padding-top: 98px; }
-  #panel-lessonnotes { padding-top: 158px; }
   #panel-video.vt-fullscreen { max-width: none !important; width: 100vw !important; }
 
   /* ── SECTION TITLE ── */
@@ -1521,11 +1520,7 @@
   .panel-section-title-jp { font-family: var(--jp); font-size: 2.2rem; color: var(--ink); }
   .panel-section-title-en { font-family: var(--ui); font-size: 0.72rem; color: var(--ink-light); letter-spacing: 0.08em; text-transform: uppercase; }
   .panel-header-lower {
-    position: fixed;
-    top: 98px;
-    left: 52px;
-    right: 0;
-    z-index: 48;
+    flex-shrink: 0;
     background: var(--paper-dark);
     min-height: 56px;
     height: auto;
@@ -2774,15 +2769,21 @@
 
 /* ============================================================
    LAYOUT CONSTANTS — standard panel chrome values
-   Generated: 2026-06-01
+   Generated: 2026-06-01. Rewritten 2026-06-20 (session 45 step 2):
+   nav, quick-translate, and every .panel-header-lower bar are now real
+   flex-flow siblings of main (flex-shrink:0) instead of position:fixed
+   with manually-guessed panel padding-top. No panel needs padding-top
+   for chrome clearance anymore — the browser measures each bar's real
+   height automatically. The old fixed numbers below are kept only as a
+   historical note; do not reintroduce per-panel padding-top based on them.
    ============================================================
-   nav bar:          top: 0;      height: 50px
-   quick-translate:  top: 50px;   height: 48px
-   panel-header-lower: top: 98px; (nav 50 + qt 48)
-   panel padding — 2-row header:  padding-top: 98px
-   panel padding — 3-row header:  padding-top: 158px  (98 + 60px lower header)
-   footer-upper:     bottom: 10vh; height: 10vh; left: 52px; right: 0
-   footer-lower:     bottom: 0;    height: 10vh; left: 52px; right: 0
+   nav bar:          flex-flow, ~50px tall (no longer position:fixed)
+   quick-translate:  flex-flow, 48px tall (no longer position:fixed)
+   panel-header-lower: flex-flow, real height varies per panel — do NOT
+                        assume ~60px; measure if in doubt (e.g. readPanelHeader
+                        is actually ~101px tall)
+   footer-upper:     bottom: 10vh; height: 10vh; left: 52px; right: 0  (still position:fixed — out of scope for this pass)
+   footer-lower:     bottom: 0;    height: 10vh; left: 52px; right: 0  (still position:fixed — out of scope for this pass)
    sidebar width:    52px
    ============================================================ */
   #drillProgress { display: none !important; }
