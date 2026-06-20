@@ -137,7 +137,8 @@ function vtLoadTransFile(file) {
     vtRenderTranscript();
     // Auto-import transcript sentences into corpus DB if not previously seen
     (App.corpusCheckAndImport || window.corpusCheckAndImport)?.(file.name, VideoState.cues);
-    document.getElementById('vtTranscriptWrap').style.display = 'block';
+    document.getElementById('vtTranscriptWrap').style.display = 'flex';
+    vtPinRowHeight();
     const noTrans = document.getElementById('vtNoTranscript');
     if (noTrans) noTrans.style.display = 'none';
     vtCollapseLoadBar();
@@ -349,6 +350,23 @@ function vtOnPause() {
   vtWatchStop();
 }
 
+function vtPinRowHeight() {
+  const row = document.getElementById('vtRow');
+  const wrap = document.getElementById('vtTranscriptWrap');
+  if (!row) return;
+  const prevDisplay = wrap ? wrap.style.display : null;
+  if (wrap) wrap.style.display = 'none';
+  row.style.height = '';
+  row.style.overflow = '';
+  void row.offsetHeight;
+  const h = row.offsetHeight;
+  if (wrap && prevDisplay !== null) wrap.style.display = prevDisplay;
+  if (h) {
+    row.style.height = h + 'px';
+    row.style.overflow = 'hidden';
+  }
+}
+
 function vtOnLoaded() {
   VideoState.watchedThreshold = false;
   const v = document.getElementById('vtVideo');
@@ -369,6 +387,7 @@ function vtOnLoaded() {
   if (waveMsg) waveMsg.style.display = 'none';
   vtUpdateDisplay();
   vtDrawWaveform();
+  vtPinRowHeight();
 }
 
 function vtAnimLoop() {
@@ -1081,6 +1100,7 @@ function vtTryLoadMatchingTranscript(videoName) {
     VideoState.cues = savedTrans.transcript;
     vtRenderTranscript();
     document.getElementById('vtTranscriptWrap').style.display = 'flex';
+    vtPinRowHeight();
     document.getElementById('vtNoTranscript').style.display = 'none';
   }
 }
@@ -1164,6 +1184,7 @@ function vtTranslateWord(word, event) {
                 VideoState.cues = hf.transcript;
                 vtRenderTranscript();
                 document.getElementById('vtTranscriptWrap').style.display = 'flex';
+                vtPinRowHeight();
                 document.getElementById('vtNoTranscript').style.display = 'none';
               }, 100);
             }
