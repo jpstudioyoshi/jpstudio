@@ -871,7 +871,7 @@
     font-family: 'Noto Sans JP', sans-serif;
   }
   .chat-msg.user { background: var(--ink); color: var(--paper); }
-  .chat-msg.ai { background: var(--paper); border: 1px solid var(--border); color: var(--ink); font-size: var(--fs-body); line-height: 1.7; max-height: calc(100vh - 400px); overflow-y: auto; }
+  .chat-msg.ai { background: var(--paper); border: 1px solid var(--border); color: var(--ink); font-size: var(--fs-body); line-height: 1.7; }
   .chat-input {
     flex: 1; padding: 12px 16px;
     background: var(--paper-dark); border: 1px solid var(--border); border-right: none;

@@ -773,6 +773,25 @@ function updateChatMsg(id, text) {
   document.getElementById('chatMessages').scrollTop = 99999;
 }
 
+// Re-display a past Q&A from chatHistory (no API call). Used by the
+// History drawer — see toggleChatHistory()/buildChatHistoryList() in
+// features-tools.js, which now reads chatHistory directly instead of
+// scraping #chatMessages (that DOM gets wiped by sendChat() on every
+// new question, so it could never show real history).
+function showChatHistoryEntry(i) {
+  const userTurns = chatHistory.filter(m => m.role === 'user');
+  const target = userTurns[i];
+  if (!target) return;
+  const idx = chatHistory.indexOf(target);
+  const reply = chatHistory[idx + 1];
+  const _chatContainer = document.getElementById('chatMessages');
+  if (_chatContainer) _chatContainer.innerHTML = '';
+  lastUserQuestion = target.content;
+  appendChatMsg('user', target.content);
+  const aiId = appendChatMsg('ai', '');
+  if (reply) updateChatMsg(aiId, reply.content);
+}
+
 function transSpeakOutput() {
   // Speak JP text — either the input (if JP→EN) or the output (if EN→JP)
   const inp = document.getElementById('transInput').value.trim();
@@ -1943,5 +1962,5 @@ function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad,
+  flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });

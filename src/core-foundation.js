@@ -1656,7 +1656,6 @@ function showPanel(id) {
   const panelId = id === 'words' ? 'panel-words' : 'panel-' + id;
   const panel = document.getElementById(panelId);
   panel.classList.add('active');
-  panel.style.display = 'block';
   const btn = document.querySelector('nav button[data-panel="' + id + '"], .sidebar button[data-panel="' + id + '"]');
   if (btn) btn.classList.add('active');
   if (id === 'kana') { if (typeof strokePanelInit === 'function') setTimeout(strokePanelInit, 50); }

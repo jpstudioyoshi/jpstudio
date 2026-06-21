@@ -390,21 +390,17 @@ function toggleChatHistory() {
 function buildChatHistoryList() {
   const list = document.getElementById('chatHistoryList');
   if (!list) return;
-  const msgs = document.querySelectorAll('#chatMessages .chat-msg.user');
-  if (!msgs.length) { list.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:8px">No questions yet.</div>'; return; }
+  const userTurns = chatHistory.filter(m => m.role === 'user');
+  if (!userTurns.length) { list.innerHTML = '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:8px">No questions yet.</div>'; return; }
   list.innerHTML = '';
-  msgs.forEach((msg, i) => {
-    const text = msg.textContent.trim().slice(0, 80) + (msg.textContent.length > 80 ? '…' : '');
+  userTurns.forEach((msg, i) => {
+    const text = msg.content.trim().slice(0, 80) + (msg.content.length > 80 ? '…' : '');
     const row = document.createElement('div');
     row.style.cssText = 'padding:6px 8px;font-family:var(--ui);font-size:inherit;color:var(--ink-light);cursor:pointer;border-radius:4px;transition:background 0.1s';
     row.textContent = (i + 1) + '. ' + text;
     row.classList.add('row-hover');
     row.onclick = () => {
-      // Find the AI reply after this user message and scroll to top of it
-      const allMsgs = [...document.querySelectorAll('#chatMessages .chat-msg')];
-      const idx = allMsgs.indexOf(msg);
-      const target = allMsgs[idx + 1] || msg;
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      (App.showChatHistoryEntry || window.showChatHistoryEntry)(i);
       toggleChatHistory();
     };
     list.appendChild(row);
