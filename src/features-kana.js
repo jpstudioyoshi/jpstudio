@@ -686,6 +686,14 @@ async function kanaToKanji(el, btn) {
   const end = el.selectionEnd || 0;
   const hasSelection = start !== end;
   
+  // Kanji conversion only allowed at the trailing edge of the text —
+  // converting mid-sentence would replace text with something of a
+  // different length somewhere before the cursor, which would desync
+  // _kataFrom (the katakana-zone marker) if katakana mode is active.
+  // Restricting to the edge avoids that entirely rather than needing to
+  // track and adjust for it.
+  if (end !== el.value.length) return;
+  
   let kana, convertStart, convertEnd;
   if (hasSelection) {
     // Convert selected text
