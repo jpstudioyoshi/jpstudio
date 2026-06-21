@@ -5,6 +5,24 @@ const fs   = require('fs');
 let mainWindow;
 let mgmtWindow = null;
 
+// ── Single instance lock ────────────────────────────────────────────
+// Without this, launching the app while another instance is already running
+// spawns a second, competing instance instead of focusing the existing one.
+// That caused real, reproducible window-focus corruption and stuck native
+// file dialogs (session 46) — every second launch fights the first one for
+// the same window state.
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
+
 // ── Management window ─────────────────────────────────────────────────────────
 function openMgmtWindow() {
   if (mgmtWindow && !mgmtWindow.isDestroyed()) {

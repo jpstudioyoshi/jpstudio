@@ -247,7 +247,8 @@ function renderListenPlaylist() {
       <button class="listen-track-del" onclick="event.stopPropagation();removeListenTrack(${i})" title="Remove from playlist">✕</button>
     </div>`;
   }).join('');
-  document.getElementById('listenTrackCount').textContent =
+  const countEl = document.getElementById('listenTrackCount');
+  if (countEl) countEl.textContent =
     listenTracks.length + ' track' + (listenTracks.length !== 1 ? 's' : '');
   if (listenTracks.length === 1) {
     const cb = document.querySelector('.listen-check');

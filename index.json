@@ -3,7 +3,7 @@
     "type": "function",
     "name": "openMgmtWindow",
     "file": "main.js",
-    "line": 9,
+    "line": 27,
     "desc": "if (mgmtWindow && !mgmtWindow.isDestroyed()) {",
     "callers": 1,
     "exported": false
@@ -12,7 +12,7 @@
     "type": "function",
     "name": "getDbPath",
     "file": "main.js",
-    "line": 124,
+    "line": 142,
     "desc": "return path.join(app.getPath('userData'), 'jpstudio.db');",
     "callers": 2,
     "exported": false
@@ -21,7 +21,7 @@
     "type": "function",
     "name": "initDatabase",
     "file": "main.js",
-    "line": 128,
+    "line": 146,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -30,7 +30,7 @@
     "type": "function",
     "name": "saveDatabase",
     "file": "main.js",
-    "line": 155,
+    "line": 173,
     "desc": "if (!db) return;",
     "callers": 18,
     "exported": false
@@ -39,7 +39,7 @@
     "type": "function",
     "name": "createSchema",
     "file": "main.js",
-    "line": 166,
+    "line": 184,
     "desc": "db.run(`",
     "callers": 1,
     "exported": false
@@ -48,7 +48,7 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 659,
+    "line": 677,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');",
     "callers": 1,
     "exported": false
@@ -57,7 +57,7 @@
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 1026,
+    "line": 1044,
     "desc": "const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese",
     "callers": 2,
     "exported": false
@@ -66,7 +66,7 @@
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 1033,
+    "line": 1051,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}",
     "callers": 2,
     "exported": false
@@ -75,7 +75,7 @@
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 1043,
+    "line": 1061,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];",
     "callers": 1,
     "exported": false
@@ -84,7 +84,7 @@
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1294,
+    "line": 1312,
     "desc": "mainWindow = new BrowserWindow({",
     "callers": 2,
     "exported": false
@@ -93,7 +93,7 @@
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1345,
+    "line": 1363,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {",
     "callers": 4,
     "exported": false
@@ -102,7 +102,7 @@
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1433,
+    "line": 1451,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {",
     "callers": 2,
     "exported": false
@@ -111,49 +111,42 @@
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 400,
+    "line": 418,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 413,
+    "line": 431,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 422,
+    "line": 440,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 473,
+    "line": 491,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 526,
+    "line": 544,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 542,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 551,
+    "line": 560,
     "desc": "db.run"
   },
   {
@@ -167,26 +160,26 @@
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 584,
+    "line": 587,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 601,
+    "line": 602,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 608,
+    "line": 619,
     "desc": "db.run"
   },
   {
     "type": "storage",
-    "name": "INSERT",
+    "name": "UPDATE",
     "file": "main.js",
     "line": 626,
     "desc": "db.run"
@@ -195,91 +188,84 @@
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 648,
+    "line": 644,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 666,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 653,
+    "line": 671,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 740,
+    "line": 758,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 791,
+    "line": 809,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 859,
+    "line": 877,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 916,
+    "line": 934,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 933,
+    "line": 951,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 941,
+    "line": 959,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1058,
+    "line": 1076,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1122,
+    "line": 1140,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1203,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 1219,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 1223,
+    "line": 1221,
     "desc": "db.run"
   },
   {
@@ -291,16 +277,30 @@
   },
   {
     "type": "storage",
-    "name": "DELETE",
+    "name": "INSERT",
     "file": "main.js",
-    "line": 1277,
+    "line": 1241,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "main.js",
+    "line": 1255,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1278,
+    "line": 1295,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "DELETE",
+    "file": "main.js",
+    "line": 1296,
     "desc": "db.run"
   },
   {
@@ -2882,7 +2882,7 @@
     "type": "function",
     "name": "loadAndPlayTrack",
     "file": "src/core-listen.js",
-    "line": 259,
+    "line": 260,
     "desc": "loadListenTrack(idx, false);",
     "callers": 2,
     "exported": true
@@ -2891,7 +2891,7 @@
     "type": "function",
     "name": "removeListenTrack",
     "file": "src/core-listen.js",
-    "line": 263,
+    "line": 264,
     "desc": "if (idx < 0 || idx >= listenTracks.length) return;",
     "callers": 2,
     "exported": true
@@ -2900,7 +2900,7 @@
     "type": "function",
     "name": "toggleSelectAll",
     "file": "src/core-listen.js",
-    "line": 302,
+    "line": 303,
     "desc": "document.querySelectorAll('.listen-check').forEach(cb => cb.checked = checked);",
     "callers": 1,
     "exported": true
@@ -2909,7 +2909,7 @@
     "type": "function",
     "name": "updateSelectAll",
     "file": "src/core-listen.js",
-    "line": 306,
+    "line": 307,
     "desc": "const all = document.querySelectorAll('.listen-check');",
     "callers": 3,
     "exported": true
@@ -2918,7 +2918,7 @@
     "type": "function",
     "name": "getCheckedIndices",
     "file": "src/core-listen.js",
-    "line": 313,
+    "line": 314,
     "desc": "return Array.from(document.querySelectorAll('.listen-check:checked'))",
     "callers": 1,
     "exported": false
@@ -2927,7 +2927,7 @@
     "type": "function",
     "name": "playSelected",
     "file": "src/core-listen.js",
-    "line": 318,
+    "line": 319,
     "desc": "const sel = listenTracks[listenCurrentIdx >= 0 ? listenCurrentIdx : 0];",
     "callers": 2,
     "exported": true
@@ -2936,7 +2936,7 @@
     "type": "function",
     "name": "loadListenTrack",
     "file": "src/core-listen.js",
-    "line": 332,
+    "line": 333,
     "desc": "autoplay = false; // Manual play only",
     "callers": 10,
     "exported": true
@@ -2945,7 +2945,7 @@
     "type": "function",
     "name": "listenQueueNext",
     "file": "src/core-listen.js",
-    "line": 371,
+    "line": 372,
     "desc": "if (listenQueue.length && listenQueuePos >= 0) {",
     "callers": 2,
     "exported": true
@@ -2954,7 +2954,7 @@
     "type": "function",
     "name": "listenUpdateNavBtns",
     "file": "src/core-listen.js",
-    "line": 385,
+    "line": 386,
     "desc": "const prevBtn = document.querySelector('.btn-action[title=\"Previous\"]');",
     "callers": 2,
     "exported": false
@@ -2963,7 +2963,7 @@
     "type": "function",
     "name": "listenQueuePrev",
     "file": "src/core-listen.js",
-    "line": 394,
+    "line": 395,
     "desc": "if (listenQueue.length && listenQueuePos > 0) {",
     "callers": 2,
     "exported": true
@@ -2972,7 +2972,7 @@
     "type": "function",
     "name": "toggleListenPlay",
     "file": "src/core-listen.js",
-    "line": 403,
+    "line": 404,
     "desc": "const audio = document.getElementById('listenAudio');",
     "callers": 7,
     "exported": true
@@ -2981,7 +2981,7 @@
     "type": "function",
     "name": "listenTransToggleKana",
     "file": "src/core-listen.js",
-    "line": 434,
+    "line": 435,
     "desc": "Translation cache is defined earlier in the file (GLOBAL QUICK TRANSLATE section)",
     "callers": 2,
     "exported": true
@@ -2990,7 +2990,7 @@
     "type": "function",
     "name": "listenTransClear",
     "file": "src/core-listen.js",
-    "line": 438,
+    "line": 439,
     "desc": "const inp = document.getElementById('listenTranscribeText');",
     "callers": 3,
     "exported": true
@@ -2999,7 +2999,7 @@
     "type": "function",
     "name": "renderListenSession",
     "file": "src/core-listen.js",
-    "line": 468,
+    "line": 469,
     "desc": "const list = document.getElementById('listenSessionList');",
     "callers": 1,
     "exported": false
@@ -3008,7 +3008,7 @@
     "type": "function",
     "name": "listenSessionDelete",
     "file": "src/core-listen.js",
-    "line": 489,
+    "line": 490,
     "desc": "if (i >= 0 && i < ListenState.sessionLookups.length) {",
     "callers": 1,
     "exported": false
@@ -3017,7 +3017,7 @@
     "type": "function",
     "name": "updatePlayBtn",
     "file": "src/core-listen.js",
-    "line": 496,
+    "line": 497,
     "desc": "const btn = document.getElementById('listenPlayBtn');",
     "callers": 15,
     "exported": false
@@ -3026,7 +3026,7 @@
     "type": "function",
     "name": "listenOnEnded",
     "file": "src/core-listen.js",
-    "line": 501,
+    "line": 502,
     "desc": "listenPlaying = false; updatePlayBtn();",
     "callers": 1,
     "exported": false
@@ -3035,7 +3035,7 @@
     "type": "function",
     "name": "listenTimeUpdate",
     "file": "src/core-listen.js",
-    "line": 508,
+    "line": 509,
     "desc": "const audio = document.getElementById('listenAudio');",
     "callers": 2,
     "exported": false
@@ -3044,7 +3044,7 @@
     "type": "function",
     "name": "setListenLoopPause",
     "file": "src/core-listen.js",
-    "line": 553,
+    "line": 554,
     "desc": "listenLoopPauseSecs = secs;",
     "callers": 1,
     "exported": false
@@ -3053,7 +3053,7 @@
     "type": "function",
     "name": "setListenSpeed",
     "file": "src/core-listen.js",
-    "line": 558,
+    "line": 559,
     "desc": "listenCurrentSpeed = rate;",
     "callers": 2,
     "exported": false
@@ -3062,7 +3062,7 @@
     "type": "function",
     "name": "listenSkip",
     "file": "src/core-listen.js",
-    "line": 569,
+    "line": 570,
     "desc": "const audio = document.getElementById('listenAudio');",
     "callers": 2,
     "exported": true
@@ -3071,7 +3071,7 @@
     "type": "function",
     "name": "fmtTime",
     "file": "src/core-listen.js",
-    "line": 574,
+    "line": 575,
     "desc": "if (!s || isNaN(s)) return '0:00';",
     "callers": 11,
     "exported": false
@@ -3080,7 +3080,7 @@
     "type": "function",
     "name": "cycleLoop",
     "file": "src/core-listen.js",
-    "line": 584,
+    "line": 585,
     "desc": "if (listenAbLooping || loopSetState === 'a' || loopSetState === 'b') {",
     "callers": 3,
     "exported": true
@@ -3089,7 +3089,7 @@
     "type": "function",
     "name": "updateLoopSetUI",
     "file": "src/core-listen.js",
-    "line": 597,
+    "line": 598,
     "desc": "kept as alias for safety",
     "callers": 6,
     "exported": false
@@ -3098,7 +3098,7 @@
     "type": "function",
     "name": "clearAbLoop",
     "file": "src/core-listen.js",
-    "line": 632,
+    "line": 633,
     "desc": "listenAbA = null; listenAbB = null; listenAbLooping = false; loopSetState = null;",
     "callers": 3,
     "exported": false
@@ -3107,7 +3107,7 @@
     "type": "function",
     "name": "waveformClick",
     "file": "src/core-listen.js",
-    "line": 638,
+    "line": 639,
     "desc": "const canvas = document.getElementById('listenWaveform');",
     "callers": 2,
     "exported": false
@@ -3116,7 +3116,7 @@
     "type": "function",
     "name": "updateListenTimeDisplay",
     "file": "src/core-listen.js",
-    "line": 699,
+    "line": 700,
     "desc": "const audio = document.getElementById('listenAudio');",
     "callers": 4,
     "exported": false
@@ -3125,7 +3125,7 @@
     "type": "function",
     "name": "saveListenNote",
     "file": "src/core-listen.js",
-    "line": 708,
+    "line": 709,
     "desc": "clearTimeout(listenNotesSave);",
     "callers": 1,
     "exported": false
@@ -3134,7 +3134,7 @@
     "type": "function",
     "name": "clearListenPlaylist",
     "file": "src/core-listen.js",
-    "line": 720,
+    "line": 721,
     "desc": "listenTracks.forEach(t => URL.revokeObjectURL(t.url));",
     "callers": 3,
     "exported": true
@@ -3143,7 +3143,7 @@
     "type": "function",
     "name": "decodeWaveform",
     "file": "src/core-listen.js",
-    "line": 746,
+    "line": 747,
     "desc": "const waveMsg = document.getElementById('listenWaveMsg');",
     "callers": 1,
     "exported": false
@@ -3152,7 +3152,7 @@
     "type": "function",
     "name": "findSilenceBoundary",
     "file": "src/core-listen.js",
-    "line": 777,
+    "line": 778,
     "desc": "direction: 'before' scans leftward, 'after' scans rightward.",
     "callers": 4,
     "exported": false
@@ -3161,7 +3161,7 @@
     "type": "function",
     "name": "drawWaveform",
     "file": "src/core-listen.js",
-    "line": 832,
+    "line": 833,
     "desc": "const canvas = document.getElementById('listenWaveform');",
     "callers": 15,
     "exported": false
@@ -3170,7 +3170,7 @@
     "type": "function",
     "name": "toggleDictationMode",
     "file": "src/core-listen.js",
-    "line": 997,
+    "line": 998,
     "desc": "── Toggle dictation mode ─────────────────────────────────",
     "callers": 2,
     "exported": true
@@ -3179,7 +3179,7 @@
     "type": "function",
     "name": "newDictSentence",
     "file": "src/core-listen.js",
-    "line": 1035,
+    "line": 1036,
     "desc": "dictSentence = N5_SENTENCES[Math.floor(Math.random() * N5_SENTENCES.length)];",
     "callers": 4,
     "exported": true
@@ -3188,7 +3188,7 @@
     "type": "function",
     "name": "playDictSentence",
     "file": "src/core-listen.js",
-    "line": 1045,
+    "line": 1046,
     "desc": "if (!dictSentence) return;",
     "callers": 5,
     "exported": true
@@ -3197,7 +3197,7 @@
     "type": "function",
     "name": "checkDictation",
     "file": "src/core-listen.js",
-    "line": 1050,
+    "line": 1051,
     "desc": "if (!dictSentence) return;",
     "callers": 3,
     "exported": true
@@ -3206,7 +3206,7 @@
     "type": "function",
     "name": "showDictReveal",
     "file": "src/core-listen.js",
-    "line": 1102,
+    "line": 1103,
     "desc": "if (!dictSentence) return;",
     "callers": 2,
     "exported": false
@@ -3215,7 +3215,7 @@
     "type": "function",
     "name": "onDictationInput",
     "file": "src/core-listen.js",
-    "line": 1111,
+    "line": 1112,
     "desc": "if (!dictationActive) return;",
     "callers": 2,
     "exported": false
@@ -3224,7 +3224,7 @@
     "type": "function",
     "name": "onDictationInputAudio",
     "file": "src/core-listen.js",
-    "line": 1155,
+    "line": 1156,
     "desc": "onDictationInput(); }",
     "callers": 1,
     "exported": false
@@ -3233,7 +3233,7 @@
     "type": "function",
     "name": "cancelDictResume",
     "file": "src/core-listen.js",
-    "line": 1157,
+    "line": 1158,
     "desc": "if (dictResumeTimer)    { clearTimeout(dictResumeTimer);    dictResumeTimer = null; }",
     "callers": 3,
     "exported": false
@@ -3242,7 +3242,7 @@
     "type": "function",
     "name": "updateDictCountdown",
     "file": "src/core-listen.js",
-    "line": 1164,
+    "line": 1165,
     "desc": "const cd = document.getElementById('dictCountdown');",
     "callers": 2,
     "exported": false
@@ -3251,7 +3251,7 @@
     "type": "function",
     "name": "setDictStatus",
     "file": "src/core-listen.js",
-    "line": 1173,
+    "line": 1174,
     "desc": "const el = document.getElementById('dictStatus');",
     "callers": 5,
     "exported": false
@@ -3260,7 +3260,7 @@
     "type": "function",
     "name": "clearDictation",
     "file": "src/core-listen.js",
-    "line": 1188,
+    "line": 1189,
     "desc": "const ta = document.getElementById('dictationText') || document.getElementById('dictationTextAudio')",
     "callers": 4,
     "exported": true
@@ -3269,7 +3269,7 @@
     "type": "function",
     "name": "copyDictation",
     "file": "src/core-listen.js",
-    "line": 1195,
+    "line": 1196,
     "desc": "const ta  = document.getElementById('dictationTextAudio') || document.getElementById('dictationText'",
     "callers": 3,
     "exported": true
@@ -3278,7 +3278,7 @@
     "type": "function",
     "name": "toggleShadowing",
     "file": "src/core-listen.js",
-    "line": 1218,
+    "line": 1219,
     "desc": "",
     "callers": 4,
     "exported": true
@@ -3287,7 +3287,7 @@
     "type": "function",
     "name": "shadowOnEnded",
     "file": "src/core-listen.js",
-    "line": 1259,
+    "line": 1260,
     "desc": "shadowAdvanceOrRepeat();",
     "callers": 1,
     "exported": false
@@ -3296,7 +3296,7 @@
     "type": "function",
     "name": "shadowCheckTime",
     "file": "src/core-listen.js",
-    "line": 1264,
+    "line": 1265,
     "desc": "if (!shadowingActive || listenAbB === null) return;",
     "callers": 1,
     "exported": false
@@ -3305,7 +3305,7 @@
     "type": "function",
     "name": "shadowAdvanceOrRepeat",
     "file": "src/core-listen.js",
-    "line": 1274,
+    "line": 1275,
     "desc": "shadowRepsDone++;",
     "callers": 2,
     "exported": false
@@ -3314,7 +3314,7 @@
     "type": "function",
     "name": "shadowContinue",
     "file": "src/core-listen.js",
-    "line": 1300,
+    "line": 1301,
     "desc": "updateShadowStatus();",
     "callers": 2,
     "exported": false
@@ -3323,7 +3323,7 @@
     "type": "function",
     "name": "updateShadowStatus",
     "file": "src/core-listen.js",
-    "line": 1323,
+    "line": 1324,
     "desc": "const el = document.getElementById('shadowStatus');",
     "callers": 7,
     "exported": false
@@ -3332,7 +3332,7 @@
     "type": "function",
     "name": "listenPopulateMics",
     "file": "src/core-listen.js",
-    "line": 1337,
+    "line": 1338,
     "desc": "ListenState.sh* — see declaration below",
     "callers": 2,
     "exported": false
@@ -3341,7 +3341,7 @@
     "type": "function",
     "name": "listenSetMic",
     "file": "src/core-listen.js",
-    "line": 1370,
+    "line": 1371,
     "desc": "ListenState.selectedMicId = deviceId || null;",
     "callers": 1,
     "exported": false
@@ -3350,7 +3350,7 @@
     "type": "function",
     "name": "listenRequestMicAccess",
     "file": "src/core-listen.js",
-    "line": 1380,
+    "line": 1381,
     "desc": "const select = document.getElementById('listenMicSelect');",
     "callers": 1,
     "exported": false
@@ -3359,7 +3359,7 @@
     "type": "function",
     "name": "listenShPlayback",
     "file": "src/core-listen.js",
-    "line": 1387,
+    "line": 1388,
     "desc": "if (!ListenState.shRecordedBlob) return;",
     "callers": 1,
     "exported": false
@@ -3368,7 +3368,7 @@
     "type": "function",
     "name": "listenShDrawWaveform",
     "file": "src/core-listen.js",
-    "line": 1408,
+    "line": 1409,
     "desc": "const canvas = document.getElementById('listenShWaveform');",
     "callers": 2,
     "exported": false
@@ -3377,7 +3377,7 @@
     "type": "function",
     "name": "setListenRecMode",
     "file": "src/core-listen.js",
-    "line": 1461,
+    "line": 1462,
     "desc": "ListenState.recMode — see declaration below",
     "callers": 4,
     "exported": true
@@ -3386,7 +3386,7 @@
     "type": "function",
     "name": "updateListenSegmentUI",
     "file": "src/core-listen.js",
-    "line": 1480,
+    "line": 1481,
     "desc": "const countEl = document.getElementById('listenSegmentCount');",
     "callers": 5,
     "exported": false
@@ -3395,7 +3395,7 @@
     "type": "function",
     "name": "listenSegDragStart",
     "file": "src/core-listen.js",
-    "line": 1510,
+    "line": 1511,
     "desc": "ListenState.dragIdx — see declaration below",
     "callers": 1,
     "exported": false
@@ -3404,7 +3404,7 @@
     "type": "function",
     "name": "listenSegDragOver",
     "file": "src/core-listen.js",
-    "line": 1516,
+    "line": 1517,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -3413,7 +3413,7 @@
     "type": "function",
     "name": "listenSegDrop",
     "file": "src/core-listen.js",
-    "line": 1523,
+    "line": 1524,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -3422,7 +3422,7 @@
     "type": "function",
     "name": "listenSegDragEnd",
     "file": "src/core-listen.js",
-    "line": 1537,
+    "line": 1538,
     "desc": "ListenState.dragIdx = -1;",
     "callers": 1,
     "exported": false
@@ -3431,7 +3431,7 @@
     "type": "function",
     "name": "listenShRecord",
     "file": "src/core-listen.js",
-    "line": 1545,
+    "line": 1546,
     "desc": "const btn = document.getElementById('listenShRecordBtn');",
     "callers": 1,
     "exported": false
@@ -3440,7 +3440,7 @@
     "type": "function",
     "name": "listenPlaySegment",
     "file": "src/core-listen.js",
-    "line": 1604,
+    "line": 1605,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;",
     "callers": 1,
     "exported": false
@@ -3449,7 +3449,7 @@
     "type": "function",
     "name": "listenDeleteSegment",
     "file": "src/core-listen.js",
-    "line": 1610,
+    "line": 1611,
     "desc": "if (idx < 0 || idx >= ListenState.segmentRecordings.length) return;",
     "callers": 1,
     "exported": false
@@ -3458,7 +3458,7 @@
     "type": "function",
     "name": "listenClearSegments",
     "file": "src/core-listen.js",
-    "line": 1616,
+    "line": 1617,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;",
     "callers": 3,
     "exported": true
@@ -3467,7 +3467,7 @@
     "type": "function",
     "name": "listenPlayAllSegments",
     "file": "src/core-listen.js",
-    "line": 1624,
+    "line": 1625,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;",
     "callers": 3,
     "exported": true
@@ -3476,7 +3476,7 @@
     "type": "function",
     "name": "listenCombineSegments",
     "file": "src/core-listen.js",
-    "line": 1644,
+    "line": 1645,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;",
     "callers": 3,
     "exported": true
@@ -3485,7 +3485,7 @@
     "type": "function",
     "name": "listenDownloadSegments",
     "file": "src/core-listen.js",
-    "line": 1694,
+    "line": 1695,
     "desc": "if (ListenState.segmentRecordings.length === 0) return;",
     "callers": 3,
     "exported": true
@@ -3494,7 +3494,7 @@
     "type": "function",
     "name": "getVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1784,
+    "line": 1785,
     "desc": "",
     "callers": 6,
     "exported": false
@@ -3503,7 +3503,7 @@
     "type": "function",
     "name": "saveVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1791,
+    "line": 1792,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -3512,7 +3512,7 @@
     "type": "function",
     "name": "dropVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1802,
+    "line": 1803,
     "desc": "if (listenCurrentIdx < 0) return;",
     "callers": 5,
     "exported": true
@@ -3521,7 +3521,7 @@
     "type": "function",
     "name": "renderVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1820,
+    "line": 1821,
     "desc": "if (listenCurrentIdx < 0) return;",
     "callers": 4,
     "exported": false
@@ -3530,7 +3530,7 @@
     "type": "function",
     "name": "updateVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1847,
+    "line": 1848,
     "desc": "const bms = getVocabBookmarks(trackName);",
     "callers": 2,
     "exported": false
@@ -3539,7 +3539,7 @@
     "type": "function",
     "name": "parseTimeStr",
     "file": "src/core-listen.js",
-    "line": 1852,
+    "line": 1853,
     "desc": "str = str.trim();",
     "callers": 1,
     "exported": false
@@ -3548,7 +3548,7 @@
     "type": "function",
     "name": "updateVocabTime",
     "file": "src/core-listen.js",
-    "line": 1865,
+    "line": 1866,
     "desc": "const secs = parseTimeStr(value);",
     "callers": 1,
     "exported": false
@@ -3557,7 +3557,7 @@
     "type": "function",
     "name": "deleteVocabBookmark",
     "file": "src/core-listen.js",
-    "line": 1878,
+    "line": 1879,
     "desc": "const bms = getVocabBookmarks(trackName);",
     "callers": 3,
     "exported": true
@@ -3566,7 +3566,7 @@
     "type": "function",
     "name": "clearVocabBookmarks",
     "file": "src/core-listen.js",
-    "line": 1885,
+    "line": 1886,
     "desc": "if (listenCurrentIdx < 0) return;",
     "callers": 3,
     "exported": true
@@ -3575,7 +3575,7 @@
     "type": "function",
     "name": "seekToBookmark",
     "file": "src/core-listen.js",
-    "line": 1892,
+    "line": 1893,
     "desc": "const audio = document.getElementById('listenAudio');",
     "callers": 3,
     "exported": true
@@ -3584,7 +3584,7 @@
     "type": "function",
     "name": "jishoLookup",
     "file": "src/core-listen.js",
-    "line": 1898,
+    "line": 1899,
     "desc": "const q = (word || '').trim();",
     "callers": 3,
     "exported": true
@@ -3593,7 +3593,7 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-listen.js",
-    "line": 1070,
+    "line": 1071,
     "desc": "The student is practising Japanese dictation at N5 level. The sentence that was "
   },
   {
@@ -4843,7 +4843,7 @@
     "file": "src/features-kana.js",
     "line": 116,
     "desc": "let out = '';",
-    "callers": 6,
+    "callers": 7,
     "exported": true
   },
   {
@@ -4852,14 +4852,14 @@
     "file": "src/features-kana.js",
     "line": 198,
     "desc": "Then call: setButtonGroupActive('groupName', 'activeButtonId')",
-    "callers": 6,
+    "callers": 8,
     "exported": true
   },
   {
     "type": "function",
     "name": "hiraganaToKatakana",
     "file": "src/features-kana.js",
-    "line": 291,
+    "line": 256,
     "desc": "return str.split('').map(c => {",
     "callers": 4,
     "exported": true
@@ -4868,34 +4868,43 @@
     "type": "function",
     "name": "_kanaSyncCursor",
     "file": "src/features-kana.js",
-    "line": 313,
-    "desc": "cursor the same way without focus or click firing either.",
+    "line": 275,
+    "desc": "gone — see kanaInputHandler, which now converts the whole field every",
     "callers": 4,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "_kanaDebug",
+    "file": "src/features-kana.js",
+    "line": 310,
+    "desc": "time after the bug reappears to see a readable table of recent events.",
+    "callers": 9,
     "exported": false
   },
   {
     "type": "function",
     "name": "kanaOn",
     "file": "src/features-kana.js",
-    "line": 352,
+    "line": 328,
     "desc": "if (!el || el._kanaOn) return;",
-    "callers": 20,
+    "callers": 23,
     "exported": true
   },
   {
     "type": "function",
     "name": "kanaOff",
     "file": "src/features-kana.js",
-    "line": 428,
+    "line": 411,
     "desc": "if (!el) return;",
-    "callers": 12,
+    "callers": 14,
     "exported": true
   },
   {
     "type": "function",
     "name": "kanaToggle",
     "file": "src/features-kana.js",
-    "line": 437,
+    "line": 421,
     "desc": "if (!el._kanaOn) {",
     "callers": 5,
     "exported": true
@@ -4904,7 +4913,7 @@
     "type": "function",
     "name": "kanjiPickerShow",
     "file": "src/features-kana.js",
-    "line": 470,
+    "line": 455,
     "desc": "kajiPickerClose();",
     "callers": 4,
     "exported": true
@@ -4913,7 +4922,7 @@
     "type": "function",
     "name": "kajiPickerClose",
     "file": "src/features-kana.js",
-    "line": 568,
+    "line": 553,
     "desc": "document.querySelectorAll('.kanji-picker').forEach(p => {",
     "callers": 6,
     "exported": true
@@ -4922,7 +4931,7 @@
     "type": "function",
     "name": "kanaToKanji",
     "file": "src/features-kana.js",
-    "line": 695,
+    "line": 680,
     "desc": "if (document.querySelector('.kanji-picker')) { kajiPickerClose(); return; }",
     "callers": 7,
     "exported": true
@@ -4931,16 +4940,16 @@
     "type": "function",
     "name": "kanaSetMode",
     "file": "src/features-kana.js",
-    "line": 797,
+    "line": 782,
     "desc": "const inp = document.getElementById(inputId);",
-    "callers": 25,
+    "callers": 28,
     "exported": true
   },
   {
     "type": "function",
     "name": "kanaToolbar",
     "file": "src/features-kana.js",
-    "line": 841,
+    "line": 834,
     "desc": "Guards against double-init: safe to call on every panel render.",
     "callers": 14,
     "exported": true
@@ -4949,7 +4958,7 @@
     "type": "function",
     "name": "kanaAddToggle",
     "file": "src/features-kana.js",
-    "line": 943,
+    "line": 937,
     "desc": "Use for inputs that are always hiragana with no mode choice.",
     "callers": 9,
     "exported": true
@@ -4958,7 +4967,7 @@
     "type": "function",
     "name": "_initKanaToolbars",
     "file": "src/features-kana.js",
-    "line": 953,
+    "line": 947,
     "desc": "console.log('[kana] _initKanaToolbars running, readyState=', document.readyState);",
     "callers": 3,
     "exported": false
@@ -4967,7 +4976,7 @@
     "type": "function",
     "name": "setGlobalQTMode",
     "file": "src/features-kana.js",
-    "line": 975,
+    "line": 971,
     "desc": "── Mode-setter shims (kept for programmatic callers) ────────────────────────",
     "callers": 2,
     "exported": true
@@ -4976,7 +4985,7 @@
     "type": "function",
     "name": "setChatInputMode",
     "file": "src/features-kana.js",
-    "line": 976,
+    "line": 972,
     "desc": "All now reference IDs generated by kanaToolbar's naming convention.",
     "callers": 3,
     "exported": true
@@ -4985,7 +4994,7 @@
     "type": "function",
     "name": "listenTransSetMode",
     "file": "src/features-kana.js",
-    "line": 977,
+    "line": 973,
     "desc": "kanaSetMode('listenTranscribeText', mode, 'listenTranscribeTextKana',  { romaji:'listenTranscribeTex",
     "callers": 5,
     "exported": true
@@ -4994,7 +5003,7 @@
     "type": "function",
     "name": "setVtDictateMode",
     "file": "src/features-kana.js",
-    "line": 978,
+    "line": 974,
     "desc": "kanaSetMode('vtDictateInput',       mode, 'vtDictateInputKana',       { romaji:'vtDictateInputRomaji",
     "callers": 1,
     "exported": true
@@ -5003,7 +5012,7 @@
     "type": "function",
     "name": "setGramSentQMode",
     "file": "src/features-kana.js",
-    "line": 979,
+    "line": 975,
     "desc": "kanaSetMode('gramSentQuestion',     mode, 'gramSentQuestionKana',     { romaji:'gramSentQuestionRoma",
     "callers": 1,
     "exported": true
@@ -5012,7 +5021,7 @@
     "type": "function",
     "name": "setWritingMode",
     "file": "src/features-kana.js",
-    "line": 980,
+    "line": 976,
     "desc": "kanaSetMode('writingInput',         mode, 'writingInputKana',         { romaji:'writingInputRomajiBt",
     "callers": 5,
     "exported": true
@@ -5021,7 +5030,7 @@
     "type": "function",
     "name": "transDoKanjiConvert",
     "file": "src/features-kana.js",
-    "line": 981,
+    "line": 977,
     "desc": "const i=document.getElementById('transInput'); if(i) kanaToKanji(i,document.getElementById('transInp",
     "callers": 4,
     "exported": true

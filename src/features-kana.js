@@ -208,80 +208,45 @@ function kanaInputHandler(e) {
   const pos = el.selectionStart;
   const raw = el.value;
   
-  // Determine where to start converting - respect mode snapshot
-  const snapshotLen = el._modeSnapshot || 0;
+  // Convert the WHOLE field every keystroke. romajiToHiragana already
+  // skips any character that's already kana/kanji/punctuation (code >=
+  // 0x3000) one at a time, so re-running it over already-converted text
+  // is a safe no-op — it doesn't need a separately-tracked "where did I
+  // leave off" boundary to know what to leave alone. The old approach
+  // (_modeSnapshot, a cursor-position boundary re-anchored on clicks) kept
+  // drifting out of sync with where the user actually clicked/edited,
+  // orphaning characters typed right after a click (session 46). Removed.
+  let result = romajiToHiragana(raw);
   
-  // Keep everything before the snapshot as-is
-  const preserved = raw.slice(0, snapshotLen);
-  const toProcess = raw.slice(snapshotLen);
-  
-  // Only convert romaji portions in the new text, preserve all existing Japanese characters
-  let result = '';
-  let i = 0;
-  
-  while (i < toProcess.length) {
-    const ch = toProcess[i];
-    const cp = ch.charCodeAt(0);
-    
-    // If it's already Japanese (hiragana, katakana, kanji, punctuation), keep as-is
-    if (cp >= 0x3000) {
-      result += ch;
-      i++;
-      continue;
-    }
-    
-    // Find the extent of the romaji segment
-    let romajiEnd = i;
-    while (romajiEnd < toProcess.length && toProcess.charCodeAt(romajiEnd) < 0x3000) {
-      romajiEnd++;
-    }
-    
-    // Convert this romaji segment
-    const romajiSegment = toProcess.slice(i, romajiEnd);
-    let converted = romajiToHiragana(romajiSegment);
-    
-    // If in katakana mode, convert the newly generated kana to katakana
-    if (el._kanaMode === 'katakana') {
-      converted = hiraganaToKatakana(converted);
-    }
-
-    // If converted still ends with unconverted ASCII (partial romaji like 'h', 'sh' etc.)
-    // and there's a Japanese character following this segment, update the snapshot
-    // so the trailing ASCII gets re-processed with the next keystroke.
-    const trailingAscii = converted.match(/[a-z']+$/i);
-    if (trailingAscii && romajiEnd < toProcess.length) {
-      // Move snapshot forward to just before the trailing ascii so it stays editable
-      el._modeSnapshot = (snapshotLen + i + (romajiSegment.length - trailingAscii[0].length));
-    }
-    
-    result += converted;
-    i = romajiEnd;
+  // Katakana only applies from the point the user actually switched into
+  // katakana mode (_kataFrom — set once, in kanaSetMode, when the mode
+  // button is clicked; never touched by ordinary clicks/edits). Text that
+  // existed before that point stays hiragana even though the whole string
+  // was just re-scanned above.
+  if (el._kanaMode === 'katakana' && el._kataFrom != null) {
+    const before = result.slice(0, el._kataFrom);
+    const after  = hiraganaToKatakana(result.slice(el._kataFrom));
+    result = before + after;
   }
   
-  // Combine preserved + converted
-  let finalResult = preserved + result;
-  
-  // Convert quotation marks to Japanese brackets in the new portion only
+  // Convert quotation marks to Japanese brackets — scan the whole result
+  // linearly to track open/close state; already-converted 「」 brackets
+  // update the toggle but aren't touched themselves, so this is also safe
+  // to run on the full string every time.
   let quoteOpen = false;
-  // Count existing open quotes in preserved portion + already-converted quotes in result
-  const scanBase = preserved + result;
-  for (const c of scanBase) {
-    if (c === '「') quoteOpen = true;
-    if (c === '」') quoteOpen = false;
-  }
   result = result.split('').map(c => {
-    if (c === '"' || c === '"' || c === '"') {
+    if (c === '「') { quoteOpen = true; return c; }
+    if (c === '」') { quoteOpen = false; return c; }
+    if (c === '"' || c === '\u201c' || c === '\u201d') {
       quoteOpen = !quoteOpen;
       return quoteOpen ? '「' : '」';
     }
     return c;
   }).join('');
   
-  finalResult = preserved + result;
-  
-  if (finalResult !== raw) {
-    el.value = finalResult;
-    const diff = raw.length - finalResult.length;
+  if (result !== raw) {
+    el.value = result;
+    const diff = raw.length - result.length;
     const newPos = Math.max(0, pos - diff);
     el.setSelectionRange(newPos, newPos);
   }
@@ -299,30 +264,18 @@ function hiraganaToKatakana(str) {
   }).join('');
 }
 
-// ── Cursor sync — SINGLE SOURCE OF TRUTH for every kana input ────────────
-// _modeSnapshot marks the boundary kanaInputHandler treats as "already
-// settled" vs. "fresh text to convert". It must be re-anchored to the real
-// cursor position every time the cursor moves — not just on focus. A plain
-// click INSIDE an already-focused field does not fire 'focus' at all, so
-// relying on focus alone leaves a stale (too-high) snapshot: newly typed
-// romaji before that stale boundary is left unconverted until the cursor
-// types far enough to catch up to it — which looks like "romaji for a few
-// characters, then it snaps to hiragana". Arrow/Home/End keys move the
-// cursor the same way without focus or click firing either.
-// Used identically by every kana input, toolbar or not.
+// ── Cursor sync — resolves mode from button state ─────────────────────────
+// Mode itself is always read fresh from which toolbar button is
+// highlighted — that's ground truth and doesn't drift. This function's
+// only remaining job is that resolution (plus caret colour and making
+// sure the input listener is still attached). It used to also manage a
+// _modeSnapshot cursor-position boundary for the converter, but that's
+// gone — see kanaInputHandler, which now converts the whole field every
+// keystroke instead of needing a separately-tracked boundary.
 function _kanaSyncCursor(el) {
   if (!el._kanaOn) return;
-  // If a mode switch just set _modeSnapshot (button click → kanaSetMode →
-  // inp.focus()), don't touch it — it's already correct.
-  if (el._modeSwitchPending) {
-    el._modeSwitchPending = false;
-    if (el._kanaMode === 'hiragana') el.style.caretColor = 'var(--teal)';
-    else if (el._kanaMode === 'katakana') el.style.caretColor = 'var(--gold)';
-    return;
-  }
-  // Defer one tick: focus/click fire before the browser finishes
-  // repositioning the caret, so selectionStart read synchronously here
-  // would still reflect the OLD cursor position.
+  // Defer one tick so focus has time to settle before reading button
+  // state (mostly relevant right after kanaSetMode's inp.focus() call).
   setTimeout(() => {
     // If this input has a kana toolbar (kanaToolbar sets el._kanaBtnIds),
     // the highlighted button is ground truth for mode. Inputs with no
@@ -338,7 +291,7 @@ function _kanaSyncCursor(el) {
       else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
-    el._modeSnapshot = (el.selectionStart != null) ? el.selectionStart : el.value.length;
+    _kanaDebug('syncCursor-resolved', el, { resolvedMode: activeMode, hadBtnIds: !!ids });
     if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
     else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
     else el.style.caretColor = '';
@@ -349,44 +302,78 @@ function _kanaSyncCursor(el) {
 }
 const _KANA_NAV_KEYS = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
 
+// ═══ TEMPORARY DEBUG INSTRUMENTATION (session 46) — remove once the
+// hiragana drop-out bug is diagnosed. Logs kana lifecycle events to
+// window._kanaLog. Run window.kanaDebugDump() in DevTools console any
+// time after the bug reappears to see a readable table of recent events.
+window._kanaLog = [];
+function _kanaDebug(event, el, extra) {
+  const entry = {
+    t: new Date().toISOString().slice(11, 23),
+    event,
+    id: el?.id || '(no id)',
+    mode: el?._kanaMode,
+    onCount: el?._kanaOnCallCount || 0,
+  };
+  if (extra) Object.assign(entry, extra);
+  window._kanaLog.push(entry);
+  if (window._kanaLog.length > 800) window._kanaLog.shift();
+  console.log('[KANA-DEBUG]', entry.t, event, entry.id, 'mode=' + entry.mode, 'onCount=' + entry.onCount, extra || '');
+}
+window.kanaDebugDump = function() {
+  console.table(window._kanaLog);
+  return window._kanaLog;
+};
+
 function kanaOn(el) {
   if (!el || el._kanaOn) return;
+  el._kanaOnCallCount = (el._kanaOnCallCount || 0) + 1;
+  _kanaDebug('kanaOn', el);
   el._kanaOn = true;
   // Restore last known mode for this input if available
   if (!el._kanaMode) el._kanaMode = 'hiragana';
   el.addEventListener('input', kanaInputHandler);
   // Note: mode is persisted in _kanaLastMode[el.id] for re-init after DOM recreation
-  // Track IME composition to prevent doubling on non-Latin keyboards
-  el.addEventListener('compositionstart', () => { 
-    el._isComposing = true; 
-    el._compositionStart = el.selectionStart;
-    el._valueBeforeCompose = el.value;
-  });
-  el.addEventListener('compositionend', (e) => {
-    el._isComposing = false;
-    // Only remove the newly composed IME text (between compositionstart position and now)
-    // This prevents the romaji converter from double-converting IME input
-    // But we DON'T want to clear existing Japanese text that was already in the field
-    if (el._compositionStart !== undefined && e.data) {
-      // The composed text is in e.data - we need to remove it since our romaji converter handles input
-      const start = el._compositionStart;
-      const composedLen = e.data.length;
-      const before = el.value.slice(0, start);
-      const after = el.value.slice(start + composedLen);
-      // Only remove if it looks like IME composed Japanese (not our converted kana)
-      const composed = el.value.slice(start, start + composedLen);
-      // Check if this was actual IME input (contains kanji or mixed) vs our romaji conversion
-      const hasKanji = /[一-鿿]/.test(composed);
-      if (hasKanji) {
-        // Real IME input with kanji - remove it, user should use romaji
-        el.value = before + after;
-        el.setSelectionRange(start, start);
+  // Track IME composition to prevent doubling on non-Latin keyboards.
+  // Guarded like the focus/click/keyup listeners below — kanaOn() runs many
+  // times on the same element (every kanaSetMode/toggle/panel revisit does
+  // kanaOff()+kanaOn()), and these were being re-added unguarded each time,
+  // piling up duplicate composition listeners on long-lived inputs.
+  if (!el._kanaCompositionListener) {
+    el._kanaCompositionListener = true;
+    el.addEventListener('compositionstart', () => { 
+      _kanaDebug('compositionstart', el);
+      el._isComposing = true; 
+      el._compositionStart = el.selectionStart;
+      el._valueBeforeCompose = el.value;
+    });
+    el.addEventListener('compositionend', (e) => {
+      _kanaDebug('compositionend', el, { data: e.data });
+      el._isComposing = false;
+      // Only remove the newly composed IME text (between compositionstart position and now)
+      // This prevents the romaji converter from double-converting IME input
+      // But we DON'T want to clear existing Japanese text that was already in the field
+      if (el._compositionStart !== undefined && e.data) {
+        // The composed text is in e.data - we need to remove it since our romaji converter handles input
+        const start = el._compositionStart;
+        const composedLen = e.data.length;
+        const before = el.value.slice(0, start);
+        const after = el.value.slice(start + composedLen);
+        // Only remove if it looks like IME composed Japanese (not our converted kana)
+        const composed = el.value.slice(start, start + composedLen);
+        // Check if this was actual IME input (contains kanji or mixed) vs our romaji conversion
+        const hasKanji = /[一-鿿]/.test(composed);
+        if (hasKanji) {
+          // Real IME input with kanji - remove it, user should use romaji
+          el.value = before + after;
+          el.setSelectionRange(start, start);
+        }
+        // If it's just hiragana/katakana, leave it - could be from our converter or valid paste
       }
-      // If it's just hiragana/katakana, leave it - could be from our converter or valid paste
-    }
-    el._compositionStart = undefined;
-    el._valueBeforeCompose = undefined;
-  });
+      el._compositionStart = undefined;
+      el._valueBeforeCompose = undefined;
+    });
+  }
   // Paste: accept text as-is, never convert
   if (!el._pasteKanaListener) {
     el._pasteKanaListener = true;
@@ -407,26 +394,23 @@ function kanaOn(el) {
   }
   el.placeholder = el.dataset.placeholderJp || el.placeholder;
 
-  // Cursor sync: every way the cursor can move into a different position
-  // must re-anchor _modeSnapshot, or stale state causes the "romaji for a
-  // few characters then snaps to hiragana" bug. See _kanaSyncCursor above.
+  // Cursor sync: re-resolves mode from button state on every way the
+  // cursor can move. No longer manages any conversion boundary — see
+  // _kanaSyncCursor and kanaInputHandler.
   // Guard against re-entry from programmatic focus calls.
   if (!el._kanaFocusListener) {
     el._kanaFocusListener = true;
-    el.addEventListener('focus', () => _kanaSyncCursor(el));
-    // Clicking inside an ALREADY-focused field repositions the caret
-    // without firing 'focus' again — this is the actual cause of the bug
-    // when editing mid-text in a field you're already in.
-    el.addEventListener('click', () => _kanaSyncCursor(el));
-    // Arrow/Home/End also move the caret without a focus or click event.
+    el.addEventListener('focus', () => { _kanaDebug('event:focus', el); _kanaSyncCursor(el); });
+    el.addEventListener('click', () => { _kanaDebug('event:click', el); _kanaSyncCursor(el); });
     el.addEventListener('keyup', (e) => {
-      if (_KANA_NAV_KEYS.includes(e.key)) _kanaSyncCursor(el);
+      if (_KANA_NAV_KEYS.includes(e.key)) { _kanaDebug('event:keyup-nav', el, { key: e.key }); _kanaSyncCursor(el); }
     });
   }
 }
 
 function kanaOff(el) {
   if (!el) return;
+  _kanaDebug('kanaOff', el);
   el._kanaOn = false;
   el._kanaMode = null;
   el._isComposing = false;
@@ -449,6 +433,7 @@ function kanaToggle(btn, el) {
   } else if (el._kanaMode === 'hiragana') {
     // Was hiragana → switch to katakana
     el._kanaMode = 'katakana';
+    el._kataFrom = (el.selectionStart != null) ? el.selectionStart : el.value.length;
     el.style.caretColor = 'var(--gold)';
     btn.classList.add('on');
     btn.style.borderColor = 'var(--gold)';
@@ -797,9 +782,7 @@ Text: ${kana}` }]
 function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
   const inp = document.getElementById(inputId);
   if (!inp) return;
-  // Use cursor position as snapshot — preserves text before cursor, converts after
-  inp._modeSnapshot = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
-  inp._modeSwitchPending = true; // prevents focus listener from resetting _modeSnapshot
+  _kanaDebug('kanaSetMode', inp, { requestedMode: mode, caller: (new Error().stack || '').split('\n')[2]?.trim().slice(0, 90) });
   if (inputId) _kanaLastMode[inputId] = mode;
   if (btnGroupId) {
     const ids    = btnIds || {};
@@ -809,9 +792,17 @@ function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
   if (mode === 'romaji') {
     kanaOff(inp); inp._kanaMode = 'romaji'; inp.style.caretColor = '';
   } else if (mode === 'hiragana') {
-    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp.style.caretColor = 'var(--teal)';
+    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp._kataFrom = null; inp.style.caretColor = 'var(--teal)';
   } else if (mode === 'katakana') {
-    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'katakana'; inp.style.caretColor = 'var(--gold)';
+    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'katakana';
+    // Katakana only applies from here forward — see kanaInputHandler.
+    // selectionStart at this point reflects wherever the cursor was last
+    // left in the field (browsers preserve it across blur/focus on the
+    // same element), which is exactly the right anchor: focus necessarily
+    // left the field to click this button, so "from here" naturally means
+    // "from the moment focus returns to the field".
+    inp._kataFrom = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+    inp.style.caretColor = 'var(--gold)';
   }
   // NOTE: no inp.focus() here — callers focus the input themselves if needed.
   // Calling focus() here triggers the focus listener which calls kanaSetMode again → loop.
@@ -828,6 +819,8 @@ function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
 // opts:
 //   defaultMode  'hiragana' (default) | 'romaji' | 'katakana'
 //   noKanji      true → omit 漢字 button
+//   noRomaji     true → omit A (romaji) button — input is always
+//                hiragana/katakana, no romaji-passthrough option
 //   btnClass     CSS class for buttons (default: 'btn-kana')
 //
 // Button IDs follow the convention: inputId + 'RomajiBtn' / 'HiraBtn' /
@@ -893,7 +886,7 @@ function kanaToolbar(inputId, opts = {}) {
     return 'romaji';
   }
 
-  wrap.appendChild(mkBtn(inputId+'RomajiBtn', 'A',  'Romaji mode'));
+  if (!opts.noRomaji) wrap.appendChild(mkBtn(inputId+'RomajiBtn', 'A',  'Romaji mode'));
   wrap.appendChild(mkBtn(inputId+'HiraBtn',  'ひ',  'Hiragana mode'));
   wrap.appendChild(mkBtn(inputId+'KataBtn',  'カ',  'Katakana mode', 'var(--gold)'));
 
@@ -922,7 +915,8 @@ function kanaToolbar(inputId, opts = {}) {
   (async () => {
     const key = 'kana_default:' + inputId;
     try {
-      const saved = window.kvAPI ? await window.kvAPI.get(key) : null;
+      let saved = window.kvAPI ? await window.kvAPI.get(key) : null;
+      if (opts.noRomaji && saved === 'romaji') saved = null; // romaji not offered here
       kanaSetMode(inputId, saved || mode, grp, btnIds);
     } catch(e) {
       kanaSetMode(inputId, mode, grp, btnIds);
@@ -957,7 +951,9 @@ function _initKanaToolbars() {
     const el = document.getElementById(id);
     const ph = document.querySelector('[data-kana-for="'+id+'"]');
     console.log('[kana]', id, '→ el:', !!el, 'placeholder:', !!ph);
-    kanaToolbar(id);
+    // Writing is hiragana/katakana only — romaji is never used there (per
+    // Paul, session 46), so the option is removed rather than left dormant.
+    kanaToolbar(id, id === 'writingInput' ? { noRomaji: true } : {});
   });
 }
 

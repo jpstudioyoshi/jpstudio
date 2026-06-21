@@ -1157,7 +1157,7 @@
   /* Feedback panel */
   .feedback-panel {
     display: flex; flex-direction: column; gap: 0;
-    position: sticky; top: 70px;
+    position: sticky; top: 0;
     max-height: calc(100vh - 120px);
     overflow: hidden;
   }
