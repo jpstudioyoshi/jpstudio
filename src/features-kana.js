@@ -333,9 +333,9 @@ function _kanaSyncCursor(el) {
       const romajiEl = document.getElementById(ids.romaji);
       const hiraEl   = document.getElementById(ids.hira);
       const kataEl   = document.getElementById(ids.kata);
-      if (romajiEl && romajiEl.classList.contains('btn-active')) activeMode = 'romaji';
-      else if (kataEl && (kataEl.classList.contains('btn-active-gold') || kataEl.classList.contains('btn-active'))) activeMode = 'katakana';
-      else if (hiraEl && hiraEl.classList.contains('btn-active')) activeMode = 'hiragana';
+      if (romajiEl && (romajiEl.classList.contains('active-hira') || romajiEl.classList.contains('active-kata'))) activeMode = 'romaji';
+      else if (kataEl && kataEl.classList.contains('active-kata')) activeMode = 'katakana';
+      else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
     el._modeSnapshot = (el.selectionStart != null) ? el.selectionStart : el.value.length;

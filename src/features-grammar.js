@@ -1307,7 +1307,7 @@ async function startConjDrillG() {
   let verbTypes = [];
 
   if (ruEndingOnly) {
-    const ruEnding = v => v.dict && v.dict.endsWith('る');
+    const ruEnding = v => v.type === 'u' && v.dict && v.dict.endsWith('る');
     verbTypes.push(...VERBS_U.filter(ruEnding));
     verbTypes.push(...VERBS_RU.filter(ruEnding));
     verbTypes.push(...(window._conjExtraVerbs || []).filter(ruEnding));
@@ -1396,7 +1396,7 @@ function conjForceNewSession() {
   const naIEndingOnly = document.getElementById('optNaIEndingG')?.checked;
   const verbTypes = [];
   if (ruEndingOnly) {
-    const ruEnding = v => v.dict && v.dict.endsWith('る');
+    const ruEnding = v => v.type === 'u' && v.dict && v.dict.endsWith('る');
     verbTypes.push(...VERBS_U.filter(ruEnding));
     verbTypes.push(...VERBS_RU.filter(ruEnding));
     verbTypes.push(...(window._conjExtraVerbs || []).filter(ruEnding));
@@ -1574,6 +1574,17 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
   renderConjDrillG();
 }
 
+function conjUpdateHeaderDots() {
+  const el = document.getElementById('conjHeaderDots');
+  if (!el) return;
+  if (!conjQueue || !conjQueue.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 15).map((r,i) =>
+    '<div class="conj-dot ' + (r==='ok'?'ok':r==='miss'?'miss':r==='slip'?'slip':i===conjIdx?'cur':'') + '"></div>'
+  ).join('');
+  el.innerHTML = dotHtml;
+  el.style.display = 'flex';
+}
+
 function renderConjDrillG() {
   const area = document.getElementById('conjDrillAreaG');
   if (!area) return;
@@ -1582,6 +1593,7 @@ function renderConjDrillG() {
   // leave the idle state rather than rendering a summary with an unset conjRun.
   if (!conjQueue || !conjQueue.length) return;
 
+  conjUpdateHeaderDots();
   const _fb = document.getElementById('conjFeedbackG'); if (_fb) { _fb.textContent = ''; _fb.className = 'conj-feedback'; }
   // End of run
   if (conjIdx >= conjQueue.length) {
@@ -1675,9 +1687,6 @@ function renderConjDrillG() {
       ? '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--gold);letter-spacing:0.06em">な-ADJ → conjugates with だ/です, not くない</div>'
       : '';
   const listenMode = typeof conjListenMode !== 'undefined' && conjListenMode;
-  const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 15).map((r,i) =>
-    '<div class="conj-dot ' + (r==='ok'?'ok':r==='miss'?'miss':r==='slip'?'slip':i===conjIdx?'cur':'') + '"></div>'
-  ).join('');
   // Badge colour: register only — polite=blue, plain=neutral
   const badgeCls = item.reg === 'polite' ? 'polite' : 'plain';
   
@@ -1689,7 +1698,6 @@ function renderConjDrillG() {
 
   area.innerHTML =
     '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + (CONJ_SESSION_RUNS || 3) + '</div><div>✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
-    '<div class="conj-dot-row">' + dotHtml + '</div>' +
     '<div class="conj-card">' +
       (listenMode ? '' : '<div class="conj-word" style="color:' + typeColor + '">' + item.word.dict + '</div>') +
       (showRead && !listenMode ? '<div class="conj-reading">' + item.word.read + '</div>' : '') +
@@ -1943,6 +1951,9 @@ function gram2Switch(name) {
     if (el) el.style.display = s === name ? 'block' : 'none';
     if (btn) btn.classList.toggle('active', s === name);
   });
+  if (name !== 'conj') {
+    const hd = document.getElementById('conjHeaderDots'); if (hd) hd.style.display = 'none';
+  }
   if (name === 'conj') {
     // Don't auto-start — user presses Start explicitly
     setTimeout(() => {

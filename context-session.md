@@ -537,22 +537,35 @@ on identical failures — needs live DevTools investigation, handed to Claude Co
 1. `ReferenceError: _rtkMnemonicCache is not defined` at `features-stroke.js:405`, in
    `strokeFetchKoohii()`, triggered from `showBtn.onclick` (`features-stroke.js:323`).
    Found during session 45 unrelated testing. Likely an undeclared/out-of-scope variable.
+2. **Kana mode possibly still droppable via `kanaToolbar()` re-init-on-rerender** (session 46
+   suspect, not yet confirmed/reproduced). Session 46 fixed a confirmed, separate bug:
+   `_kanaSyncCursor`'s button ground-truth check read `btn-active`/`btn-active-gold`, but
+   `setButtonGroupActive()` actually applies `active-hira`/`active-kata` to `btn-kana`-classed
+   buttons — the read path had been silently a no-op since session 45 (fixed,
+   `features-kana.js`, `_kanaSyncCursor`). Paul reports the original "hiragana drops on
+   refocus" symptom "seems fixed... for now" — if it recurs, the next suspect is
+   `kanaToolbar()` itself: every call (including re-renders of the same input, e.g.
+   `gdRenderCard()`, `gramSentRenderCard()`, `showPanel('writing')`'s delayed
+   `setWritingMode('hiragana')`) re-asserts the saved/default mode via its trailing async
+   `kanaSetMode(...)` IIFE, regardless of the user's current mode — a re-render mid-session
+   could silently overwrite an active katakana/romaji choice back to the default. Not yet
+   reproduced as a live bug — flagging for investigation only if the symptom recurs.
 
 ### Grammar coverage
-2. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
-3. turn_id population — match phrases to transcript_turns at extraction time
-4. "Play from here" button — turn_id → audio seek
-5. Genki II node integration
-6. Grammar node timestamps → transcript → sprint suggestion pipeline
+3. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
+4. turn_id population — match phrases to transcript_turns at extraction time
+5. "Play from here" button — turn_id → audio seek
+6. Genki II node integration
+7. Grammar node timestamps → transcript → sprint suggestion pipeline
 
 ### Dead code / cleanup
-7. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
-8. `vtWatch*` localStorage — low priority, working fine
-9. `customTranscribe` — confirmed NOT dead, ticket closed
-10. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
+8. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
+9. `vtWatch*` localStorage — low priority, working fine
+10. `customTranscribe` — confirmed NOT dead, ticket closed
+11. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
     since session 45 moved the Next button to the panel header. Low priority; only worth
     removing if nothing else ever gets added to them.
-11. Dead fullscreen-video CSS block (`#panel-video.vt-fullscreen` and descendants in
+12. Dead fullscreen-video CSS block (`#panel-video.vt-fullscreen` and descendants in
     style.css) — uses the wrong id (`#panel-video` not `#panel-video2`), matches nothing
     in any mode. Pre-existing, found during session 45's video panel investigation.
     Low priority — fullscreen mode presumably hasn't worked via this CSS for a while;
@@ -560,14 +573,14 @@ on identical failures — needs live DevTools investigation, handed to Claude Co
     vs. remove the dead block entirely.
 
 ### Vocab pipeline
-12. corpus_productions extraction fix (single-kanji in old rows)
+13. corpus_productions extraction fix (single-kanji in old rows)
 
 ### Future / larger features
-13. FLUENCY_432 emitter — 4/3/2 speaking session wiring
-14. Layer 6 — grammar drill + writing prompt with top-N words
-15. Book vocab import (18 pages, OCR artifact, deferred)
-16. Sight-reading feature (to be built from scratch)
-17. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
+14. FLUENCY_432 emitter — 4/3/2 speaking session wiring
+15. Layer 6 — grammar drill + writing prompt with top-N words
+16. Book vocab import (18 pages, OCR artifact, deferred)
+17. Sight-reading feature (to be built from scratch)
+18. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
 
 ---
 
