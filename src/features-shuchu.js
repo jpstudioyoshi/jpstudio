@@ -597,8 +597,29 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
       if (saved) {
         _sprint = saved;
         shuchuShowIntro();
+        return;
       }
     }
+    // Inject NoM suggestion container + analyse button if not already present
+    const setupEl = document.getElementById('shuchu-setup');
+    if (setupEl && !document.getElementById('nomSuggestionsWrap')) {
+      const wrap = document.createElement('div');
+      wrap.id = 'nomSuggestionsWrap';
+      wrap.style.display = 'none';
+      setupEl.insertBefore(wrap, setupEl.firstChild);
+
+      const analyseRow = document.createElement('div');
+      analyseRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:14px';
+      analyseRow.innerHTML =
+        `<button class="btn-action" style="font-size:0.78rem" onclick="(async()=>{` +
+          `const rows=await window.db.query('SELECT id FROM lesson_sessions WHERE source=\'recording\' ORDER BY id DESC LIMIT 1');` +
+          `if(rows&&rows[0])nomRunAndCache(rows[0].id);` +
+          `else document.getElementById('nomAnalyseStatus').textContent='No recording sessions found.';` +
+        `})()">Analyse last lesson</button>` +
+        `<span id="nomAnalyseStatus" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)"></span>`;
+      setupEl.insertBefore(analyseRow, setupEl.firstChild);
+    }
+    if (typeof nomRenderSuggestions === 'function') nomRenderSuggestions();
   };
 
 })();

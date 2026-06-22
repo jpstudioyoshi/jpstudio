@@ -662,7 +662,151 @@ function nomRankSuggestions(classified, topN = 3) {
   return scored.slice(0, topN).map(({ clusters: _c, ...rest }) => rest);
 }
 
+// ── Cache writer ─────────────────────────────────────────
+
+const NOM_CACHE_KEY = 'nom_suggestions';
+
+/**
+ * Run full NoM pipeline for a session and cache the ranked suggestions.
+ * Triggered on demand ("Analyse last lesson" button in 集中 panel).
+ * @param {number} sessionId
+ */
+async function nomRunAndCache(sessionId) {
+  const statusEl = document.getElementById('nomAnalyseStatus');
+  function setStatus(msg) { if (statusEl) statusEl.textContent = msg; }
+
+  try {
+    setStatus('Detecting clusters…');
+    const clusters = await nomDetectClusters(sessionId);
+    if (!clusters.length) {
+      setStatus('No breakdown clusters found in this session.');
+      return [];
+    }
+
+    setStatus(`Classifying ${clusters.length} clusters…`);
+    const classified = await nomClassifyClusters(clusters);
+    if (!classified.length) {
+      setStatus('No confirmed NoM episodes after classification.');
+      return [];
+    }
+
+    const suggestions = nomRankSuggestions(classified);
+
+    // Persist to kv_store
+    await window.kvAPI.set(NOM_CACHE_KEY, JSON.stringify({
+      sessionId,
+      date: new Date().toISOString().slice(0, 10),
+      suggestions,
+    }));
+
+    setStatus('');
+    nomRenderSuggestions();
+    return suggestions;
+  } catch(e) {
+    console.error('[NoM] nomRunAndCache failed:', e);
+    setStatus('Analysis failed: ' + e.message);
+    return [];
+  }
+}
+
+// ── UI renderer ─────────────────────────────────────────
+
+/**
+ * Render NoM suggestion cards in the 集中 setup panel.
+ * Reads from kv_store cache — no API calls.
+ * Called from shuchuOnOpen and after nomRunAndCache completes.
+ */
+async function nomRenderSuggestions() {
+  const container = document.getElementById('nomSuggestionsWrap');
+  if (!container) return;
+
+  // Load from cache
+  let cached;
+  try {
+    const raw = await window.kvAPI.get(NOM_CACHE_KEY);
+    cached = raw ? JSON.parse(raw) : null;
+  } catch(e) {
+    console.warn('[NoM] Could not load suggestions cache:', e);
+    return;
+  }
+
+  if (!cached || !cached.suggestions || !cached.suggestions.length) {
+    container.style.display = 'none';
+    return;
+  }
+
+  const { suggestions, date, sessionId } = cached;
+  container.style.display = '';
+  container.innerHTML = '';
+
+  // Header
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px';
+  header.innerHTML =
+    `<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">FROM LAST LESSON — ${date}</span>` +
+    `<span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">session ${sessionId}</span>`;
+  container.appendChild(header);
+
+  // Cards
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-bottom:14px';
+
+  for (const s of suggestions) {
+    const card = document.createElement('div');
+    card.style.cssText = [
+      'padding:12px 14px',
+      'background:var(--paper-dark)',
+      'border:1px solid var(--border)',
+      'border-left:3px solid var(--teal)',
+      'border-radius:6px',
+      'cursor:pointer',
+      'display:flex',
+      'align-items:center',
+      'justify-content:space-between',
+      'gap:12px',
+      'transition:border-color 0.15s',
+    ].join(';');
+
+    card.onmouseenter = () => { card.style.borderLeftColor = 'var(--gold)'; };
+    card.onmouseleave = () => { card.style.borderLeftColor = 'var(--teal)'; };
+
+    // Severity dots
+    const dots = '●'.repeat(s.severity) + '○'.repeat(3 - s.severity);
+    const dotsColor = s.severity === 3 ? 'var(--red,#e05)' : s.severity === 2 ? 'var(--gold)' : 'var(--teal)';
+
+    card.innerHTML =
+      `<div style="flex:1;min-width:0">` +
+        `<div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.topic}</div>` +
+        `<div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)">${s.episode_count} episode${s.episode_count !== 1 ? 's' : ''}</div>` +
+      `</div>` +
+      `<div style="display:flex;align-items:center;gap:10px;flex-shrink:0">` +
+        `<span style="font-family:monospace;font-size:0.82rem;color:${dotsColor};letter-spacing:1px">${dots}</span>` +
+        `<button class="btn-action" style="font-size:0.78rem;padding:5px 10px;white-space:nowrap">Sprint →</button>` +
+      `</div>`;
+
+    // Click fills topic input and focuses Start button
+    card.addEventListener('click', () => {
+      const topicInput = document.getElementById('shuchuTopicInput');
+      if (topicInput) {
+        topicInput.value = s.topic;
+        topicInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      const startBtn = document.getElementById('shuchuStartBtn');
+      if (startBtn) startBtn.focus();
+    });
+
+    grid.appendChild(card);
+  }
+
+  container.appendChild(grid);
+
+  // Divider
+  const divider = document.createElement('div');
+  divider.style.cssText = 'border-top:1px solid var(--border);margin-bottom:14px';
+  container.appendChild(divider);
+}
+
 // ── App registry ─────────────────────────────────────────
 try {
-  Object.assign(App, { nomDetectClusters, nomClassifyClusters, nomRankSuggestions, nomTestSession80 });
+  Object.assign(App, { nomDetectClusters, nomClassifyClusters, nomRankSuggestions, nomRunAndCache, nomRenderSuggestions, nomTestSession80 });
 } catch(e) { console.error('[NoM] App registry failed:', e); }
