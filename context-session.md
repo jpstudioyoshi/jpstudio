@@ -1,6 +1,6 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-22 (session 49 — NoM pipeline foundations: hallucination scrubber,
-raw_content persistence, session linking, transcript cleanup)
+Last updated: 2026-06-22 (session 50 — NoM pipeline complete: cluster detection,
+LLM classification, ranking, 集中 sprint suggestion cards)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -53,6 +53,80 @@ raw_content persistence, session linking, transcript cleanup)
 ACTIVE DEVELOPMENT / ONGOING CLEANUP — dead-code cleanup, bug fixes, and feature work
 handled as routine, in whatever order makes sense.
 
+## Session 50 Changes (2026-06-22)
+
+### NoM pipeline — complete (`src/features-nom.js`)
+
+New file. Zero API calls in detection phase. ~14 LLM calls per session in classification.
+
+#### Rule-based cluster detection — `nomDetectClusters(sessionId)`
+Five rules over `transcript_turns`:
+1. **Dense repetition** — same surface token 4+ times in 45s window
+2. **Morphological variation** — same hiragana stem (≥3 chars) with 3+ distinct endings in 60s
+3. **Particle alternation** — same noun with 2+ different particles in 30s
+4. **Repair markers** — explicit hesitation words (`えーと`, `すみません`, `もう一度`, etc.)
+5. **Vocab gap** — English word (Latin ≥3 chars) followed by repetitive Japanese search in 90s
+
+Pre-processing:
+- `_nomScrub(turns)` — in-memory hallucination filter (same threshold as Orchestrator:
+  tokens appearing ≥5 times, keep only first) + stoplist (`うん`, `はい`, `ええ`, etc.)
+- `_mergeClusters` — clusters within 20s merged; composite `ruleType` string preserved
+
+Tested against session 80 (7 known episodes from handoff doc): **7/7 recall**.
+
+#### LLM classification — `nomClassifyClusters(clusters)`
+- One call per cluster, 12 turns max context, ~120 tokens output
+- Returns `{isNom, topic, severity 1-3, node_id}` per cluster
+- Validates `node_id` against `NOM_NODE_IDS` list (Genki I/II nodes)
+- False positives (lone `すみません`, `use` L1 trigger) correctly rejected
+- Session 80: 12/14 confirmed, 2 rejected
+
+#### Ranking — `nomRankSuggestions(classified, topN=3)`
+- Groups by `node_id`; null node_ids get individual buckets
+- Score: `severity × 3 + episode_count × 2`
+- Returns top N with `{topic, node_id, severity, episode_count, example_offset_ms, score}`
+
+#### Cache + UI — `nomRunAndCache(sessionId)` / `nomRenderSuggestions()`
+- `nomRunAndCache` runs full pipeline, persists to `kv_store` key `nom_suggestions`
+- `nomRenderSuggestions` reads cache, renders cards in 集中 setup panel (no API calls)
+- "Analyse last lesson" button injected into `shuchu-setup` by `shuchuOnOpen`
+- Card click fills `shuchuTopicInput` → user presses Start
+- Status messages via `#nomAnalyseStatus` span
+
+#### Test harness — `nomTestSession80()`
+- Run in DevTools: queries last recording session, compares against 7 known episodes
+- Prints recall score + per-cluster offsets
+
+#### Data fix
+- Session 80 `transcript_turns`: 109 hallucination rows deleted directly in SQLite
+  (`猫はお尻を探しています` reduced from 110 → 1 occurrence)
+
+### Architecture decisions (session 50)
+
+#### Signal weighting (discussed, not yet built)
+- **Yoshi notes (recent)** → primary signal for current sprint suggestions
+- **Transcript clusters (historical, multi-session)** → surfaces recurring patterns
+  Yoshi didn't write down — potential blind spots
+- **Both agree** → highest confidence
+- Future: two-tier 集中 surface ("This week" from notes vs "Recurring" from transcript)
+
+#### Levenshtein confirmation (deferred)
+- Whisper transcript tokens vs Yoshi note content at same timestamp
+- Close orthographic match = note is a correction of exactly what broke down
+- Requires `turn_id` population in `lesson_phrases` first (step 6 below)
+- Blocks on: WhatsApp notes in DB (none exist yet — `lesson_sessions` has no `whatsapp` rows)
+
+#### WhatsApp notes status
+- `lesson_sessions` contains only `source='recording'` rows — no WhatsApp rows exist
+- `raw_content` persistence wired (session 49) but no imports have happened since
+- `linked_session_id` is null everywhere — auto-link code in place but untested
+- Note confirmation signal deferred until a real WhatsApp import occurs
+
+### L1 pattern clarification
+- German is transcribed by Whisper as hiragana phonetically — no Latin chars in transcript
+- `NOM_L1_PATTERN` is English-only: `/[a-zA-Z]{3,}/`
+- Common English words (`OK`, `yes`, `no`) added to `NOM_STOPLIST`
+
 ## Session 49 Changes (2026-06-22)
 
 ### UI fix
@@ -64,137 +138,32 @@ handled as routine, in whatever order makes sense.
 #### Hallucination scrubber (`src/Orchestrator.js`)
 - Added `_scrubHallucinations(turns)` — keeps only the first occurrence of any string
   appearing 5+ times in the transcript. Fires after `_currentSession.merge()` before save.
-- Whisper hallucinates loops on silent/quiet sections (confirmed: session 80 had
-  `猫はお尻を探しています` repeat for 19 minutes — Whisper mishearing of マイクロ at lesson start).
 - Session 80 cleaned manually: 1039 → 429 turns; `transcript_json` rebuilt from clean
   `transcript_turns`; `transcript_turns` deduplicated in DB.
 
 #### `raw_content` persistence (`src/features-lesson-notes.js`)
 - WhatsApp notes raw text now written to `lesson_sessions.raw_content` at extraction time.
-- Added `raw_content=?` to the existing `UPDATE lesson_sessions SET extracted_grammar=?`
-  call in `lessonNotesExtractGrammarSilent`. Uses `LessonNotesState.rawText || docContent`.
-- Previously the source WhatsApp text was lost after extraction — only grammar/vocab survived.
 
 #### Session linking (Claude Code job — completed)
-- Added `linked_session_id INTEGER` column to `lesson_sessions` (schema v14, same guard
-  pattern as all other migrations in `main.js`).
-- Fixed `source` value: WhatsApp imports now use `source='whatsapp'` (was `'lesson_notes'`).
-- Auto-link on import: `lessonNotesEnsureDbRow` queries same-date recordings with
-  `audio_duration_s > 600` and no existing link; updates the one match silently;
-  logs warning if multiple candidates found.
-- Recording INSERT at main.js:1077 already had `source='recording'` — no change needed.
-
-### Architecture decisions (session 49)
-- **One lesson = one WhatsApp row** (anchor). Recording row links back via `linked_session_id`.
-- `notes_text` column is currently a recording session JSON blob (StorageService.js) —
-  NOT WhatsApp text. `raw_content` is the correct column for WhatsApp source.
-- `lesson_sessions` full consolidation (single row per lesson) deferred — link column
-  unblocks the pipeline without requiring a rebuild.
-- Hallucination filter is prerequisite for all NoM detection — must run before any
-  cluster detection or theme segmentation.
-
-### NoM design validated against real data (session 80, 2026-06-22)
-- Full lesson transcript examined manually — see `nom-sprint-handoff.md` for episode list.
-- Dominant pattern: `なければなりません` — 4 episodes, severity 3, Yoshi-note confirmed.
-- Particle alternation: `映画館に` → `映画館で` (particle_de_place node).
-- Vocab gap: `おしといい` (German) → `お人よし` resolution.
-- Theme segmentation via API identified as valuable future step — one call per session
-  would produce section markers (topic + offset) for timeline navigation.
+- Added `linked_session_id INTEGER` column to `lesson_sessions` (schema v14).
+- Fixed `source` value: WhatsApp imports now use `source='whatsapp'`.
+- Auto-link on import: same-date recordings with `audio_duration_s > 600`.
 
 ## Session 47/48 Changes (2026-06-22)
 
 ### Dead-code cleanup (all committed)
-- **`_rtkMnemonicCache` ReferenceError** (`features-stroke.js`) — variable used but never
-  declared. Added lazy-init from Storage before `strokeFetchKoohii`. Fixed.
-- **Kana debug instrumentation** (`features-kana.js`) — removed `_kanaDebug()`,
-  `window._kanaLog`, `window.kanaDebugDump()`, all 9 call sites, `_kanaOnCallCount`.
-  Simplified focus/click/keyup listeners to call `_kanaSyncCursor(el)` directly.
-- **`rtCompareBtn` dead refs** (`features-voice.js`) — 4 refs removed from
-  `voiceTopicChanged`, `fttInit`, `rtCheckProgress`, `rtNewSession`. Button never existed
-  in HTML; all refs were null-guarded no-ops.
-- **Dead fullscreen CSS** (`style.css`) — removed single line at ~366 and large block
-  lines 2427–2604 (`/* Watch panel fullscreen */`). All used wrong id `#panel-video`
-  instead of `#panel-video2`, matched nothing.
-- **`vtCloseLineTranslate` dead branch** (`features-video.js`) — `isFullscreen` was always
-  false (`vt-fullscreen` class never set anywhere). Simplified to
-  `if (panel) panel.style.display = 'none'`. Removed unused `const isFullscreen` from
-  `vtTranslateLine` too.
+- **`_rtkMnemonicCache` ReferenceError** (`features-stroke.js`) — fixed.
+- **Kana debug instrumentation** (`features-kana.js`) — removed.
+- **`rtCompareBtn` dead refs** (`features-voice.js`) — 4 refs removed.
+- **Dead fullscreen CSS** (`style.css`) — removed (~180 lines, wrong panel id).
+- **`vtCloseLineTranslate` dead branch** (`features-video.js`) — simplified.
 
 ### Conjugation SRS-due toggle (features-grammar.js, index.html)
-- Added `let _conjSrsMode = false` state variable
-- Added `async function _conjGetDueKeys()` — queries `srs_items WHERE drill_type =
-  STORAGE_KEYS.DRILL_SRS_CONJ AND srs_due <= date('now','localtime')`
-- Added `function conjToggleSrsMode()` — toggles mode, updates button class
-- Modified `conjBuildRunQueue(verbTypes, forms, polarities, registers, dueKeys = null)` —
-  filters combos to dueKeys when set; shows "Nothing due" message if empty
-- Made `startConjDrillG` and `conjNextRun` (now async) fetch due keys when in SRS mode
-- Added `<button class="btn-toggle" id="conjSrsModeBtn" onclick="conjToggleSrsMode()">SRS
-  Due</button>` next to New button in index.html
+- `conjSrsModeBtn` — filters queue to only SRS-due form keys; "Nothing due" if empty.
 
 ### Vocab drill: Yoshi word flooding fix (core-vocab.js)
-- **Problem 1**: Reviewed words (any source) kept full source weight permanently → crowded
-  out other sources. **Fix**: In `loadVocabItemsDeck`, mark each row `_isNew = (srs_due ==
-  null)`. Reviewed words get flat `_base = 0.35` regardless of source; new words keep full
-  `entry_weight × source_weight`. This means once you review a Yoshi word once, it
-  competes on equal footing with all other reviewed words — source no longer matters.
-- **Problem 2**: New Yoshi words from each lesson flooded all session slots. **Fix**: In
-  `startNewSession`, separate `newIdx`/`dueIdx`, cap new words at `MAX_NEW = 5` per
-  session, combine+sort+slice.
-
-### Writing extraction: hiragana→kanji normalization (core-vocab.js)
-- Claude sometimes returns pure-hiragana words (e.g. まいにち instead of 毎日) from writing
-  extraction.
-- After parsing the Claude response in `extractWritingVocabToItems`, added normalization
-  loop: for each word matching `/^[ぁ-ん]+$/`, looks up `words` table by reading. If match
-  found, substitutes the kanji form. No API cost.
-- Also deleted existing bad rows from DB: `まいにち`, `おもしろい`, `たいくつ`, `まわり`
-  from source='writing'.
-- Katakana loanwords (ショップ, ドーナツ etc.) and legitimately-hiragana words (する, ある,
-  どう) are left alone.
-
-### Writing panel improvements (core-writing.js, features-tools.js, index.html)
-- **Enter key bug**: `wbCallTutor` was disabling `writingInput` during API call, making
-  plain Enter silently fail mid-flight. Fixed by removing `input.disabled = true/false` —
-  only the button is now disabled; input stays live.
-- **Detail hidden behind "more ↓"**: removed `toggleDetail` mechanism entirely from
-  `renderFeedback`. Detail now shown inline, no click required.
-- **Font sizes**: corrected from `1.05rem`→`1.15rem`, note/translation from
-  `inherit`→`0.95rem`, detail at `0.9rem`.
-- **Follow-up question**: added `<input id="writingFollowUpInput">` + Ask button at bottom
-  of each feedback entry. `writingFollowUp()` appends question to `writingChatHistory` and
-  calls Claude with max_tokens=400. Exported to `window[]` in features-tools.js.
-- **Saved texts width**: narrowed to `max-width:60%` so feedback panel is less cramped.
-- **Feedback panel `onclick`**: removed `onclick="checkWritingSentence()"` from the
-  feedback-panel div — clicking feedback area no longer triggers an API call.
-
-### Lesson recording mic fix (services/AudioService.js, lesson-overlay.html)
-- **Root cause**: `getUserMedia({ audio: true })` and `getUserMedia({ audio: {
-  echoCancellation:false... } })` both grab the system default audio device. On Paul's
-  Mac, this is BlackHole 2ch (set as default for routing). Recording was capturing
-  BlackHole (silent), not the mic.
-- **AudioService.js fix**: added `findMicDevice()` — priority: USB/external wired mic
-  first, then built-in Mac mic, then any non-virtual device. Excludes BlackHole, loopback,
-  virtual, Zoom, iPhone (continuity mic), Bluetooth. Used in `start()` before
-  `getUserMedia`.
-- **lesson-overlay.html fix**: same priority logic applied to the audio level monitor's
-  mic device selection (visual feedback, not recording itself).
-- **Recording is single-channel** (mic only). `_teacherPath` / loopback recorder already
-  skipped when `recordTeacherTrack` is unset (which it is).
-- Console log added: `[AudioService] Mic device: <label>` on every recording start for
-  verification.
-
-## Audit Status
-- Likely dead candidates: 1 (customTranscribe in features-voice-drill.js — confirmed NOT
-  dead, closure-based call, ticket permanently closed)
-
-## Panel Scroll/Layout Architecture — Complete State (session 45)
-nav, #globalQuickTranslate, and all .panel-header-lower bars are flex-shrink:0 real flex
-siblings — not position:fixed. main is display:flex;flex-direction:column;flex:1;
-min-height:0. .panel.active has overflow-y:auto. Per-panel padding-top hacks removed.
-
-Per-panel overflow exceptions (panels with internal scroll management):
-- #panel-words.active: overflow:hidden (fixed-viewport flashcard)
-- #panel-shuchu.active, #panel-listening.active: overflow:hidden
+- Reviewed words get flat `_base = 0.35` regardless of source.
+- New words capped at `MAX_NEW = 5` per session.
 
 ## Video Panel — Open Issue (handed to Claude Code)
 File: `video-panel-handoff.md` (repo root). Loading transcript with video breaks layout —
@@ -218,15 +187,14 @@ SQL-aware Q&A via `dbqaQuery()` — NEED_SQL: marker routes to NL→SQL pipeline
 Whole-field reconversion on every keystroke (safe — `romajiToHiragana` skips non-ASCII).
 `_kataFrom` is the only cursor-position state — set once on カ button click.
 `_kanaSyncCursor(el)` wired to focus + click + arrow keyup.
-Debug instrumentation removed this session (session 47/48).
+Debug instrumentation removed (session 47/48).
 
 ## Conjugation Drill — Complete State
 - `CONJ_FORMS` — 13 fixed transformation types
 - `buildConjVerbPool()` — vocab_items SRS-ranked (up to 60) topped up by frequency (100)
 - `DrillSRS.record()` — called on each answer, writes to srs_items drill_type='conj_forms'
 - Weighted random queue (GrammarErrors.weight) biases toward error-prone forms
-- **SRS-due toggle** (new): `conjSrsModeBtn` — filters queue to only due form keys;
-  "Nothing due" message if queue is empty; plain Random mode unchanged
+- **SRS-due toggle**: `conjSrsModeBtn` — filters queue to only due form keys
 
 ## Vocab System — Complete State
 
@@ -239,34 +207,50 @@ Debug instrumentation removed this session (session 47/48).
 | lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
 | n5 | one-time backfill | vocab_items |
 
-### Weighting (updated session 47/48)
+### Weighting
 - New words (_isNew = srs_due IS NULL): `_base = entry_weight × source_weight`
 - Reviewed words (_isNew = false): `_base = 0.35` FLAT (source no longer matters)
 - Direction weight and prep_boost (1.5×) still applied to both
 - Session pool: all reviewed due words + max 5 new words, sorted by effective weight
 - Source weights for new words: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
 
-### Writing extraction normalization (new session 47/48)
-- Pure-hiragana extracted words looked up in `words` table by reading
-- If kanji form found, substituted before INSERT
-- Katakana loanwords and legitimately-hiragana words left alone
-
 ### SRS — SM-2
 - Known: interval = floor(interval × ease), ease +0.1
 - Got it: interval = floor(interval × max(1.3, ease − 0.10))
 - Again: interval = 1, due tomorrow, ease −0.15 (min 1.3)
 
+## NoM Pipeline — Complete State (`src/features-nom.js`)
+
+### Functions
+- `nomDetectClusters(sessionId)` → raw clusters (no API)
+- `nomClassifyClusters(clusters)` → confirmed clusters with topic/severity/node_id
+- `nomRankSuggestions(classified, topN=3)` → scored, deduplicated suggestions
+- `nomRunAndCache(sessionId)` → runs pipeline, writes to kv_store `nom_suggestions`
+- `nomRenderSuggestions()` → reads cache, renders cards in 集中 setup (no API)
+- `nomTestSession80()` → DevTools test harness, 7/7 recall on session 80
+
+### Constants
+- `NOM_RULE` — rule type labels
+- `NOM_CFG` — tuneable thresholds (window sizes, min counts)
+- `NOM_STOPLIST` — filler words excluded from detection
+- `NOM_REPAIR_MARKERS` — explicit hesitation/repair words
+- `NOM_PARTICLES` — particles tracked for alternation rule
+- `NOM_L1_PATTERN` — English-only `/[a-zA-Z]{3,}/`
+- `NOM_HALLUCINATION_THRESHOLD = 5`
+- `NOM_NODE_IDS` — valid Genki I/II node ids for classification prompt
+- `NOM_CACHE_KEY = 'nom_suggestions'`
+
+### Card UI
+- "Analyse last lesson" button injected into `shuchu-setup` on panel open
+- Cards show topic, episode count, severity dots (●●● colour-coded)
+- Click → fills `shuchuTopicInput`, focuses Start button
+
 ## Lesson Recording — Complete State
-- `AudioService.js` (`src/services/AudioService.js`) handles mic recording
-- `Orchestrator.startLesson()` / `stopLesson()` coordinate the session lifecycle
-- Audio saved as WebM chunks to iCloud (`~/Library/Mobile Documents/...
-  /JPstudiorecordings/`) with ffmpeg reindex + ffprobe duration on stop
-- Single-channel recording (mic only) — loopback recorder skipped when
-  `recordTeacherTrack` unset
-- **Mic device priority** (new): USB/external wired → built-in Mac mic → any non-virtual
-  Excludes: BlackHole, loopback, virtual, Zoom, iPhone continuity mic, Bluetooth
-- Overlay window (`lesson-overlay.html`) shows live mic/loop level meters with same
-  device priority for the mic channel visual
+- `AudioService.js` handles mic recording
+- `Orchestrator.startLesson()` / `stopLesson()` coordinate lifecycle
+- Audio saved as WebM chunks to iCloud with ffmpeg reindex + ffprobe duration on stop
+- Single-channel recording (mic only)
+- **Mic device priority**: USB/external wired → built-in Mac mic → any non-virtual
 
 ## Grammar Node Mapping Pipeline — COMPLETE
 - Gold dot indicators on Genki node pills (per-session)
@@ -282,9 +266,9 @@ vocab_items, vocab_items_backup, vocab_srs, words, writing_sessions, writing_sit
 
 `lesson_sessions` key columns:
 - `source` — `'whatsapp'` (notes import) or `'recording'` (audio session)
-- `raw_content` — raw WhatsApp text (now persisted at import)
+- `raw_content` — raw WhatsApp text (persisted at import)
 - `extracted_grammar` — JSON array of node_ids
-- `linked_session_id` — recording row points to its WhatsApp anchor row (new v14)
+- `linked_session_id` — recording row points to its WhatsApp anchor row (v14)
 
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
@@ -292,20 +276,22 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
 ### Bugs / cleanup open
 1. Video panel transcript overflow — open, with Claude Code (`video-panel-handoff.md`)
-2. `shuchuActivityBtns` / `shuchuR2Btns` — always empty (Next button moved to header
-   session 45). Low priority; only remove if nothing else ever fills them.
+2. `shuchuActivityBtns` / `shuchuR2Btns` — always empty (low priority)
 
-### NoM pipeline (in progress)
-3. Rule-based cluster detection function (client-side JS, no API calls) — next
-4. LLM window classification per cluster (1 call per cluster)
-5. Score + rank by grammar node, note confirmation, severity; deduplicate by node
-6. Surface top 2–3 as sprint suggestion cards in 集中 panel
-7. Theme segmentation — one API call per session, section markers for timeline navigation
+### NoM pipeline — next steps
+3. `turn_id` population — match phrases to transcript_turns at extraction time
+4. Levenshtein confirmation — Whisper token vs Yoshi note content at same timestamp;
+   requires turn_id + WhatsApp rows in DB (none exist yet)
+5. Note confirmation signal — `note_confirmed: true` on suggestions where node_id
+   matches `extracted_grammar` of linked WhatsApp session
+6. Multi-session aggregation — cluster node_ids across last N sessions to surface
+   recurring patterns Yoshi hasn't written down (historical blind spots)
+7. Two-tier 集中 surface — "This week" (from notes) vs "Recurring" (from transcript)
+8. Theme segmentation — one API call per session, section markers for timeline navigation
 
 ### Grammar coverage (all blocked on data/infra)
-8. Gold dot detail panel — needs node_id query on lesson_phrases → source sentences
-9. turn_id population — match phrases to transcript_turns at extraction time
-10. "Play from here" button — turn_id → audio seek (session linking now unblocks this)
+9. Gold dot detail panel — needs node_id query on lesson_phrases → source sentences
+10. "Play from here" button — turn_id → audio seek (session linking unblocks this)
 11. Genki II node integration
 
 ### Vocab pipeline
