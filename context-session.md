@@ -1,12 +1,13 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-20 (session 45, full session — four parts: (1) kana input
-root-cause fix, (2) 集中 Focus Sprint UI polish + dead-code cleanup, (3) SQL-aware
-Q&A chat in the Home/質問 panel, (4) panel scroll/layout architecture overhaul —
-nav, quick-translate bar, and every `.panel-header-lower` bar converted from
-position:fixed to real flex-flow siblings of `main`, eliminating every
-manually-guessed `padding-top` value app-wide. One open item carried forward:
-video panel (`panel-video2`) transcript overflow — handed to Claude Code, see
-`video-panel-handoff.md` in repo root.)
+Last updated: 2026-06-21 (session 46, full session — (1) Q&A/Home panel header
+redesign + real history fix, (2) Writing panel header redesign (input moved to
+frozen header), (3) root-cause fix for a panel-wide bug — `showPanel()` was
+inline-overriding every panel's `display` to `block`, silently defeating session
+45's flex architecture on every panel switch, (4) kana converter redesign —
+removed the cursor-position-snapshot boundary entirely in favour of whole-field
+reconversion + a single `_kataFrom` marker for katakana, (5) Listen panel
+`listenTrackCount` crash fix, (6) Electron single-instance lock added to
+main.js after a multi-instance focus-corruption incident.)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -270,7 +271,99 @@ data go from 1 call to 3 (routing call + SQL generation + summary) — same per-
 cost the "Ask your data" feature already had on its own, just now reachable from the main
 chat too.
 
-## Kana Input System — Complete State (session 45)
+## Kana Input System — Complete State (session 46)
+Supersedes the session 45 "Kana Input System" notes below (kept, folded in) —
+this is a full redesign, not another patch. Three patches were tried first this
+session and each either didn't fully fix it or made it worse — see "Why a
+fourth+ fix became a redesign" below for why patching was abandoned.
+
+### Architecture (current)
+- **`kanaInputHandler(e)`** re-converts the **whole field value** on every
+  keystroke via `romajiToHiragana(raw)`. This is safe and was always safe —
+  `romajiToHiragana` already skips any character with code ≥ 0x3000 (kana,
+  kanji, punctuation) one at a time, so re-running it over already-converted
+  text is a no-op. There is no cursor-position boundary to track or
+  re-anchor anymore.
+- **`_kataFrom`** (on the input element) is the *only* remaining piece of
+  cursor-position state, and it's narrow: it marks the index from which
+  katakana-shifting applies. Text before it stays hiragana even though the
+  whole string is rescanned every keystroke. It is set in exactly one place
+  — `kanaSetMode()`, the instant the user clicks the カ button — and never
+  touched by clicks, focus, or arrow-key navigation. This matches the real
+  semantics: switching to katakana means clicking a button, which by
+  definition takes focus out of the field first; `inp.selectionStart` read
+  at that moment (before `inp.focus()` is called back) reflects wherever the
+  cursor was last left in the field, which is exactly the right anchor for
+  "from here forward."
+- **`_kanaSyncCursor(el)`** is now much smaller — its only job is resolving
+  `el._kanaMode` from which toolbar button is highlighted (ground truth,
+  read fresh every time) and updating caret colour. No snapshot management
+  left in it. Still wired to `focus` + `click` + arrow/Home/End `keyup`
+  (click and keyup-nav don't fire `focus`, so mode still needs re-resolving
+  on those), but none of those events need to touch any conversion-relevant
+  state anymore — they only affect *mode display*, not what gets converted.
+- **`kanaToolbar(inputId, opts)`** gained a `noRomaji` option — omits the A
+  button entirely. **Writing's toolbar uses this** (`_initKanaToolbars()`
+  passes `{ noRomaji: true }` only for `writingInput`) — Paul confirmed
+  romaji is never used in Writing, so the option was removed rather than
+  left as a dormant failure mode. Also guards against a stale saved
+  `kana_default:writingInput` of `'romaji'` from before this change (falls
+  back to the toolbar's default instead).
+- **`kanaToKanji()`** (the 漢字 button) now only acts when the cursor/selection
+  is at the very end of the field (`end !== el.value.length` → silent
+  no-op). Kanji conversion replaces text with something of a different
+  length; restricting it to the trailing edge means it can never land
+  before `_kataFrom` and desync it — sidesteps the problem by construction
+  rather than needing index-adjustment math. **Known follow-up risk, not yet
+  observed**: this restriction only protects `_kataFrom`; if kanji edge
+  cases do surface, the fix is a one-line length-diff adjustment to
+  `_kataFrom` in `kanjiPickerShow`'s `selectItem()`, mirroring the cursor-
+  position diff it already computes — not a redesign. Wait and see before
+  touching this.
+
+### Why a fourth+ fix became a redesign
+The session 45 "third fix" (see folded-in notes below) was real but
+incomplete: it fixed *which events* re-anchor `_modeSnapshot`, but the
+ground-truth mode READ inside that resync had a separate, independent bug
+(class-name mismatch, `btn-active` vs `active-hira`/`active-kata` — fixed
+early this session) that had silently made the whole resync a no-op since
+session 45. Fixing that *revealed* the real, deeper problem clearly for the
+first time via live debug logging (temporary instrumentation added this
+session, see below): clicking mid-text to edit, then typing immediately,
+raced against `_kanaSyncCursor`'s `setTimeout(0)` deferral — the first
+keystroke could fire before the deferred snapshot update ran, processing
+against a stale boundary and orphaning one character. A synchronous
+pre-update on click closed that race but exposed a worse bug: the deferred
+callback *also* still ran afterward and re-stamped the snapshot using the
+cursor position *after* the first keystroke, deterministically orphaning it
+every time instead of just sometimes. At that point Paul asked the right
+question — mode is already read correctly from the button every time, so
+why does *conversion* need a separately-tracked, constantly-drifting
+boundary at all? It doesn't: `romajiToHiragana`'s per-character Japanese-
+scan already makes the boundary redundant for everything except the narrow
+katakana-zone case, which only needs a value set once. Removed the snapshot
+entirely rather than patching its timing a fourth time.
+
+### Temporary debug instrumentation — still present, not yet removed
+`features-kana.js` still has `_kanaDebug()`, `window._kanaLog`, and
+`window.kanaDebugDump()` logging every `kanaOn`/`kanaOff`/`kanaSetMode`/
+focus/click/keyup-nav/composition event with timestamps and an `onCount`
+per element. Added mid-session for live debugging; deliberately left in for
+now so Paul can keep watching for any recurrence of mode-related issues
+under real use. **Remove once the new architecture has been confirmed
+stable for a while** — not urgent, no functional cost, just noise in the
+console.
+
+### Composition listener pile-up — fixed (separate, smaller bug)
+`compositionstart`/`compositionend` listeners in `kanaOn()` were being
+re-added, unguarded, every time `kanaOn()` ran on the same element (every
+mode toggle and every panel revisit does `kanaOff()`+`kanaOn()`) —
+duplicate listeners piled up silently (confirmed via `onCount` climbing into
+double digits in a real session log). Now guarded by `el._kanaCompositionListener`,
+matching the existing pattern for the focus/click/keyup group and for
+paste — attaches exactly once per element regardless of `onCount`.
+
+### Session 45 notes (folded in, superseded by the above but kept for history)
 Authoritative description of the kana/romaji input engine in `features-kana.js`. Supersedes
 the session 43 "Kana focus desync fix" and session 44 "Kana focus/snapshot timing fix" notes
 below, both of which were genuine but incomplete fixes to the same underlying bug class — see
@@ -345,6 +438,119 @@ hiragana. Sessions 43 and 44 each fixed a real bug in this area but both were pa
   focused** fires no `focus` event at all, so `_modeSnapshot` was never re-anchored for that
   click. Fixed by extracting `_kanaSyncCursor` as a single function wired to `focus` +
   `click` + arrow/Home/End `keyup` — see "Architecture" above.
+
+## Q&A / Home Panel (質問) — Complete State (session 46)
+The input textarea, kana toolbar, Send button, and History toggle/drawer now
+live inside `dashboardPanelHeader` (frozen, `flex-shrink:0`) instead of in the
+scrollable panel body. `#chatMessages` is the only scrollable region now —
+long answers can no longer push the input or title off-screen, which was the
+original reported bug.
+
+**Root cause of the original bug** (not fixed by restructuring alone — see
+"showPanel() inline-display bug" below): the real cause was `showPanel()`
+forcing `display:block` on every panel via inline style on every navigation,
+silently overriding `.panel.active`'s `display:flex` from the session 45
+architecture. `#panel-dashboard` was never actually a flex column after the
+first panel switch, so `#chatMessages`'s `flex:1;min-height:0` had nothing to
+constrain against and grew to full content height, then got clipped by the
+panel's `overflow:hidden` with no internal scrollbar. Confirmed via
+`scrollHeight`/`clientHeight`/computed-`display` measurements before fixing.
+
+**History — actually fixed, not just relocated.** `buildChatHistoryList()`
+used to scrape `document.querySelectorAll('#chatMessages .chat-msg.user')` —
+but `sendChat()` clears `#chatMessages` on every new question, so the History
+drawer could only ever show the *current* question, never real history. It
+now reads the real `chatHistory` array (the same one already sent to Claude
+for conversation context) and a new `showChatHistoryEntry(i)` (core-vocab.js)
+redisplays a past Q&A from that array with no new API call.
+
+Layout: header row is `panel-section-title` (title) + a flex column (input +
+kana/Send/History row), `max-width:1100px` so the input fills most of the
+available header width. History drawer gets `flex-basis:100%` so it drops
+onto its own line within the header when opened, no absolute positioning
+needed.
+
+## Writing Panel — Header Redesign (session 46)
+Same pattern as the Q&A panel, same underlying reason: `panel-writing`
+scrolls as a whole (`overflow-y:auto` on the panel itself), so as the
+sentence board or feedback list grew, scrolling down to read it pushed the
+input off-screen, requiring a scroll back up to keep writing.
+
+The input textarea + kana toolbar + Copy/Save/Submit/Clear buttons moved
+into `writingPanelHeader` (frozen). `panel-writing`'s body now starts
+directly with the sentence board / feedback panel / saved texts.
+`.feedback-panel`'s `position:sticky; top:70px` dropped to `top:0` — that
+offset was compensating for the input that used to sit above it in the same
+scroll context; with the input now in a separate frozen header, the panel's
+own scroll area starts cleanly and no longer needs a manual offset.
+
+**Known remaining magic number, not touched**: `.feedback-panel` still has
+`max-height: calc(100vh - 120px)` — out of scope for this fix, flag if it
+looks wrong after the header change.
+
+## showPanel() Inline-Display Bug — Root Cause, Fixed (session 46)
+A single line in `showPanel()` (core-foundation.js) was silently defeating
+the entire session 45 panel-flex architecture on every single panel switch:
+```js
+panel.classList.add('active');
+panel.style.display = 'block';   // ← removed
+```
+Inline styles beat any CSS rule regardless of specificity, so this overrode
+`.panel.active { display: flex; ... }` for every panel the moment
+`showPanel()` ran — which is every navigation except the very first panel
+shown on initial page load (that one is `class="panel active"` directly in
+the HTML, never touched by JS, so it's correctly flex until the user
+navigates away and back even once). This explains why the bug was so hard to
+pin down: the very first visit to any panel often looked fine; the bug only
+bit after at least one navigation away and back. Likely a pre-session-45
+leftover from before the class-based `.panel.active` system existed.
+
+**Fix**: deleted the line entirely. `.panel.active`'s own `display:flex` is
+already correct and is what every panel was supposed to get. This is a
+shared code path — the fix benefits every panel, not just Q&A, restoring the
+intended session 45 behaviour app-wide, not introducing anything new.
+
+**Verification discipline used to find this** (worth repeating as a
+pattern): rather than guessing at CSS, got a one-shot console script
+reporting `getComputedStyle(el).display` for the panel itself, alongside
+`scrollHeight`/`clientHeight` for the panel and its scrollable child. The
+smoking gun was `display: 'block'` where `'flex'` was expected — a computed-
+style value that store CSS rules alone couldn't produce, which pointed
+directly at an inline-style override before any CSS file needed re-reading.
+
+## Listen Panel — listenTrackCount Crash Fix (session 46)
+`renderListenPlaylist()` (core-listen.js) set `.textContent` on
+`document.getElementById('listenTrackCount')` — an element that didn't exist
+anywhere in `index.html` (likely dropped accidentally during an earlier
+cleanup pass; the playlist header's `justify-content:space-between` with
+nothing on the right side was a tell). Every call to `renderListenPlaylist()`
+threw and aborted partway through, before reaching `listenUpdateNavBtns()` /
+`saveListenPrefs()` — explains both reported symptoms ("Add tracks" not
+fully working, and a crash when clicking a track to play it). Fixed by
+restoring the missing `<span id="listenTrackCount">` to the playlist header,
+plus defensively guarding the JS line (`if (countEl) ...`) so a future
+missing element degrades gracefully instead of crashing the whole render.
+
+## Electron Single-Instance Lock (session 46)
+`main.js` had no `app.requestSingleInstanceLock()` — nothing prevented a
+second launch from spawning a competing instance instead of focusing the
+existing window. This caused a real, reproducible incident this session:
+repeated `jpstart` calls during testing (without confirming the previous
+instance had quit) led to a genuinely broken app state — window appeared but
+was completely unresponsive, clicking the dock icon closed it instead of
+focusing it, all file-picker dialogs silently failed to open (including
+verified via direct DevTools console `.click()` calls, ruling out any
+HTML/JS cause), and elevated power/CPU usage. Required a full computer
+restart to clear. Root cause: classic symptom of multiple Electron instances
+fighting over the same window/focus state, consistent with no guard existing
+against it.
+
+**Fix**: added the standard Electron guard — `app.requestSingleInstanceLock()`
+near the top of main.js; if the lock isn't obtained (a second instance), that
+instance quits immediately. An `app.on('second-instance', ...)` handler
+focuses/restores the existing `mainWindow` instead. Any future accidental
+double-launch (including from Claude testing via repeated `jpstart` calls in
+a chat session) will now just refocus the existing window.
 
 ## 集中 Focus Sprint — UI fixes (session 45, features-shuchu.js, index.html)
 1. **Next button moved to panel header**: added `#shuchuHeaderNextBtn` (hidden by default)
@@ -537,50 +743,50 @@ on identical failures — needs live DevTools investigation, handed to Claude Co
 1. `ReferenceError: _rtkMnemonicCache is not defined` at `features-stroke.js:405`, in
    `strokeFetchKoohii()`, triggered from `showBtn.onclick` (`features-stroke.js:323`).
    Found during session 45 unrelated testing. Likely an undeclared/out-of-scope variable.
-2. **Kana mode possibly still droppable via `kanaToolbar()` re-init-on-rerender** (session 46
-   suspect, not yet confirmed/reproduced). Session 46 fixed a confirmed, separate bug:
-   `_kanaSyncCursor`'s button ground-truth check read `btn-active`/`btn-active-gold`, but
-   `setButtonGroupActive()` actually applies `active-hira`/`active-kata` to `btn-kana`-classed
-   buttons — the read path had been silently a no-op since session 45 (fixed,
-   `features-kana.js`, `_kanaSyncCursor`). Paul reports the original "hiragana drops on
-   refocus" symptom "seems fixed... for now" — if it recurs, the next suspect is
-   `kanaToolbar()` itself: every call (including re-renders of the same input, e.g.
-   `gdRenderCard()`, `gramSentRenderCard()`, `showPanel('writing')`'s delayed
-   `setWritingMode('hiragana')`) re-asserts the saved/default mode via its trailing async
-   `kanaSetMode(...)` IIFE, regardless of the user's current mode — a re-render mid-session
-   could silently overwrite an active katakana/romaji choice back to the default. Not yet
-   reproduced as a live bug — flagging for investigation only if the symptom recurs.
+2. **[RESOLVED session 46]** Kana mode/conversion bug — see "Kana Input System — Complete
+   State (session 46)" above for the full root-cause chain and final architecture
+   (whole-field reconversion, no more cursor-snapshot boundary). Confirmed via extensive
+   live debug logging across multiple real sessions before and after each fix attempt.
+3. **404 from `api.anthropic.com/v1/messages` on every Writing sentence submission**,
+   followed by `SyntaxError: Unexpected end of JSON input` in `extractWritingVocabToItems`
+   (core-vocab.js:1692-1693). 100% reproducible — happens every time `writing:submitted`
+   fires. Paul believes this is the "send finished sentence into the student vocab
+   pipeline" call hitting a bad model string or endpoint; not yet investigated. Lower
+   priority than the kana work this session, deliberately deferred.
 
 ### Grammar coverage
-3. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
-4. turn_id population — match phrases to transcript_turns at extraction time
-5. "Play from here" button — turn_id → audio seek
-6. Genki II node integration
-7. Grammar node timestamps → transcript → sprint suggestion pipeline
+4. Gold dot detail panel — query `lesson_phrases WHERE node_id = ?` to show source sentences
+5. turn_id population — match phrases to transcript_turns at extraction time
+6. "Play from here" button — turn_id → audio seek
+7. Genki II node integration
+8. Grammar node timestamps → transcript → sprint suggestion pipeline
 
 ### Dead code / cleanup
-8. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
-9. `vtWatch*` localStorage — low priority, working fine
-10. `customTranscribe` — confirmed NOT dead, ticket closed
-11. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
+9. `rtCompareBtn` (4 refs in features-voice.js) — tie into FLUENCY_432 or remove
+10. `vtWatch*` localStorage — low priority, working fine
+11. `customTranscribe` — confirmed NOT dead, ticket closed
+12. `shuchuActivityBtns` / `shuchuR2Btns` divs (index.html, panel-shuchu) — now always empty
     since session 45 moved the Next button to the panel header. Low priority; only worth
     removing if nothing else ever gets added to them.
-12. Dead fullscreen-video CSS block (`#panel-video.vt-fullscreen` and descendants in
+13. Dead fullscreen-video CSS block (`#panel-video.vt-fullscreen` and descendants in
     style.css) — uses the wrong id (`#panel-video` not `#panel-video2`), matches nothing
     in any mode. Pre-existing, found during session 45's video panel investigation.
     Low priority — fullscreen mode presumably hasn't worked via this CSS for a while;
     confirm with Paul whether fullscreen video is actually used before deciding to fix
     vs. remove the dead block entirely.
+14. Temporary kana debug instrumentation (`_kanaDebug`, `window._kanaLog`,
+    `window.kanaDebugDump`) in features-kana.js — see "Kana Input System (session 46)"
+    above. Remove once the new converter architecture is confirmed stable under real use.
 
 ### Vocab pipeline
-13. corpus_productions extraction fix (single-kanji in old rows)
+15. corpus_productions extraction fix (single-kanji in old rows)
 
 ### Future / larger features
-14. FLUENCY_432 emitter — 4/3/2 speaking session wiring
-15. Layer 6 — grammar drill + writing prompt with top-N words
-16. Book vocab import (18 pages, OCR artifact, deferred)
-17. Sight-reading feature (to be built from scratch)
-18. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
+16. FLUENCY_432 emitter — 4/3/2 speaking session wiring
+17. Layer 6 — grammar drill + writing prompt with top-N words
+18. Book vocab import (18 pages, OCR artifact, deferred)
+19. Sight-reading feature (to be built from scratch)
+20. Satellite (jpsat) redesign — warm parchment scheme, rebuilt HTML shell, verify Gist sync
 
 ---
 
