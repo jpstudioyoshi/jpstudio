@@ -1,6 +1,6 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-22 (session 47/48 — dead-code cleanup, conjugation SRS toggle,
-vocab weight fixes, writing panel improvements, lesson recording mic fix)
+Last updated: 2026-06-22 (session 49 — NoM pipeline foundations: hallucination scrubber,
+raw_content persistence, session linking, transcript cleanup)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -52,6 +52,54 @@ vocab weight fixes, writing panel improvements, lesson recording mic fix)
 ## Current Mode
 ACTIVE DEVELOPMENT / ONGOING CLEANUP — dead-code cleanup, bug fixes, and feature work
 handled as routine, in whatever order makes sense.
+
+## Session 49 Changes (2026-06-22)
+
+### UI fix
+- **`listenTrackCount` span removed** (`index.html`) — was hidden behind the Clear button
+  in the listen panel playlist header. Redundant — playlist items are visible.
+
+### NoM pipeline foundations
+
+#### Hallucination scrubber (`src/Orchestrator.js`)
+- Added `_scrubHallucinations(turns)` — keeps only the first occurrence of any string
+  appearing 5+ times in the transcript. Fires after `_currentSession.merge()` before save.
+- Whisper hallucinates loops on silent/quiet sections (confirmed: session 80 had
+  `猫はお尻を探しています` repeat for 19 minutes — Whisper mishearing of マイクロ at lesson start).
+- Session 80 cleaned manually: 1039 → 429 turns; `transcript_json` rebuilt from clean
+  `transcript_turns`; `transcript_turns` deduplicated in DB.
+
+#### `raw_content` persistence (`src/features-lesson-notes.js`)
+- WhatsApp notes raw text now written to `lesson_sessions.raw_content` at extraction time.
+- Added `raw_content=?` to the existing `UPDATE lesson_sessions SET extracted_grammar=?`
+  call in `lessonNotesExtractGrammarSilent`. Uses `LessonNotesState.rawText || docContent`.
+- Previously the source WhatsApp text was lost after extraction — only grammar/vocab survived.
+
+#### Session linking (Claude Code job — completed)
+- Added `linked_session_id INTEGER` column to `lesson_sessions` (schema v14, same guard
+  pattern as all other migrations in `main.js`).
+- Fixed `source` value: WhatsApp imports now use `source='whatsapp'` (was `'lesson_notes'`).
+- Auto-link on import: `lessonNotesEnsureDbRow` queries same-date recordings with
+  `audio_duration_s > 600` and no existing link; updates the one match silently;
+  logs warning if multiple candidates found.
+- Recording INSERT at main.js:1077 already had `source='recording'` — no change needed.
+
+### Architecture decisions (session 49)
+- **One lesson = one WhatsApp row** (anchor). Recording row links back via `linked_session_id`.
+- `notes_text` column is currently a recording session JSON blob (StorageService.js) —
+  NOT WhatsApp text. `raw_content` is the correct column for WhatsApp source.
+- `lesson_sessions` full consolidation (single row per lesson) deferred — link column
+  unblocks the pipeline without requiring a rebuild.
+- Hallucination filter is prerequisite for all NoM detection — must run before any
+  cluster detection or theme segmentation.
+
+### NoM design validated against real data (session 80, 2026-06-22)
+- Full lesson transcript examined manually — see `nom-sprint-handoff.md` for episode list.
+- Dominant pattern: `なければなりません` — 4 episodes, severity 3, Yoshi-note confirmed.
+- Particle alternation: `映画館に` → `映画館で` (particle_de_place node).
+- Vocab gap: `おしといい` (German) → `お人よし` resolution.
+- Theme segmentation via API identified as valuable future step — one call per session
+  would produce section markers (topic + offset) for timeline navigation.
 
 ## Session 47/48 Changes (2026-06-22)
 
@@ -225,12 +273,18 @@ Debug instrumentation removed this session (session 47/48).
 - lesson_phrases has node_id + turn_id columns
 - Remaining: detail panel (source sentences); turn_id population; "Play from here"
 
-## SQLite Schema — v13
+## SQLite Schema — v14
 kv_store, corpus_entries, corpus_lookups, corpus_productions, counters,
 drill_results, error_history, failure_events, grammar_mastery, kanji_ref,
 learning_events, lesson_phrases, lesson_sessions, panel_sessions,
 pitch_data, schema_version, srs_items, transcript_turns, transcript_vocab,
 vocab_items, vocab_items_backup, vocab_srs, words, writing_sessions, writing_sittings
+
+`lesson_sessions` key columns:
+- `source` — `'whatsapp'` (notes import) or `'recording'` (audio session)
+- `raw_content` — raw WhatsApp text (now persisted at import)
+- `extracted_grammar` — JSON array of node_ids
+- `linked_session_id` — recording row points to its WhatsApp anchor row (new v14)
 
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 
@@ -239,25 +293,31 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 ### Bugs / cleanup open
 1. Video panel transcript overflow — open, with Claude Code (`video-panel-handoff.md`)
 2. `shuchuActivityBtns` / `shuchuR2Btns` — always empty (Next button moved to header
-   session 45). Low priority; only remove if nothing else ever fills them. Needs JS
-   refactor to null-safe the refs before removing the HTML elements.
+   session 45). Low priority; only remove if nothing else ever fills them.
+
+### NoM pipeline (in progress)
+3. Rule-based cluster detection function (client-side JS, no API calls) — next
+4. LLM window classification per cluster (1 call per cluster)
+5. Score + rank by grammar node, note confirmation, severity; deduplicate by node
+6. Surface top 2–3 as sprint suggestion cards in 集中 panel
+7. Theme segmentation — one API call per session, section markers for timeline navigation
 
 ### Grammar coverage (all blocked on data/infra)
-3. Gold dot detail panel — needs node_id query on lesson_phrases → source sentences
-4. turn_id population — match phrases to transcript_turns at extraction time
-5. "Play from here" button — turn_id → audio seek
-6. Genki II node integration
-7. Grammar node timestamps → transcript → sprint suggestion pipeline
+8. Gold dot detail panel — needs node_id query on lesson_phrases → source sentences
+9. turn_id population — match phrases to transcript_turns at extraction time
+10. "Play from here" button — turn_id → audio seek (session linking now unblocks this)
+11. Genki II node integration
 
 ### Vocab pipeline
-8. corpus_productions extraction fix — single-kanji in old rows
+12. corpus_productions extraction fix — single-kanji in old rows
 
 ### Future / larger features
-9. FLUENCY_432 emitter — 4/3/2 speaking session wiring
-10. Layer 6 — grammar drill + writing prompt with top-N words
-11. Book vocab import (18 pages, OCR artifact, deferred)
-12. Sight-reading feature (from scratch)
-13. Satellite (jpsat) redesign
+13. FLUENCY_432 emitter — 4/3/2 speaking session wiring
+14. Layer 6 — grammar drill + writing prompt with top-N words
+15. Book vocab import (18 pages, OCR artifact, deferred)
+16. Sight-reading feature (from scratch)
+17. Satellite (jpsat) redesign
+18. `lesson_sessions` full consolidation — single row per lesson (Claude Code, larger job)
 
 ## Dead-Code Lookup Tooling
 - check-syntax.js: callers + exported per function → audit-latest.md + index.json
