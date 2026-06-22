@@ -1,0 +1,513 @@
+// ═══════════════════════════════════════════════════════
+// FEATURES-NOM  (Noticing-of-Mistakes detection)
+// Rule-based cluster detection over transcript_turns.
+// No API calls. Pure client-side JS.
+//
+// Entry point:  nomDetectClusters(sessionId) → Array<Cluster>
+// Test harness: nomTestSession80()           → console report
+//
+// Cluster shape:
+//   { startOffset, endOffset, turns, ruleType }
+//   startOffset / endOffset: float seconds
+//   turns: Array<{id, timestamp_offset, content}>
+//   ruleType: one of the RULE_* constants below
+//
+// Depends on: window.db (Electron IPC db proxy)
+// ═══════════════════════════════════════════════════════
+
+// ── Rule type labels ────────────────────────────────────
+const NOM_RULE = {
+  MORPHOLOGICAL_VARIATION: 'morphological_variation',  // same stem, changing endings
+  DENSE_REPETITION:        'dense_repetition',          // same token 4+ times in window
+  PARTICLE_ALTERNATION:    'particle_alternation',      // same noun, different particle
+  REPAIR_MARKER:           'repair_marker',             // explicit hesitation/repair words
+  VOCAB_GAP:               'vocab_gap',                 // L1 word (German/English) before Japanese search
+};
+
+// ── Tuneable constants ──────────────────────────────────
+const NOM_CFG = {
+  // Morphological variation
+  MORPH_MIN_VARIANTS:    3,     // minimum distinct endings to fire
+  MORPH_WINDOW_S:       60,     // seconds to look back/forward for variants of same stem
+  MORPH_MIN_STEM_LEN:    3,     // minimum stem length (chars, hiragana)
+
+  // Dense repetition
+  DENSE_MIN_COUNT:       4,     // occurrences of same token
+  DENSE_WINDOW_S:       45,     // seconds window
+
+  // Particle alternation
+  PARTICLE_MIN_SWITCHES: 2,     // how many different particles on same noun
+  PARTICLE_WINDOW_S:    30,
+
+  // Vocab gap — L1 detection
+  VOCAB_GAP_WINDOW_S:   90,     // window after L1 word to catch search sequence
+
+  // Cluster merging
+  MERGE_GAP_S:          20,     // two clusters within this gap → merged
+};
+
+// ── Repair marker list ──────────────────────────────────
+// Explicit hesitation / repair words that signal a breakdown.
+const NOM_REPAIR_MARKERS = [
+  'なんで', 'ちょっと待ってください', 'すみません', '何ですか', 'もう一度',
+  'えーと', 'えっと', 'あの', 'うーん', 'もう一回',
+  'ごめんなさい', '分かりません', 'どういう意味', 'もう少し', 'ゆっくり',
+];
+
+// Japanese particles to track for alternation
+const NOM_PARTICLES = ['に', 'で', 'を', 'が', 'は', 'へ', 'と', 'から', 'まで', 'より'];
+
+// L1 word patterns (German/English words appearing in transcript)
+// Whisper romanises German words phonetically — catch common patterns.
+const NOM_L1_PATTERN = /[a-zA-ZäöüÄÖÜß]{3,}/;
+
+// Stoplist — high-frequency tokens that are normal conversation, not NoM signals.
+// These are excluded from dense_repetition and morphological_variation checks.
+const NOM_STOPLIST = new Set([
+  'うん', 'はい', 'ええ', 'あ', 'え', 'そう', 'そうです', 'そうですね',
+  'ね', 'よ', 'か', 'な', 'で', 'は', 'が', 'を', 'に', 'と',
+  'OK', 'ok', 'うんうん', 'ああ', 'あー', 'えー', 'まあ',
+]);
+
+// Hallucination scrub threshold — same rule as Orchestrator._scrubHallucinations.
+// Any token appearing this many times or more: keep only first occurrence.
+const NOM_HALLUCINATION_THRESHOLD = 5;
+
+// ── Main entry point ────────────────────────────────────
+
+/**
+ * Detect NoM clusters in a session's transcript_turns.
+ * @param {number} sessionId
+ * @returns {Promise<Array<{startOffset, endOffset, turns, ruleType}>>}
+ */
+async function nomDetectClusters(sessionId) {
+  const raw = await _nomLoadTurns(sessionId);
+  if (!raw.length) {
+    console.log('[NoM] No turns found for session', sessionId);
+    return [];
+  }
+  const turns = _nomScrub(raw);
+  console.log(`[NoM] Loaded ${raw.length} turns for session ${sessionId} (${raw.length - turns.length} scrubbed)`);
+
+  const rawClusters = [
+    ..._detectDenseRepetition(turns),
+    ..._detectMorphologicalVariation(turns),
+    ..._detectParticleAlternation(turns),
+    ..._detectRepairMarkers(turns),
+    ..._detectVocabGap(turns),
+  ];
+
+  const merged = _mergeClusters(rawClusters);
+  console.log(`[NoM] ${rawClusters.length} raw clusters → ${merged.length} after merge`);
+  return merged;
+}
+
+// ── In-memory hallucination scrubber ──────────────────
+// Mirrors Orchestrator._scrubHallucinations but works on transcript_turns rows.
+// Also strips stoplist tokens so they don't pollute dense_repetition.
+function _nomScrub(turns) {
+  const counts = {};
+  for (const t of turns) counts[t.content] = (counts[t.content] || 0) + 1;
+  const seen = new Set();
+  const result = [];
+  for (const t of turns) {
+    if (NOM_STOPLIST.has(t.content)) continue;
+    if (counts[t.content] >= NOM_HALLUCINATION_THRESHOLD) {
+      if (seen.has(t.content)) continue;
+      seen.add(t.content);
+    }
+    result.push(t);
+  }
+  return result;
+}
+
+// ── DB loader ───────────────────────────────────────────
+
+async function _nomLoadTurns(sessionId) {
+  try {
+    const rows = await window.db.query(
+      `SELECT id, CAST(timestamp_offset AS REAL) AS ts, content
+       FROM transcript_turns
+       WHERE session_id = ${Number(sessionId)}
+       ORDER BY ts ASC`
+    );
+    return rows.map(r => ({
+      id:      r.id,
+      ts:      r.ts,         // float seconds
+      content: (r.content || '').trim(),
+    })).filter(r => r.content.length > 0);
+  } catch (e) {
+    console.error('[NoM] Failed to load turns:', e);
+    return [];
+  }
+}
+
+// ── Rule 1: Dense repetition ────────────────────────────
+// Same surface token appears 4+ times within a sliding window.
+// Tokenise by splitting on whitespace; normalise full-width chars.
+
+function _detectDenseRepetition(turns) {
+  const clusters = [];
+  const W = NOM_CFG.DENSE_WINDOW_S;
+  const MIN = NOM_CFG.DENSE_MIN_COUNT;
+
+  // Collect all tokens with their turn index
+  const tokens = []; // [{token, turnIdx, ts}]
+  for (let i = 0; i < turns.length; i++) {
+    const t = turns[i];
+    for (const tok of _tokenise(t.content)) {
+      if (tok.length >= 2) tokens.push({ token: tok, turnIdx: i, ts: t.ts });
+    }
+  }
+
+  // For each unique token, find windows where it appears MIN+ times
+  const byToken = {};
+  for (const entry of tokens) {
+    if (!byToken[entry.token]) byToken[entry.token] = [];
+    byToken[entry.token].push(entry);
+  }
+
+  for (const [token, occurrences] of Object.entries(byToken)) {
+    if (occurrences.length < MIN) continue;
+
+    // Sliding window scan
+    let i = 0;
+    while (i < occurrences.length) {
+      const windowStart = occurrences[i].ts;
+      const windowEnd   = windowStart + W;
+      const inWindow    = occurrences.filter(o => o.ts >= windowStart && o.ts <= windowEnd);
+      if (inWindow.length >= MIN) {
+        const turnIdxSet = new Set(inWindow.map(o => o.turnIdx));
+        const clusterTurns = [...turnIdxSet].map(idx => turns[idx]);
+        clusters.push(_makeCluster(clusterTurns, NOM_RULE.DENSE_REPETITION));
+        // Advance past this window
+        i = occurrences.findIndex(o => o.ts > windowEnd);
+        if (i < 0) break;
+      } else {
+        i++;
+      }
+    }
+  }
+
+  return clusters;
+}
+
+// ── Rule 2: Morphological variation ─────────────────────
+// Same stem with 3+ distinct endings within a time window.
+// Approach: extract hiragana stems (longest common prefix of token pairs),
+// group tokens sharing a stem, check variant count.
+
+function _detectMorphologicalVariation(turns) {
+  const clusters = [];
+  const W   = NOM_CFG.MORPH_WINDOW_S;
+  const MIN = NOM_CFG.MORPH_MIN_VARIANTS;
+  const STEM_LEN = NOM_CFG.MORPH_MIN_STEM_LEN;
+
+  // Collect all hiragana-dominant tokens with turn info
+  const hiraganaTokens = [];
+  for (let i = 0; i < turns.length; i++) {
+    const t = turns[i];
+    for (const tok of _tokenise(t.content)) {
+      if (_isHiraganaDominant(tok) && tok.length > STEM_LEN) {
+        hiraganaTokens.push({ token: tok, turnIdx: i, ts: t.ts });
+      }
+    }
+  }
+
+  // For each token, look for tokens within W seconds sharing a stem of length STEM_LEN
+  // To avoid O(n²) explosion, bucket by first STEM_LEN chars
+  const byStem = {};
+  for (const entry of hiraganaTokens) {
+    const stem = entry.token.slice(0, STEM_LEN);
+    if (!byStem[stem]) byStem[stem] = [];
+    byStem[stem].push(entry);
+  }
+
+  for (const [stem, group] of Object.entries(byStem)) {
+    if (group.length < MIN) continue;
+
+    // Sliding window: find time windows with MIN+ distinct endings
+    for (let i = 0; i < group.length; i++) {
+      const windowStart = group[i].ts;
+      const windowEnd   = windowStart + W;
+      const inWindow    = group.filter(e => e.ts >= windowStart && e.ts <= windowEnd);
+      const distinct    = new Set(inWindow.map(e => e.token));
+      if (distinct.size >= MIN) {
+        const turnIdxSet = new Set(inWindow.map(e => e.turnIdx));
+        const clusterTurns = [...turnIdxSet].map(idx => turns[idx]);
+        clusters.push(_makeCluster(clusterTurns, NOM_RULE.MORPHOLOGICAL_VARIATION));
+        // Skip past window
+        i = group.findIndex(e => e.ts > windowEnd);
+        if (i < 0) break;
+        i--; // for-loop will increment
+      }
+    }
+  }
+
+  return clusters;
+}
+
+// ── Rule 3: Particle alternation ────────────────────────
+// Same noun appearing with 2+ different particles within a window.
+// Pattern: look for sequences [noun + particle] in turns.
+
+function _detectParticleAlternation(turns) {
+  const clusters = [];
+  const W   = NOM_CFG.PARTICLE_WINDOW_S;
+  const MIN = NOM_CFG.PARTICLE_MIN_SWITCHES;
+
+  // Extract (noun, particle) pairs from each turn.
+  // Simple heuristic: look for tokens followed immediately (in content) by a particle char.
+  // Content like "映画館で" or "映画館 で" → noun=映画館, particle=で
+  const nounParticlePairs = []; // [{noun, particle, turnIdx, ts}]
+
+  for (let i = 0; i < turns.length; i++) {
+    const t = turns[i];
+    const extracted = _extractNounParticlePairs(t.content);
+    for (const pair of extracted) {
+      nounParticlePairs.push({ ...pair, turnIdx: i, ts: t.ts });
+    }
+  }
+
+  // Group by noun
+  const byNoun = {};
+  for (const p of nounParticlePairs) {
+    if (!byNoun[p.noun]) byNoun[p.noun] = [];
+    byNoun[p.noun].push(p);
+  }
+
+  for (const [noun, occurrences] of Object.entries(byNoun)) {
+    if (occurrences.length < MIN) continue;
+
+    // Sliding window
+    for (let i = 0; i < occurrences.length; i++) {
+      const windowStart = occurrences[i].ts;
+      const windowEnd   = windowStart + W;
+      const inWindow    = occurrences.filter(o => o.ts >= windowStart && o.ts <= windowEnd);
+      const distinctParticles = new Set(inWindow.map(o => o.particle));
+      if (distinctParticles.size >= MIN) {
+        const turnIdxSet = new Set(inWindow.map(o => o.turnIdx));
+        const clusterTurns = [...turnIdxSet].map(idx => turns[idx]);
+        clusters.push(_makeCluster(clusterTurns, NOM_RULE.PARTICLE_ALTERNATION));
+        i = occurrences.findIndex(o => o.ts > windowEnd);
+        if (i < 0) break;
+        i--;
+      }
+    }
+  }
+
+  return clusters;
+}
+
+// ── Rule 4: Repair markers ──────────────────────────────
+// Turn containing any explicit repair/hesitation word.
+// Each turn with a marker becomes its own single-turn cluster.
+// Adjacent marker clusters within MERGE_GAP_S will be merged later.
+
+function _detectRepairMarkers(turns) {
+  const clusters = [];
+  for (let i = 0; i < turns.length; i++) {
+    const t = turns[i];
+    const lower = t.content;
+    if (NOM_REPAIR_MARKERS.some(m => lower.includes(m))) {
+      // Include 1 turn before and after for context
+      const contextTurns = turns.slice(Math.max(0, i - 1), Math.min(turns.length, i + 2));
+      clusters.push(_makeCluster(contextTurns, NOM_RULE.REPAIR_MARKER));
+    }
+  }
+  return clusters;
+}
+
+// ── Rule 5: Vocab gap (L1 intrusion) ───────────────────
+// A token matching L1 pattern (latin chars ≥3) followed by
+// Japanese search activity (repeated near-similar tokens) within window.
+
+function _detectVocabGap(turns) {
+  const clusters = [];
+  const W = NOM_CFG.VOCAB_GAP_WINDOW_S;
+
+  for (let i = 0; i < turns.length; i++) {
+    const t = turns[i];
+    // Check if this turn contains an L1 (non-Japanese) word
+    const words = t.content.split(/\s+/);
+    const hasL1 = words.some(w => NOM_L1_PATTERN.test(w) && !_isRomajiNumber(w));
+    if (!hasL1) continue;
+
+    // Look forward for a cluster of Japanese search activity
+    const windowEnd = t.ts + W;
+    const forward = turns.slice(i + 1).filter(ft => ft.ts <= windowEnd);
+    if (forward.length < 2) continue;
+
+    // Check if forward turns show search activity: multiple turns with overlapping hiragana content
+    const forwardTokens = forward.flatMap(ft => _tokenise(ft.content).filter(_isHiraganaDominant));
+    const uniqueForward = new Set(forwardTokens);
+
+    // If there are fewer unique tokens than total (repetition) → likely searching
+    if (forwardTokens.length >= 3 && uniqueForward.size < forwardTokens.length) {
+      const clusterTurns = [t, ...forward];
+      clusters.push(_makeCluster(clusterTurns, NOM_RULE.VOCAB_GAP));
+    }
+  }
+
+  return clusters;
+}
+
+// ── Cluster helpers ─────────────────────────────────────
+
+function _makeCluster(turns, ruleType) {
+  const sorted = [...turns].sort((a, b) => a.ts - b.ts);
+  return {
+    startOffset: sorted[0].ts,
+    endOffset:   sorted[sorted.length - 1].ts,
+    turns:       sorted.map(t => ({ id: t.id, timestamp_offset: t.ts, content: t.content })),
+    ruleType,
+  };
+}
+
+/**
+ * Merge clusters that overlap or are within MERGE_GAP_S of each other.
+ * Preserves all ruleTypes as an array on merged clusters.
+ */
+function _mergeClusters(clusters) {
+  if (!clusters.length) return [];
+  const GAP = NOM_CFG.MERGE_GAP_S;
+
+  // Sort by start
+  const sorted = [...clusters].sort((a, b) => a.startOffset - b.startOffset);
+
+  const merged = [];
+  let current = { ...sorted[0], ruleTypes: [sorted[0].ruleType] };
+
+  for (let i = 1; i < sorted.length; i++) {
+    const c = sorted[i];
+    if (c.startOffset <= current.endOffset + GAP) {
+      // Merge
+      current.endOffset = Math.max(current.endOffset, c.endOffset);
+      current.ruleTypes = [...new Set([...current.ruleTypes, c.ruleType])];
+      // Union turns by id
+      const seenIds = new Set(current.turns.map(t => t.id));
+      for (const t of c.turns) {
+        if (!seenIds.has(t.id)) { current.turns.push(t); seenIds.add(t.id); }
+      }
+      current.turns.sort((a, b) => a.timestamp_offset - b.timestamp_offset);
+    } else {
+      // Finalise current and start new
+      current.ruleType = current.ruleTypes.length === 1
+        ? current.ruleTypes[0]
+        : current.ruleTypes.join('+');
+      merged.push(current);
+      current = { ...c, ruleTypes: [c.ruleType] };
+    }
+  }
+  current.ruleType = current.ruleTypes.length === 1
+    ? current.ruleTypes[0]
+    : current.ruleTypes.join('+');
+  merged.push(current);
+
+  return merged;
+}
+
+// ── Tokeniser ───────────────────────────────────────────
+
+function _tokenise(text) {
+  // Split on whitespace and punctuation; return non-empty tokens
+  return text
+    .split(/[\s、。！？「」『』（）・…\-\/]+/)
+    .map(t => t.trim())
+    .filter(t => t.length >= 2);
+}
+
+function _isHiraganaDominant(token) {
+  const hiragana = (token.match(/[\u3041-\u3096]/g) || []).length;
+  return hiragana / token.length > 0.5;
+}
+
+function _isRomajiNumber(w) {
+  // Ignore things like "N5", "JLPT", pure numbers
+  return /^[A-Z]{1,5}\d+$|^\d+$/.test(w);
+}
+
+// Extract (noun, particle) pairs from a content string.
+// Strategy: find any NOM_PARTICLES that appear directly after a CJK/hiragana sequence.
+function _extractNounParticlePairs(content) {
+  const pairs = [];
+  // Match: CJK or hiragana sequence immediately followed by a particle
+  const particleGroup = NOM_PARTICLES.join('|');
+  const re = new RegExp(`([\\u3040-\\u9FFF\\u30A0-\\u30FF]{2,})(${particleGroup})(?=[^\\u3040-\\u9FFF\\u30A0-\\u30FF]|$)`, 'g');
+  let m;
+  while ((m = re.exec(content)) !== null) {
+    pairs.push({ noun: m[1], particle: m[2] });
+  }
+  return pairs;
+}
+
+// ── Test harness ─────────────────────────────────────────
+// Run in DevTools: nomTestSession80()
+// Compares detected clusters against the 7 known episodes from the handoff doc.
+
+async function nomTestSession80() {
+  // Find session 80 (the one cleaned manually — 429 turns after scrub)
+  let sessionId;
+  try {
+    const rows = await window.db.query(
+      `SELECT id, date, source FROM lesson_sessions ORDER BY id DESC LIMIT 20`
+    );
+    console.table(rows);
+    // Session 80 is the largest cleaned recording session
+    const rec = rows.find(r => r.source === 'recording');
+    if (!rec) { console.warn('[NoM test] No recording sessions found'); return; }
+    sessionId = rec.id;
+    console.log('[NoM test] Using session id', sessionId, '— date', rec.date);
+  } catch (e) {
+    console.error('[NoM test] Could not query lesson_sessions:', e);
+    return;
+  }
+
+  const clusters = await nomDetectClusters(sessionId);
+
+  // Known episodes from handoff doc (seconds)
+  const KNOWN = [
+    { label: 'E1 話さなければなりません',   startS: 1179, endS: 1213, rule: NOM_RULE.MORPHOLOGICAL_VARIATION },
+    { label: 'E2 やることをしなければ',     startS: 1733, endS: 1815, rule: NOM_RULE.MORPHOLOGICAL_VARIATION },
+    { label: 'E3 部屋で遊ばなければ',        startS: 1887, endS: 1899, rule: NOM_RULE.MORPHOLOGICAL_VARIATION },
+    { label: 'E4 映画館で/に particle',      startS: 1585, endS: 1599, rule: NOM_RULE.PARTICLE_ALTERNATION   },
+    { label: 'E5 水は来なければなりません',  startS: 1999, endS: 2007, rule: NOM_RULE.MORPHOLOGICAL_VARIATION },
+    { label: 'E6 食べ物を買わなければ',      startS: 2753, endS: 2820, rule: NOM_RULE.MORPHOLOGICAL_VARIATION },
+    { label: 'E7 お人よし vocab gap',        startS: 2263, endS: 2337, rule: NOM_RULE.VOCAB_GAP              },
+  ];
+
+  console.log('\n=== NoM Test: Session 80 ===');
+  console.log(`Total clusters detected: ${clusters.length}\n`);
+
+  let hits = 0;
+  for (const ep of KNOWN) {
+    const match = clusters.find(c =>
+      c.startOffset <= ep.endS + 30 && c.endOffset >= ep.startS - 30
+    );
+    if (match) {
+      hits++;
+      console.log(`✅  ${ep.label}`);
+      console.log(`    Expected: ${ep.startS}–${ep.endS}s  |  Got: ${match.startOffset.toFixed(1)}–${match.endOffset.toFixed(1)}s  |  Rule: ${match.ruleType}`);
+    } else {
+      console.log(`❌  ${ep.label}`);
+      console.log(`    Expected: ${ep.startS}–${ep.endS}s  |  No cluster found nearby`);
+    }
+  }
+
+  console.log(`\nRecall: ${hits}/${KNOWN.length} known episodes covered`);
+  console.log('\nAll clusters:');
+  for (const c of clusters) {
+    console.log(`  [${c.startOffset.toFixed(0)}–${c.endOffset.toFixed(0)}s] ${c.ruleType} (${c.turns.length} turns)`);
+    // Show first 2 turns for context
+    for (const t of c.turns.slice(0, 2)) {
+      console.log(`    ${t.timestamp_offset.toFixed(1)}s: ${t.content.slice(0, 60)}`);
+    }
+  }
+
+  return clusters;
+}
+
+// ── App registry ─────────────────────────────────────────
+try {
+  Object.assign(App, { nomDetectClusters, nomTestSession80 });
+} catch(e) { console.error('[NoM] App registry failed:', e); }
