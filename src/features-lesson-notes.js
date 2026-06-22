@@ -1741,8 +1741,8 @@ ${docContent.slice(0, 10000)}`;
       console.log('[LN] grammar patterns written to lesson_phrases:', _rows.length);
       const nodeIds = [...new Set(LessonNotesState.grammar.flatMap(g => g.grammarNodeIds || []))];
       await window.db.run(
-        'UPDATE lesson_sessions SET extracted_grammar=? WHERE id=?',
-        [JSON.stringify(nodeIds), _lessonId]
+        'UPDATE lesson_sessions SET extracted_grammar=?, raw_content=? WHERE id=?',
+        [JSON.stringify(nodeIds), LessonNotesState.rawText || docContent, _lessonId]
       );
       console.log('[LN] extracted_grammar written:', nodeIds.length, 'node IDs');
     } catch(e) { console.warn('[LN] grammar SQL write failed:', e.message); }
