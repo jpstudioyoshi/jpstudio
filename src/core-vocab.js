@@ -1709,6 +1709,15 @@ async function extractWritingVocabToItems(text) {
       console.warn('[vocab] writing extraction parse error', e); return;
     }
     if (!Array.isArray(words) || words.length === 0) return;
+    // Normalize pure-hiragana words to kanji form using the words table.
+    // Claude sometimes returns e.g. まいにち instead of 毎日 — look it up.
+    for (const w of words) {
+      if (!w.word || !/^[ぁ-ん]+$/.test(w.word)) continue;
+      try {
+        const match = await window.db.query('SELECT word FROM words WHERE reading = ? LIMIT 1', [w.word]);
+        if (match && match.length > 0) w.word = match[0].word;
+      } catch(e) {}
+    }
     const now = new Date().toISOString();
     for (const w of words) {
       if (!w.word || typeof w.word !== 'string') continue;
