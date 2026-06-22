@@ -1486,9 +1486,7 @@ function voiceTopicChanged(val) {
   if (transcriptWrap) transcriptWrap.style.display = 'none';
 
   const r2Btn  = document.getElementById('rtRound2Btn');
-  const cmpBtn = document.getElementById('rtCompareBtn');
   if (r2Btn)  r2Btn.style.display  = 'none';
-  if (cmpBtn) cmpBtn.style.display = 'none';
   rtSetStatus('');
 
   if (structured) {
@@ -1527,9 +1525,7 @@ function fttInit() {
   if (label) label.textContent = '⏱ Topic:';
   if (topicInput) { topicInput.value = ''; topicInput.placeholder = 'What to talk about…'; }
   const r2Btn = document.getElementById('rtRound2Btn');
-  const cmpBtn = document.getElementById('rtCompareBtn');
   if (r2Btn) r2Btn.style.display = 'none';
-  if (cmpBtn) cmpBtn.style.display = 'none';
   rtSetStatus('');
   voiceNewChat();
 }
@@ -1734,10 +1730,6 @@ function rtCheckProgress() {
     // Only show Round 2 for round-trip mode; comprehension just shows Compare
     if (VoiceState.rtMode === 'round-trip') {
       if (btn) btn.style.display = 'inline-block';
-    } else {
-      // Comprehension: show Compare button after enough exchanges
-      const cmpBtn = document.getElementById('rtCompareBtn');
-      if (cmpBtn) cmpBtn.style.display = 'inline-block';
     }
   }
 }
@@ -1991,9 +1983,7 @@ function rtNewSession() {
   document.getElementById('rtDebriefPanel')?.remove();
   VoiceState.rtRound = 1; VoiceState.rtMessages1 = []; VoiceState.rtMessages2 = []; VoiceState.messages = [];
   const r2 = document.getElementById('rtRound2Btn');
-  const rc = document.getElementById('rtCompareBtn');
   if (r2) r2.style.display = 'none';
-  if (rc) rc.style.display = 'none';
   rtSetStatus('Round 1 — speak naturally');
   voiceNewChat();
 }

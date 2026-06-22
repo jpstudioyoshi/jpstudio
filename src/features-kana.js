@@ -291,7 +291,6 @@ function _kanaSyncCursor(el) {
       else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
-    _kanaDebug('syncCursor-resolved', el, { resolvedMode: activeMode, hadBtnIds: !!ids });
     if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
     else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
     else el.style.caretColor = '';
@@ -302,33 +301,10 @@ function _kanaSyncCursor(el) {
 }
 const _KANA_NAV_KEYS = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
 
-// ═══ TEMPORARY DEBUG INSTRUMENTATION (session 46) — remove once the
-// hiragana drop-out bug is diagnosed. Logs kana lifecycle events to
-// window._kanaLog. Run window.kanaDebugDump() in DevTools console any
-// time after the bug reappears to see a readable table of recent events.
-window._kanaLog = [];
-function _kanaDebug(event, el, extra) {
-  const entry = {
-    t: new Date().toISOString().slice(11, 23),
-    event,
-    id: el?.id || '(no id)',
-    mode: el?._kanaMode,
-    onCount: el?._kanaOnCallCount || 0,
-  };
-  if (extra) Object.assign(entry, extra);
-  window._kanaLog.push(entry);
-  if (window._kanaLog.length > 800) window._kanaLog.shift();
-  console.log('[KANA-DEBUG]', entry.t, event, entry.id, 'mode=' + entry.mode, 'onCount=' + entry.onCount, extra || '');
-}
-window.kanaDebugDump = function() {
-  console.table(window._kanaLog);
-  return window._kanaLog;
-};
+
 
 function kanaOn(el) {
   if (!el || el._kanaOn) return;
-  el._kanaOnCallCount = (el._kanaOnCallCount || 0) + 1;
-  _kanaDebug('kanaOn', el);
   el._kanaOn = true;
   // Restore last known mode for this input if available
   if (!el._kanaMode) el._kanaMode = 'hiragana';
@@ -342,13 +318,11 @@ function kanaOn(el) {
   if (!el._kanaCompositionListener) {
     el._kanaCompositionListener = true;
     el.addEventListener('compositionstart', () => { 
-      _kanaDebug('compositionstart', el);
       el._isComposing = true; 
       el._compositionStart = el.selectionStart;
       el._valueBeforeCompose = el.value;
     });
     el.addEventListener('compositionend', (e) => {
-      _kanaDebug('compositionend', el, { data: e.data });
       el._isComposing = false;
       // Only remove the newly composed IME text (between compositionstart position and now)
       // This prevents the romaji converter from double-converting IME input
@@ -400,17 +374,16 @@ function kanaOn(el) {
   // Guard against re-entry from programmatic focus calls.
   if (!el._kanaFocusListener) {
     el._kanaFocusListener = true;
-    el.addEventListener('focus', () => { _kanaDebug('event:focus', el); _kanaSyncCursor(el); });
-    el.addEventListener('click', () => { _kanaDebug('event:click', el); _kanaSyncCursor(el); });
+    el.addEventListener('focus', () => { _kanaSyncCursor(el); });
+    el.addEventListener('click', () => { _kanaSyncCursor(el); });
     el.addEventListener('keyup', (e) => {
-      if (_KANA_NAV_KEYS.includes(e.key)) { _kanaDebug('event:keyup-nav', el, { key: e.key }); _kanaSyncCursor(el); }
+      if (_KANA_NAV_KEYS.includes(e.key)) { _kanaSyncCursor(el); }
     });
   }
 }
 
 function kanaOff(el) {
   if (!el) return;
-  _kanaDebug('kanaOff', el);
   el._kanaOn = false;
   el._kanaMode = null;
   el._isComposing = false;
@@ -790,7 +763,6 @@ Text: ${kana}` }]
 function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
   const inp = document.getElementById(inputId);
   if (!inp) return;
-  _kanaDebug('kanaSetMode', inp, { requestedMode: mode, caller: (new Error().stack || '').split('\n')[2]?.trim().slice(0, 90) });
   if (inputId) _kanaLastMode[inputId] = mode;
   if (btnGroupId) {
     const ids    = btnIds || {};

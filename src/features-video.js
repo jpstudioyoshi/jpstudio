@@ -1696,8 +1696,6 @@ function vtClearTranslation() {
 async function vtTranslateLine() {
   const panel = document.getElementById('vtLineTranslate');
   const video = document.getElementById('vtVideo');
-  const isFullscreen = document.getElementById('panel-video2')?.classList.contains('vt-fullscreen');
-  
   if (video && !video.paused) video.pause();
 
   // Get current line text
@@ -1984,16 +1982,7 @@ function vtJumpToTime(timeStr) {
 
 function vtCloseLineTranslate() {
   const panel = document.getElementById('vtLineTranslate');
-  const isFullscreen = document.getElementById('panel-video2')?.classList.contains('vt-fullscreen');
-  if (panel) {
-    if (isFullscreen) {
-      // In fullscreen, just clear the content
-      document.getElementById('vtLineJp').textContent = '';
-      document.getElementById('vtLineEn').textContent = '';
-    } else {
-      panel.style.display = 'none';
-    }
-  }
+  if (panel) panel.style.display = 'none';
 }
 
 
