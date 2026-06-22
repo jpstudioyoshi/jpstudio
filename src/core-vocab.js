@@ -167,10 +167,20 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
         }
       }
     } catch(e) { console.warn('[vocab] prep boost lookup failed:', e); }
-    const weighted = (rows || []).map(r => ({
-      ...r,
-      _effectiveWeight: (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5) * (dirWeights[direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
-    }));
+    const weighted = (rows || []).map(r => {
+      // Once a word has been reviewed (srs_due is set), its source no longer
+      // drives priority — SRS due date does. Flatten to 0.35 so Yoshi words
+      // don't permanently crowd out everything else after first review.
+      const _isNew = r.srs_due == null;
+      const _base  = _isNew
+        ? (r.entry_weight || 1.0) * (sourceWeights[r.source] || 0.5)
+        : 0.35;
+      return {
+        ...r,
+        _isNew,
+        _effectiveWeight: _base * (dirWeights[direction] || 1.0) * (prepWords.has(r.word) ? 1.5 : 1.0)
+      };
+    });
     weighted.sort((a, b) => b._effectiveWeight - a._effectiveWeight);
     state.vocabItems = weighted.slice(0, 200);
     vocabIdx = state.vocabItems[0]?.id ?? (state.vocabItems[0] ? 0 : -1);
@@ -189,9 +199,15 @@ function startNewSession() {
   const _sizeKey = vcDirection === 'en_jp' ? 'session_size_en_jp' : vcDirection === 'speaking' ? 'session_size_speaking' : 'session_size_jp_en';
   const size = _vcThresholds[_sizeKey] || 20;
 
-  // state.vocabItems is already ordered by entry_weight DESC, encounter_at DESC
-  // and pre-filtered to due/new rows by the SQL query — take the top N.
-  const pool = state.vocabItems.slice(0, size).map((_, i) => i);
+  // Cap new (never-reviewed) words per session to avoid flooding when a new
+  // Yoshi lesson arrives. Reviewed words fill most of the session; new words
+  // are capped at MAX_NEW regardless of source weight.
+  const MAX_NEW = 5;
+  const newIdx = [], dueIdx = [];
+  state.vocabItems.forEach((r, i) => { if (r._isNew) newIdx.push(i); else dueIdx.push(i); });
+  const combined = [...dueIdx, ...newIdx.slice(0, MAX_NEW)];
+  combined.sort((a, b) => (state.vocabItems[b]._effectiveWeight || 0) - (state.vocabItems[a]._effectiveWeight || 0));
+  const pool = combined.slice(0, size);
   vocabSession    = pool;
   vocabSessionPos = 0;
   vocabIdx        = vocabSession[0] ?? 0;
