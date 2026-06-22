@@ -610,13 +610,20 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
 
       const analyseRow = document.createElement('div');
       analyseRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:14px';
-      analyseRow.innerHTML =
-        `<button class="btn-action" style="font-size:0.78rem" onclick="(async()=>{` +
-          `const rows=await window.db.query('SELECT id FROM lesson_sessions WHERE source=\'recording\' ORDER BY id DESC LIMIT 1');` +
-          `if(rows&&rows[0])nomRunAndCache(rows[0].id);` +
-          `else document.getElementById('nomAnalyseStatus').textContent='No recording sessions found.';` +
-        `})()">Analyse last lesson</button>` +
-        `<span id="nomAnalyseStatus" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)"></span>`;
+      const analyseBtn = document.createElement('button');
+      analyseBtn.className = 'btn-action';
+      analyseBtn.style.fontSize = '0.78rem';
+      analyseBtn.textContent = 'Analyse last lesson';
+      analyseBtn.onclick = async () => {
+        const rows = await window.db.query("SELECT id FROM lesson_sessions WHERE source='recording' ORDER BY id DESC LIMIT 1");
+        if (rows && rows[0]) nomRunAndCache(rows[0].id);
+        else document.getElementById('nomAnalyseStatus').textContent = 'No recording sessions found.';
+      };
+      const analyseStatus = document.createElement('span');
+      analyseStatus.id = 'nomAnalyseStatus';
+      analyseStatus.style.cssText = 'font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)';
+      analyseRow.appendChild(analyseBtn);
+      analyseRow.appendChild(analyseStatus);
       setupEl.insertBefore(analyseRow, setupEl.firstChild);
     }
     if (typeof nomRenderSuggestions === 'function') nomRenderSuggestions();
