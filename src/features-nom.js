@@ -609,7 +609,60 @@ If isNom is false, set topic to null, severity to 0, node_id to null.`;
   return results;
 }
 
+// ── Score, rank, deduplicate ──────────────────────────────
+
+/**
+ * Score and rank classified clusters. Deduplicates by node_id.
+ * Returns top N sprint suggestions.
+ * @param {Array}  classified — output of nomClassifyClusters()
+ * @param {number} topN       — how many to return (default 3)
+ * @returns {Array<{topic, node_id, severity, episode_count, example_offset_ms, score}>}
+ */
+function nomRankSuggestions(classified, topN = 3) {
+  if (!classified.length) return [];
+
+  // Group by node_id (null node_ids each get their own bucket keyed by startOffset)
+  const byNode = {};
+  for (const c of classified) {
+    const key = c.node_id || `_vocab_${c.startOffset}`;
+    if (!byNode[key]) {
+      byNode[key] = {
+        node_id:           c.node_id,
+        topic:             c.topic,
+        severity:          c.severity,
+        episode_count:     0,
+        example_offset_ms: Math.round(c.startOffset * 1000),
+        clusters:          [],
+      };
+    }
+    const bucket = byNode[key];
+    bucket.episode_count++;
+    bucket.clusters.push(c);
+    // Keep highest severity across episodes
+    if (c.severity > bucket.severity) bucket.severity = c.severity;
+    // Keep earliest offset as the example
+    if (c.startOffset < bucket.example_offset_ms / 1000) {
+      bucket.example_offset_ms = Math.round(c.startOffset * 1000);
+    }
+    // Keep the topic from the highest-severity cluster
+    if (c.severity >= bucket.severity) bucket.topic = c.topic;
+  }
+
+  // Score: severity × 3 + episode_count × 2
+  // Weighting: severity matters more than count, but count breaks ties
+  const scored = Object.values(byNode).map(b => ({
+    ...b,
+    score: b.severity * 3 + b.episode_count * 2,
+  }));
+
+  // Sort descending by score
+  scored.sort((a, b) => b.score - a.score);
+
+  // Return top N, dropping internal clusters array
+  return scored.slice(0, topN).map(({ clusters: _c, ...rest }) => rest);
+}
+
 // ── App registry ─────────────────────────────────────────
 try {
-  Object.assign(App, { nomDetectClusters, nomClassifyClusters, nomTestSession80 });
+  Object.assign(App, { nomDetectClusters, nomClassifyClusters, nomRankSuggestions, nomTestSession80 });
 } catch(e) { console.error('[NoM] App registry failed:', e); }
