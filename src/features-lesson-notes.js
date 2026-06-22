@@ -228,7 +228,7 @@ async function lessonNotesEnsureDbRow(session, sessions) {
     const _existing = await window.db.get('SELECT id FROM lesson_sessions WHERE date=? LIMIT 1', [_date]);
     let _dbId = _existing?.id;
     if (!_dbId) {
-      await window.db.run('INSERT INTO lesson_sessions (date, created_at, source) VALUES (?,?,?)', [_date, new Date().toISOString(), 'lesson_notes']);
+      await window.db.run('INSERT INTO lesson_sessions (date, created_at, source) VALUES (?,?,?)', [_date, new Date().toISOString(), 'whatsapp']);
       const _row = await window.db.get('SELECT last_insert_rowid() AS id');
       _dbId = _row?.id;
     }
@@ -236,6 +236,25 @@ async function lessonNotesEnsureDbRow(session, sessions) {
     LessonNotesState.currentLessonId = _dbId;
     lessonNotesSaveSessions(sessions);
     console.log('[LN] lesson_sessions row:', _dbId, 'for date', _date);
+    // Auto-link to same-date recording if exactly one match > 10 min
+    try {
+      const _recs = await window.db.query(
+        `SELECT id FROM lesson_sessions
+         WHERE date=? AND source='recording' AND audio_duration_s > 600
+         AND linked_session_id IS NULL
+         ORDER BY id DESC`,
+        [_date]
+      );
+      if (_recs && _recs.length === 1) {
+        await window.db.run(
+          'UPDATE lesson_sessions SET linked_session_id=? WHERE id=?',
+          [_dbId, _recs[0].id]
+        );
+        console.log('[LN] Auto-linked recording', _recs[0].id, '→ notes session', _dbId);
+      } else if (_recs && _recs.length > 1) {
+        console.log('[LN] Multiple recordings found for', _date, '— manual link needed');
+      }
+    } catch(e) { console.warn('[LN] Auto-link failed:', e.message); }
   } catch(e) { console.warn('[LN] lesson_sessions link failed:', e.message); }
 }
 

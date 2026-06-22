@@ -671,6 +671,13 @@ function createSchema() {
     db.run('UPDATE schema_version SET version = 11');
     console.log('Migrated schema to v11 (vocab_items/vocab_srs split)');
   }
+  // v12: linked_session_id on lesson_sessions (links recording row back to whatsapp anchor)
+  if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 12) {
+    const lsCols = (db.exec("PRAGMA table_info(lesson_sessions)")[0]?.values || []).map(r => r[1]);
+    if (!lsCols.includes('linked_session_id')) db.run('ALTER TABLE lesson_sessions ADD COLUMN linked_session_id INTEGER');
+    db.run('UPDATE schema_version SET version = 12');
+    console.log('Migrated schema to v12 (lesson_sessions: linked_session_id)');
+  }
   console.log('Schema created/verified');
 }
 
