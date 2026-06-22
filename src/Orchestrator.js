@@ -123,6 +123,28 @@ const Orchestrator = (() => {
     }
   }
 
+  // ── Hallucination scrubber ──────────────────────────────
+  // Whisper hallucinates loops on silent sections — same string
+  // repeated many times. Keep only the first occurrence of any
+  // string that appears 5+ times in the transcript.
+  function _scrubHallucinations(turns) {
+    if (!turns || !turns.length) return turns;
+    const counts = {};
+    for (const t of turns) counts[t.text] = (counts[t.text] || 0) + 1;
+    const seen = new Set();
+    const result = [];
+    for (const t of turns) {
+      if (counts[t.text] >= 5) {
+        if (seen.has(t.text)) continue;
+        seen.add(t.text);
+      }
+      result.push(t);
+    }
+    const removed = turns.length - result.length;
+    if (removed > 0) console.log('[Orchestrator] Scrubbed', removed, 'hallucination turns');
+    return result;
+  }
+
   // ── Processing pipeline ────────────────────────────────
 
   async function _runProcessingPipeline(recordingResult) {
@@ -163,6 +185,7 @@ const Orchestrator = (() => {
     }
 
     _currentSession.merge();
+    _currentSession.mergedTranscript = _scrubHallucinations(_currentSession.mergedTranscript);
     _currentSession.status = 'done';
 
     AppEvents.emit(AppEvents.TRANSCRIPTION_COMPLETE, { session: _currentSession });
