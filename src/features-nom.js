@@ -57,16 +57,16 @@ const NOM_REPAIR_MARKERS = [
 // Japanese particles to track for alternation
 const NOM_PARTICLES = ['に', 'で', 'を', 'が', 'は', 'へ', 'と', 'から', 'まで', 'より'];
 
-// L1 word patterns (German/English words appearing in transcript)
-// Whisper romanises German words phonetically — catch common patterns.
-const NOM_L1_PATTERN = /[a-zA-ZäöüÄÖÜß]{3,}/;
+// L1 word patterns — English words appearing in transcript for clarification.
+// Whisper transcribes German phonetically into hiragana, so no German chars here.
+const NOM_L1_PATTERN = /[a-zA-Z]{3,}/;
 
 // Stoplist — high-frequency tokens that are normal conversation, not NoM signals.
 // These are excluded from dense_repetition and morphological_variation checks.
 const NOM_STOPLIST = new Set([
   'うん', 'はい', 'ええ', 'あ', 'え', 'そう', 'そうです', 'そうですね',
   'ね', 'よ', 'か', 'な', 'で', 'は', 'が', 'を', 'に', 'と',
-  'OK', 'ok', 'うんうん', 'ああ', 'あー', 'えー', 'まあ',
+  'OK', 'ok', 'yes', 'no', 'Yes', 'No', 'うんうん', 'ああ', 'あー', 'えー', 'まあ',
 ]);
 
 // Hallucination scrub threshold — same rule as Orchestrator._scrubHallucinations.
