@@ -29,7 +29,8 @@ const AudioService = (() => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const inputs  = devices.filter(d => d.kind === 'audioinput');
-      return inputs.find(d => /built.?in|macbook|internal/i.test(d.label)) ||
+      return inputs.find(d => !/blackhole|loopback|virtual|zoom|iphone|bluetooth|built.?in|macbook|internal/i.test(d.label)) ||
+             inputs.find(d => /built.?in|macbook|internal/i.test(d.label)) ||
              inputs.find(d => !/blackhole|loopback|virtual|zoom|iphone|bluetooth/i.test(d.label)) ||
              null;
     } catch(e) {

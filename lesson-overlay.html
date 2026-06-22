@@ -721,7 +721,8 @@
       _audio.ctx = new AudioContext();
       _audio.buf = new Uint8Array(64);
 
-      const micDev = inputs.find(d => /built.?in|macbook|internal/i.test(d.label)) ||
+      const micDev = inputs.find(d => !/blackhole|loopback|virtual|zoom|iphone|bluetooth|built.?in|macbook|internal/i.test(d.label)) ||
+                   inputs.find(d => /built.?in|macbook|internal/i.test(d.label)) ||
                    inputs.find(d => !/blackhole|loopback|virtual|zoom|iphone|bluetooth/i.test(d.label));
       try {
         _audio.micStream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: micDev ? { exact: micDev.deviceId } : undefined, echoCancellation: false, noiseSuppression: false } });
