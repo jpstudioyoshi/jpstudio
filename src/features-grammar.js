@@ -1044,6 +1044,23 @@ const GrammarErrors = {
 
 let _conjTrackingPaused = false;
 let _conjHintUsed = false; // true if kanji stem was pre-filled for current question
+let _conjSrsMode = false;  // SRS-due mode: only drill forms with srs_due <= today
+
+async function _conjGetDueKeys() {
+  try {
+    const rows = await window.db.query(
+      `SELECT item_key FROM srs_items WHERE drill_type = ? AND srs_due <= date('now','localtime') LIMIT 200`,
+      [STORAGE_KEYS.DRILL_SRS_CONJ]
+    );
+    return new Set((rows || []).map(r => r.item_key));
+  } catch(e) { return new Set(); }
+}
+
+function conjToggleSrsMode() {
+  _conjSrsMode = !_conjSrsMode;
+  const btn = document.getElementById('conjSrsModeBtn');
+  if (btn) btn.classList.toggle('toggle-on', _conjSrsMode);
+}
 
 const ConjSession = {
   todayStr() { return new Date().toISOString().slice(0, 10); },
@@ -1369,7 +1386,8 @@ async function startConjDrillG() {
   conjRun = 1;
   conjSessionWrong = {};
   conjSessionCorrect = {};
-  conjBuildRunQueue(verbTypes, forms, polarities, registers);
+  const _dueKeys = _conjSrsMode && window.db ? await _conjGetDueKeys() : null;
+  conjBuildRunQueue(verbTypes, forms, polarities, registers, _dueKeys);
 }
 
 function _conjUpdateSpecialFilterUI() {
@@ -1506,7 +1524,7 @@ function conjDeConsecutive(queue) {
   return result;
 }
 
-function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
+function conjBuildRunQueue(verbTypes, forms, polarities, registers, dueKeys = null) {
   // Store options for later runs
   window._conjVerbTypes = verbTypes;
   window._conjForms = forms;
@@ -1540,9 +1558,18 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
     }
   }
 
+  // ── SRS-due filter (optional) ─────────────────────────────────────────────
+  const activePool = dueKeys ? combos.filter(c => dueKeys.has(c.key)) : combos;
+  if (dueKeys && activePool.length === 0) {
+    const _area = document.getElementById('conjDrillAreaG');
+    if (_area) _area.innerHTML = '<div class="conj-idle"><span class="conj-idle-char">✓</span><div>Nothing due — all forms up to date.</div><div style="font-family:var(--ui);font-size:0.75rem;color:var(--ink-light);margin-top:8px">Switch to Random to drill anyway.</div></div>';
+    const _sb = document.getElementById('conjStartBtnG'); if (_sb) _sb.style.display = '';
+    const _nb = document.getElementById('conjNewDrillBtn'); if (_nb) _nb.style.display = 'none';
+    return;
+  }
   // ── Weight by session performance + cross-session grammar errors ─────────
   const weighted = [];
-  for (const item of combos) {
+  for (const item of activePool) {
     const w = conjSessionWrong[item.key] || 0;
     const r = conjSessionCorrect[item.key] || 0;
     // Cross-session: look up form|pol|reg|verbType pattern weight
@@ -1554,12 +1581,12 @@ function conjBuildRunQueue(verbTypes, forms, polarities, registers) {
   }
 
   // Guarantee at least a few grammar-error-boosted items appear
-  const boosted = combos.filter(c => GrammarErrors.weight(c.form, c.pol, c.reg, c.word.type || 'u') > 0);
+  const boosted = activePool.filter(c => GrammarErrors.weight(c.form, c.pol, c.reg, c.word.type || 'u') > 0);
   if (boosted.length > 0) {
     boosted.sort(() => Math.random()-0.5).slice(0, 3).forEach(g => weighted.unshift(g));
   }
 
-  const pool = weighted.length >= 5 ? weighted : combos;
+  const pool = weighted.length >= 5 ? weighted : activePool;
   const recentKeys = new Set(window._conjLastRunKeys || []);
   const deduped = pool.filter(c => !recentKeys.has(c.key));
   const finalPool = deduped.length >= CONJ_QUESTIONS_PER_RUN ? deduped : pool;
@@ -1725,9 +1752,10 @@ function renderConjDrillG() {
   inp.focus();
 }
 
-function conjNextRun() {
+async function conjNextRun() {
   conjRun++;
-  conjBuildRunQueue(window._conjVerbTypes, window._conjForms, window._conjPolarities, window._conjRegisters);
+  const _dueKeys = _conjSrsMode && window.db ? await _conjGetDueKeys() : null;
+  conjBuildRunQueue(window._conjVerbTypes, window._conjForms, window._conjPolarities, window._conjRegisters, _dueKeys);
 }
 
 function handleConjKeyG(e) { 
