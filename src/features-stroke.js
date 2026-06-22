@@ -400,6 +400,7 @@ async function strokeLoadKanG(ch, container, size) {
 }
 
 // Koohii stories cache (shared with RTK drill)
+let _rtkMnemonicCache = (() => { try { return JSON.parse(Storage.get(STORAGE_KEYS.RTK_MNEMONICS) || '{}'); } catch(e) { return {}; } })();
 async function strokeFetchKoohii(ch, container) {
   // Check cache first
   if (_rtkMnemonicCache[ch]) {

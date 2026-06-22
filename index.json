@@ -7574,10 +7574,19 @@
   },
   {
     "type": "function",
-    "name": "strokeFetchKoohii",
+    "name": "_rtkMnemonicCache",
     "file": "src/features-stroke.js",
     "line": 403,
-    "desc": "if (_rtkMnemonicCache[ch]) {",
+    "desc": "try { return JSON.parse(Storage.get(STORAGE_KEYS.RTK_MNEMONICS) || '{}'); } catch(e) { return {}; } ",
+    "callers": 4,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "strokeFetchKoohii",
+    "file": "src/features-stroke.js",
+    "line": 404,
+    "desc": "Koohii stories cache (shared with RTK drill)",
     "callers": 1,
     "exported": false
   },
@@ -7585,7 +7594,7 @@
     "type": "function",
     "name": "strokeLoadSteps",
     "file": "src/features-stroke.js",
-    "line": 460,
+    "line": 461,
     "desc": "const hex = ch.codePointAt(0).toString(16).padStart(5, '0');",
     "callers": 1,
     "exported": false
@@ -7601,7 +7610,7 @@
     "type": "storage",
     "name": "RTK_MNEMONICS",
     "file": "src/features-stroke.js",
-    "line": 453,
+    "line": 454,
     "desc": "Storage.set"
   },
   {
