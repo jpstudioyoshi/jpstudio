@@ -24,6 +24,20 @@ const AudioService = (() => {
 
   // ── Device discovery ───────────────────────────────────
 
+  // Find built-in or first non-virtual mic — avoids grabbing BlackHole as default
+  async function findMicDevice() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const inputs  = devices.filter(d => d.kind === 'audioinput');
+      return inputs.find(d => /built.?in|macbook|internal/i.test(d.label)) ||
+             inputs.find(d => !/blackhole|loopback|virtual|zoom|iphone|bluetooth/i.test(d.label)) ||
+             null;
+    } catch(e) {
+      console.warn('[AudioService] Could not enumerate mic devices:', e.message);
+      return null;
+    }
+  }
+
   // Find BlackHole or similar loopback virtual device
   async function findLoopbackDevice() {
     try {
@@ -61,10 +75,16 @@ const AudioService = (() => {
     _loopbackChunks = [];
 
     try {
-      // Mic stream — no echo cancellation (raw capture for Whisper)
+      // Mic stream — prefer built-in mic, avoid BlackHole as system default
+      const micDev = await findMicDevice();
       const micStream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false }
+        audio: {
+          deviceId: micDev ? { exact: micDev.deviceId } : undefined,
+          echoCancellation: false,
+          noiseSuppression: false
+        }
       });
+      console.log('[AudioService] Mic device:', micDev?.label || 'default');
 
       // Loopback stream (BlackHole)
       const _recordTeacher = (App.Storage || window.Storage)?.get('recordTeacherTrack');
