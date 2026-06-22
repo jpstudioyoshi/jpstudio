@@ -301,6 +301,7 @@ try {
   window["startWritingSpeech"] = startWritingSpeech;
   window["sttStart"] = sttStart;
   window["submitWritingSentence"] = submitWritingSentence;
+  window["writingFollowUp"] = writingFollowUp;
   window["testMicrophone"] = testMicrophone;
   window["toggleBlitzMode"] = toggleBlitzMode;
   window["toggleConjListenMode"] = toggleConjListenMode;

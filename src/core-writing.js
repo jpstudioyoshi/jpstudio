@@ -211,8 +211,6 @@ async function wbCallTutor(text, btnEl, btnLabel) {
   // Shared AI call for check and submit
   if (!(App.getApiKey || window.getApiKey)?.()) { alert('Please add your API key using the ⚙ API button at the top.'); return null; }
   if (btnEl) { btnEl.disabled = true; btnEl.textContent = '…'; }
-  const input = document.getElementById('writingInput');
-  if (input) input.disabled = true;
   let parsed = null;
   try {
     const checkMessages = [...writingChatHistory, {role:'user', content:text}];
@@ -237,7 +235,7 @@ async function wbCallTutor(text, btnEl, btnLabel) {
     catch(e) { parsed = {corrected:text, isCorrect:true, blockSubmit:false, note:'', detail:'', _raw:raw}; }
   } catch(e) { console.error('Writing check error:', e); alert('Error: ' + e.message); }
   if (btnEl) { btnEl.disabled = false; btnEl.textContent = btnLabel; }
-  if (input) { input.disabled = false; input.focus(); }
+  document.getElementById('writingInput')?.focus();
   return parsed;
 }
 
@@ -491,8 +489,6 @@ function renderFeedback(entry) {
   const note = entry.note || entry.notes?.[0] || '';
   const detail = entry.detail || '';
   const translation = entry.translation || '';
-  const detailId = `fe-detail-${idx}`;
-
   div.innerHTML = `
     <div class="fe-header" onclick="feToggle(this.parentElement)">
       <span class="fe-toggle">▾</span>
@@ -501,17 +497,20 @@ function renderFeedback(entry) {
     </div>
     <div class="fe-body">
       ${!isOk ? `<div class="fe-row"><span class="fe-label">Corrected</span>
-        <span style="font-family:var(--jp);font-size:1.05rem;color:var(--ink);line-height:1.7">${highlightCorrectedParticles(entry.original||'', entry.corrected||'')}</span></div>` : ''}
+        <span style="font-family:var(--jp);font-size:1.15rem;color:var(--ink);line-height:1.7">${highlightCorrectedParticles(entry.original||'', entry.corrected||'')}</span></div>` : ''}
       ${translation ? `<div class="fe-row"><span class="fe-label">Meaning</span>
-        <span style="font-family:var(--ui);font-size:inherit;color:var(--ink);font-style:italic">${translation}</span></div>` : ''}
+        <span style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);font-style:italic">${translation}</span></div>` : ''}
       ${note ? `<div class="fe-row"><span class="fe-label">Note</span>
-        <span style="font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.6">${note}</span></div>` : ''}
-      ${detail ? `<div class="fe-row" style="cursor:pointer" onclick="toggleDetail('${detailId}',this.querySelector('.fe-more-btn'))" >
+        <span style="font-family:var(--ui);font-size:0.95rem;color:var(--ink);line-height:1.6">${note}</span></div>` : ''}
+      ${detail ? `<div class="fe-row">
         <span class="fe-label">Detail</span>
-        <div style="flex:1">
-          <button class="fe-more-btn">more ↓</button>
-          <div id="${detailId}" style="display:none;margin-top:6px;font-family:var(--ui);font-size:inherit;color:var(--ink);line-height:1.7">${detail}</div>
-        </div></div>` : ''}
+        <div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);line-height:1.7">${detail}</div>
+      </div>` : ''}
+      <div style="margin-top:12px;display:flex;gap:6px;align-items:center">
+        <input id="writingFollowUpInput" type="text" placeholder="Ask a follow-up…" style="flex:1;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.9rem;padding:6px 10px" onkeydown="if(event.key==='Enter'){event.preventDefault();writingFollowUp()}" />
+        <button onclick="writingFollowUp()" class="btn-action" style="padding:5px 12px;font-size:0.85rem">Ask</button>
+      </div>
+      <div id="writingFollowUpAnswer" style="display:none;margin-top:8px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);line-height:1.7;padding:8px;background:var(--paper-dark);border-radius:6px"></div>
     </div>
   `;
   container.innerHTML = '';
@@ -533,6 +532,34 @@ function toggleDetail(id, btn) {
   const open = el.style.display === 'none';
   el.style.display = open ? 'block' : 'none';
   btn.textContent = open ? 'less ↑' : 'more ↓';
+}
+
+async function writingFollowUp() {
+  const inp = document.getElementById('writingFollowUpInput');
+  const ansEl = document.getElementById('writingFollowUpAnswer');
+  if (!inp || !ansEl) return;
+  const question = inp.value.trim();
+  if (!question) return;
+  inp.disabled = true;
+  ansEl.style.display = 'block';
+  ansEl.innerHTML = '<span style="color:var(--ink-light)">Thinking…</span>';
+  try {
+    const messages = [...writingChatHistory, { role: 'user', content: question }];
+    const data = await (App.claudeAPI || window.claudeAPI)({
+      max_tokens: 400,
+      system: WRITING_SYSTEM,
+      messages,
+      track: 'writing'
+    });
+    const reply = (App.claudeText || window.claudeText)(data) || '—';
+    writingChatHistory.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
+    ansEl.textContent = reply;
+    inp.value = '';
+  } catch(e) {
+    ansEl.textContent = 'Error: ' + e.message;
+  }
+  inp.disabled = false;
+  inp.focus();
 }
 
 
@@ -725,5 +752,6 @@ try {
     wbRenumber,
     wbUpdateCount,
     highlightCorrectedParticles,
+    writingFollowUp,
   });
 } catch(e) { console.error('[core-writing] App registry failed:', e); }

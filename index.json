@@ -1127,7 +1127,7 @@
     "file": "src/core-foundation.js",
     "line": 984,
     "desc": "const apiKey = getApiKey();",
-    "callers": 73,
+    "callers": 75,
     "exported": true
   },
   {
@@ -1136,7 +1136,7 @@
     "file": "src/core-foundation.js",
     "line": 1020,
     "desc": "return data.content?.[0]?.text || '';",
-    "callers": 21,
+    "callers": 23,
     "exported": true
   },
   {
@@ -2555,16 +2555,16 @@
     "type": "function",
     "name": "checkWritingSentence",
     "file": "src/core-writing.js",
-    "line": 250,
+    "line": 248,
     "desc": "const _fp = document.querySelector('.feedback-panel');",
-    "callers": 4,
+    "callers": 3,
     "exported": true
   },
   {
     "type": "function",
     "name": "submitWritingSentence",
     "file": "src/core-writing.js",
-    "line": 283,
+    "line": 281,
     "desc": "const input = document.getElementById('writingInput');",
     "callers": 4,
     "exported": true
@@ -2573,7 +2573,7 @@
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 338,
+    "line": 336,
     "desc": "AppState.wbDragEl — see declaration below",
     "callers": 2,
     "exported": true
@@ -2582,7 +2582,7 @@
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 389,
+    "line": 387,
     "desc": "item.remove();",
     "callers": 3,
     "exported": true
@@ -2591,7 +2591,7 @@
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 401,
+    "line": 399,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {",
     "callers": 3,
     "exported": true
@@ -2600,7 +2600,7 @@
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 415,
+    "line": 413,
     "desc": "const n = writingSentences.length;",
     "callers": 5,
     "exported": true
@@ -2609,7 +2609,7 @@
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 421,
+    "line": 419,
     "desc": "AppState.wbDragEl = this;",
     "callers": 1,
     "exported": false
@@ -2618,7 +2618,7 @@
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 428,
+    "line": 426,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2627,7 +2627,7 @@
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 433,
+    "line": 431,
     "desc": "this.classList.remove('drag-over');",
     "callers": 1,
     "exported": false
@@ -2636,7 +2636,7 @@
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 436,
+    "line": 434,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2645,7 +2645,7 @@
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 453,
+    "line": 451,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');",
     "callers": 1,
     "exported": false
@@ -2654,7 +2654,7 @@
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 459,
+    "line": 457,
     "desc": "wbUpdateCount(); } // legacy stub",
     "callers": 1,
     "exported": false
@@ -2663,7 +2663,7 @@
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 461,
+    "line": 459,
     "desc": "const inp = document.getElementById('writingInput');",
     "callers": 3,
     "exported": true
@@ -2672,7 +2672,7 @@
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 473,
+    "line": 471,
     "desc": "const container = document.getElementById('feedbackEntries');",
     "callers": 2,
     "exported": false
@@ -2681,7 +2681,7 @@
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 521,
+    "line": 520,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');",
     "callers": 3,
     "exported": true
@@ -2690,16 +2690,25 @@
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 530,
+    "line": 529,
     "desc": "const el = document.getElementById(id);",
-    "callers": 3,
+    "callers": 2,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "writingFollowUp",
+    "file": "src/core-writing.js",
+    "line": 537,
+    "desc": "const inp = document.getElementById('writingFollowUpInput');",
+    "callers": 5,
     "exported": true
   },
   {
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 539,
+    "line": 566,
     "desc": "writingSentences.splice(idx, 1);",
     "callers": 1,
     "exported": false
@@ -2708,7 +2717,7 @@
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 548,
+    "line": 575,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }",
     "callers": 1,
     "exported": false
@@ -2717,7 +2726,7 @@
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 553,
+    "line": 580,
     "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Type a sentence ",
     "callers": 3,
     "exported": true
@@ -2726,7 +2735,7 @@
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 573,
+    "line": 600,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }",
     "callers": 3,
     "exported": true
@@ -2735,7 +2744,7 @@
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 593,
+    "line": 620,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": false
@@ -2744,7 +2753,7 @@
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 613,
+    "line": 640,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2753,7 +2762,7 @@
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 630,
+    "line": 657,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2762,7 +2771,7 @@
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 642,
+    "line": 669,
     "desc": "const tLen = token.length;",
     "callers": 2,
     "exported": false
@@ -2771,7 +2780,7 @@
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 656,
+    "line": 683,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);",
     "callers": 2,
     "exported": true
@@ -2780,21 +2789,21 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 297,
+    "line": 295,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 301,
+    "line": 299,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 583,
+    "line": 610,
     "desc": "db.run"
   },
   {
@@ -8853,7 +8862,7 @@
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 380,
+    "line": 381,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');",
     "callers": 3,
     "exported": false
@@ -8862,7 +8871,7 @@
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 390,
+    "line": 391,
     "desc": "const list = document.getElementById('chatHistoryList');",
     "callers": 2,
     "exported": false
@@ -8871,7 +8880,7 @@
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-tools.js",
-    "line": 411,
+    "line": 412,
     "desc": "const reader = document.getElementById('qrReader');",
     "callers": 5,
     "exported": true
