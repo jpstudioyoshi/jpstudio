@@ -507,7 +507,109 @@ async function nomTestSession80() {
   return clusters;
 }
 
+// ── Grammar node id list (Genki I/II) ──────────────────
+// Used in classification prompt so Claude picks a valid id.
+// Keep in sync with grammar_nodes.json.
+const NOM_NODE_IDS = [
+  'desu','question_ka','particle_no_possession','word_order','kore_sore_are',
+  'koko_soko_asoko','particle_mo','numbers','time_expressions','particle_wa',
+  'particle_o','particle_ni_direction','particle_de_place','particle_de_means',
+  'particle_ni_time','adjective_i','adjective_na','adverbs','te_form',
+  'te_form_request','te_imasu','negative_te','motion_verbs','existence_aru_iru',
+  'frequency_adverbs','counting','past_tense_masu','past_negative_masu',
+  'short_forms_plain','short_form_past','short_form_negative','nominalization',
+  'adjective_past','suki_kirai','want_to','potential_form','volitional_form',
+  'conditional_tara','conditional_ba','giving_receiving','passive_form',
+  'causative_form','causative_passive','honorific_language','humble_language',
+  'kara_reason','node_because','temo_even_if','tari_tari','koto_ga_aru',
+  'n_desu','ho_ga_ii','nakucha_ikemasen','desho','mae_ni','toki',
+  'comparison','superlative','relative_clause','transitive_intransitive',
+  'particle_de_place','particle_ga_subject',
+];
+
+// ── LLM cluster classification ───────────────────────────
+
+/**
+ * Classify raw clusters via LLM. Filters false positives, names grammar point.
+ * @param {Array} clusters — output of nomDetectClusters()
+ * @returns {Promise<Array>} — clusters with isNom, topic, severity, node_id added;
+ *                             clusters where isNom=false are excluded
+ */
+async function nomClassifyClusters(clusters) {
+  if (!clusters.length) return [];
+
+  const nodeList = NOM_NODE_IDS.join(', ');
+  const results = [];
+
+  for (const cluster of clusters) {
+    const turnLines = cluster.turns
+      .slice(0, 12)  // cap at 12 turns per cluster — enough context, small prompt
+      .map(t => `${Math.round(t.timestamp_offset)}s: ${t.content}`)
+      .join('\n');
+
+    const prompt =
+`You are analysing a Japanese lesson transcript (single mixed-channel recording — both student and teacher on one mic, all turns labelled as one speaker). Identify whether this excerpt shows a genuine communication breakdown or repair episode where the student struggled.
+
+Transcript excerpt (rule trigger: ${cluster.ruleType}):
+${turnLines}
+
+Available grammar node ids: ${nodeList}
+
+Reply with JSON only, no explanation, no markdown:
+{"isNom": boolean, "topic": "short English label for the sprint card", "severity": 1|2|3, "node_id": "best matching id from the list above or null if vocab/unknown"}
+
+severity: 1=minor hesitation, 2=clear struggle, 3=repeated breakdown
+If isNom is false, set topic to null, severity to 0, node_id to null.`;
+
+    try {
+      const data = await (App.claudeAPI || window.claudeAPI)({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 120,
+        messages: [{ role: 'user', content: prompt }],
+        track: 'nom-classify',
+      });
+
+      const raw = (data.content?.[0]?.text || '').trim()
+        .replace(/^```[a-z]*\n?/i, '').replace(/```$/, '').trim();
+
+      let parsed;
+      try { parsed = JSON.parse(raw); }
+      catch(e) {
+        console.warn('[NoM] JSON parse failed for cluster', cluster.startOffset, raw);
+        continue;
+      }
+
+      if (!parsed.isNom) {
+        console.log(`[NoM] ${cluster.startOffset.toFixed(0)}s — rejected by LLM`);
+        continue;
+      }
+
+      // Validate node_id against known list
+      if (parsed.node_id && !NOM_NODE_IDS.includes(parsed.node_id)) {
+        console.warn(`[NoM] Unknown node_id "${parsed.node_id}" — clearing`);
+        parsed.node_id = null;
+      }
+
+      results.push({
+        ...cluster,
+        isNom:    true,
+        topic:    parsed.topic    || null,
+        severity: parsed.severity || 1,
+        node_id:  parsed.node_id  || null,
+      });
+
+      console.log(`[NoM] ${cluster.startOffset.toFixed(0)}s ✅ ${parsed.topic} (severity ${parsed.severity}, node: ${parsed.node_id})`);
+
+    } catch(e) {
+      console.error('[NoM] Classification call failed:', e.message);
+    }
+  }
+
+  console.log(`[NoM] Classification: ${results.length}/${clusters.length} clusters confirmed as NoM`);
+  return results;
+}
+
 // ── App registry ─────────────────────────────────────────
 try {
-  Object.assign(App, { nomDetectClusters, nomTestSession80 });
+  Object.assign(App, { nomDetectClusters, nomClassifyClusters, nomTestSession80 });
 } catch(e) { console.error('[NoM] App registry failed:', e); }
