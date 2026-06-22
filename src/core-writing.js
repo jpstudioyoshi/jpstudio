@@ -305,6 +305,7 @@ async function submitWritingSentence() {
   }
   _writingFirstAttempt = null;
   _writingCheckCount   = 0;
+  drillLastCompletedWrite('writing');
   const entry = {original:text, corrected:text, isCorrect:true, note:'', detail:''};
   writingSentences.push(entry);
   wbAddItem(entry, writingSentences.length - 1);

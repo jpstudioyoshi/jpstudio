@@ -2573,7 +2573,7 @@
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 336,
+    "line": 337,
     "desc": "AppState.wbDragEl — see declaration below",
     "callers": 2,
     "exported": true
@@ -2582,7 +2582,7 @@
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 387,
+    "line": 388,
     "desc": "item.remove();",
     "callers": 3,
     "exported": true
@@ -2591,7 +2591,7 @@
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 399,
+    "line": 400,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {",
     "callers": 3,
     "exported": true
@@ -2600,7 +2600,7 @@
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 413,
+    "line": 414,
     "desc": "const n = writingSentences.length;",
     "callers": 5,
     "exported": true
@@ -2609,7 +2609,7 @@
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 419,
+    "line": 420,
     "desc": "AppState.wbDragEl = this;",
     "callers": 1,
     "exported": false
@@ -2618,7 +2618,7 @@
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 426,
+    "line": 427,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2627,7 +2627,7 @@
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 431,
+    "line": 432,
     "desc": "this.classList.remove('drag-over');",
     "callers": 1,
     "exported": false
@@ -2636,7 +2636,7 @@
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 434,
+    "line": 435,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2645,7 +2645,7 @@
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 451,
+    "line": 452,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');",
     "callers": 1,
     "exported": false
@@ -2654,7 +2654,7 @@
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 457,
+    "line": 458,
     "desc": "wbUpdateCount(); } // legacy stub",
     "callers": 1,
     "exported": false
@@ -2663,7 +2663,7 @@
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 459,
+    "line": 460,
     "desc": "const inp = document.getElementById('writingInput');",
     "callers": 3,
     "exported": true
@@ -2672,7 +2672,7 @@
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 471,
+    "line": 472,
     "desc": "const container = document.getElementById('feedbackEntries');",
     "callers": 2,
     "exported": false
@@ -2681,7 +2681,7 @@
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 520,
+    "line": 521,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');",
     "callers": 3,
     "exported": true
@@ -2690,7 +2690,7 @@
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 529,
+    "line": 530,
     "desc": "const el = document.getElementById(id);",
     "callers": 2,
     "exported": true
@@ -2699,7 +2699,7 @@
     "type": "function",
     "name": "writingFollowUp",
     "file": "src/core-writing.js",
-    "line": 537,
+    "line": 538,
     "desc": "const inp = document.getElementById('writingFollowUpInput');",
     "callers": 5,
     "exported": true
@@ -2708,7 +2708,7 @@
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 566,
+    "line": 567,
     "desc": "writingSentences.splice(idx, 1);",
     "callers": 1,
     "exported": false
@@ -2717,7 +2717,7 @@
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 575,
+    "line": 576,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }",
     "callers": 1,
     "exported": false
@@ -2726,7 +2726,7 @@
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 580,
+    "line": 581,
     "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Type a sentence ",
     "callers": 3,
     "exported": true
@@ -2735,7 +2735,7 @@
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 600,
+    "line": 601,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }",
     "callers": 3,
     "exported": true
@@ -2744,7 +2744,7 @@
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 620,
+    "line": 621,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": false
@@ -2753,7 +2753,7 @@
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 640,
+    "line": 641,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2762,7 +2762,7 @@
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 657,
+    "line": 658,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2771,7 +2771,7 @@
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 669,
+    "line": 670,
     "desc": "const tLen = token.length;",
     "callers": 2,
     "exported": false
@@ -2780,7 +2780,7 @@
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 683,
+    "line": 684,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);",
     "callers": 2,
     "exported": true
@@ -2803,7 +2803,7 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 610,
+    "line": 611,
     "desc": "db.run"
   },
   {
@@ -7191,7 +7191,7 @@
     "file": "src/features-progress.js",
     "line": 116,
     "desc": "",
-    "callers": 24,
+    "callers": 25,
     "exported": true
   },
   {
