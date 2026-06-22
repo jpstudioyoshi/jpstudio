@@ -721,8 +721,9 @@
       _audio.ctx = new AudioContext();
       _audio.buf = new Uint8Array(64);
 
+      const micDev = inputs.find(d => !/blackhole|loopback|virtual|zoom/i.test(d.label));
       try {
-        _audio.micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false } });
+        _audio.micStream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: micDev ? { exact: micDev.deviceId } : undefined, echoCancellation: false, noiseSuppression: false } });
         const t = _audio.micStream.getAudioTracks()[0];
         document.getElementById('micLabel').textContent = (t?.label||'unknown').replace(/\s*\(.*\)/,'').trim().slice(0,36);
         _audio.micAnalyser = _audio.ctx.createAnalyser(); _audio.micAnalyser.fftSize = 128;
