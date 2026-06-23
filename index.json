@@ -8449,6 +8449,24 @@
     "exported": true
   },
   {
+    "type": "function",
+    "name": "_dlDistance",
+    "file": "src/features-lesson-notes.js",
+    "line": 2642,
+    "desc": "Only updates rows where a confident match is found (distance ≤ threshold).",
+    "callers": 1,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "lnPopulateTurnIds",
+    "file": "src/features-lesson-notes.js",
+    "line": 2659,
+    "desc": "if (!window.db) return;",
+    "callers": 1,
+    "exported": false
+  },
+  {
     "type": "storage",
     "name": "lessonNoteSessions",
     "file": "src/features-lesson-notes.js",
@@ -8516,6 +8534,13 @@
     "name": "UPDATE",
     "file": "src/features-lesson-notes.js",
     "line": 1769,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "UPDATE",
+    "file": "src/features-lesson-notes.js",
+    "line": 2687,
     "desc": "db.run"
   },
   {

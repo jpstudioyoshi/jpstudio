@@ -2634,3 +2634,62 @@ function yoshiParseWhatsapp(raw) {
 Object.assign(App, {
   yoshiParseWhatsapp,
 });
+
+// ── turn_id population via Damerau-Levenshtein ───────────────────────────────
+// Matches lesson_phrases to transcript_turns for a linked session pair.
+// Only updates rows where a confident match is found (distance ≤ threshold).
+
+function _dlDistance(a, b) {
+  const la = a.length, lb = b.length;
+  if (la === 0) return lb;
+  if (lb === 0) return la;
+  const d = Array.from({length: la + 1}, (_, i) => Array.from({length: lb + 1}, (_, j) => i === 0 ? j : j === 0 ? i : 0));
+  for (let i = 1; i <= la; i++) {
+    for (let j = 1; j <= lb; j++) {
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + cost);
+      if (i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) {
+        d[i][j] = Math.min(d[i][j], d[i-2][j-2] + cost);
+      }
+    }
+  }
+  return d[la][lb];
+}
+
+async function lnPopulateTurnIds(waLessonId, recSessionId) {
+  if (!window.db) return;
+  try {
+    const phrases = await window.db.query(
+      `SELECT id, phrase FROM lesson_phrases WHERE lesson_id=? AND turn_id IS NULL AND type != 'grammar'`,
+      [waLessonId]
+    );
+    if (!phrases.length) { console.log('[lnTurnIds] no phrases to match'); return; }
+
+    const turns = await window.db.query(
+      `SELECT id, content FROM transcript_turns WHERE session_id=? AND content IS NOT NULL`,
+      [recSessionId]
+    );
+    if (!turns.length) { console.log('[lnTurnIds] no turns found'); return; }
+
+    let matched = 0;
+    for (const p of phrases) {
+      const needle = (p.phrase || '').slice(0, 20); // compare on first 20 chars
+      if (!needle) continue;
+      let bestId = null, bestDist = Infinity;
+      for (const t of turns) {
+        const hay = (t.content || '').slice(0, 40);
+        const dist = _dlDistance(needle, hay.slice(0, needle.length + 4));
+        if (dist < bestDist) { bestDist = dist; bestId = t.id; }
+      }
+      // Threshold: distance ≤ 3 or ≤ 30% of phrase length
+      const threshold = Math.max(3, Math.floor(needle.length * 0.3));
+      if (bestId && bestDist <= threshold) {
+        await window.db.run('UPDATE lesson_phrases SET turn_id=? WHERE id=?', [bestId, p.id]);
+        matched++;
+      }
+    }
+    console.log(`[lnTurnIds] matched ${matched}/${phrases.length} phrases to turns`);
+  } catch(e) { console.error('[lnTurnIds]', e.message); }
+}
+
+Object.assign(App, { lnPopulateTurnIds });
