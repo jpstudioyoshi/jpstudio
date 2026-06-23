@@ -240,7 +240,8 @@ async function lessonNotesEnsureDbRow(session, sessions) {
     try {
       const _recs = await window.db.query(
         `SELECT id FROM lesson_sessions
-         WHERE date=? AND source='recording' AND audio_duration_s > 600
+         WHERE date=? AND source='recording'
+         AND (audio_duration_s > 600 OR audio_duration_s IS NULL)
          AND linked_session_id IS NULL
          ORDER BY id DESC`,
         [_date]
