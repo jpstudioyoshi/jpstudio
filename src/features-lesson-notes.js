@@ -225,12 +225,12 @@ async function lessonNotesEnsureDbRow(session, sessions) {
   if (!window.db || !session) return;
   try {
     const _date = session.date;
-    const _existing = await window.db.get('SELECT id FROM lesson_sessions WHERE date=? LIMIT 1', [_date]);
+    const _existing = await window.db.get('SELECT id FROM lesson_sessions WHERE date=? AND source=\'whatsapp\' LIMIT 1', [_date]);
     let _dbId = _existing?.id;
     if (!_dbId) {
       await window.db.run('INSERT INTO lesson_sessions (date, created_at, source) VALUES (?,?,?)', [_date, new Date().toISOString(), 'whatsapp']);
-      const _row = await window.db.get('SELECT last_insert_rowid() AS id');
-      _dbId = _row?.id;
+      const _rows = await window.db.query('SELECT last_insert_rowid() AS id');
+      _dbId = _rows?.[0]?.id;
     }
     session.lessonSessionDbId = _dbId;
     LessonNotesState.currentLessonId = _dbId;
@@ -269,7 +269,15 @@ async function lessonNotesPanelHandlePaste(event) {
   const _firstDated = _docContent.find(item => item.date);
   const firstLine = text.split('\n')[0].slice(0, 30).trim() || 'Pasted notes';
   const title = _firstDated ? (lnFormatWaDate(_firstDated.date) || 'Lesson') : (firstLine + (firstLine.length >= 30 ? '...' : ''));
-  const newSession = { id: Date.now(), title, date: new Date().toISOString().slice(0,10), vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
+  const _isoDate = (() => {
+    if (!_firstDated) return new Date().toISOString().slice(0,10);
+    const p = _firstDated.date.split(/[\.\/-]/);
+    if (p.length !== 3) return new Date().toISOString().slice(0,10);
+    let [d, m, y] = p;
+    if (y.length === 2) y = '20' + y;
+    return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+  })();
+  const newSession = { id: Date.now(), title, date: _isoDate, vocab: [], stories: [], keyPhrases: [], grammar: [], errors: [], docContent: [], rawText: '', summary: '', lessonSessionDbId: null };
   sessions.unshift(newSession);
   lessonNotesSaveSessions(sessions);
   LessonNotesState.currentIdx = 0;
@@ -293,7 +301,6 @@ async function lessonNotesPanelHandlePaste(event) {
   // Re-assert index 0 — extract may have triggered re-renders that reset it
   LessonNotesState.currentIdx = 0;
   lessonNotesRenderPanel();
-  lessonNotesUpdateDropdown();
 }
 
 async function lessonNotesPanelHandleDrop(event) {
