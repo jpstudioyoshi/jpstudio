@@ -202,6 +202,18 @@ const Orchestrator = (() => {
     try {
       await StorageService.saveSession(_currentSession);
       AppEvents.emit(AppEvents.SESSION_SAVED, { session: _currentSession });
+      // Auto-populate turn_ids on linked lesson_phrases (non-blocking)
+      try {
+        const _linked = await window.db.query(
+          `SELECT linked_session_id FROM lesson_sessions WHERE id=? AND linked_session_id IS NOT NULL`,
+          [sessionId]
+        );
+        if (_linked && _linked[0]) {
+          const _waId = _linked[0].linked_session_id;
+          const _fn = App.lnPopulateTurnIds || window.lnPopulateTurnIds;
+          if (_fn) _fn(_waId, sessionId).catch(e => console.warn('[Orchestrator] lnPopulateTurnIds failed:', e.message));
+        }
+      } catch(e) { console.warn('[Orchestrator] turn_id auto-populate skipped:', e.message); }
     } catch (e) {
       console.error('[Orchestrator] Save failed:', e);
       AppEvents.emit(AppEvents.PIPELINE_ERROR, { stage: 'storage', message: e.message });

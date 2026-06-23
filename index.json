@@ -8463,7 +8463,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 2659,
     "desc": "if (!window.db) return;",
-    "callers": 1,
+    "callers": 4,
     "exported": false
   },
   {
@@ -10408,7 +10408,7 @@
     "file": "src/Orchestrator.js",
     "line": 14,
     "desc": "═══════════════════════════════════════════════════════",
-    "callers": 43,
+    "callers": 45,
     "exported": true
   },
   {
