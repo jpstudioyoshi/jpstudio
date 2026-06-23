@@ -4733,7 +4733,7 @@
     "file": "src/features-core.js",
     "line": 520,
     "desc": "return TTS.speak(text, rate || 0.9, opts || {}); }",
-    "callers": 57,
+    "callers": 61,
     "exported": true
   },
   {
@@ -5432,9 +5432,18 @@
   },
   {
     "type": "function",
+    "name": "conjToggleTts",
+    "file": "src/features-grammar.js",
+    "line": 1051,
+    "desc": "_conjTtsMode = !_conjTtsMode;",
+    "callers": 2,
+    "exported": true
+  },
+  {
+    "type": "function",
     "name": "_conjGetDueKeys",
     "file": "src/features-grammar.js",
-    "line": 1049,
+    "line": 1057,
     "desc": "",
     "callers": 2,
     "exported": false
@@ -5443,7 +5452,7 @@
     "type": "function",
     "name": "conjToggleSrsMode",
     "file": "src/features-grammar.js",
-    "line": 1059,
+    "line": 1067,
     "desc": "_conjSrsMode = !_conjSrsMode;",
     "callers": 1,
     "exported": false
@@ -5452,7 +5461,7 @@
     "type": "function",
     "name": "conjAddFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1152,
+    "line": 1160,
     "desc": "const batch = FREQ_VERBS_ORDERED.slice(_conjFreqVerbsAdded, _conjFreqVerbsAdded + 10);",
     "callers": 2,
     "exported": true
@@ -5461,7 +5470,7 @@
     "type": "function",
     "name": "conjResetFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1165,
+    "line": 1173,
     "desc": "window._conjExtraVerbs = [];",
     "callers": 2,
     "exported": true
@@ -5470,7 +5479,7 @@
     "type": "function",
     "name": "conjUpdateFreqCount",
     "file": "src/features-grammar.js",
-    "line": 1171,
+    "line": 1179,
     "desc": "const el = document.getElementById('conjFreqVerbCount');",
     "callers": 3,
     "exported": false
@@ -5479,7 +5488,7 @@
     "type": "function",
     "name": "_conjGodanGroupRule",
     "file": "src/features-grammar.js",
-    "line": 1212,
+    "line": 1220,
     "desc": "── DB-driven conjugation verb pool ──────────────────────────────────────────",
     "callers": 1,
     "exported": false
@@ -5488,7 +5497,7 @@
     "type": "function",
     "name": "_conjMapPoolRow",
     "file": "src/features-grammar.js",
-    "line": 1228,
+    "line": 1236,
     "desc": "const dict = row.dict;",
     "callers": 2,
     "exported": false
@@ -5497,7 +5506,7 @@
     "type": "function",
     "name": "buildConjVerbPool",
     "file": "src/features-grammar.js",
-    "line": 1251,
+    "line": 1259,
     "desc": "up by high-frequency words. Never throws — returns [] and degrades per-step.",
     "callers": 4,
     "exported": true
@@ -5506,7 +5515,7 @@
     "type": "function",
     "name": "startConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1314,
+    "line": 1322,
     "desc": "window._conjExtraVerbs = await buildConjVerbPool();",
     "callers": 3,
     "exported": true
@@ -5515,7 +5524,7 @@
     "type": "function",
     "name": "_conjUpdateSpecialFilterUI",
     "file": "src/features-grammar.js",
-    "line": 1393,
+    "line": 1401,
     "desc": "const ruOnly = document.getElementById('optRuEndingG')?.checked;",
     "callers": 1,
     "exported": false
@@ -5524,7 +5533,7 @@
     "type": "function",
     "name": "conjUpdateOptions",
     "file": "src/features-grammar.js",
-    "line": 1407,
+    "line": 1415,
     "desc": "conjUpdateFreqCount();",
     "callers": 18,
     "exported": false
@@ -5533,7 +5542,7 @@
     "type": "function",
     "name": "conjForceNewSession",
     "file": "src/features-grammar.js",
-    "line": 1412,
+    "line": 1420,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;",
     "callers": 1,
     "exported": false
@@ -5542,7 +5551,7 @@
     "type": "function",
     "name": "conjResumeSession",
     "file": "src/features-grammar.js",
-    "line": 1466,
+    "line": 1474,
     "desc": "conjQueue = saved.queue.map(item => {",
     "callers": 1,
     "exported": false
@@ -5551,7 +5560,7 @@
     "type": "function",
     "name": "conjDeConsecutive",
     "file": "src/features-grammar.js",
-    "line": 1497,
+    "line": 1505,
     "desc": "if (queue.length <= 5) return queue;",
     "callers": 1,
     "exported": false
@@ -5560,7 +5569,7 @@
     "type": "function",
     "name": "conjBuildRunQueue",
     "file": "src/features-grammar.js",
-    "line": 1527,
+    "line": 1535,
     "desc": "window._conjVerbTypes = verbTypes;",
     "callers": 3,
     "exported": false
@@ -5569,7 +5578,7 @@
     "type": "function",
     "name": "conjUpdateHeaderDots",
     "file": "src/features-grammar.js",
-    "line": 1604,
+    "line": 1612,
     "desc": "const el = document.getElementById('conjHeaderDots');",
     "callers": 1,
     "exported": false
@@ -5578,7 +5587,7 @@
     "type": "function",
     "name": "renderConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1616,
+    "line": 1624,
     "desc": "const area = document.getElementById('conjDrillAreaG');",
     "callers": 10,
     "exported": false
@@ -5587,7 +5596,7 @@
     "type": "function",
     "name": "conjNextRun",
     "file": "src/features-grammar.js",
-    "line": 1755,
+    "line": 1767,
     "desc": "conjRun++;",
     "callers": 3,
     "exported": true
@@ -5596,7 +5605,7 @@
     "type": "function",
     "name": "handleConjKeyG",
     "file": "src/features-grammar.js",
-    "line": 1761,
+    "line": 1773,
     "desc": "if (e.key === 'Enter') {",
     "callers": 3,
     "exported": false
@@ -5605,7 +5614,7 @@
     "type": "function",
     "name": "conjAutoConvertG",
     "file": "src/features-grammar.js",
-    "line": 1781,
+    "line": 1793,
     "desc": "if (!conjCurrentAnswer) return;",
     "callers": 1,
     "exported": false
@@ -5614,7 +5623,7 @@
     "type": "function",
     "name": "conjClassifyError",
     "file": "src/features-grammar.js",
-    "line": 1805,
+    "line": 1817,
     "desc": "const dist = cmLevenshtein(typed, correct);",
     "callers": 1,
     "exported": false
@@ -5623,7 +5632,7 @@
     "type": "function",
     "name": "checkConjG",
     "file": "src/features-grammar.js",
-    "line": 1849,
+    "line": 1861,
     "desc": "const input = document.getElementById('conjInputG');",
     "callers": 3,
     "exported": true
@@ -5632,7 +5641,7 @@
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1941,
+    "line": 1957,
     "desc": "conjAutoConvertG();",
     "callers": 1,
     "exported": false
@@ -5641,7 +5650,7 @@
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1952,
+    "line": 1968,
     "desc": "if (conjIdx <= 0) return;",
     "callers": 2,
     "exported": true
@@ -5650,7 +5659,7 @@
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1966,
+    "line": 1982,
     "desc": "if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }",
     "callers": 3,
     "exported": true
@@ -5659,7 +5668,7 @@
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 1974,
+    "line": 1990,
     "desc": "Grammar2State.lastSubtab = name;",
     "callers": 8,
     "exported": false
@@ -5668,7 +5677,7 @@
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 2030,
+    "line": 2046,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';",
     "callers": 4,
     "exported": true
@@ -5677,7 +5686,7 @@
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 2076,
+    "line": 2092,
     "desc": "const area = document.getElementById('particleDrillArea');",
     "callers": 5,
     "exported": false
@@ -5686,7 +5695,7 @@
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 2159,
+    "line": 2175,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered",
     "callers": 2,
     "exported": true
@@ -5695,7 +5704,7 @@
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 2167,
+    "line": 2183,
     "desc": "if (_pdResults[exIdx] !== null) return;",
     "callers": 2,
     "exported": true
@@ -5704,7 +5713,7 @@
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 2175,
+    "line": 2191,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;",
     "callers": 3,
     "exported": true
@@ -5713,7 +5722,7 @@
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2213,
+    "line": 2229,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for",
     "callers": 3,
     "exported": true
@@ -5722,14 +5731,14 @@
     "type": "storage",
     "name": "GRAMMAR_ERRORS",
     "file": "src/features-grammar.js",
-    "line": 1017,
+    "line": 1018,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "CONJ_SESSION",
     "file": "src/features-grammar.js",
-    "line": 1077,
+    "line": 1085,
     "desc": "Storage.set"
   },
   {
@@ -5750,14 +5759,14 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1898,
+    "line": 1914,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1902,
+    "line": 1918,
     "desc": "db.run"
   },
   {

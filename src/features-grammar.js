@@ -992,6 +992,7 @@ try {
     conjNextRun,
     showConjLookupG,
     retreatConjG,
+    conjToggleTts,
     pdSelectLeft,
     pdSelectRight,
     pdTryMatch,
@@ -1045,6 +1046,13 @@ const GrammarErrors = {
 let _conjTrackingPaused = false;
 let _conjHintUsed = false; // true if kanji stem was pre-filled for current question
 let _conjSrsMode = false;  // SRS-due mode: only drill forms with srs_due <= today
+let _conjTtsMode = false;  // TTS mode: speak word on card render + correct answer
+
+function conjToggleTts() {
+  _conjTtsMode = !_conjTtsMode;
+  const btn = document.getElementById('conjTtsBtnG');
+  if (btn) btn.classList.toggle('toggle-on', _conjTtsMode);
+}
 
 async function _conjGetDueKeys() {
   try {
@@ -1750,6 +1758,10 @@ function renderConjDrillG() {
   _conjHintUsed = !!_stem;
   if (_stem) { inp.value = _stem; }
   inp.focus();
+  // TTS: speak the dictionary form on card render
+  if (_conjTtsMode && item.word.dict && typeof jpSpeak === 'function') {
+    setTimeout(() => jpSpeak(item.word.dict, 0.9), 300);
+  }
 }
 
 async function conjNextRun() {
@@ -1890,6 +1902,10 @@ function checkConjG() {
       conjResults[conjIdx] = levClass.severity === 'slip' ? 'slip' : 'miss';
       conjTypedAnswers[conjIdx] = { val, hintUsed: _conjHintUsed };
       conjSessionWrong[item.key] = (conjSessionWrong[item.key] || 0) + 1;
+    }
+    // TTS: always speak correct answer after check (word spoken on card render)
+    if (_conjTtsMode && item.answer && typeof jpSpeak === 'function') {
+      setTimeout(() => jpSpeak(item.answer, 0.9), 300);
     }
   }
   if (typeof window !== 'undefined' && window.db) {
