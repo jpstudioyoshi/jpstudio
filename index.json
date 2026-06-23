@@ -4731,7 +4731,7 @@
     "type": "function",
     "name": "jpSpeak",
     "file": "src/features-core.js",
-    "line": 520,
+    "line": 523,
     "desc": "return TTS.speak(text, rate || 0.9, opts || {}); }",
     "callers": 61,
     "exported": true
@@ -4740,7 +4740,7 @@
     "type": "function",
     "name": "setTtsVoice",
     "file": "src/features-core.js",
-    "line": 521,
+    "line": 524,
     "desc": "── Legacy shims ─────────────────────────────────────────",
     "callers": 5,
     "exported": true
@@ -4749,7 +4749,7 @@
     "type": "function",
     "name": "testVoice",
     "file": "src/features-core.js",
-    "line": 522,
+    "line": 525,
     "desc": "TTS.test(); }",
     "callers": 4,
     "exported": true
@@ -4758,7 +4758,7 @@
     "type": "function",
     "name": "vvToggle",
     "file": "src/features-core.js",
-    "line": 523,
+    "line": 526,
     "desc": "TTS.vvSetEnabled(on); }",
     "callers": 6,
     "exported": true
@@ -4767,7 +4767,7 @@
     "type": "function",
     "name": "vvSetSpeaker",
     "file": "src/features-core.js",
-    "line": 524,
+    "line": 527,
     "desc": "TTS.vvSetSpeaker(id); }",
     "callers": 6,
     "exported": true
@@ -4776,7 +4776,7 @@
     "type": "function",
     "name": "toggleResourcesSettings",
     "file": "src/features-core.js",
-    "line": 526,
+    "line": 529,
     "desc": "const panel = document.getElementById('resourcesSettingsPanel');",
     "callers": 4,
     "exported": true
@@ -4785,7 +4785,7 @@
     "type": "function",
     "name": "vocabSpeak",
     "file": "src/features-core.js",
-    "line": 548,
+    "line": 551,
     "desc": "const _state    = App.state    || window.state;",
     "callers": 2,
     "exported": true
@@ -4794,7 +4794,7 @@
     "type": "function",
     "name": "conjSpeak",
     "file": "src/features-core.js",
-    "line": 577,
+    "line": 580,
     "desc": "const _conjCurrentAnswer = App.conjCurrentAnswer || window.conjCurrentAnswer;",
     "callers": 4,
     "exported": true
@@ -4803,7 +4803,7 @@
     "type": "function",
     "name": "toggleConjListenMode",
     "file": "src/features-core.js",
-    "line": 583,
+    "line": 586,
     "desc": "conjListenMode = !conjListenMode;",
     "callers": 6,
     "exported": true
@@ -4812,7 +4812,7 @@
     "type": "function",
     "name": "trimSilence",
     "file": "src/features-core.js",
-    "line": 605,
+    "line": 608,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 9,
     "exported": true
@@ -4821,7 +4821,7 @@
     "type": "function",
     "name": "audioBufferToWav",
     "file": "src/features-core.js",
-    "line": 660,
+    "line": 663,
     "desc": "const numChannels = buffer.numberOfChannels;",
     "callers": 9,
     "exported": true

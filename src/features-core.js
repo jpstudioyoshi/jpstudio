@@ -321,13 +321,16 @@ const TTS = {
   async _vvSpeak(text, rate = 0.9, opts = {}) {
     const clean = text.replace(/[(（][^)）]*[)）]/g, '').replace(/〜/g, '');
     if (!clean.trim()) return;
+    // Prepend a short pause mora for short words — VoiceVox clips the first
+    // syllable on single-word inputs because audio starts before buffer fills.
+    const vvText = clean.length <= 6 ? '、' + clean : clean;
     try {
       // Stop any current playback
       if (this._vvAudio) { this._vvAudio.pause(); this._vvAudio = null; }
 
       // Step 1: audio_query
       const qResp = await fetch(
-        `${this.VOICEVOX_URL}/audio_query?text=${encodeURIComponent(clean)}&speaker=${this._vvSpeakerId}`,
+        `${this.VOICEVOX_URL}/audio_query?text=${encodeURIComponent(vvText)}&speaker=${this._vvSpeakerId}`,
         { method: 'POST' }
       );
       if (!qResp.ok) throw new Error('VoiceVox query failed: ' + qResp.status);
