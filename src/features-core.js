@@ -323,7 +323,7 @@ const TTS = {
     if (!clean.trim()) return;
     // Prepend a short pause mora for short words — VoiceVox clips the first
     // syllable on single-word inputs because audio starts before buffer fills.
-    const vvText = clean.length <= 6 ? '、' + clean : clean;
+    const vvText = clean;
     try {
       // Stop any current playback
       if (this._vvAudio) { this._vvAudio.pause(); this._vvAudio = null; }
@@ -342,6 +342,8 @@ const TTS = {
       query.intonationScale = this._vvParams.intonationScale;
       query.volumeScale     = this._vvParams.volumeScale;
       if (this._vvParams.pauseLengthScale !== 1.0) query.pauseLengthScale = this._vvParams.pauseLengthScale;
+      // Ensure enough leading silence so the first mora isn't clipped
+      if ((query.prePhonemeLength ?? 0) < 0.15) query.prePhonemeLength = 0.15;
 
       // Step 2: synthesis
       const sResp = await fetch(
@@ -350,17 +352,16 @@ const TTS = {
       );
       if (!sResp.ok) throw new Error('VoiceVox synthesis failed: ' + sResp.status);
       const audioBlob = await sResp.blob();
-      const audioUrl  = URL.createObjectURL(audioBlob);
-
-      const audio = new Audio(audioUrl);
-      this._vvAudio = audio;
-      if (opts.onend) audio.onended = () => { URL.revokeObjectURL(audioUrl); opts.onend(); };
-      else audio.onended = () => URL.revokeObjectURL(audioUrl);
-      if (opts.onerror) audio.onerror = opts.onerror;
-      // Pre-load before playing to prevent first-mora clipping
-      audio.load();
-      await new Promise(r => setTimeout(r, 120));
-      audio.play();
+      const arrayBuf = await audioBlob.arrayBuffer();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const decoded = await audioCtx.decodeAudioData(arrayBuf);
+      const source = audioCtx.createBufferSource();
+      source.buffer = decoded;
+      source.connect(audioCtx.destination);
+      if (opts.onend) source.onended = () => { audioCtx.close(); opts.onend(); };
+      else source.onended = () => audioCtx.close();
+      this._vvAudio = { pause: () => { try { source.stop(); audioCtx.close(); } catch(e) {} } };
+      source.start(0);
     } catch(e) {
       console.warn('[TTS] VoiceVox error:', e.message, '— falling back to Web Speech');
       this._vvEnabled = false;
