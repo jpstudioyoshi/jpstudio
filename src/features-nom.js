@@ -692,6 +692,22 @@ async function nomRunAndCache(sessionId) {
 
     const suggestions = nomRankSuggestions(classified);
 
+    // note_confirmed: check if node_id appears in extracted_grammar of linked whatsapp session
+    try {
+      const _linked = await window.db.query(
+        `SELECT ls_wa.extracted_grammar FROM lesson_sessions ls_rec
+         JOIN lesson_sessions ls_wa ON ls_rec.linked_session_id = ls_wa.id
+         WHERE ls_rec.id = ? AND ls_wa.extracted_grammar IS NOT NULL LIMIT 1`,
+        [sessionId]
+      );
+      if (_linked && _linked[0]) {
+        const _waNodes = new Set(JSON.parse(_linked[0].extracted_grammar || '[]'));
+        for (const s of suggestions) {
+          s.note_confirmed = !!(s.node_id && _waNodes.has(s.node_id));
+        }
+      }
+    } catch(e) { console.warn('[NoM] note_confirmed lookup failed:', e.message); }
+
     // Persist to kv_store
     await window.kvAPI.set(NOM_CACHE_KEY, JSON.stringify({
       sessionId,
@@ -777,7 +793,7 @@ async function nomRenderSuggestions() {
     card.innerHTML =
       `<div style="flex:1;min-width:0">` +
         `<div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.topic}</div>` +
-        `<div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)">${s.episode_count} episode${s.episode_count !== 1 ? 's' : ''}</div>` +
+        `<div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light)">${s.episode_count} episode${s.episode_count !== 1 ? 's' : ''}${s.note_confirmed ? ' · <span style="color:var(--teal)">✓ Yoshi</span>' : ''}</div>` +
       `</div>` +
       `<div style="display:flex;align-items:center;gap:10px;flex-shrink:0">` +
         `<span style="font-family:monospace;font-size:0.82rem;color:${dotsColor};letter-spacing:1px">${dots}</span>` +
