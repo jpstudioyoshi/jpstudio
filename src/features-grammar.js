@@ -1745,6 +1745,7 @@ function renderConjDrillG() {
           '<button class="btn-action btn-sm" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none">←</button>' +
           '<button class="btn-action btn-sm" id="conjNextBtnG" onclick="advanceConjG()" style="display:none">→</button>' +
           '<button class="btn-action btn-sm" id="conjLookupBtnG" onclick="showConjLookupG()" style="display:none">📝</button>' +
+          (_conjTtsMode ? '<button class="btn-action btn-sm" id="conjRepeatTtsBtnG" onclick="if(conjCurrentAnswer)jpSpeak(conjCurrentAnswer.answer||conjCurrentAnswer.word.dict,0.9)">🔊</button>' : '') +
         '</div>' +
       '</div>' +
     '</div>';
