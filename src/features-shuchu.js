@@ -300,7 +300,7 @@ Requirements:
       kanaSpan.style.marginBottom = '10px';
       card.appendChild(inp);
       card.appendChild(kanaSpan);
-      setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar('shuchuAnswerInput'); }, 50);
+      setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar('shuchuAnswerInput', { noRomaji: true }); }, 50);
       const sub = document.createElement('button');
       sub.className = 'btn-action';
       sub.textContent = 'Check';
@@ -339,7 +339,7 @@ Requirements:
     btn.onclick = () => {
       inputWrap.style.display = inputWrap.style.display === 'none' ? '' : 'none';
       if (inputWrap.style.display !== 'none') {
-        setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar(kanaId); inp.focus(); }, 50);
+        setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar(kanaId, { noRomaji: true }); inp.focus(); }, 50);
       }
     };
 

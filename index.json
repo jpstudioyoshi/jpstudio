@@ -5578,7 +5578,7 @@
     "type": "function",
     "name": "renderConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1615,
+    "line": 1616,
     "desc": "const area = document.getElementById('conjDrillAreaG');",
     "callers": 10,
     "exported": false
@@ -5715,7 +5715,7 @@
     "file": "src/features-grammar.js",
     "line": 2213,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for",
-    "callers": 2,
+    "callers": 3,
     "exported": true
   },
   {

@@ -1,194 +1,186 @@
 # jpStudio: NoM Analysis & Focus Sprint — Handoff Document
+Last updated: 2026-06-23 (session 51)
 
-## What we're building
+## What's built
 
-After each lesson import, automatically surface 2–3 sprint focus theme suggestions based on where communication broke down in the transcript. These feed the 集中 (Focus Sprint) panel which already exists and accepts a topic string.
+The full NoM pipeline is complete and wired end-to-end. After each lesson transcription,
+the system automatically detects communication breakdown clusters, classifies them with LLM,
+ranks them as sprint suggestions, and surfaces them in the 集中 (Focus Sprint) panel.
 
 ---
 
-## What's already built
+## Pipeline overview
 
-- `transcript_turns` table: `session_id`, `timestamp_offset`, `speaker`, `content`, `word_count`
-- `lesson_sessions.extracted_grammar`: flat JSON array of node_ids — already populated by `lessonNotesExtractGrammarSilent`
-- `lesson_sessions.raw_content`: raw WhatsApp notes text — now persisted at import (wired 2026-06-22)
-- `lesson_sessions.linked_session_id`: recording row → WhatsApp anchor row (added 2026-06-22)
-- `lesson_sessions.source`: `'whatsapp'` or `'recording'` (fixed 2026-06-22)
-- Audio seek infrastructure: `lnSeekToTime(ms)` already wired — "Play from here" buttons are essentially free
-- 集中 panel accepts a topic string — sprint suggestions just need to call it with a label
-- Grammar nodes already linked to Genki points in the Progress panel
-- Hallucination scrubber wired into Orchestrator pipeline (added 2026-06-22)
+```
+transcript_turns
+    ↓ nomDetectClusters()       — rule-based, no API
+raw clusters
+    ↓ nomClassifyClusters()     — ~14 LLM calls per session
+confirmed clusters
+    ↓ nomRankSuggestions()      — scoring, dedup by node_id
+    ↓ note_confirmed enrichment — one DB query, no API
+ranked suggestions
+    ↓ nomRunAndCache()          — writes to kv_store
+    ↓ nomRenderSuggestions()    — renders cards in 集中
+```
+
+---
+
+## Session data (first real run)
+
+- Recording session: `lesson_sessions.id = 80` (`source='recording'`, date 2026-06-22)
+- WhatsApp session: `lesson_sessions.id = 82` (`source='whatsapp'`, date 2026-06-22)
+- Link: `lesson_sessions SET linked_session_id=82 WHERE id=80`
+- Transcript turns: 2658 rows in `transcript_turns WHERE session_id=80`
+- Lesson phrases: 65 rows in `lesson_phrases WHERE lesson_id=82`
+  - 46 grammar, 16 phrase, 3 word
+  - 12/19 phrase rows have `turn_id` populated via DL matching
+- Extracted grammar: 22 node IDs in `lesson_sessions.extracted_grammar WHERE id=82`
+
+---
+
+## Detection rules (features-nom.js)
+
+Five rules over `transcript_turns`, all client-side, zero API calls:
+
+1. **Dense repetition** — same surface token 4+ times in 45s window
+2. **Morphological variation** — same hiragana stem (≥3 chars), 3+ distinct endings in 60s
+3. **Particle alternation** — same noun with 2+ different particles in 30s
+4. **Repair markers** — `えーと`, `すみません`, `もう一度`, `ちょっと待って` etc.
+5. **Vocab gap** — English word (Latin ≥3 chars) followed by repetitive Japanese search in 90s
+
+Pre-processing:
+- `_nomScrub(turns)` — removes hallucination loops + stoplist (`うん`, `はい`, `ええ` etc.)
+- `_mergeClusters` — clusters within 20s merged; composite ruleType preserved
+
+Recall: **7/7** on known session 80 episodes.
+
+---
+
+## turn_id population — `lnPopulateTurnIds(waLessonId, recSessionId)`
+
+Added session 51. Populates `lesson_phrases.turn_id` by matching phrase content to
+`transcript_turns.content` using Damerau-Levenshtein distance.
+
+### Why Damerau-Levenshtein
+Standard Levenshtein counts a transposition (ab→ba) as 2 edits. DL counts it as 1.
+This matters because Whisper frequently transposes adjacent morae in phonetic transcription.
+Example: `tabemasita` → `taembasita` = 1 DL edit, 2 standard edits.
+On short Japanese tokens (5-10 chars), this difference decides match/no-match.
+
+### Algorithm
+- Needle: first 20 chars of `lesson_phrases.phrase`
+- Haystack window: `transcript_turns.content.slice(0, needle.length + 4)`
+- Threshold: `distance ≤ max(3, floor(needle.length × 0.3))`
+- Only matches `type != 'grammar'` rows (grammar patterns aren't spoken verbatim)
+
+### Hit rate
+12/19 phrases matched (63%). The 7 misses are genuinely absent from transcript —
+phrases Yoshi wrote in WhatsApp that Paul never said aloud during the lesson.
+
+### Wiring
+- Auto-fires in `Orchestrator.js` after `SESSION_SAVED`
+- Looks up `linked_session_id` from recording row → finds whatsapp lesson_id → calls match
+- Non-blocking (`.catch` logged, never throws)
+- Also available manually: `await lnPopulateTurnIds(82, 80)`
+
+---
+
+## note_confirmed signal
+
+After `nomRankSuggestions()`, `nomRunAndCache()` runs one DB query:
+
+```sql
+SELECT ls_wa.extracted_grammar FROM lesson_sessions ls_rec
+JOIN lesson_sessions ls_wa ON ls_rec.linked_session_id = ls_wa.id
+WHERE ls_rec.id = ? AND ls_wa.extracted_grammar IS NOT NULL LIMIT 1
+```
+
+If the suggestion's `node_id` appears in the whatsapp session's `extracted_grammar` JSON array,
+`note_confirmed: true` is set on the suggestion object before caching.
+
+Rendered as `· ✓ Yoshi` on the 集中 sprint card subtitle.
+
+**What this means:** both the transcript cluster detection AND Yoshi's own grammar extraction
+independently identified the same node. High-confidence signal.
+
+---
+
+## Deferred: Levenshtein confirmation layer (full)
+
+The full confirmation layer matches Whisper tokens to Yoshi note *content* (not just node_id)
+at the same timestamp. This would give the strongest possible `note_confirmed` signal:
+temporal + content agreement, not just topic overlap.
+
+**Prerequisites now met:**
+- `turn_id` is populated ✓
+- WhatsApp data is in DB ✓
+- `linked_session_id` is set ✓
+
+**Still needed:**
+- Multiple sessions with real WhatsApp data to tune and validate
+
+Design: for each NoM cluster at offset X, find `lesson_phrases` rows whose `turn_id`
+falls within ±30s of X. Run DL between cluster's representative turn content and phrase text.
+If distance ≤ threshold → strongest `note_confirmed`.
+
+---
+
+## lesson_sessions link architecture
+
+```
+lesson_sessions (source='whatsapp', id=82)
+    ↑ linked_session_id
+lesson_sessions (source='recording', id=80)
+    ↓ session_id
+transcript_turns (2658 rows)
+
+lesson_phrases (lesson_id=82)
+    → turn_id → transcript_turns.id
+    → node_id → grammar_mastery / GrammarModel nodes
+```
+
+Auto-link fires in `lessonNotesEnsureDbRow()` on paste:
+- Finds same-date recording where `audio_duration_s > 600 OR IS NULL`
+- Silent if exactly one match; warns if multiple
+
+---
+
+## Pending next steps (priority order)
+
+1. **Multi-session aggregation** — query `lesson_phrases.node_id` across last N sessions,
+   surface nodes appearing in 2+ sessions as recurring blind spots
+2. **Two-tier 集中 surface** — "This week" (from notes/recent) vs "Recurring" (historical)
+3. **Full Levenshtein confirmation** — temporal + content match (needs more WA data)
+4. **"Play from here" button** — `turn_id` → `lnSeekToTime(ms)` (infrastructure in place)
+5. **Theme segmentation** — one API call per session, section markers for audio timeline
 
 ---
 
 ## Key data facts
 
-- **Single audio channel** — both Paul and Yoshi on one mic. Whisper outputs everything as `speaker: user`. Diarization not available and not needed.
-- **Transcript is fragmented** — Whisper chunks short utterances as single words. Longer utterances appear as full sentences at decimal timestamps.
-- **Whisper hallucinates on ambiguous audio** — confirmed: session 80 had `猫はお尻を探しています` repeat for 19 minutes (Whisper mishearing マイクロ at lesson start). Scrubber now handles this automatically.
-- **WhatsApp notes are timestamped** — Yoshi's notes interleave with the transcript timeline and contain corrections, vocabulary callouts, and sentence summaries.
+- Single audio channel — Whisper outputs everything as `speaker: user`
+- Transcript is fragmented — Whisper chunks short utterances as single words
+- Whisper hallucinates on ambiguous audio — scrubber removes loops (≥5 repeats)
+- WhatsApp notes format: `[DD.MM.YY, HH:MM:SS] Sender: message`
+- German transcribed as hiragana by Whisper — `NOM_L1_PATTERN` is English-only `/[a-zA-Z]{3,}/`
+- Common English words (`OK`, `yes`, `no`) in `NOM_STOPLIST`
 
 ---
 
-## DB Schema (relevant tables)
+## Build sequence — completed steps
 
-```sql
-transcript_turns (
-  id               INTEGER PRIMARY KEY AUTOINCREMENT,
-  session_id       INTEGER,
-  timestamp_offset TEXT,      -- seconds as float string
-  speaker          TEXT,      -- "user" or "teacher"
-  content          TEXT,
-  word_count       INTEGER
-)
-
-lesson_sessions (
-  id                INTEGER PRIMARY KEY AUTOINCREMENT,
-  created_at        TEXT,
-  date              TEXT,
-  source            TEXT,      -- 'whatsapp' or 'recording'
-  audio_path        TEXT,
-  raw_content       TEXT,      -- raw WhatsApp text (now persisted)
-  extracted_grammar TEXT,      -- JSON array: ["comparison","te_form",...]
-  transcript_json   TEXT,
-  processed_at      TEXT,
-  linked_session_id INTEGER    -- recording row → whatsapp anchor row
-)
-```
-
----
-
-## Architecture — lesson_sessions model
-
-- One lesson = one WhatsApp row (`source='whatsapp'`) as anchor
-- Recording row (`source='recording'`) links back via `linked_session_id`
-- Auto-linking on WhatsApp import: same-date recordings with `audio_duration_s > 600`, silent if one match, warning if multiple
-- Full consolidation to single row deferred — link column unblocks the pipeline
-
----
-
-## Hallucination scrubber
-
-**Already wired** in `Orchestrator.js` — `_scrubHallucinations(turns)` runs after `merge()` before save.
-
-Rule: keep only the first occurrence of any string appearing 5+ times in the transcript.
-
----
-
-## NoM detection approach
-
-Forget diarization entirely. Detect from the single mixed-channel transcript:
-
-### Rule-based triggers (cheap, client-side)
-
-1. **Morphological variation** — same stem with changing endings → learner working out a form
-   - Session 80: `はなしゃ` → `はなしゃな` → `はなさん` → `はなさなきり` → `ば` → `なりません` (t=1179–1213s)
-
-2. **Dense repetition clusters** — same word 4+ times in short window → searching/hesitating
-
-3. **Particle alternation** — same noun, different particle in adjacent turns → repair signal
-   - Session 80: `映画館の中に` → `映画館に` → `映画館で` × 4 → settles on で (t=1585–1591s)
-
-4. **Explicit repair markers** — `なんで`, `ちょっと待ってください`, `すみません`, `何ですか`, `もう一度`
-
-5. **Vocabulary gap** — L1 word followed by Japanese search
-   - Session 80: `おしといい` (German) → `おひとよい` → `お人よし` (t=2263–2337s)
-
-### LLM window classification (1 API call per cluster)
-
-Feed 4–6 turn window to Claude:
-> "Does this contain a breakdown/repair episode? If yes, what grammar/vocab point was likely the cause? Reply JSON only: `{isNom: bool, topic: string, severity: 1-3}`"
-
-### Yoshi notes as confirmation signal
-
-Rule-detected repair overlapping a Yoshi note correction = high-confidence episode. No ML needed.
-
----
-
-## Real lesson analysis — session 80 (2026-06-22)
-
-### NoM episodes identified
-
-**Episode 1 — `話さなければなりません` (t=1179–1213s)**
-`はなしゃ` × 3 → `はなさん` × 2 → `はなさなきり` → `ば` → `なりません`
-Yoshi note confirms at 14:20. Node: `nakucha_ikemasen`. Severity: 3.
-
-**Episode 2 — `やることをしなければなりません` (t=1733–1815s)**
-`やること` × 4 → `しな` → `しなけれ` × 3 → `しなければ` → `なりません`
-Yoshi note confirms at 14:30. Node: `nakucha_ikemasen`. Severity: 3.
-
-**Episode 3 — `部屋で遊ばなければなりませんでした` (t=1887–1899s)**
-`あそば` × 3 → `あそばなかれ` → `あそばなかれば` → `なりません` → `でした` × 2
-Node: `nakucha_ikemasen` + `past_tense_masu`. Severity: 2.
-
-**Episode 4 — `映画館で/に` particle alternation (t=1585–1599s)**
-`映画館の中に` → `映画館に` → `映画館で` × 4 → `見ました`
-Node: `particle_de_place`. Severity: 2.
-
-**Episode 5 — `水は来なければなりません` (t=1999–2007s)**
-`こうなければ` → `来なければ` → `なりません` × 2
-Node: `nakucha_ikemasen`. Severity: 2.
-
-**Episode 6 — `食べ物を買わなければなりませんでした` (t=2753–2820s)**
-`かなかれ` → `かねかればなりませんでした` → `かわ` × 4 → `かれば` → `なりませんでした`
-Yoshi comment: `ちょっと変ですね`. Node: `nakucha_ikemasen` + `past_tense_masu`. Severity: 3.
-
-**Episode 7 — `お人よし` vocabulary gap (t=2263–2337s)**
-`おしといい` (German) → `おひとよい` × 5 → `おひとよしい` → `お人よし`
-Node: new vocab. Severity: 1.
-
-### Sprint suggestions this lesson would generate
-
-| Rank | Topic | Node | Episodes | Severity | Note confirmed |
-|------|-------|------|----------|----------|----------------|
-| 1 | `なければなりません — obligation forms` | `nakucha_ikemasen` | 4 | 3 | ✅ ×3 |
-| 2 | `買わなければなりませんでした — past obligation` | `nakucha_ikemasen` + `past_tense_masu` | 2 | 3 | ✅ |
-| 3 | `映画館で vs に — place particles` | `particle_de_place` | 1 | 2 | ❌ |
-
-Deduplication: topics 1 and 2 share a node — surface the most complex variant (past obligation) as primary.
-
-### Key architectural finding
-
-`nakucha_ikemasen` dominates this session (4+ episodes) AND appears in `extracted_grammar` for the linked WhatsApp session. Grammar extraction and NoM detection converge on the same node independently — when both agree, confidence is high.
-
----
-
-## Proposed sprint suggestion output format
-
-```json
-{
-  "topic": "なければなりません — obligation forms",
-  "node_id": "nakucha_ikemasen",
-  "episode_count": 4,
-  "severity": 3,
-  "example_offset_ms": 1179000,
-  "note_confirmed": true
-}
-```
-
-Rendered as a card in 集中 panel:
-- Topic label
-- "Session 80, 19:39"
-- ▶ Play (seeks audio to episode)
-- Start Sprint button
-
----
-
-## Future: theme segmentation
-
-One API call per session could return section markers (topic + offset) for timeline navigation. Combined with Yoshi notes (green) and NoM cluster markers (red) on the same timeline, makes the recording genuinely navigable.
-
----
-
-## Build sequence
-
-1. ✅ Fix duplicate transcript rows — done 2026-06-22
-2. ✅ Wire `raw_content` persistence — done 2026-06-22
-3. ✅ Wire hallucination scrubber into Orchestrator — done 2026-06-22
-4. ✅ Add `linked_session_id` + fix `source` values — done 2026-06-22 (Claude Code)
-5. Fix 📋 Data button clipboard confirmation
-6. Wire `turn_id` population in `lesson_phrases`
-7. **Build `nomDetectClusters(sessionId)` — rule-based, client-side JS, no API calls** ← next
-8. Add LLM window classification per cluster (1 call per cluster)
-9. Score + rank; deduplicate by node
-10. Surface top 2–3 as sprint suggestion cards in 集中 panel
-11. Theme segmentation — one API call per session, section markers for timeline
+1. ✅ Fix duplicate transcript rows
+2. ✅ Wire `raw_content` persistence
+3. ✅ Wire hallucination scrubber into Orchestrator
+4. ✅ Add `linked_session_id` + fix `source` values
+5. ✅ Build `nomDetectClusters()` — rule-based, client-side
+6. ✅ LLM window classification per cluster
+7. ✅ Score + rank; deduplicate by node
+8. ✅ Surface top 2–3 as sprint suggestion cards in 集中
+9. ✅ `lnPopulateTurnIds()` — DL matching, auto-wired post-transcription
+10. ✅ `note_confirmed` signal — node_id cross-check with extracted_grammar
+11. 🔲 Multi-session aggregation
+12. 🔲 Two-tier 集中 surface
+13. 🔲 Full Levenshtein confirmation layer
+14. 🔲 Theme segmentation

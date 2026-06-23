@@ -1608,7 +1608,8 @@ function conjUpdateHeaderDots() {
   const dotHtml = conjResults.slice(0, CONJ_QUESTIONS_PER_RUN || 15).map((r,i) =>
     '<div class="conj-dot ' + (r==='ok'?'ok':r==='miss'?'miss':r==='slip'?'slip':i===conjIdx?'cur':'') + '"></div>'
   ).join('');
-  el.innerHTML = dotHtml;
+  el.innerHTML = dotHtml +
+    '<span style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-left:10px">Run ' + conjRun + '/' + (CONJ_SESSION_RUNS || 3) + '</span>';
   el.style.display = 'flex';
 }
 
@@ -1724,7 +1725,6 @@ function renderConjDrillG() {
   if (newDrillBtn) newDrillBtn.style.display = '';
 
   area.innerHTML =
-    '<div class="conj-stats-bar"><div>Run ' + conjRun + '/' + (CONJ_SESSION_RUNS || 3) + '</div><div>✓ ' + conjOk + '</div><div>✗ ' + conjMiss + '</div></div>' +
     '<div class="conj-card">' +
       (listenMode ? '' : '<div class="conj-word" style="color:' + typeColor + '">' + item.word.dict + '</div>') +
       (showRead && !listenMode ? '<div class="conj-reading">' + item.word.read + '</div>' : '') +
@@ -1736,7 +1736,7 @@ function renderConjDrillG() {
           '<button class="btn-action" id="conjCheckBtnG" onclick="checkConjG()">Check</button>' +
           '<button class="btn-action btn-sm" id="conjPrevBtnG" onclick="retreatConjG()" style="display:none">←</button>' +
           '<button class="btn-action btn-sm" id="conjNextBtnG" onclick="advanceConjG()" style="display:none">→</button>' +
-
+          '<button class="btn-action btn-sm" id="conjLookupBtnG" onclick="showConjLookupG()" style="display:none">📝</button>' +
         '</div>' +
       '</div>' +
     '</div>';
