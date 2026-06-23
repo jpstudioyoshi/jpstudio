@@ -323,7 +323,7 @@ const TTS = {
     if (!clean.trim()) return;
     // Prepend a short pause mora for short words — VoiceVox clips the first
     // syllable on single-word inputs because audio starts before buffer fills.
-    const vvText = clean.length <= 6 ? '。' + clean : clean;
+    const vvText = clean.length <= 6 ? '、' + clean : clean;
     try {
       // Stop any current playback
       if (this._vvAudio) { this._vvAudio.pause(); this._vvAudio = null; }
@@ -357,6 +357,9 @@ const TTS = {
       if (opts.onend) audio.onended = () => { URL.revokeObjectURL(audioUrl); opts.onend(); };
       else audio.onended = () => URL.revokeObjectURL(audioUrl);
       if (opts.onerror) audio.onerror = opts.onerror;
+      // Pre-load before playing to prevent first-mora clipping
+      audio.load();
+      await new Promise(r => setTimeout(r, 120));
       audio.play();
     } catch(e) {
       console.warn('[TTS] VoiceVox error:', e.message, '— falling back to Web Speech');
