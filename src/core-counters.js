@@ -67,7 +67,7 @@ const CounterDrillState = {
   wrong:          0,
   current:        null,
   waiting:        false,  // waiting for Next button
-  activeCounters: ['tsu','nin','hon','mai','hiki','dai','satsu','hai','ko'],
+  activeCounters: ['tsu','nin','hon','mai','hiki','dai','satsu','hai','ko','kai','tou','wa','soku','chaku'],
   sessionWrong:   {},     // key → wrong count this session
   sessionCorrect: {},     // key → correct count this session
   runLog:         [],     // [{run, correct, total, errors:[{key,label,reading,cat}]}]
@@ -290,10 +290,15 @@ function countRenderRefGrid2() {
     { key: 'satsu', name: '冊', desc: 'books',         on: true  },
     { key: 'hai',   name: '杯', desc: 'cups',          on: true  },
     { key: 'ko',    name: '個', desc: 'small round',   on: true  },
+    { key: 'kai',   name: '階', desc: 'floors',         on: true  },
+    { key: 'tou',   name: '頭', desc: 'large animals',  on: true  },
+    { key: 'wa',    name: '羽', desc: 'birds/rabbits',  on: true  },
+    { key: 'soku',  name: '足', desc: 'pairs of shoes', on: true  },
+    { key: 'chaku', name: '着', desc: 'clothing',       on: true  },
   ];
   window._counterDrillList = counters;
 
-  const footerHtml = counters.map(c => `
+  const makeRow = (items) => items.map(c => `
     <label class="btn-toggle" style="gap:4px">
       <input type="checkbox" id="countOpt2-${c.key}" ${c.on ? 'checked' : ''}
         onchange="countUpdateOptions2()"
@@ -302,6 +307,11 @@ function countRenderRefGrid2() {
       <span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">${c.desc}</span>
     </label>
   `).join('');
+
+  const mid = Math.ceil(counters.length / 2);
+  const row1 = makeRow(counters.slice(0, mid));
+  const row2 = makeRow(counters.slice(mid));
+  const footerHtml = `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px">${row1}</div><div style="display:flex;flex-wrap:wrap;gap:4px">${row2}</div>`;
   if (row) row.innerHTML = footerHtml;
   if (grid) grid.innerHTML = footerHtml;
 }

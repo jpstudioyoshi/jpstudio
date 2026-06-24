@@ -490,7 +490,7 @@ async function _gramSentPrefetch() {
   GramSentState.generating = true;
   try {
     const level = document.getElementById('gramSentLevel')?.value || 'N4';
-    const theme = document.getElementById('gramSentTheme')?.value?.trim() || '';
+    const theme = '';  // theme field removed
     const s = await _gramSentGenerateOne(GramSentState.target, level, theme, _gramSentAvoidList());
     GramSentState.nextSentence = s;
   } catch(e) {
@@ -514,7 +514,7 @@ async function gramSentGenerate() {
     return;
   }
   const level = document.getElementById('gramSentLevel')?.value || 'N4';
-  const theme = document.getElementById('gramSentTheme')?.value?.trim() || '';
+  const theme = '';  // theme field removed
   const btn = document.getElementById('gramSentCreateBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
 
@@ -567,7 +567,7 @@ function gramSentRenderCard() {
 
   area.innerHTML = `
     <div class="gd-progress-row" style="margin-bottom:4px">${dots}</div>
-    <div class="gd-card">
+    <div class="gd-card" style="border:none;background:none;padding:10px 0">
       <div class="gd-source-en">${s.en}</div>
       <button class="gd-hint-toggle" onclick="gramSentToggleHint(this)">▸ Grammar hint</button>
       <div class="gd-hint" id="gramSentCardHint">${s.hint}</div>
