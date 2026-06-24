@@ -326,10 +326,13 @@ function vtWatchStart() {
 
 function vtWatchStop() {
   if (VideoState.watchStartTime) {
-    const elapsed = (Date.now() - VideoState.watchStartTime) / 60000; // convert to minutes
+    const elapsed = (Date.now() - VideoState.watchStartTime) / 60000;
     const current = vtWatchLoad();
-    vtWatchSave(Math.round(current + elapsed));
+    const newTotal = Math.round(current + elapsed);
+    vtWatchSave(newTotal);
     vtWatchUpdate();
+    // Mark video as active in the strand chart if cumulative today >= 2 min
+    if (newTotal >= 2) drillLastCompletedWrite('video', VideoState.savedFiles?.[0]?.name?.replace(/\.[^.]+$/, '') || null);
     VideoState.watchStartTime = null;
   }
 }

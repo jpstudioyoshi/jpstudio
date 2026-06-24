@@ -6476,7 +6476,7 @@
     "type": "function",
     "name": "vtOnPlay",
     "file": "src/features-video.js",
-    "line": 340,
+    "line": 343,
     "desc": "document.getElementById('vtPlayBtn').textContent = '⏸ Pause';",
     "callers": 4,
     "exported": true
@@ -6485,7 +6485,7 @@
     "type": "function",
     "name": "vtOnPause",
     "file": "src/features-video.js",
-    "line": 346,
+    "line": 349,
     "desc": "document.getElementById('vtPlayBtn').textContent = '▶ Play';",
     "callers": 4,
     "exported": true
@@ -6494,7 +6494,7 @@
     "type": "function",
     "name": "vtPinRowHeight",
     "file": "src/features-video.js",
-    "line": 353,
+    "line": 356,
     "desc": "const row = document.getElementById('vtRow');",
     "callers": 4,
     "exported": false
@@ -6503,7 +6503,7 @@
     "type": "function",
     "name": "vtOnLoaded",
     "file": "src/features-video.js",
-    "line": 370,
+    "line": 373,
     "desc": "VideoState.watchedThreshold = false;",
     "callers": 2,
     "exported": true
@@ -6512,7 +6512,7 @@
     "type": "function",
     "name": "vtAnimLoop",
     "file": "src/features-video.js",
-    "line": 393,
+    "line": 396,
     "desc": "vtDrawWaveform();",
     "callers": 3,
     "exported": true
@@ -6521,7 +6521,7 @@
     "type": "function",
     "name": "vtTogglePlay",
     "file": "src/features-video.js",
-    "line": 398,
+    "line": 401,
     "desc": "const v = document.getElementById('vtVideo');",
     "callers": 7,
     "exported": true
@@ -6530,7 +6530,7 @@
     "type": "function",
     "name": "vtSetSpeed",
     "file": "src/features-video.js",
-    "line": 415,
+    "line": 418,
     "desc": "document.getElementById('vtVideo').playbackRate = parseFloat(document.getElementById('vtSpeed').valu",
     "callers": 4,
     "exported": true
@@ -6539,7 +6539,7 @@
     "type": "function",
     "name": "vtUpdateDisplay",
     "file": "src/features-video.js",
-    "line": 419,
+    "line": 422,
     "desc": "const v = document.getElementById('vtVideo');",
     "callers": 3,
     "exported": true
@@ -6548,7 +6548,7 @@
     "type": "function",
     "name": "vtFmtTime",
     "file": "src/features-video.js",
-    "line": 426,
+    "line": 429,
     "desc": "if (!isFinite(s)) return '0:00';",
     "callers": 7,
     "exported": true
@@ -6557,7 +6557,7 @@
     "type": "function",
     "name": "vtSetLoopA",
     "file": "src/features-video.js",
-    "line": 433,
+    "line": 436,
     "desc": "const v = document.getElementById('vtVideo');",
     "callers": 3,
     "exported": true
@@ -6566,7 +6566,7 @@
     "type": "function",
     "name": "vtClearLoop",
     "file": "src/features-video.js",
-    "line": 460,
+    "line": 463,
     "desc": "VideoState.loopA = null; VideoState.loopB = null; VideoState.loopState = 'idle';",
     "callers": 3,
     "exported": true
@@ -6575,7 +6575,7 @@
     "type": "function",
     "name": "vtSetLoopPause",
     "file": "src/features-video.js",
-    "line": 472,
+    "line": 475,
     "desc": "VideoState.loopPauseSecs = secs;",
     "callers": 1,
     "exported": true
@@ -6584,7 +6584,7 @@
     "type": "function",
     "name": "vtDecodeWaveform",
     "file": "src/features-video.js",
-    "line": 477,
+    "line": 480,
     "desc": "const waveMsg = document.getElementById('vtWaveMsg');",
     "callers": 1,
     "exported": false
@@ -6593,7 +6593,7 @@
     "type": "function",
     "name": "vtWaveClick",
     "file": "src/features-video.js",
-    "line": 532,
+    "line": 535,
     "desc": "const canvas = document.getElementById('vtWaveform');",
     "callers": 4,
     "exported": true
@@ -6602,7 +6602,7 @@
     "type": "function",
     "name": "vtDrawWaveform",
     "file": "src/features-video.js",
-    "line": 540,
+    "line": 543,
     "desc": "const canvas = document.getElementById('vtWaveform');",
     "callers": 10,
     "exported": true
@@ -6611,7 +6611,7 @@
     "type": "function",
     "name": "vtFuriLine",
     "file": "src/features-video.js",
-    "line": 636,
+    "line": 639,
     "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;",
     "callers": 4,
     "exported": true
@@ -6620,7 +6620,7 @@
     "type": "function",
     "name": "resourcesGet",
     "file": "src/features-video.js",
-    "line": 724,
+    "line": 727,
     "desc": "",
     "callers": 7,
     "exported": false
@@ -6629,7 +6629,7 @@
     "type": "function",
     "name": "resourcesSave",
     "file": "src/features-video.js",
-    "line": 732,
+    "line": 735,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -6638,7 +6638,7 @@
     "type": "function",
     "name": "resourcesRender",
     "file": "src/features-video.js",
-    "line": 738,
+    "line": 741,
     "desc": "const grid = document.getElementById('resourcesGrid');",
     "callers": 9,
     "exported": false
@@ -6647,7 +6647,7 @@
     "type": "function",
     "name": "resourcesAdd",
     "file": "src/features-video.js",
-    "line": 808,
+    "line": 811,
     "desc": "const urlEl = document.getElementById('resNewUrl');",
     "callers": 4,
     "exported": true
@@ -6656,7 +6656,7 @@
     "type": "function",
     "name": "resourcesPickIcon",
     "file": "src/features-video.js",
-    "line": 903,
+    "line": 906,
     "desc": "if (url.includes('youtube')) return '▶️';",
     "callers": 3,
     "exported": false
@@ -6665,7 +6665,7 @@
     "type": "function",
     "name": "resourcesEdit",
     "file": "src/features-video.js",
-    "line": 914,
+    "line": 917,
     "desc": "const resources = resourcesGet();",
     "callers": 2,
     "exported": true
@@ -6674,7 +6674,7 @@
     "type": "function",
     "name": "resourcesSaveEdit",
     "file": "src/features-video.js",
-    "line": 939,
+    "line": 942,
     "desc": "const resources = resourcesGet();",
     "callers": 2,
     "exported": true
@@ -6683,7 +6683,7 @@
     "type": "function",
     "name": "resourcesDelete",
     "file": "src/features-video.js",
-    "line": 958,
+    "line": 961,
     "desc": "if (!confirm('Delete this resource?')) return;",
     "callers": 2,
     "exported": true
@@ -6692,7 +6692,7 @@
     "type": "function",
     "name": "resourcesReset",
     "file": "src/features-video.js",
-    "line": 967,
+    "line": 970,
     "desc": "if (!confirm('Reset to default resources? This will remove all your custom links.')) return;",
     "callers": 1,
     "exported": true
@@ -6701,7 +6701,7 @@
     "type": "function",
     "name": "vtAddSavedLink",
     "file": "src/features-video.js",
-    "line": 984,
+    "line": 987,
     "desc": "VideoState.savedFiles → VideoState.savedFiles",
     "callers": 2,
     "exported": true
@@ -6710,7 +6710,7 @@
     "type": "function",
     "name": "vtSaveHistory",
     "file": "src/features-video.js",
-    "line": 999,
+    "line": 1002,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -6719,7 +6719,7 @@
     "type": "function",
     "name": "vtLoadHistory",
     "file": "src/features-video.js",
-    "line": 1012,
+    "line": 1015,
     "desc": "",
     "callers": 2,
     "exported": true
@@ -6728,7 +6728,7 @@
     "type": "function",
     "name": "vtUpdateHistoryDropdown",
     "file": "src/features-video.js",
-    "line": 1022,
+    "line": 1025,
     "desc": "const select = document.getElementById('vtHistorySelect');",
     "callers": 4,
     "exported": true
@@ -6737,7 +6737,7 @@
     "type": "function",
     "name": "vtLoadFromHistory",
     "file": "src/features-video.js",
-    "line": 1053,
+    "line": 1056,
     "desc": "if (!indexStr) return;",
     "callers": 2,
     "exported": true
@@ -6746,7 +6746,7 @@
     "type": "function",
     "name": "vtTryLoadMatchingTranscript",
     "file": "src/features-video.js",
-    "line": 1088,
+    "line": 1091,
     "desc": "const baseName = videoName.replace(/\\.[^.]+$/, '');",
     "callers": 2,
     "exported": true
@@ -6755,7 +6755,7 @@
     "type": "function",
     "name": "vtRenderSavedLinks",
     "file": "src/features-video.js",
-    "line": 1108,
+    "line": 1111,
     "desc": "vtUpdateHistoryDropdown();",
     "callers": 2,
     "exported": true
@@ -6764,7 +6764,7 @@
     "type": "function",
     "name": "vtWordSelect",
     "file": "src/features-video.js",
-    "line": 1119,
+    "line": 1122,
     "desc": "VideoState.pendingHistoryName → VideoState.pendingHistoryName",
     "callers": 4,
     "exported": true
@@ -6773,7 +6773,7 @@
     "type": "function",
     "name": "vtTranslateWord",
     "file": "src/features-video.js",
-    "line": 1132,
+    "line": 1135,
     "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;",
     "callers": 2,
     "exported": true
@@ -6782,7 +6782,7 @@
     "type": "function",
     "name": "strokeMagnify",
     "file": "src/features-video.js",
-    "line": 1233,
+    "line": 1236,
     "desc": "In browser we can't access filesystem — hint is shown instead",
     "callers": 2,
     "exported": true
@@ -6791,7 +6791,7 @@
     "type": "function",
     "name": "strokeGetReading",
     "file": "src/features-video.js",
-    "line": 1275,
+    "line": 1278,
     "desc": "const cp = ch.codePointAt(0);",
     "callers": 2,
     "exported": true
@@ -6800,7 +6800,7 @@
     "type": "function",
     "name": "strokeFetchReadings",
     "file": "src/features-video.js",
-    "line": 1284,
+    "line": 1287,
     "desc": "const kanji = chars.filter(ch => {",
     "callers": 2,
     "exported": false
@@ -6809,7 +6809,7 @@
     "type": "function",
     "name": "readSwitchTab",
     "file": "src/features-video.js",
-    "line": 1318,
+    "line": 1321,
     "desc": "═══════════════════════════════════════════════════════════════════════════",
     "callers": 2,
     "exported": true
@@ -6818,7 +6818,7 @@
     "type": "function",
     "name": "epubHandleDrop",
     "file": "src/features-video.js",
-    "line": 1360,
+    "line": 1363,
     "desc": "e.preventDefault();",
     "callers": 2,
     "exported": true
@@ -6827,7 +6827,7 @@
     "type": "function",
     "name": "epubLoadFile",
     "file": "src/features-video.js",
-    "line": 1367,
+    "line": 1370,
     "desc": "const dz = document.getElementById('epubDropZone');",
     "callers": 2,
     "exported": false
@@ -6836,7 +6836,7 @@
     "type": "function",
     "name": "epubParseOPF",
     "file": "src/features-video.js",
-    "line": 1396,
+    "line": 1399,
     "desc": "const containerXml = await EpubState.zip.file('META-INF/container.xml').async('string');",
     "callers": 1,
     "exported": false
@@ -6845,7 +6845,7 @@
     "type": "function",
     "name": "epubLoadChapter",
     "file": "src/features-video.js",
-    "line": 1460,
+    "line": 1463,
     "desc": "idx = parseInt(idx);",
     "callers": 3,
     "exported": false
@@ -6854,7 +6854,7 @@
     "type": "function",
     "name": "epubSetFontSize",
     "file": "src/features-video.js",
-    "line": 1539,
+    "line": 1542,
     "desc": "EpubState.fontSize = parseFloat(val);",
     "callers": 2,
     "exported": true
@@ -6863,7 +6863,7 @@
     "type": "function",
     "name": "epubToggleFuri",
     "file": "src/features-video.js",
-    "line": 1546,
+    "line": 1549,
     "desc": "EpubState.furi = !EpubState.furi;",
     "callers": 2,
     "exported": true
@@ -6872,7 +6872,7 @@
     "type": "function",
     "name": "epubApplyFuri",
     "file": "src/features-video.js",
-    "line": 1553,
+    "line": 1556,
     "desc": "const content = document.getElementById('epubContent');",
     "callers": 2,
     "exported": false
@@ -6881,7 +6881,7 @@
     "type": "function",
     "name": "epubRemoveFuri",
     "file": "src/features-video.js",
-    "line": 1577,
+    "line": 1580,
     "desc": "const sel = document.getElementById('epubChapterSel');",
     "callers": 2,
     "exported": true
@@ -6890,7 +6890,7 @@
     "type": "function",
     "name": "epubGetFurigana",
     "file": "src/features-video.js",
-    "line": 1584,
+    "line": 1587,
     "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();",
     "callers": 1,
     "exported": false
@@ -6899,7 +6899,7 @@
     "type": "function",
     "name": "epubWireWordTap",
     "file": "src/features-video.js",
-    "line": 1600,
+    "line": 1603,
     "desc": "const content = document.getElementById('epubContent');",
     "callers": 2,
     "exported": true
@@ -6908,7 +6908,7 @@
     "type": "function",
     "name": "epubOnWordSelect",
     "file": "src/features-video.js",
-    "line": 1606,
+    "line": 1609,
     "desc": "const sel = window.getSelection();",
     "callers": 1,
     "exported": false
@@ -6917,7 +6917,7 @@
     "type": "function",
     "name": "epubHidePopup",
     "file": "src/features-video.js",
-    "line": 1645,
+    "line": 1648,
     "desc": "const p = document.getElementById('epubWordPopup');",
     "callers": 4,
     "exported": true
@@ -6926,7 +6926,7 @@
     "type": "function",
     "name": "epubSpeak",
     "file": "src/features-video.js",
-    "line": 1651,
+    "line": 1654,
     "desc": "const btn = document.getElementById('epubTtsBtn');",
     "callers": 2,
     "exported": true
@@ -6935,7 +6935,7 @@
     "type": "function",
     "name": "epubClose",
     "file": "src/features-video.js",
-    "line": 1673,
+    "line": 1676,
     "desc": "EpubState.zip = null; EpubState.spine = []; EpubState.chapterIdx = 0;",
     "callers": 2,
     "exported": true
@@ -6944,7 +6944,7 @@
     "type": "function",
     "name": "vtClearTranslation",
     "file": "src/features-video.js",
-    "line": 1686,
+    "line": 1689,
     "desc": "const jpEl = document.getElementById('vtLineJp');",
     "callers": 3,
     "exported": true
@@ -6953,7 +6953,7 @@
     "type": "function",
     "name": "vtTranslateLine",
     "file": "src/features-video.js",
-    "line": 1696,
+    "line": 1699,
     "desc": "const panel = document.getElementById('vtLineTranslate');",
     "callers": 2,
     "exported": true
@@ -6962,7 +6962,7 @@
     "type": "function",
     "name": "vtBreakdownLine",
     "file": "src/features-video.js",
-    "line": 1759,
+    "line": 1762,
     "desc": "const jpEl = document.getElementById('vtLineJp');",
     "callers": 2,
     "exported": true
@@ -6971,7 +6971,7 @@
     "type": "function",
     "name": "vtGetVocabCacheKey",
     "file": "src/features-video.js",
-    "line": 1809,
+    "line": 1812,
     "desc": "VideoState.vocabListCache → VideoState.vocabListCache",
     "callers": 4,
     "exported": false
@@ -6980,7 +6980,7 @@
     "type": "function",
     "name": "vtShowVocabList",
     "file": "src/features-video.js",
-    "line": 1820,
+    "line": 1823,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');",
     "callers": 3,
     "exported": true
@@ -6989,7 +6989,7 @@
     "type": "function",
     "name": "vtCloseVocabList",
     "file": "src/features-video.js",
-    "line": 1843,
+    "line": 1846,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');",
     "callers": 4,
     "exported": true
@@ -6998,7 +6998,7 @@
     "type": "function",
     "name": "vtRegenerateVocabList",
     "file": "src/features-video.js",
-    "line": 1848,
+    "line": 1851,
     "desc": "const cacheKey = vtGetVocabCacheKey();",
     "callers": 3,
     "exported": true
@@ -7007,7 +7007,7 @@
     "type": "function",
     "name": "vtGenerateVocabList",
     "file": "src/features-video.js",
-    "line": 1859,
+    "line": 1862,
     "desc": "VideoState.currentVocab → VideoState.currentVocab",
     "callers": 2,
     "exported": false
@@ -7016,7 +7016,7 @@
     "type": "function",
     "name": "vtRenderVocabList",
     "file": "src/features-video.js",
-    "line": 1922,
+    "line": 1925,
     "desc": "const content = document.getElementById('vtVocabListContent');",
     "callers": 4,
     "exported": true
@@ -7025,7 +7025,7 @@
     "type": "function",
     "name": "vtDeleteVocabWord",
     "file": "src/features-video.js",
-    "line": 1959,
+    "line": 1962,
     "desc": "if (!VideoState.currentVocab || idx < 0 || idx >= VideoState.currentVocab.length) return;",
     "callers": 4,
     "exported": true
@@ -7034,7 +7034,7 @@
     "type": "function",
     "name": "vtJumpToTime",
     "file": "src/features-video.js",
-    "line": 1968,
+    "line": 1971,
     "desc": "const video = document.getElementById('vtVideo');",
     "callers": 5,
     "exported": true
@@ -7043,7 +7043,7 @@
     "type": "function",
     "name": "vtCloseLineTranslate",
     "file": "src/features-video.js",
-    "line": 1983,
+    "line": 1986,
     "desc": "const panel = document.getElementById('vtLineTranslate');",
     "callers": 2,
     "exported": true
@@ -7207,7 +7207,7 @@
     "file": "src/features-progress.js",
     "line": 116,
     "desc": "",
-    "callers": 25,
+    "callers": 26,
     "exported": true
   },
   {
