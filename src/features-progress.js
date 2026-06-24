@@ -197,7 +197,7 @@ function renderFourStrandRecency() {
     { label: 'INPUT', sub: 'listening & reading', items: [
       { label: 'Reading',    key: 'reading',   panel: 'read'      },
       { label: 'Listening',  key: 'listening', panel: 'listening' },
-      { label: 'Video',      key: 'video',     panel: 'video'     },
+      { label: 'Video',      key: 'video',     panel: 'video2'    },
     ]},
     { label: 'OUTPUT', sub: 'speaking & writing', items: [
       { label: 'Writing',    key: 'writing',   panel: 'writing'   },
