@@ -465,7 +465,7 @@ async function _gramSentGenerateOne(target, level, theme, avoidJp) {
   const avoidNote = avoidJp && avoidJp.length ? `Avoid repeating these sentences: ${avoidJp.join(' / ')}` : '';
   const seed = Math.floor(Math.random() * 9000) + 1000;
   const themeNote = theme ? `Set the sentence in the context of: ${theme}.` : '';
-  const prompt = `Generate 1 Japanese sentence for a ${level} learner practising: "${target}".\n${themeNote}\n${vocabNote}\n${avoidNote}\nThe sentence must clearly use the target grammar. Provide a natural English translation and a brief grammar hint (one sentence).\nReply ONLY with a JSON object, no markdown:\n{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}`;
+  const prompt = `Generate 1 Japanese sentence for a ${level} learner practising: "${target}".\n${themeNote}\n${vocabNote}\n${avoidNote}\nThe target grammar must be the main structural feature of the sentence — not incidental. Keep it short (8–14 words). Avoid starting with 私は unless it is natural. Provide a natural English translation and a one-sentence grammar hint that names the specific form used.\nReply ONLY with a JSON object, no markdown:\n{"jp":"Japanese sentence","en":"English translation","hint":"grammar hint"}`;
   const data = await claudeAPI({
     model: 'claude-sonnet-4-6',
     max_tokens: 400,
@@ -556,19 +556,17 @@ function gramSentRenderCard() {
     return;
   }
   const s    = GramSentState.sentences[GramSentState.idx];
-  const dots = GramSentState.sentences.map((_, i) => {
+  // Always show GRAM_SENT_TOTAL dots: filled for done, current, or pending
+  const dots = Array.from({ length: GRAM_SENT_TOTAL }, (_, i) => {
     const r   = GramSentState.results[i];
-    const cls = r === null ? (i === GramSentState.idx ? 'cur' : '') : r.correct ? 'ok' : 'miss';
+    const cls = (r == null)
+      ? (i === GramSentState.idx ? 'cur' : 'pending')
+      : r.correct ? 'ok' : 'miss';
     return `<div class="gd-dot ${cls}"></div>`;
   }).join('');
 
   area.innerHTML = `
-    <div class="gd-stats">
-      <span>Correct: <strong style="color:var(--teal)">${GramSentState.ok}</strong></span>
-      <span>Wrong: <strong style="color:var(--red)">${GramSentState.miss}</strong></span>
-      <span>Left: <strong>${GramSentState.sentences.length - GramSentState.idx}</strong></span>
-    </div>
-    <div class="gd-progress-row">${dots}</div>
+    <div class="gd-progress-row" style="margin-bottom:4px">${dots}</div>
     <div class="gd-card">
       <div class="gd-source-en">${s.en}</div>
       <button class="gd-hint-toggle" onclick="gramSentToggleHint(this)">▸ Grammar hint</button>
@@ -629,20 +627,33 @@ async function gramSentCheck() {
 
   if (apiKey) {
     try {
-      const prompt = `English: "${s.en}". Target grammar: "${GramSentState.target}" (hint: ${s.hint}). ` +
-        `Correct Japanese: "${s.jp}". Student wrote: "${val}". ` +
-        `Grade this. Accept natural variations. IMPORTANT: if the student wrote hiragana where kanji would normally be used (e.g. たべる instead of 食べる), count it as CORRECT — kana-only writing is valid Japanese. When mentioning Japanese words with kanji in feedback, add reading in brackets, e.g. 食べる(たべる). ` +
-        `Reply ONLY with JSON: {"correct":true/false,"feedback":"one sentence","correctAnswer":"${s.jp}"}`;
+      const prompt = `English: "${s.en}". Target grammar: "${GramSentState.target}" (hint: ${s.hint}).` +
+        ` Correct Japanese: "${s.jp}". Student wrote: "${val}".` +
+        ` Grade this. Accept natural variations. Kana-only writing (e.g. たべる instead of 食べる) is CORRECT.` +
+        ` When mentioning Japanese with kanji in feedback, add reading in brackets, e.g. 食べる(たべる).` +
+        ` Reply ONLY with JSON, no markdown: {"correct":true/false,"error":"null|wrong_particle|wrong_ending|missing_grammar|word_order|wrong_word|extra_word|incomplete","diagnosis":"one phrase naming the specific problem e.g. 'used に instead of で' or 'missing なければ' — null if correct","correctAnswer":"${s.jp}"}`;
 
       const data = await claudeAPI({
         model: 'claude-sonnet-4-6',
-        max_tokens: 200,
+        max_tokens: 300,
         messages: [{ role: 'user', content: prompt }],
         track: 'grammar',
       });
       const parsed = JSON.parse((data.content?.[0]?.text || '{}').replace(/```json|```/g, '').trim());
       correct = parsed.correct === true;
-      feedbackHtml = `<div>${parsed.feedback || ''}</div><div class="gd-correct-ans">${correct ? '✓' : '→ '} ${parsed.correctAnswer || s.jp}</div>`;
+      const _diag = parsed.diagnosis && parsed.diagnosis !== 'null' ? parsed.diagnosis : '';
+      const _errLabel = parsed.error && parsed.error !== 'null' ? parsed.error.replace(/_/g, ' ') : '';
+      feedbackHtml = `<table style="width:100%;border-collapse:collapse;margin-top:6px">
+        <tr>
+          <td style="padding:3px 8px 1px;color:var(--ink-light);font-family:var(--ui);font-size:0.68rem;width:50%">Your answer</td>
+          <td style="padding:3px 8px 1px;color:var(--ink-light);font-family:var(--ui);font-size:0.68rem">Correct</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 8px;font-family:var(--jp);font-size:inherit;color:${correct ? 'var(--teal)' : 'var(--red)'}">${val}</td>
+          <td style="padding:5px 8px;font-family:var(--jp);font-size:inherit;color:var(--teal)">${parsed.correctAnswer || s.jp}</td>
+        </tr>
+        ${!correct && _diag ? `<tr><td colspan="2" style="padding:4px 8px 6px;font-family:var(--ui);font-size:0.73rem;color:var(--ink-light)">${_errLabel ? '<strong>' + _errLabel + '</strong> — ' : ''}${_diag}</td></tr>` : ''}
+      </table>`;
     } catch {
       correct = val.includes(s.jp.slice(0, 4));
       feedbackHtml = `<div class="gd-correct-ans">→ ${s.jp}</div>`;
@@ -1047,6 +1058,7 @@ let _conjTrackingPaused = false;
 let _conjHintUsed = false; // true if kanji stem was pre-filled for current question
 let _conjSrsMode = false;  // SRS-due mode: only drill forms with srs_due <= today
 let _conjTtsMode = false;  // TTS mode: speak word on card render + correct answer
+let _conjTtsSpeaking = false; // true while VoiceVox is rendering/playing
 
 function conjToggleTts() {
   _conjTtsMode = !_conjTtsMode;
@@ -1761,7 +1773,8 @@ function renderConjDrillG() {
   inp.focus();
   // TTS: speak the dictionary form on card render
   if (_conjTtsMode && item.word.dict && typeof jpSpeak === 'function') {
-    setTimeout(() => jpSpeak(item.word.dict, 0.9), 300);
+    _conjTtsSpeaking = true;
+    setTimeout(() => jpSpeak(item.word.dict, 0.9, { onend: () => { _conjTtsSpeaking = false; } }), 300);
   }
 }
 
@@ -1906,7 +1919,8 @@ function checkConjG() {
     }
     // TTS: always speak correct answer after check (word spoken on card render)
     if (_conjTtsMode && item.answer && typeof jpSpeak === 'function') {
-      setTimeout(() => jpSpeak(item.answer, 0.9), 300);
+      _conjTtsSpeaking = true;
+      setTimeout(() => jpSpeak(item.answer, 0.9, { onend: () => { _conjTtsSpeaking = false; } }), 300);
     }
   }
   if (typeof window !== 'undefined' && window.db) {
@@ -1981,6 +1995,7 @@ function retreatConjG() {
 }
 
 function advanceConjG() {
+  if (_conjTtsMode && _conjTtsSpeaking) return;
   if (!conjRevealed) { conjResults[conjIdx] = 'miss'; conjMiss++; }
   conjIdx++; conjRevealed = false;
   ConjSession.saveProgress(conjQueue, conjIdx, conjResults, conjOk, conjMiss, conjRun, conjSessionCorrect, conjSessionWrong, window._conjVerbTypes, window._conjForms, window._conjPolarities, window._conjRegisters);

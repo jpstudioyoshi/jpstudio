@@ -1,5 +1,5 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-23 (session 51 — turn_id population, DL matching, note_confirmed, auto-link fixes)
+Last updated: 2026-06-23 (session 52 — vocab pruning, conjugation drill TTS, shuchu ref overlay, VoiceVox clipping fix)
 
 ## User Preferences
 - Paul is learning development workflows as we go — suggest improvements concisely.
@@ -41,6 +41,7 @@ Last updated: 2026-06-23 (session 51 — turn_id population, DL matching, note_c
 - Repo: https://github.com/jpstudioyoshi/jpstudio (private)
 - Standard push: jp && git add -A && git commit -m "message" && git push
 - Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
+- Token stored in remote URL: `git remote set-url origin https://TOKEN@github.com/...`
 
 ## Claude Code
 - Launch: jp && claude --model claude-sonnet-4-6
@@ -52,6 +53,52 @@ Last updated: 2026-06-23 (session 51 — turn_id population, DL matching, note_c
 ACTIVE DEVELOPMENT / ONGOING CLEANUP — dead-code cleanup, bug fixes, and feature work
 handled as routine, in whatever order makes sense.
 
+## Session 52 Changes (2026-06-23)
+
+### Vocab SRS pool pruning
+- 28 n5 words with interval ≥ 14 deleted from srs_items (demonstrably known)
+- Pool reduced from 183 → 135 words; healthier source balance
+- n5 words re-enter via lookup pipeline if Paul genuinely doesn't know them
+- Remaining n5: 83 words (avg interval 2.5 — genuinely unproven, correct to keep)
+- Source weights active: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
+- Reviewed words: flat 0.35 base regardless of source (SRS handles priority from there)
+
+### Conjugation drill TTS toggle
+- `_conjTtsMode` + `conjToggleTts()` added to `features-grammar.js`
+- `_conjTtsSpeaking` flag blocks `advanceConjG()` while audio is playing
+- On card render: speaks `item.word.dict` via `jpSpeak(..., { onend: cb })`
+- On any check (correct or wrong): speaks `item.answer`
+- 🔊 TTS button added to conjugation controls row in `index.html`
+- 🔊 repeat button rendered in card button row when TTS mode active
+- `conjToggleTts` exported on `App`
+
+### VoiceVox first-syllable clipping fix
+- Root cause: HTMLAudio element fade-in on cold Electron audio session
+- Fix: switched to `AudioContext.decodeAudioData` + `BufferSource.start(0)` — no fade-in
+- `prePhonemeLength` set to min 0.15 in query object (leading silence in synthesis)
+- `audio.load()` + 120ms delay removed (no longer needed with AudioContext approach)
+- `_vvAudio` now stores a shim `{ pause: () => source.stop() }` for stop compatibility
+
+### Focus sprint reference overlay
+- `shuchuRefOverlay` was never created — `shuchuToggleRef` silently returned
+- Now created lazily on first call to `shuchuToggleRef()`
+- Overlay: fixed, centred, 640px wide, 75vh max-height, scrollable
+- Back button: positioned above the overlay top edge, centred, outside the popup
+- Both overlay and back button hidden together on close
+
+### Shuchu answer inputs
+- All text answer fields in focus sprint now default to hiragana, no romaji option
+- `kanaToolbar('shuchuAnswerInput', { noRomaji: true })` on main answer input
+- Same fix applied to further-question inputs (`shuchuFQInput_*`)
+
+### Conjugation drill header cleanup
+- `conj-stats-bar` (Run N/3 · ✓ · ✗) removed from card area
+- Run N/3 counter moved into dots row, appended after dot elements
+- Eliminates layout collision with answer box when answer is revealed
+
+### lessonNotesUpdateDropdown dead call removed
+- `lessonNotesUpdateDropdown()` at end of `lessonNotesPanelHandlePaste` — function never existed
+
 ## Session 51 Changes (2026-06-23)
 
 ### turn_id population — `lnPopulateTurnIds(waLessonId, recSessionId)`
@@ -60,20 +107,18 @@ handled as routine, in whatever order makes sense.
 - Matches `lesson_phrases` (type != grammar) to `transcript_turns` by content similarity
 - Needle: first 20 chars of phrase; haystack window: needle.length + 4 chars
 - Threshold: distance ≤ max(3, floor(needle.length × 0.3))
-- Hit rate on session 80/82: 12/19 (7 misses are genuinely absent from transcript)
+- Hit rate on session 80/82: 12/19 (7 misses genuinely absent from transcript)
 - Auto-wired in `Orchestrator.js` after `SESSION_SAVED` — fires non-blocking post-transcription
 - Also registered on `App` for manual DevTools calls: `await lnPopulateTurnIds(waId, recId)`
 
 ### note_confirmed signal — `nomRunAndCache()`
-- After ranking, queries `extracted_grammar` of linked WhatsApp session
+- After ranking, queries `extracted_grammar` of linked WhatsApp session via JOIN
 - Sets `note_confirmed: true` on suggestions where `node_id` appears in Yoshi's grammar list
 - Rendered as `· ✓ Yoshi` badge on 集中 sprint suggestion cards
-- No API calls — one DB join query
 
 ### WhatsApp paste date fix — `lessonNotesPanelHandlePaste()`
 - Session date now parsed from first dated WhatsApp message (`DD.MM.YY` format)
 - Falls back to today only if no dated messages found
-- Fixes auto-link failing due to date mismatch between notes and recording
 
 ### lessonNotesEnsureDbRow fixes
 - `SELECT` now filters `AND source='whatsapp'` — was accidentally matching recording rows
@@ -82,62 +127,13 @@ handled as routine, in whatever order makes sense.
 
 ### audio_duration_s backfill
 - All existing recording sessions backfilled via `window.lessonAPI.finaliseRecording()`
-- ffprobe works correctly — was never being called for historical sessions
-- Durations confirmed: sessions 59/66/67/69/70/71/72 all written
-
-### Dead call removed
-- `lessonNotesUpdateDropdown()` — called at end of paste handler, function never existed
+- Sessions 59/66/67/69/70/71/72/80 all written
 
 ### First real WhatsApp import
 - Session 82 (whatsapp, date 2026-06-22) linked to session 80 (recording, 2658 turns)
-- lesson_phrases populated: 46 grammar + 16 phrase + 3 word with lesson_id=82
+- lesson_phrases: 46 grammar + 16 phrase + 3 word with lesson_id=82
 - turn_id populated on 12/19 phrase rows
-- extracted_grammar: 22 node IDs written to lesson_sessions
-
-## Session 50 Changes (2026-06-22)
-
-### NoM pipeline — complete (`src/features-nom.js`)
-
-New file. Zero API calls in detection phase. ~14 LLM calls per session in classification.
-
-#### Rule-based cluster detection — `nomDetectClusters(sessionId)`
-Five rules over `transcript_turns`:
-1. **Dense repetition** — same surface token 4+ times in 45s window
-2. **Morphological variation** — same hiragana stem (≥3 chars) with 3+ distinct endings in 60s
-3. **Particle alternation** — same noun with 2+ different particles in 30s
-4. **Repair markers** — explicit hesitation words (`えーと`, `すみません`, `もう一度`, etc.)
-5. **Vocab gap** — English word (Latin ≥3 chars) followed by repetitive Japanese search in 90s
-
-Pre-processing:
-- `_nomScrub(turns)` — in-memory hallucination filter (same threshold as Orchestrator:
-  tokens appearing ≥5 times, keep only first) + stoplist (`うん`, `はい`, `ええ`, etc.)
-- `_mergeClusters` — clusters within 20s merged; composite `ruleType` string preserved
-
-Tested against session 80 (7 known episodes from handoff doc): **7/7 recall**.
-
-#### LLM classification — `nomClassifyClusters(clusters)`
-- One call per cluster, 12 turns max context, ~120 tokens output
-- Returns `{isNom, topic, severity 1-3, node_id}` per cluster
-- Validates `node_id` against `NOM_NODE_IDS` list (Genki I/II nodes)
-- False positives (lone `すみません`, `use` L1 trigger) correctly rejected
-- Session 80: 12/14 confirmed, 2 rejected
-
-#### Ranking — `nomRankSuggestions(classified, topN=3)`
-- Groups by `node_id`; null node_ids get individual buckets
-- Score: `severity × 3 + episode_count × 2`
-- Returns top N with `{topic, node_id, severity, episode_count, example_offset_ms, score}`
-
-#### Cache + UI — `nomRunAndCache(sessionId)` / `nomRenderSuggestions()`
-- `nomRunAndCache` runs full pipeline, persists to `kv_store` key `nom_suggestions`
-- `nomRenderSuggestions` reads cache, renders cards in 集中 setup panel (no API calls)
-- "Analyse last lesson" button injected into `shuchu-setup` by `shuchuOnOpen`
-- Card click fills `shuchuTopicInput` → user presses Start
-- Status messages via `#nomAnalyseStatus` span
-- Cards show `· ✓ Yoshi` badge when `note_confirmed: true`
-
-#### Test harness — `nomTestSession80()`
-- Run in DevTools: queries last recording session, compares against 7 known episodes
-- Prints recall score + per-cluster offsets
+- extracted_grammar: 22 node IDs
 
 ## NoM Pipeline — Complete State (`src/features-nom.js`)
 
@@ -149,43 +145,29 @@ Tested against session 80 (7 known episodes from handoff doc): **7/7 recall**.
 - `nomRenderSuggestions()` → reads cache, renders cards in 集中 setup (no API)
 - `nomTestSession80()` → DevTools test harness, 7/7 recall on session 80
 
+### Detection rules (five, client-side, no API)
+1. Dense repetition — same token 4+ times in 45s
+2. Morphological variation — same stem 3+ endings in 60s
+3. Particle alternation — same noun 2+ particles in 30s
+4. Repair markers — えーと, すみません, もう一度 etc.
+5. Vocab gap — English word (Latin ≥3 chars) + repetitive Japanese search in 90s
+
 ### note_confirmed logic
-- After ranking, queries `extracted_grammar` of linked WhatsApp session via JOIN
+- After ranking, queries `extracted_grammar` of linked WhatsApp session
 - `note_confirmed: true` when suggestion `node_id` ∈ Yoshi's `extracted_grammar`
 - Rendered as `· ✓ Yoshi` on card subtitle
 
-### Constants
-- `NOM_RULE` — rule type labels
-- `NOM_CFG` — tuneable thresholds (window sizes, min counts)
-- `NOM_STOPLIST` — filler words excluded from detection
-- `NOM_REPAIR_MARKERS` — explicit hesitation/repair words
-- `NOM_PARTICLES` — particles tracked for alternation rule
-- `NOM_L1_PATTERN` — English-only `/[a-zA-Z]{3,}/`
-- `NOM_HALLUCINATION_THRESHOLD = 5`
-- `NOM_NODE_IDS` — valid Genki I/II node ids for classification prompt
-- `NOM_CACHE_KEY = 'nom_suggestions'`
-
-## Lesson Recording — Complete State
-- `AudioService.js` handles mic recording
-- `Orchestrator.startLesson()` / `stopLesson()` coordinate lifecycle
-- Audio saved as WebM chunks to iCloud with ffmpeg reindex + ffprobe duration on stop
-- `audio_duration_s` written by `lesson:finaliseRecording` IPC handler in main.js
-- Single-channel recording (mic only)
-- **Mic device priority**: USB/external wired → built-in Mac mic → any non-virtual
-- Post-transcription hook: `lnPopulateTurnIds` fires automatically via Orchestrator
+### Deferred: Levenshtein confirmation layer (full)
+- Temporal + content match: NoM cluster offset X → lesson_phrases turn_id within ±30s → DL match
+- Prerequisites met (turn_id populated, WA data in DB)
+- Needs multiple sessions to tune and validate
 
 ## lesson_sessions — Link Architecture
 - One lesson = one WhatsApp row (`source='whatsapp'`) as anchor
 - Recording row (`source='recording'`) has `linked_session_id` → WhatsApp row id
 - Auto-link on paste: same-date recordings where `audio_duration_s > 600 OR IS NULL`
-- `lessonNotesEnsureDbRow` creates whatsapp row, sets `LessonNotesState.currentLessonId`
 - Date parsed from first WhatsApp message timestamp (DD.MM.YY format)
-
-## Grammar Node Mapping Pipeline — COMPLETE
-- Gold dot indicators on Genki node pills (per-session)
-- `lesson_phrases` has `node_id` + `turn_id` columns
-- `turn_id` now auto-populated via DL matching post-transcription
-- Remaining: detail panel (source sentences); "Play from here" button
+- `lessonNotesEnsureDbRow` creates whatsapp row, sets `LessonNotesState.currentLessonId`
 
 ## SQLite Schema — v14
 kv_store, corpus_entries, corpus_lookups, corpus_productions, counters,
@@ -195,16 +177,16 @@ pitch_data, schema_version, srs_items, transcript_turns, transcript_vocab,
 vocab_items, vocab_items_backup, vocab_srs, words, writing_sessions, writing_sittings
 
 `lesson_sessions` key columns:
-- `source` — `'whatsapp'` (notes import) or `'recording'` (audio session)
-- `raw_content` — raw WhatsApp text (persisted at import)
+- `source` — `'whatsapp'` | `'recording'`
+- `raw_content` — raw WhatsApp text
 - `extracted_grammar` — JSON array of node_ids
-- `linked_session_id` — recording row points to its WhatsApp anchor row (v14)
-- `audio_duration_s` — set by ffprobe in `lesson:finaliseRecording` IPC handler
+- `linked_session_id` — recording → whatsapp anchor
+- `audio_duration_s` — set by ffprobe in `lesson:finaliseRecording`
 
 `lesson_phrases` key columns:
 - `lesson_id` — FK to whatsapp lesson_sessions row
-- `node_id` — Genki grammar node (grammar type rows only)
-- `turn_id` — FK to transcript_turns row (populated by lnPopulateTurnIds via DL)
+- `node_id` — Genki grammar node (grammar rows only)
+- `turn_id` — FK to transcript_turns (populated by lnPopulateTurnIds via DL)
 - `type` — `'phrase'` | `'word'` | `'grammar'`
 
 DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
@@ -216,22 +198,19 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 2. `shuchuActivityBtns` / `shuchuR2Btns` — always empty (low priority)
 
 ### NoM pipeline — next steps
-3. Multi-session aggregation — cluster node_ids across last N sessions to surface
-   recurring patterns Yoshi hasn't written down (historical blind spots)
-4. Two-tier 集中 surface — "This week" (from notes) vs "Recurring" (from transcript)
-5. Levenshtein confirmation layer — DL match Whisper tokens to Yoshi note content at
-   same timestamp; `turn_id` is now populated so prerequisite is met;
-   still needs multiple sessions with real WhatsApp data
-6. Theme segmentation — one API call per session, section markers for timeline navigation
+3. Multi-session aggregation — cluster node_ids across last N sessions
+4. Two-tier 集中 surface — "This week" vs "Recurring"
+5. Full Levenshtein confirmation layer — temporal + content match (needs more WA data)
 
 ### Grammar coverage
-7. Gold dot detail panel — needs node_id query on lesson_phrases → source sentences
-8. "Play from here" button — turn_id → audio seek (infrastructure now in place)
-9. Genki II node integration
+6. Gold dot detail panel — node_id → lesson_phrases → source sentences
+7. "Play from here" button — turn_id → audio seek (infrastructure in place)
+8. Genki II node integration
 
 ### Vocab pipeline
-10. corpus_productions extraction fix — single-kanji in old rows
-11. Reading backfill — ~567 words still missing readings
+9. corpus_productions extraction fix — single-kanji in old rows
+10. Reading backfill — ~567 words still missing readings
+11. Yoshi word boost — 2-day surface window after lesson import (deferred pending filter btn review)
 
 ### Future / larger features
 12. FLUENCY_432 emitter — 4/3/2 speaking session wiring
@@ -239,7 +218,7 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 14. Book vocab import (18 pages, OCR artifact, deferred)
 15. Sight-reading feature (from scratch)
 16. Satellite (jpsat) redesign
-17. `lesson_sessions` full consolidation — single row per lesson (Claude Code, larger job)
+17. `lesson_sessions` full consolidation — single row per lesson (Claude Code)
 18. Stale docs cleanup — `context-static.md`, `html-map.md`
 
 ## Vocab System — Complete State
@@ -254,16 +233,16 @@ DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
 | n5 | one-time backfill | vocab_items |
 
 ### Weighting
-- New words (_isNew = srs_due IS NULL): `_base = entry_weight × source_weight`
-- Reviewed words (_isNew = false): `_base = 0.35` FLAT (source no longer matters)
-- Direction weight and prep_boost (1.5×) still applied to both
+- New words: `_base = entry_weight × source_weight`
+- Reviewed words: `_base = 0.35` FLAT
+- Direction weight and prep_boost (1.5×) applied to both
 - Session pool: all reviewed due words + max 5 new words, sorted by effective weight
-- Source weights for new words: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
+- Source weights: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
 
 ### SRS — SM-2
 - Known: interval = floor(interval × ease), ease +0.1
 - Got it: interval = floor(interval × max(1.3, ease − 0.10))
-- Again: interval = 1, due tomorrow, ease −0.15 (min 1.3)
+- Again: interval = 1, ease −0.15 (min 1.3)
 
 ## Dead-Code Lookup Tooling
 - check-syntax.js: callers + exported per function → audit-latest.md + index.json

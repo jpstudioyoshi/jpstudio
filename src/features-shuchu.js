@@ -556,10 +556,27 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
 
   // ── Reset ────────────────────────────────────────────────────────────────────
   window.shuchuToggleRef = function() {
-    const overlay = document.getElementById('shuchuRefOverlay');
-    if (!overlay) return;
+    let overlay = document.getElementById('shuchuRefOverlay');
+    if (!overlay) {
+      // Create overlay lazily on first open
+      overlay = document.createElement('div');
+      overlay.id = 'shuchuRefOverlay';
+      overlay.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:var(--surface,#1a1a1a);border:1px solid var(--border);border-radius:12px;width:min(640px,90vw);max-height:75vh;overflow-y:auto;padding:28px 28px 24px;box-shadow:0 8px 40px rgba(0,0,0,0.6);display:none';
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕ Back';
+      closeBtn.style.cssText = 'position:fixed;top:calc(50% - min(75vh,640px)/2 - 40px);left:50%;transform:translateX(-50%) translateY(calc(-50vh + 12px));z-index:1000;font-family:var(--ui);font-size:0.82rem;padding:5px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--ink-light);cursor:pointer';
+      closeBtn.id = 'shuchuRefBackBtn';
+      closeBtn.onclick = () => { overlay.style.display = 'none'; closeBtn.style.display = 'none'; };
+      const content = document.createElement('div');
+      content.id = 'shuchuRefContent';
+      overlay.appendChild(content);
+      document.body.appendChild(overlay);
+      document.body.appendChild(closeBtn);
+    }
+    const closeBtn = document.getElementById('shuchuRefBackBtn');
     if (overlay.style.display !== 'none') {
       overlay.style.display = 'none';
+      if (closeBtn) closeBtn.style.display = 'none';
       return;
     }
     if (!_sprint) return;
@@ -568,6 +585,7 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
     const introContent = document.getElementById('shuchuIntroContent');
     if (introContent) refContent.innerHTML = introContent.innerHTML;
     overlay.style.display = '';
+    if (closeBtn) closeBtn.style.display = '';
     overlay.scrollTop = 0;
   };
 
