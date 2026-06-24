@@ -291,6 +291,9 @@ function _kanaSyncCursor(el) {
       else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
+    // If mode is katakana, anchor _kataFrom to current cursor so only
+    // newly typed text gets converted — not existing text to the right.
+    if (activeMode === 'katakana') el._kataFrom = el.selectionStart ?? el.value.length;
     if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
     else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
     else el.style.caretColor = '';

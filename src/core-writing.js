@@ -246,15 +246,14 @@ let _writingFirstAttempt = null;
 let _writingCheckCount   = 0;
 
 async function checkWritingSentence() {
-  const _fp = document.querySelector('.feedback-panel');
-  if (_fp) { _fp.style.background = 'rgba(48,213,200,0.06)'; _fp.style.transition = 'background 0.4s'; }
   const input = document.getElementById('writingInput');
   const text = input.value.trim();
   if (!text) return;
   const btn = document.getElementById('writingCheckBtn');
+  // Clear feedback and show clear loading state
+  const container = document.getElementById('feedbackEntries');
+  if (container) container.innerHTML = '<div style="padding:20px;text-align:center;font-family:var(--ui);font-size:inherit;color:var(--ink-light)"><div style="font-size:1.4rem;margin-bottom:8px">🔍</div>Evaluating your sentence…</div>';
   const parsed = await wbCallTutor(text, btn, 'Check');
-  const _fp2 = document.querySelector('.feedback-panel');
-  if (_fp2) { _fp2.style.background = ''; }
   if (!parsed) return;
   
   // Only record error on the FIRST check of this sentence text
@@ -507,9 +506,12 @@ function renderFeedback(entry) {
         <span class="fe-label">Detail</span>
         <div style="font-family:var(--ui);font-size:0.9rem;color:var(--ink);line-height:1.7">${detail}</div>
       </div>` : ''}
-      <div style="margin-top:12px;display:flex;gap:6px;align-items:center">
-        <input id="writingFollowUpInput" type="text" placeholder="Ask a follow-up…" style="flex:1;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.9rem;padding:6px 10px" onkeydown="if(event.key==='Enter'){event.preventDefault();writingFollowUp()}" />
-        <button onclick="writingFollowUp()" class="btn-action" style="padding:5px 12px;font-size:0.85rem">Ask</button>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);letter-spacing:0.06em;margin-bottom:6px">ASK ABOUT THIS SENTENCE</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="writingFollowUpInput" type="text" placeholder="e.g. Why is は used here? How else could I say this?" style="flex:1;background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;color:var(--ink);font-family:var(--ui);font-size:0.85rem;padding:6px 10px" onkeydown="if(event.key==='Enter'){event.preventDefault();writingFollowUp()}" />
+          <button onclick="writingFollowUp()" class="btn-action" style="padding:5px 12px;font-size:0.85rem">Ask</button>
+        </div>
       </div>
       <div id="writingFollowUpAnswer" style="display:none;margin-top:8px;font-family:var(--ui);font-size:0.9rem;color:var(--ink);line-height:1.7;padding:8px;background:var(--paper-dark);border-radius:6px"></div>
     </div>

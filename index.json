@@ -2563,7 +2563,7 @@
     "name": "checkWritingSentence",
     "file": "src/core-writing.js",
     "line": 248,
-    "desc": "const _fp = document.querySelector('.feedback-panel');",
+    "desc": "const input = document.getElementById('writingInput');",
     "callers": 3,
     "exported": true
   },
@@ -2571,7 +2571,7 @@
     "type": "function",
     "name": "submitWritingSentence",
     "file": "src/core-writing.js",
-    "line": 281,
+    "line": 280,
     "desc": "const input = document.getElementById('writingInput');",
     "callers": 4,
     "exported": true
@@ -2580,7 +2580,7 @@
     "type": "function",
     "name": "wbAddItem",
     "file": "src/core-writing.js",
-    "line": 337,
+    "line": 336,
     "desc": "AppState.wbDragEl — see declaration below",
     "callers": 2,
     "exported": true
@@ -2589,7 +2589,7 @@
     "type": "function",
     "name": "wbDelete",
     "file": "src/core-writing.js",
-    "line": 388,
+    "line": 387,
     "desc": "item.remove();",
     "callers": 3,
     "exported": true
@@ -2598,7 +2598,7 @@
     "type": "function",
     "name": "wbRenumber",
     "file": "src/core-writing.js",
-    "line": 400,
+    "line": 399,
     "desc": "document.querySelectorAll('#writingBoard .wb-item').forEach((el, i) => {",
     "callers": 3,
     "exported": true
@@ -2607,7 +2607,7 @@
     "type": "function",
     "name": "wbUpdateCount",
     "file": "src/core-writing.js",
-    "line": 414,
+    "line": 413,
     "desc": "const n = writingSentences.length;",
     "callers": 5,
     "exported": true
@@ -2616,7 +2616,7 @@
     "type": "function",
     "name": "wbDragStart",
     "file": "src/core-writing.js",
-    "line": 420,
+    "line": 419,
     "desc": "AppState.wbDragEl = this;",
     "callers": 1,
     "exported": false
@@ -2625,7 +2625,7 @@
     "type": "function",
     "name": "wbDragOver",
     "file": "src/core-writing.js",
-    "line": 427,
+    "line": 426,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2634,7 +2634,7 @@
     "type": "function",
     "name": "wbDragLeave",
     "file": "src/core-writing.js",
-    "line": 432,
+    "line": 431,
     "desc": "this.classList.remove('drag-over');",
     "callers": 1,
     "exported": false
@@ -2643,7 +2643,7 @@
     "type": "function",
     "name": "wbDrop",
     "file": "src/core-writing.js",
-    "line": 435,
+    "line": 434,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -2652,7 +2652,7 @@
     "type": "function",
     "name": "wbDragEnd",
     "file": "src/core-writing.js",
-    "line": 452,
+    "line": 451,
     "desc": "if (AppState.wbDragEl) AppState.wbDragEl.classList.remove('dragging');",
     "callers": 1,
     "exported": false
@@ -2661,7 +2661,7 @@
     "type": "function",
     "name": "renderTextSoFar",
     "file": "src/core-writing.js",
-    "line": 458,
+    "line": 457,
     "desc": "wbUpdateCount(); } // legacy stub",
     "callers": 1,
     "exported": false
@@ -2670,7 +2670,7 @@
     "type": "function",
     "name": "wbCopyInput",
     "file": "src/core-writing.js",
-    "line": 460,
+    "line": 459,
     "desc": "const inp = document.getElementById('writingInput');",
     "callers": 3,
     "exported": true
@@ -2679,7 +2679,7 @@
     "type": "function",
     "name": "renderFeedback",
     "file": "src/core-writing.js",
-    "line": 472,
+    "line": 471,
     "desc": "const container = document.getElementById('feedbackEntries');",
     "callers": 2,
     "exported": false
@@ -2688,7 +2688,7 @@
     "type": "function",
     "name": "feToggle",
     "file": "src/core-writing.js",
-    "line": 521,
+    "line": 523,
     "desc": "const collapsed = el.classList.toggle('fe-collapsed');",
     "callers": 3,
     "exported": true
@@ -2697,7 +2697,7 @@
     "type": "function",
     "name": "toggleDetail",
     "file": "src/core-writing.js",
-    "line": 530,
+    "line": 532,
     "desc": "const el = document.getElementById(id);",
     "callers": 2,
     "exported": true
@@ -2706,7 +2706,7 @@
     "type": "function",
     "name": "writingFollowUp",
     "file": "src/core-writing.js",
-    "line": 538,
+    "line": 540,
     "desc": "const inp = document.getElementById('writingFollowUpInput');",
     "callers": 5,
     "exported": true
@@ -2715,7 +2715,7 @@
     "type": "function",
     "name": "deleteWritingEntry",
     "file": "src/core-writing.js",
-    "line": 567,
+    "line": 569,
     "desc": "writingSentences.splice(idx, 1);",
     "callers": 1,
     "exported": false
@@ -2724,7 +2724,7 @@
     "type": "function",
     "name": "handleWritingKey",
     "file": "src/core-writing.js",
-    "line": 576,
+    "line": 578,
     "desc": "if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }",
     "callers": 1,
     "exported": false
@@ -2733,7 +2733,7 @@
     "type": "function",
     "name": "clearWritingFeedback",
     "file": "src/core-writing.js",
-    "line": 581,
+    "line": 583,
     "desc": "document.getElementById('feedbackEntries').innerHTML = '<div class=\"feedback-empty\">Type a sentence ",
     "callers": 3,
     "exported": true
@@ -2742,7 +2742,7 @@
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 601,
+    "line": 603,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }",
     "callers": 3,
     "exported": true
@@ -2751,7 +2751,7 @@
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 621,
+    "line": 623,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": false
@@ -2760,7 +2760,7 @@
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 641,
+    "line": 643,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2769,7 +2769,7 @@
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 658,
+    "line": 660,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2778,7 +2778,7 @@
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 670,
+    "line": 672,
     "desc": "const tLen = token.length;",
     "callers": 2,
     "exported": false
@@ -2787,7 +2787,7 @@
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 684,
+    "line": 686,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);",
     "callers": 2,
     "exported": true
@@ -2796,21 +2796,21 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 295,
+    "line": 294,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 299,
+    "line": 298,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 611,
+    "line": 613,
     "desc": "db.run"
   },
   {
@@ -4893,7 +4893,7 @@
     "type": "function",
     "name": "kanaOn",
     "file": "src/features-kana.js",
-    "line": 306,
+    "line": 309,
     "desc": "if (!el || el._kanaOn) return;",
     "callers": 22,
     "exported": true
@@ -4902,7 +4902,7 @@
     "type": "function",
     "name": "kanaOff",
     "file": "src/features-kana.js",
-    "line": 385,
+    "line": 388,
     "desc": "if (!el) return;",
     "callers": 13,
     "exported": true
@@ -4911,7 +4911,7 @@
     "type": "function",
     "name": "kanaToggle",
     "file": "src/features-kana.js",
-    "line": 394,
+    "line": 397,
     "desc": "if (!el._kanaOn) {",
     "callers": 5,
     "exported": true
@@ -4920,7 +4920,7 @@
     "type": "function",
     "name": "kanjiPickerShow",
     "file": "src/features-kana.js",
-    "line": 428,
+    "line": 431,
     "desc": "kajiPickerClose();",
     "callers": 4,
     "exported": true
@@ -4929,7 +4929,7 @@
     "type": "function",
     "name": "kajiPickerClose",
     "file": "src/features-kana.js",
-    "line": 526,
+    "line": 529,
     "desc": "document.querySelectorAll('.kanji-picker').forEach(p => {",
     "callers": 6,
     "exported": true
@@ -4938,7 +4938,7 @@
     "type": "function",
     "name": "kanaToKanji",
     "file": "src/features-kana.js",
-    "line": 653,
+    "line": 656,
     "desc": "if (document.querySelector('.kanji-picker')) { kajiPickerClose(); return; }",
     "callers": 7,
     "exported": true
@@ -4947,7 +4947,7 @@
     "type": "function",
     "name": "kanaSetMode",
     "file": "src/features-kana.js",
-    "line": 763,
+    "line": 766,
     "desc": "const inp = document.getElementById(inputId);",
     "callers": 27,
     "exported": true
@@ -4956,7 +4956,7 @@
     "type": "function",
     "name": "kanaToolbar",
     "file": "src/features-kana.js",
-    "line": 814,
+    "line": 817,
     "desc": "Guards against double-init: safe to call on every panel render.",
     "callers": 14,
     "exported": true
@@ -4965,7 +4965,7 @@
     "type": "function",
     "name": "kanaAddToggle",
     "file": "src/features-kana.js",
-    "line": 917,
+    "line": 920,
     "desc": "Use for inputs that are always hiragana with no mode choice.",
     "callers": 9,
     "exported": true
@@ -4974,7 +4974,7 @@
     "type": "function",
     "name": "_initKanaToolbars",
     "file": "src/features-kana.js",
-    "line": 927,
+    "line": 930,
     "desc": "console.log('[kana] _initKanaToolbars running, readyState=', document.readyState);",
     "callers": 3,
     "exported": false
@@ -4983,7 +4983,7 @@
     "type": "function",
     "name": "setGlobalQTMode",
     "file": "src/features-kana.js",
-    "line": 951,
+    "line": 954,
     "desc": "── Mode-setter shims (kept for programmatic callers) ────────────────────────",
     "callers": 2,
     "exported": true
@@ -4992,7 +4992,7 @@
     "type": "function",
     "name": "setChatInputMode",
     "file": "src/features-kana.js",
-    "line": 952,
+    "line": 955,
     "desc": "All now reference IDs generated by kanaToolbar's naming convention.",
     "callers": 3,
     "exported": true
@@ -5001,7 +5001,7 @@
     "type": "function",
     "name": "listenTransSetMode",
     "file": "src/features-kana.js",
-    "line": 953,
+    "line": 956,
     "desc": "kanaSetMode('listenTranscribeText', mode, 'listenTranscribeTextKana',  { romaji:'listenTranscribeTex",
     "callers": 5,
     "exported": true
@@ -5010,7 +5010,7 @@
     "type": "function",
     "name": "setVtDictateMode",
     "file": "src/features-kana.js",
-    "line": 954,
+    "line": 957,
     "desc": "kanaSetMode('vtDictateInput',       mode, 'vtDictateInputKana',       { romaji:'vtDictateInputRomaji",
     "callers": 1,
     "exported": true
@@ -5019,7 +5019,7 @@
     "type": "function",
     "name": "setGramSentQMode",
     "file": "src/features-kana.js",
-    "line": 955,
+    "line": 958,
     "desc": "kanaSetMode('gramSentQuestion',     mode, 'gramSentQuestionKana',     { romaji:'gramSentQuestionRoma",
     "callers": 1,
     "exported": true
@@ -5028,7 +5028,7 @@
     "type": "function",
     "name": "setWritingMode",
     "file": "src/features-kana.js",
-    "line": 956,
+    "line": 959,
     "desc": "kanaSetMode('writingInput',         mode, 'writingInputKana',         { romaji:'writingInputRomajiBt",
     "callers": 5,
     "exported": true
@@ -5037,7 +5037,7 @@
     "type": "function",
     "name": "transDoKanjiConvert",
     "file": "src/features-kana.js",
-    "line": 957,
+    "line": 960,
     "desc": "const i=document.getElementById('transInput'); if(i) kanaToKanji(i,document.getElementById('transInp",
     "callers": 4,
     "exported": true
@@ -5290,7 +5290,7 @@
     "type": "function",
     "name": "_gramSentPrefetch",
     "file": "src/features-grammar.js",
-    "line": 487,
+    "line": 490,
     "desc": "if (GramSentState.generating) return;",
     "callers": 1,
     "exported": false
@@ -5299,7 +5299,7 @@
     "type": "function",
     "name": "gramSentGenerate",
     "file": "src/features-grammar.js",
-    "line": 503,
+    "line": 506,
     "desc": "const area = document.getElementById('gramSentDrillArea');",
     "callers": 5,
     "exported": true
@@ -5308,7 +5308,7 @@
     "type": "function",
     "name": "gramSentRenderCard",
     "file": "src/features-grammar.js",
-    "line": 551,
+    "line": 561,
     "desc": "── Card rendering ─────────────────────────────────────",
     "callers": 2,
     "exported": false
@@ -5317,7 +5317,7 @@
     "type": "function",
     "name": "gramSentToggleHint",
     "file": "src/features-grammar.js",
-    "line": 604,
+    "line": 614,
     "desc": "const hint = document.getElementById('gramSentCardHint');",
     "callers": 2,
     "exported": true
@@ -5326,7 +5326,7 @@
     "type": "function",
     "name": "gramSentCheck",
     "file": "src/features-grammar.js",
-    "line": 613,
+    "line": 623,
     "desc": "── Checking ───────────────────────────────────────────",
     "callers": 3,
     "exported": true
@@ -5335,7 +5335,7 @@
     "type": "function",
     "name": "gramSentAdvance",
     "file": "src/features-grammar.js",
-    "line": 699,
+    "line": 709,
     "desc": "GramSentState.idx++;",
     "callers": 4,
     "exported": true
@@ -5344,7 +5344,7 @@
     "type": "function",
     "name": "gramSentSkip",
     "file": "src/features-grammar.js",
-    "line": 725,
+    "line": 735,
     "desc": "if (!GramSentState.checked) {",
     "callers": 2,
     "exported": true
@@ -5353,7 +5353,7 @@
     "type": "function",
     "name": "gramSentFeedbackClick",
     "file": "src/features-grammar.js",
-    "line": 733,
+    "line": 743,
     "desc": "const hintArea = document.getElementById('gramSentHintArea');",
     "callers": 2,
     "exported": true
@@ -5362,7 +5362,7 @@
     "type": "function",
     "name": "gramSentAnalyseErrors",
     "file": "src/features-grammar.js",
-    "line": 742,
+    "line": 752,
     "desc": "── Complete screen ────────────────────────────────────",
     "callers": 1,
     "exported": false
@@ -5371,7 +5371,7 @@
     "type": "function",
     "name": "gramSentRenderComplete",
     "file": "src/features-grammar.js",
-    "line": 799,
+    "line": 809,
     "desc": "const area = document.getElementById('gramSentDrillArea');",
     "callers": 1,
     "exported": false
@@ -5380,7 +5380,7 @@
     "type": "function",
     "name": "gramSentAskQuestion",
     "file": "src/features-grammar.js",
-    "line": 828,
+    "line": 838,
     "desc": "── Ask a question about the current sentence ──────────",
     "callers": 3,
     "exported": true
@@ -5389,7 +5389,7 @@
     "type": "function",
     "name": "gramSentInit",
     "file": "src/features-grammar.js",
-    "line": 864,
+    "line": 874,
     "desc": "── Init (called when sent tab opens) ─────────────────",
     "callers": 3,
     "exported": true
@@ -5398,7 +5398,7 @@
     "type": "function",
     "name": "questionRecordGrammarEvidence",
     "file": "src/features-grammar.js",
-    "line": 877,
+    "line": 887,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 6,
     "exported": true
@@ -5407,7 +5407,7 @@
     "type": "function",
     "name": "_unclassifiedAppend",
     "file": "src/features-grammar.js",
-    "line": 942,
+    "line": 952,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -5416,7 +5416,7 @@
     "type": "function",
     "name": "unclassifiedRender",
     "file": "src/features-grammar.js",
-    "line": 951,
+    "line": 961,
     "desc": "const list = document.getElementById('gnote-unclassified-list');",
     "callers": 4,
     "exported": true
@@ -5425,7 +5425,7 @@
     "type": "function",
     "name": "unclassifiedClear",
     "file": "src/features-grammar.js",
-    "line": 976,
+    "line": 986,
     "desc": "if (!confirm('Clear all unclassified questions?')) return;",
     "callers": 1,
     "exported": true
@@ -5434,7 +5434,7 @@
     "type": "function",
     "name": "conjToggleTts",
     "file": "src/features-grammar.js",
-    "line": 1063,
+    "line": 1073,
     "desc": "_conjTtsMode = !_conjTtsMode;",
     "callers": 2,
     "exported": true
@@ -5443,7 +5443,7 @@
     "type": "function",
     "name": "_conjGetDueKeys",
     "file": "src/features-grammar.js",
-    "line": 1069,
+    "line": 1079,
     "desc": "",
     "callers": 2,
     "exported": false
@@ -5452,7 +5452,7 @@
     "type": "function",
     "name": "conjToggleSrsMode",
     "file": "src/features-grammar.js",
-    "line": 1079,
+    "line": 1089,
     "desc": "_conjSrsMode = !_conjSrsMode;",
     "callers": 1,
     "exported": false
@@ -5461,7 +5461,7 @@
     "type": "function",
     "name": "conjAddFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1172,
+    "line": 1182,
     "desc": "const batch = FREQ_VERBS_ORDERED.slice(_conjFreqVerbsAdded, _conjFreqVerbsAdded + 10);",
     "callers": 2,
     "exported": true
@@ -5470,7 +5470,7 @@
     "type": "function",
     "name": "conjResetFreqVerbs",
     "file": "src/features-grammar.js",
-    "line": 1185,
+    "line": 1195,
     "desc": "window._conjExtraVerbs = [];",
     "callers": 2,
     "exported": true
@@ -5479,7 +5479,7 @@
     "type": "function",
     "name": "conjUpdateFreqCount",
     "file": "src/features-grammar.js",
-    "line": 1191,
+    "line": 1201,
     "desc": "const el = document.getElementById('conjFreqVerbCount');",
     "callers": 3,
     "exported": false
@@ -5488,7 +5488,7 @@
     "type": "function",
     "name": "_conjGodanGroupRule",
     "file": "src/features-grammar.js",
-    "line": 1232,
+    "line": 1242,
     "desc": "── DB-driven conjugation verb pool ──────────────────────────────────────────",
     "callers": 1,
     "exported": false
@@ -5497,7 +5497,7 @@
     "type": "function",
     "name": "_conjMapPoolRow",
     "file": "src/features-grammar.js",
-    "line": 1248,
+    "line": 1258,
     "desc": "const dict = row.dict;",
     "callers": 2,
     "exported": false
@@ -5506,7 +5506,7 @@
     "type": "function",
     "name": "buildConjVerbPool",
     "file": "src/features-grammar.js",
-    "line": 1271,
+    "line": 1281,
     "desc": "up by high-frequency words. Never throws — returns [] and degrades per-step.",
     "callers": 4,
     "exported": true
@@ -5515,7 +5515,7 @@
     "type": "function",
     "name": "startConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1334,
+    "line": 1344,
     "desc": "window._conjExtraVerbs = await buildConjVerbPool();",
     "callers": 3,
     "exported": true
@@ -5524,7 +5524,7 @@
     "type": "function",
     "name": "_conjUpdateSpecialFilterUI",
     "file": "src/features-grammar.js",
-    "line": 1413,
+    "line": 1423,
     "desc": "const ruOnly = document.getElementById('optRuEndingG')?.checked;",
     "callers": 1,
     "exported": false
@@ -5533,7 +5533,7 @@
     "type": "function",
     "name": "conjUpdateOptions",
     "file": "src/features-grammar.js",
-    "line": 1427,
+    "line": 1437,
     "desc": "conjUpdateFreqCount();",
     "callers": 18,
     "exported": false
@@ -5542,7 +5542,7 @@
     "type": "function",
     "name": "conjForceNewSession",
     "file": "src/features-grammar.js",
-    "line": 1432,
+    "line": 1442,
     "desc": "const ruEndingOnly  = document.getElementById('optRuEndingG')?.checked;",
     "callers": 1,
     "exported": false
@@ -5551,7 +5551,7 @@
     "type": "function",
     "name": "conjResumeSession",
     "file": "src/features-grammar.js",
-    "line": 1486,
+    "line": 1496,
     "desc": "conjQueue = saved.queue.map(item => {",
     "callers": 1,
     "exported": false
@@ -5560,7 +5560,7 @@
     "type": "function",
     "name": "conjDeConsecutive",
     "file": "src/features-grammar.js",
-    "line": 1517,
+    "line": 1527,
     "desc": "if (queue.length <= 5) return queue;",
     "callers": 1,
     "exported": false
@@ -5569,7 +5569,7 @@
     "type": "function",
     "name": "conjBuildRunQueue",
     "file": "src/features-grammar.js",
-    "line": 1547,
+    "line": 1557,
     "desc": "window._conjVerbTypes = verbTypes;",
     "callers": 3,
     "exported": false
@@ -5578,7 +5578,7 @@
     "type": "function",
     "name": "conjUpdateHeaderDots",
     "file": "src/features-grammar.js",
-    "line": 1624,
+    "line": 1634,
     "desc": "const el = document.getElementById('conjHeaderDots');",
     "callers": 1,
     "exported": false
@@ -5587,7 +5587,7 @@
     "type": "function",
     "name": "renderConjDrillG",
     "file": "src/features-grammar.js",
-    "line": 1636,
+    "line": 1646,
     "desc": "const area = document.getElementById('conjDrillAreaG');",
     "callers": 10,
     "exported": false
@@ -5596,7 +5596,7 @@
     "type": "function",
     "name": "conjNextRun",
     "file": "src/features-grammar.js",
-    "line": 1781,
+    "line": 1791,
     "desc": "conjRun++;",
     "callers": 3,
     "exported": true
@@ -5605,7 +5605,7 @@
     "type": "function",
     "name": "handleConjKeyG",
     "file": "src/features-grammar.js",
-    "line": 1787,
+    "line": 1797,
     "desc": "if (e.key === 'Enter') {",
     "callers": 3,
     "exported": false
@@ -5614,7 +5614,7 @@
     "type": "function",
     "name": "conjAutoConvertG",
     "file": "src/features-grammar.js",
-    "line": 1807,
+    "line": 1817,
     "desc": "if (!conjCurrentAnswer) return;",
     "callers": 1,
     "exported": false
@@ -5623,7 +5623,7 @@
     "type": "function",
     "name": "conjClassifyError",
     "file": "src/features-grammar.js",
-    "line": 1831,
+    "line": 1841,
     "desc": "const dist = cmLevenshtein(typed, correct);",
     "callers": 1,
     "exported": false
@@ -5632,7 +5632,7 @@
     "type": "function",
     "name": "checkConjG",
     "file": "src/features-grammar.js",
-    "line": 1875,
+    "line": 1885,
     "desc": "const input = document.getElementById('conjInputG');",
     "callers": 3,
     "exported": true
@@ -5641,7 +5641,7 @@
     "type": "function",
     "name": "liveCheckConjG",
     "file": "src/features-grammar.js",
-    "line": 1972,
+    "line": 1982,
     "desc": "conjAutoConvertG();",
     "callers": 1,
     "exported": false
@@ -5650,7 +5650,7 @@
     "type": "function",
     "name": "retreatConjG",
     "file": "src/features-grammar.js",
-    "line": 1983,
+    "line": 1993,
     "desc": "if (conjIdx <= 0) return;",
     "callers": 2,
     "exported": true
@@ -5659,7 +5659,7 @@
     "type": "function",
     "name": "advanceConjG",
     "file": "src/features-grammar.js",
-    "line": 1997,
+    "line": 2007,
     "desc": "if (_conjTtsMode && _conjTtsSpeaking) return;",
     "callers": 3,
     "exported": true
@@ -5668,7 +5668,7 @@
     "type": "function",
     "name": "gram2Switch",
     "file": "src/features-grammar.js",
-    "line": 2006,
+    "line": 2016,
     "desc": "Grammar2State.lastSubtab = name;",
     "callers": 8,
     "exported": false
@@ -5677,7 +5677,7 @@
     "type": "function",
     "name": "particleDrillStart",
     "file": "src/features-grammar.js",
-    "line": 2062,
+    "line": 2072,
     "desc": "_pdPair = document.getElementById('particlePairSelect')?.value || 'ha-ga';",
     "callers": 4,
     "exported": true
@@ -5686,7 +5686,7 @@
     "type": "function",
     "name": "particleDrillRender",
     "file": "src/features-grammar.js",
-    "line": 2108,
+    "line": 2118,
     "desc": "const area = document.getElementById('particleDrillArea');",
     "callers": 5,
     "exported": false
@@ -5695,7 +5695,7 @@
     "type": "function",
     "name": "pdSelectLeft",
     "file": "src/features-grammar.js",
-    "line": 2191,
+    "line": 2201,
     "desc": "if (_pdResults[exIdx] !== null) return; // already answered",
     "callers": 2,
     "exported": true
@@ -5704,7 +5704,7 @@
     "type": "function",
     "name": "pdSelectRight",
     "file": "src/features-grammar.js",
-    "line": 2199,
+    "line": 2209,
     "desc": "if (_pdResults[exIdx] !== null) return;",
     "callers": 2,
     "exported": true
@@ -5713,7 +5713,7 @@
     "type": "function",
     "name": "pdTryMatch",
     "file": "src/features-grammar.js",
-    "line": 2207,
+    "line": 2217,
     "desc": "if (!_pdSelected.left || !_pdSelected.right) return;",
     "callers": 3,
     "exported": true
@@ -5722,7 +5722,7 @@
     "type": "function",
     "name": "showConjLookupG",
     "file": "src/features-grammar.js",
-    "line": 2245,
+    "line": 2255,
     "desc": "if (!conjCurrentAnswer) { conjCurrentAnswer = { word: { dict: \"\", read: \"\", en: \"\", type: \"u\" }, for",
     "callers": 3,
     "exported": true
@@ -5731,42 +5731,42 @@
     "type": "storage",
     "name": "GRAMMAR_ERRORS",
     "file": "src/features-grammar.js",
-    "line": 1029,
+    "line": 1039,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "CONJ_SESSION",
     "file": "src/features-grammar.js",
-    "line": 1097,
+    "line": 1107,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 788,
+    "line": 798,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 790,
+    "line": 800,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1929,
+    "line": 1939,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-grammar.js",
-    "line": 1933,
+    "line": 1943,
     "desc": "db.run"
   },
   {
@@ -5787,14 +5787,14 @@
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-grammar.js",
-    "line": 845,
+    "line": 855,
     "desc": "Current sentence: \"${…}\" (${…}). Grammar target: \"${…}\". Student asks: \"${…}\". A"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-grammar.js",
-    "line": 890,
+    "line": 900,
     "desc": "You are classifying a Japanese learner question for a grammar tracking system.\\n"
   },
   {

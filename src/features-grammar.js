@@ -479,9 +479,12 @@ async function _gramSentGenerateOne(target, level, theme, avoidJp) {
 function _gramSentAvoidList() {
   const sessions = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAM_SENT_SESSIONS, []);
   const recent = sessions.filter(s => s.target === GramSentState.target).slice(-3);
-  const pastJp = recent.flatMap(s => (s.sentences || []).map(x => x.jp)).filter(Boolean).slice(-10);
+  const pastJp = recent.flatMap(s => (s.sentences || []).map(x => x.jp)).filter(Boolean).slice(-15);
   const currentJp = GramSentState.sentences.map(s => s.jp).filter(Boolean);
-  return [...pastJp, ...currentJp];
+  // Also include any in-progress or just-completed sentences not yet persisted
+  const lastSnap = (App.Storage || window.Storage).getJSON('gramSentLastSnap', {});
+  const snapJp = (lastSnap.target === GramSentState.target ? (lastSnap.jp || []) : []);
+  return [...new Set([...pastJp, ...snapJp, ...currentJp])];
 }
 
 async function _gramSentPrefetch() {
@@ -522,7 +525,14 @@ async function gramSentGenerate() {
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
   area.innerHTML = '<div style="padding:30px;text-align:center;color:var(--ink-light);font-family:var(--ui);font-size:inherit">Generating…</div>';
   try {
-    const avoidList = _gramSentAvoidList(); // capture BEFORE resetting state
+    const avoidList = _gramSentAvoidList(); // capture BEFORE resetting state — includes current + past sessions
+    // Snapshot current sentences so they survive a restart before session is saved
+    if (GramSentState.sentences.length) {
+      (App.Storage || window.Storage).setJSON('gramSentLastSnap', {
+        target: GramSentState.target,
+        jp: GramSentState.sentences.map(s => s.jp).filter(Boolean)
+      });
+    }
     GramSentState.sentences  = [];
     GramSentState.target     = target;
     GramSentState.idx        = 0;
