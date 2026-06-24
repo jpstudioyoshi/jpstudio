@@ -291,9 +291,12 @@ function _kanaSyncCursor(el) {
       else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
-    // If mode is katakana, anchor _kataFrom to current cursor so only
-    // newly typed text gets converted — not existing text to the right.
-    if (activeMode === 'katakana') el._kataFrom = el.selectionStart ?? el.value.length;
+    // Anchor is always the current cursor position — whatever mode is active,
+    // new text typed from here uses that mode. Both _kataFrom and the hiragana
+    // equivalent reset on every cursor move and every mode switch.
+    const cursorPos = el._lastCursorPos ?? el.selectionStart ?? el.value.length;
+    if (activeMode === 'katakana') el._kataFrom = cursorPos;
+    if (activeMode === 'hiragana') el._kataFrom = null;  // hiragana: no zone boundary needed
     if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
     else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
     else el.style.caretColor = '';
@@ -378,8 +381,9 @@ function kanaOn(el) {
   if (!el._kanaFocusListener) {
     el._kanaFocusListener = true;
     el.addEventListener('focus', () => { _kanaSyncCursor(el); });
-    el.addEventListener('click', () => { _kanaSyncCursor(el); });
+    el.addEventListener('click', () => { el._lastCursorPos = el.selectionStart; _kanaSyncCursor(el); });
     el.addEventListener('keyup', (e) => {
+      el._lastCursorPos = el.selectionStart;
       if (_KANA_NAV_KEYS.includes(e.key)) { _kanaSyncCursor(el); }
     });
   }
@@ -778,13 +782,7 @@ function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
     kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp._kataFrom = null; inp.style.caretColor = 'var(--teal)';
   } else if (mode === 'katakana') {
     kanaOff(inp); kanaOn(inp); inp._kanaMode = 'katakana';
-    // Katakana only applies from here forward — see kanaInputHandler.
-    // selectionStart at this point reflects wherever the cursor was last
-    // left in the field (browsers preserve it across blur/focus on the
-    // same element), which is exactly the right anchor: focus necessarily
-    // left the field to click this button, so "from here" naturally means
-    // "from the moment focus returns to the field".
-    inp._kataFrom = (inp.selectionStart != null) ? inp.selectionStart : inp.value.length;
+    inp._kataFrom = inp._lastCursorPos ?? inp.selectionStart ?? inp.value.length;
     inp.style.caretColor = 'var(--gold)';
   }
   // NOTE: no inp.focus() here — callers focus the input themselves if needed.
