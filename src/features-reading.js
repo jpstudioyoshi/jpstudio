@@ -698,17 +698,15 @@ function qrToggleListenMode() {
     const reader = document.getElementById('qrReader');
     if (!reader) return;
     
-    // Build full text using readings for kanji words — avoids TTS misreading
+    // Build two parallel sentence lists — tts uses readings (avoids kanji misreading),
+    // kanjiSentences used for DOM highlighting (matches seg.word values in the reader)
     const hasKanji = w => /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF]/.test(w);
-    const fullText = QuickReadState.segments.map(s => {
-      const w = s.word || '';
-      return (s.reading && hasKanji(w)) ? s.reading : w;
-    }).join('');
-    
-    // Split on Japanese sentence endings and newlines
-    QuickReadState.sentences = fullText.split(/(?<=[。！？\n])(?!」)/g)
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+    const ttsFullText   = QuickReadState.segments.map(s => { const w = s.word || ''; return (s.reading && hasKanji(w)) ? s.reading : w; }).join('');
+    const kanjiFullText = QuickReadState.segments.map(s => s.word || '').join('');
+    const splitSentences = t => t.split(/(?<=[\u3002\uff01\uff1f\n])(?!\u300d)/g).map(s => s.trim()).filter(s => s.length > 0);
+    QuickReadState.sentences      = splitSentences(ttsFullText);
+    QuickReadState.sentencesKanji = splitSentences(kanjiFullText);
+    const fullText = ttsFullText; // keep for compat
     
     if (QuickReadState.sentences.length === 0) return;
     
@@ -761,7 +759,7 @@ function qrHighlightSentence(sentenceIdx) {
 
   qrClearSentenceHighlight();
 
-  const sentence = QuickReadState.sentences[sentenceIdx];
+  const sentence = (QuickReadState.sentencesKanji || QuickReadState.sentences)[sentenceIdx];
   if (!sentence) return;
 
   // Build full text from segments and find sentence position
