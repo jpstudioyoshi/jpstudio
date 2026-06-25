@@ -709,6 +709,9 @@ async function gramSentCheck() {
 async function gramSentAdvance() {
   GramSentState.idx++;
   GramSentState.checked = false;
+  // Clear Q&A history for the new sentence
+  const qRes = document.getElementById('gramSentQuestionResult');
+  if (qRes) { qRes.innerHTML = ''; qRes.style.display = 'none'; }
   const hintArea = document.getElementById('gramSentHintArea');
   if (hintArea) hintArea.style.display = 'none';
   // If we need a new sentence and one is ready, use it
@@ -849,7 +852,10 @@ async function gramSentAskQuestion() {
   if (!apiKey) { qRes.style.display = ''; qRes.textContent = 'No API key.'; return; }
 
   qRes.style.display = '';
-  qRes.textContent = '…';
+  const loadingEl = document.createElement('div');
+  loadingEl.style.cssText = 'color:var(--ink-light);font-style:italic;margin-bottom:8px';
+  loadingEl.textContent = '…';
+  qRes.appendChild(loadingEl);
 
   try {
     const prompt = `Current sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Student asks: "${q}". Answer concisely for an N4-N5 learner. Always answer in English.`;
@@ -860,12 +866,16 @@ async function gramSentAskQuestion() {
       track: 'grammar',
     });
     const answer = data.content?.[0]?.text || '';
-    qRes.textContent = answer;
+    loadingEl.remove();
+    const entry = document.createElement('div');
+    entry.style.cssText = 'margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)';
+    entry.innerHTML = `<div style="color:var(--ink-light);font-size:0.78em;margin-bottom:4px">${q}</div><div>${answer}</div>`;
+    qRes.appendChild(entry);
+    qRes.scrollTop = qRes.scrollHeight;
     qInp.value = '';
-    // Tag question to grammar node — fire and forget
     questionRecordGrammarEvidence(q, answer);
   } catch (e) {
-    qRes.textContent = 'Error: ' + e.message;
+    loadingEl.textContent = 'Error: ' + e.message;
   }
 }
 

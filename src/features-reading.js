@@ -698,8 +698,12 @@ function qrToggleListenMode() {
     const reader = document.getElementById('qrReader');
     if (!reader) return;
     
-    // Build full text directly from segments
-    const fullText = QuickReadState.segments.map(s => s.word || '').join('');
+    // Build full text using readings for kanji words — avoids TTS misreading
+    const hasKanji = w => /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF]/.test(w);
+    const fullText = QuickReadState.segments.map(s => {
+      const w = s.word || '';
+      return (s.reading && hasKanji(w)) ? s.reading : w;
+    }).join('');
     
     // Split on Japanese sentence endings and newlines
     QuickReadState.sentences = fullText.split(/(?<=[。！？\n])(?!」)/g)
@@ -734,26 +738,20 @@ function qrUpdateSentenceDisplay() {
 
 function qrListenPlay() {
   const btn = document.getElementById('qrListenPlayBtn');
-  
-  if (speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-    btn.textContent = '▶';
+  const _TTS = App.TTS || window.TTS;
+  if (_TTS?._vvAudio || window.speechSynthesis?.speaking) {
+    _TTS ? _TTS.stop() : window.speechSynthesis?.cancel();
+    if (btn) btn.textContent = '▶';
     qrClearSentenceHighlight();
     return;
   }
-  
   const sentence = QuickReadState.sentences[QuickReadState.sentenceIdx];
   if (!sentence) return;
-  
-  btn.textContent = '⏹';
-  
-  // Highlight current sentence in the main text
+  if (btn) btn.textContent = '⏹';
   qrHighlightSentence(QuickReadState.sentenceIdx);
-
-  console.log('[qrListen] speaking:', sentence);
-  TTS.speak(sentence, QuickReadState.listenSpeed, {
-    onend:   () => { btn.textContent = '▶'; },
-    onerror: () => { btn.textContent = '▶'; },
+  _TTS.speak(sentence, QuickReadState.listenSpeed, {
+    onend:   () => { if (btn) btn.textContent = '▶'; },
+    onerror: () => { if (btn) btn.textContent = '▶'; },
   });
 }
 
@@ -885,7 +883,7 @@ function qrPlayAllNext() {
 
 function qrListenPrev() {
   if (QuickReadState.sentenceIdx > 0) {
-    speechSynthesis.cancel();
+    (App.TTS || window.TTS)?.stop();
     QuickReadState.sentenceIdx--;
     qrUpdateSentenceDisplay();
     qrHighlightSentence(QuickReadState.sentenceIdx);
@@ -895,13 +893,61 @@ function qrListenPrev() {
 
 function qrListenNext() {
   if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {
-    speechSynthesis.cancel();
+    (App.TTS || window.TTS)?.stop();
     QuickReadState.sentenceIdx++;
     qrUpdateSentenceDisplay();
     qrHighlightSentence(QuickReadState.sentenceIdx);
     document.getElementById('qrListenPlayBtn').textContent = '▶';
   }
 }
+
+// Speak the current sentence and update play button
+function _qrSpeakCurrent() {
+  const _TTS = App.TTS || window.TTS;
+  _TTS?.stop();
+  const sentence = QuickReadState.sentences[QuickReadState.sentenceIdx];
+  if (!sentence) return;
+  const btn = document.getElementById('qrListenPlayBtn');
+  if (btn) btn.textContent = '⏹';
+  qrHighlightSentence(QuickReadState.sentenceIdx);
+  qrUpdateSentenceDisplay();
+  _TTS.speak(sentence, QuickReadState.listenSpeed, {
+    onend:   () => { if (btn) btn.textContent = '▶'; },
+    onerror: () => { if (btn) btn.textContent = '▶'; },
+  });
+}
+
+// Arrow key navigation for listen mode
+document.addEventListener('keydown', e => {
+  if (!QuickReadState.sentences.length) return;
+  // Ignore if focus is on an input/textarea
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {
+      QuickReadState.sentenceIdx++;
+      _qrSpeakCurrent();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    if (QuickReadState.sentenceIdx > 0) {
+      QuickReadState.sentenceIdx--;
+      _qrSpeakCurrent();
+    }
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _qrSpeakCurrent();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    (App.TTS || window.TTS)?.stop();
+    QuickReadState.sentenceIdx = 0;
+    qrUpdateSentenceDisplay();
+    qrHighlightSentence(0);
+    const btn = document.getElementById('qrListenPlayBtn');
+    if (btn) btn.textContent = '▶';
+  }
+});
 
 function qrSetSpeed(speed) {
   QuickReadState.listenSpeed = speed;

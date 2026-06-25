@@ -317,6 +317,15 @@ const TTS = {
   _vvParams:        { speedScale:1.0, pitchScale:0.0, intonationScale:1.0, volumeScale:1.0, pauseLengthScale:1.0 },
   _vvEnabled:       false,
   _vvAudio:         null, // current HTMLAudioElement
+  _audioCtx:        null, // persistent AudioContext — kept alive during reading sessions
+
+  _getAudioCtx() {
+    if (!this._audioCtx || this._audioCtx.state === 'closed') {
+      this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this._audioCtx.state === 'suspended') this._audioCtx.resume();
+    return this._audioCtx;
+  },
 
   async _vvSpeak(text, rate = 0.9, opts = {}) {
     const clean = text.replace(/[(（][^)）]*[)）]/g, '').replace(/〜/g, '');
@@ -353,14 +362,13 @@ const TTS = {
       if (!sResp.ok) throw new Error('VoiceVox synthesis failed: ' + sResp.status);
       const audioBlob = await sResp.blob();
       const arrayBuf = await audioBlob.arrayBuffer();
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioCtx = this._getAudioCtx();
       const decoded = await audioCtx.decodeAudioData(arrayBuf);
       const source = audioCtx.createBufferSource();
       source.buffer = decoded;
       source.connect(audioCtx.destination);
-      if (opts.onend) source.onended = () => { audioCtx.close(); opts.onend(); };
-      else source.onended = () => audioCtx.close();
-      this._vvAudio = { pause: () => { try { source.stop(); audioCtx.close(); } catch(e) {} } };
+      if (opts.onend) source.onended = () => { opts.onend(); };
+      this._vvAudio = { pause: () => { try { source.stop(); } catch(e) {} } };
       source.start(0);
     } catch(e) {
       console.warn('[TTS] VoiceVox error:', e.message, '— falling back to Web Speech');
