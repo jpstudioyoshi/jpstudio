@@ -2622,3 +2622,11 @@
   .fs-4 p, .fs-4 li, .fs-4 span, .fs-4 td, .fs-4 h1, .fs-4 h2, .fs-4 h3 { font-size: var(--fs-4); }
   .fs-body p, .fs-body li, .fs-body span, .fs-body td, .fs-body h1, .fs-body h2, .fs-body h3, .fs-body blockquote { font-size: var(--fs-body); }
   #agentClaudeThread { font-size: var(--fs-body); }
+
+/* 足跡 — sticky header */
+#panel-ashiato .panel-header-lower { position:sticky; top:0; z-index:10; }
+#panel-ashiato > :not(.panel-header-lower) { overflow-y:auto; flex:1; min-height:0; padding-top:8px; }
+
+/* 足跡 — panel scroll override */
+#panel-ashiato { overflow-y: hidden; }
+#panel-ashiato > :not(.panel-header-lower) { overflow-y: auto; flex: 1; min-height: 0; }

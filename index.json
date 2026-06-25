@@ -7369,7 +7369,7 @@
     "type": "function",
     "name": "grammarOverridePopup",
     "file": "src/features-progress.js",
-    "line": 1101,
+    "line": 1106,
     "desc": "const existing = document.getElementById('grammarOverrideModal');",
     "callers": 1,
     "exported": false
@@ -7378,7 +7378,7 @@
     "type": "function",
     "name": "grammarDismissEncounter",
     "file": "src/features-progress.js",
-    "line": 1139,
+    "line": 1144,
     "desc": "const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;",
     "callers": 2,
     "exported": true
@@ -7387,7 +7387,7 @@
     "type": "function",
     "name": "grammarDismissGold",
     "file": "src/features-progress.js",
-    "line": 1148,
+    "line": 1153,
     "desc": "const S = App.Storage || window.Storage;",
     "callers": 2,
     "exported": true
@@ -7396,7 +7396,7 @@
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1165,
+    "line": 1170,
     "desc": "Changes here apply to both.",
     "callers": 4,
     "exported": true
@@ -7405,7 +7405,7 @@
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1182,
+    "line": 1187,
     "desc": "const examples = (window._errorExamples || {})[key] || [];",
     "callers": 7,
     "exported": true
@@ -7414,7 +7414,7 @@
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1222,
+    "line": 1227,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};",
     "callers": 1,
     "exported": true
@@ -7423,7 +7423,7 @@
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1230,
+    "line": 1235,
     "desc": "const chartEl = document.getElementById('progress-error-chart');",
     "callers": 11,
     "exported": true
@@ -7432,7 +7432,7 @@
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1301,
+    "line": 1306,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;",
     "callers": 4,
     "exported": true
@@ -7441,7 +7441,7 @@
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1345,
+    "line": 1350,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');",
     "callers": 2,
     "exported": true
@@ -7450,7 +7450,7 @@
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1355,
+    "line": 1360,
     "desc": "const chart = document.getElementById('particleBreakdownChart');",
     "callers": 3,
     "exported": true
@@ -7459,7 +7459,7 @@
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1384,
+    "line": 1389,
     "desc": "showPanel('grammar2');",
     "callers": 3,
     "exported": true
@@ -7468,7 +7468,7 @@
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1441,
+    "line": 1446,
     "desc": "const el = document.getElementById('stPaneWeights');",
     "callers": 3,
     "exported": true
@@ -7477,7 +7477,7 @@
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1496,
+    "line": 1501,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;",
     "callers": 3,
     "exported": true
@@ -7486,7 +7486,7 @@
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1510,
+    "line": 1515,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;",
     "callers": 3,
     "exported": true
@@ -7495,7 +7495,7 @@
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1522,
+    "line": 1527,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };",
     "callers": 5,
     "exported": true
@@ -7504,7 +7504,7 @@
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1538,
+    "line": 1543,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');",
     "callers": 5,
     "exported": true
