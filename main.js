@@ -263,13 +263,6 @@ function createSchema() {
       sentence_count INTEGER,
       expires_at     TEXT
     );
-    CREATE TABLE IF NOT EXISTS writing_sittings (
-      id             INTEGER PRIMARY KEY AUTOINCREMENT,
-      started_at     TEXT,
-      saved_at       TEXT NOT NULL,
-      sentence_count INTEGER,
-      expires_at     TEXT
-    );
     CREATE TABLE IF NOT EXISTS drill_results (
       id          INTEGER PRIMARY KEY AUTOINCREMENT,
       created_at  TEXT NOT NULL,
