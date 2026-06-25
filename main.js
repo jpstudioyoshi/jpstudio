@@ -602,23 +602,6 @@ function createSchema() {
     db.run('UPDATE schema_version SET version = 9');
     console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
   }
-  // v9: pitch_data lookup table + pitch column on words
-  const vRow9 = db.exec('SELECT version FROM schema_version');
-  const v9 = vRow9[0]?.values[0]?.[0] || 0;
-  if (v9 < 9) {
-    db.run(`CREATE TABLE IF NOT EXISTS pitch_data (
-      id       INTEGER PRIMARY KEY AUTOINCREMENT,
-      kanji    TEXT NOT NULL,
-      reading  TEXT NOT NULL,
-      pitch    TEXT NOT NULL
-    )`);
-    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_kanji ON pitch_data(kanji)');
-    db.run('CREATE INDEX IF NOT EXISTS idx_pitch_reading ON pitch_data(reading)');
-    const wc9 = (db.exec("PRAGMA table_info(words)")[0]?.values || []).map(r => r[1]);
-    if (!wc9.includes('pitch')) db.run('ALTER TABLE words ADD COLUMN pitch TEXT');
-    db.run('UPDATE schema_version SET version = 9');
-    console.log('Migrated schema to v9 (pitch_data table, pitch on words)');
-  }
   // v10: srs_graduated flag on vocab_items
   if ((db.exec('SELECT version FROM schema_version')[0]?.values[0]?.[0] || 0) < 10) {
     const viCols = (db.exec("PRAGMA table_info(vocab_items)")[0]?.values || []).map(r => r[1]);

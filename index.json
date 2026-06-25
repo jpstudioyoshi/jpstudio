@@ -48,7 +48,7 @@
     "type": "function",
     "name": "seedStaticData",
     "file": "main.js",
-    "line": 684,
+    "line": 667,
     "desc": "const result = db.exec('SELECT COUNT(*) as n FROM words');",
     "callers": 1,
     "exported": false
@@ -57,7 +57,7 @@
     "type": "function",
     "name": "getLessonsDir",
     "file": "main.js",
-    "line": 1051,
+    "line": 1034,
     "desc": "const icloud = path.join(app.getPath('home'), 'Library/Mobile Documents/com~apple~CloudDocs/japanese",
     "callers": 2,
     "exported": false
@@ -66,7 +66,7 @@
     "type": "function",
     "name": "findFfmpeg",
     "file": "main.js",
-    "line": 1058,
+    "line": 1041,
     "desc": "try { return execSync('which ffmpeg', { encoding: 'utf8' }).trim(); } catch(e) {}",
     "callers": 2,
     "exported": false
@@ -75,7 +75,7 @@
     "type": "function",
     "name": "findPython",
     "file": "main.js",
-    "line": 1068,
+    "line": 1051,
     "desc": "const candidates = ['python3.12', 'python3', 'python'];",
     "callers": 1,
     "exported": false
@@ -84,7 +84,7 @@
     "type": "function",
     "name": "createMainWindow",
     "file": "main.js",
-    "line": 1319,
+    "line": 1302,
     "desc": "mainWindow = new BrowserWindow({",
     "callers": 2,
     "exported": false
@@ -93,7 +93,7 @@
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1381,
+    "line": 1364,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {",
     "callers": 4,
     "exported": false
@@ -102,7 +102,7 @@
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1469,
+    "line": 1452,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {",
     "callers": 2,
     "exported": false
@@ -174,140 +174,133 @@
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 619,
+    "line": 609,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 627,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "main.js",
+    "line": 649,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 626,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 644,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 666,
+    "line": 654,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 671,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "UPDATE",
-    "file": "main.js",
-    "line": 678,
+    "line": 661,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 765,
+    "line": 748,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 816,
+    "line": 799,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 884,
+    "line": 867,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
+    "file": "main.js",
+    "line": 924,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
     "file": "main.js",
     "line": 941,
     "desc": "db.run"
   },
   {
     "type": "storage",
-    "name": "INSERT",
-    "file": "main.js",
-    "line": 958,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 966,
+    "line": 949,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1083,
+    "line": 1066,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1147,
+    "line": 1130,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1228,
+    "line": 1211,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1244,
+    "line": 1227,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "main.js",
-    "line": 1248,
+    "line": 1231,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "main.js",
-    "line": 1262,
+    "line": 1245,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1302,
+    "line": 1285,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "main.js",
-    "line": 1303,
+    "line": 1286,
     "desc": "db.run"
   },
   {
