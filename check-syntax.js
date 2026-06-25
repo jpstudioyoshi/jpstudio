@@ -80,6 +80,12 @@ const HTML_TARGETS = [
 
 const SKIP = new Set(['node_modules', '.git', 'dist']);
 
+// Functions known to be called via closures/callbacks that the word-frequency
+// analyser can't detect. Add names here to suppress false dead-candidate warnings.
+const DEAD_IGNORE = new Set([
+  'customTranscribe',  // called via MediaRecorder.onstop closure in customStartRecord()
+]);
+
 // ── Syntax check ──────────────────────────────────────────────────────────────
 
 function syntaxCheck(filepath) {
@@ -666,7 +672,7 @@ fs.writeFileSync(indexFile, JSON.stringify(index, null, 2), 'utf8');
 console.log(`Index written to: ${indexFile} (${index.length} entries)`);
 
 // Append "Likely dead candidates" to the audit file
-const deadCandidates = index.filter(e => e.type === 'function' && e.callers === 0 && !e.exported);
+const deadCandidates = index.filter(e => e.type === 'function' && e.callers === 0 && !e.exported && !DEAD_IGNORE.has(e.name));
 if (deadCandidates.length) {
   const dcLines = [`\n## Likely dead candidates (${deadCandidates.length})`,
     'Zero references found anywhere, no window[]/App registry export. Verify before removing.', ''];
