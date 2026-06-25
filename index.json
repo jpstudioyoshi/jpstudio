@@ -5788,7 +5788,7 @@
     "name": "prompt",
     "file": "src/features-grammar.js",
     "line": 861,
-    "desc": "Current sentence: \"${…}\" (${…}). Grammar target: \"${…}\". Student asks: \"${…}\". A"
+    "desc": "Sentence: \"${…}\" (${…}). Grammar target: \"${…}\". Question: \"${…}\". Answer in 1-2"
   },
   {
     "type": "prompt",

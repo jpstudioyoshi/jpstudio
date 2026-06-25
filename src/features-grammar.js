@@ -858,10 +858,10 @@ async function gramSentAskQuestion() {
   qRes.appendChild(loadingEl);
 
   try {
-    const prompt = `Current sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Student asks: "${q}". Answer concisely for an N4-N5 learner. Always answer in English.`;
+    const prompt = `Sentence: "${s.jp}" (${s.en}). Grammar target: "${GramSentState.target}". Question: "${q}". Answer in 1-2 sentences maximum. No headers, no tables, no markdown. Plain text only.`;
     const data = await claudeAPI({
       model: 'claude-sonnet-4-6',
-      max_tokens: 300,
+      max_tokens: 120,
       messages: [{ role: 'user', content: prompt }],
       track: 'grammar',
     });
