@@ -1360,6 +1360,17 @@ function createMainWindow() {
     }
   });
 
+  // ── Renderer crash recovery ─────────────────────────────────────────────
+  // Fires when the renderer process crashes or is killed (GPU OOM, etc).
+  // Logs the reason and auto-reloads so a Mac restart isn't needed.
+  mainWindow.webContents.on('render-process-gone', (event, details) => {
+    console.error('[crash] Renderer process gone:', details.reason, '| exitCode:', details.exitCode);
+    if (details.reason !== 'clean-exit') {
+      console.error('[crash] Attempting auto-reload...');
+      mainWindow.reload();
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
     if (youtubeWindow) youtubeWindow.close();

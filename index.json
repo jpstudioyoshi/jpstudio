@@ -93,7 +93,7 @@
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1370,
+    "line": 1381,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {",
     "callers": 4,
     "exported": false
@@ -102,7 +102,7 @@
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1458,
+    "line": 1469,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {",
     "callers": 2,
     "exported": false

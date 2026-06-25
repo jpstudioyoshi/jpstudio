@@ -1,259 +1,172 @@
 # Japanese Studio — Session Context
-Last updated: 2026-06-23 (session 52 — vocab pruning, conjugation drill TTS, shuchu ref overlay, VoiceVox clipping fix)
+Last updated: 2026-06-25 (session 51 — major feature and bug fix session)
 
 ## User Preferences
-- Paul is learning development workflows as we go — suggest improvements concisely.
-- Management window deprioritised — terminal approach preferred for all edits.
-- Use jp alias (cd ~/Documents/jpStudio) not full path in commands — ALWAYS prefix with jp &&
-- pbcopy for all grep/sed output.
-- Always prefix multi-line python3 edits with jp && to avoid directory drift.
-- "done" means command ran and printed OK.
-- Paul's eyesight is not great — prefer larger text, high contrast, bigger buttons in UI work.
-- Give commands one at a time — do not batch unrelated commands.
-- Core principle: system should look after itself — Paul learns, doesn't drive the system.
-- Claude has read/write filesystem access to ~/Documents/jpStudio (via filesystem MCP).
-- Some files contain extremely long single lines — use terminal sed/grep for exact line ranges;
-  hand removals to Claude Code when exact text can't be read.
-- When a bug is described as recurring/systemic, investigate for duplicate/uncoordinated
-  implementations before patching the visible symptom again.
-- When deep CSS layout debugging stalls (3+ rounds), stop and hand off to Claude Code.
-- CSS diagnostic discipline: before changing CSS for a layout report, get scrollHeight vs
-  clientHeight first. Don't assume — measure.
+- Minimal edits over redesigns
+- One command at a time; paste output, get next step
+- Hypothesis-first debugging; stop when not converging
+- Read files before theorising
+- Commit per logical unit; `node check-syntax.js` before every commit
 
-## Environment — Fixed Facts
-- index.html is at project root (~/Documents/jpStudio/index.html), NOT in src/renderer/
-- DB: ~/Library/Application Support/japanese-studio/jpstudio.db
-- App alias: jpstart
-- Video panel ID: `panel-video2` (not `panel-video`).
+---
 
-## Chat vs Claude Code — Decision Rule
-- **Chat:** single-line fixes, config changes, CSS tweaks, grep/sed one-offs, small same-file
-  contiguous removals where the exact text is readable.
-- **Code:** multi-file refactors, cross-file dead-code investigation, multi-line removals in
-  files with unreadable giant single lines, OR layout/CSS bugs surviving 2-3 chat attempts.
+## Current State
 
-## Context File Update Process
-- context-session.md lives at project root
-- At end of session: Claude writes the full updated file directly, Paul reviews with
-  `git diff context-session.md`, commits, then uploads to project Knowledge.
+### Architecture
+- Electron app, macOS, `~/Documents/jpStudio` (alias `jp`)
+- Vanilla JS, sql.js (WebAssembly SQLite), persisted to `~/Library/Application Support/japanese-studio/jpstudio.db`
+- MCP filesystem connected to `/Users/paulandres/Documents/jpStudio/`
+- GitHub: `github.com/jpstudioyoshi/jpstudio` (private)
 
-## GitHub Workflow
-- Repo: https://github.com/jpstudioyoshi/jpstudio (private)
-- Standard push: jp && git add -A && git commit -m "message" && git push
-- Pre-commit hook runs check-syntax.js + auto-bumps cache buster (YYYYMMDDHHmmss)
-- Token stored in remote URL: `git remote set-url origin https://TOKEN@github.com/...`
+### DB
+- `panel_sessions` — session time per panel, used by StudentModel for strand balance
+- `video2` panel now correctly mapped to strand 1 in both `_STRAND_MAP` (core-foundation.js) and `StudentModel.collectStrandBalance` — was silently dropped before this session
 
-## Claude Code
-- Launch: jp && claude --model claude-sonnet-4-6
-- Start: "Read context-session.md from Knowledge only. Do not read any other files yet."
-- **Open handoff**: `video-panel-handoff.md` (repo root) — transcript overflow bug in
-  panel-video2, see "Video Panel — Open Issue" section below.
+---
 
-## Current Mode
-ACTIVE DEVELOPMENT / ONGOING CLEANUP — dead-code cleanup, bug fixes, and feature work
-handled as routine, in whatever order makes sense.
+## Work Completed This Session
 
-## Session 52 Changes (2026-06-23)
+### Video strand tracking fixed
+- `showPanel('video')` was being called from `features-progress.js` recency tiles but panel id is `panel-video2` → crash, no session recorded
+- Fixed: `panel: 'video2'` in strand items array in `features-progress.js`
+- `StudentModel.js` `PANEL_TO_WEIGHT` and `FALLBACK_STRAND` both lacked `video2` key → all video time silently dropped
+- Fixed: added `video2: 'video'` and `video2: 1` to both maps
+- `vtWatchStop` now calls `drillLastCompletedWrite('video', ...)` when cumulative minutes ≥ 2, so tile updates on pause not just at 80% completion
 
-### Vocab SRS pool pruning
-- 28 n5 words with interval ≥ 14 deleted from srs_items (demonstrably known)
-- Pool reduced from 183 → 135 words; healthier source balance
-- n5 words re-enter via lookup pipeline if Paul genuinely doesn't know them
-- Remaining n5: 83 words (avg interval 2.5 — genuinely unproven, correct to keep)
-- Source weights active: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
-- Reviewed words: flat 0.35 base regardless of source (SRS handles priority from there)
+### TTS — persistent AudioContext
+- Was: `new AudioContext()` created and closed on every sentence → boot delay per sentence, `InvalidStateError: Cannot close a closed AudioContext` spam
+- Fixed: `TTS._audioCtx` persistent context, reused across sentences, created lazily via `_getAudioCtx()`
+- `pause()` no longer calls `audioCtx.close()` — context stays warm
 
-### Conjugation drill TTS toggle
-- `_conjTtsMode` + `conjToggleTts()` added to `features-grammar.js`
-- `_conjTtsSpeaking` flag blocks `advanceConjG()` while audio is playing
-- On card render: speaks `item.word.dict` via `jpSpeak(..., { onend: cb })`
-- On any check (correct or wrong): speaks `item.answer`
-- 🔊 TTS button added to conjugation controls row in `index.html`
-- 🔊 repeat button rendered in card button row when TTS mode active
-- `conjToggleTts` exported on `App`
+### Reading panel — sentence listening overhaul
+- `qrListenPrev` / `qrListenNext` were calling `speechSynthesis.cancel()` directly — bypasses TTS, broken with VoiceVox
+- Fixed: both now call `(App.TTS || window.TTS)?.stop()`
+- `qrListenPlay` fixed to use `TTS` not `speechSynthesis` directly
+- Arrow key navigation added: `→` next+speak, `←` prev+speak, `↓` repeat, `↑` return to sentence 1
+- Guard changed from `listenModeOpen` (was always false) to `sentences.length > 0`
 
-### VoiceVox first-syllable clipping fix
-- Root cause: HTMLAudio element fade-in on cold Electron audio session
-- Fix: switched to `AudioContext.decodeAudioData` + `BufferSource.start(0)` — no fade-in
-- `prePhonemeLength` set to min 0.15 in query object (leading silence in synthesis)
-- `audio.load()` + 120ms delay removed (no longer needed with AudioContext approach)
-- `_vvAudio` now stores a shim `{ pause: () => source.stop() }` for stop compatibility
+### Reading panel — TTS kanji misreading fix
+- VoiceVox was misreading 他 as たなか (surname) etc.
+- Fix: `qrToggleListenMode` now builds two parallel arrays:
+  - `QuickReadState.sentences` — hiragana readings for TTS (accurate pronunciation)
+  - `QuickReadState.sentencesKanji` — raw kanji words for DOM highlighting (matches `seg.word`)
+- `qrHighlightSentence` uses `sentencesKanji` for the DOM search
 
-### Focus sprint reference overlay
-- `shuchuRefOverlay` was never created — `shuchuToggleRef` silently returned
-- Now created lazily on first call to `shuchuToggleRef()`
-- Overlay: fixed, centred, 640px wide, 75vh max-height, scrollable
-- Back button: positioned above the overlay top edge, centred, outside the popup
-- Both overlay and back button hidden together on close
+### Grammar sentence drill (gramSent) improvements
+- **Generation prompt** (`_gramSentGenerateOne`): grammar must be "main structural feature — not incidental"; 8–14 word cap; avoid 私は unless natural; hint must name specific form
+- **Check/feedback** (`gramSentCheck`): structured JSON with `error` (typed category) and `diagnosis` (one phrase); `max_tokens` 200→300; 2-column table feedback (your answer vs correct)
+- **Stats bar removed**: "Correct: N Wrong: N Left: N" line deleted
+- **Dots**: always show all 5 (`GRAM_SENT_TOTAL`) positions upfront; `pending` class for future; `== null` guard for undefined results
+- **Theme field removed**: from `index.html` and both `gramSentTheme` DOM reads replaced with `''`
+- **Card frame removed**: `gd-card` gets `border:none;background:none;padding:10px 0`
+- **Kana toolbar layout**: moved directly below input, separate button row below
+- **Create button**: moved into Level/Sentences settings row with `margin-left:auto`
+- **Repeat sentence guard**: `gramSentLastSnap` persists current sentences to storage before reset so restart avoid-list works even before session is saved
+- **Q&A field**: label "ASK ABOUT THIS SENTENCE", concrete placeholder; answers now append (not replace); Q&A clears on sentence advance; prompt tightened to 1-2 sentences max, `max_tokens` 120, no markdown
+- **Right column scroll**: `gramSentFeedbackCol` gets `overflow-y:auto;max-height:80vh`
+- **Q&A font**: `gramSentQuestionResult` now `font-size:inherit` (was `0.82rem`)
+- **Evaluation loading state**: replaces opacity flash with `🔍 Evaluating your sentence…` text
+- **Follow-up field relabelled**: "ASK ABOUT THIS SENTENCE" with border-top separator
 
-### Shuchu answer inputs
-- All text answer fields in focus sprint now default to hiragana, no romaji option
-- `kanaToolbar('shuchuAnswerInput', { noRomaji: true })` on main answer input
-- Same fix applied to further-question inputs (`shuchuFQInput_*`)
+### Writing panel
+- Evaluation now shows clear `🔍 Evaluating your sentence…` in feedback area while waiting
+- Follow-up question field: added `ASK ABOUT THIS SENTENCE` label, concrete placeholder examples
 
-### Conjugation drill header cleanup
-- `conj-stats-bar` (Run N/3 · ✓ · ✗) removed from card area
-- Run N/3 counter moved into dots row, appended after dot elements
-- Eliminates layout collision with answer box when answer is revealed
+### Counter drill
+- 5 new counter classes added to `src/data/counter_data.json` and `countRenderRefGrid2()` in `core-counters.js`:
+  - 階 (kai, floors/storeys)
+  - 頭 (tou, large animals)
+  - 羽 (wa, birds & rabbits)
+  - 足 (soku, pairs of footwear)
+  - 着 (chaku, clothing items)
+- `CounterDrillState.activeCounters` default updated to include all 14
+- Checkbox row split into two rows of 7 (`Math.ceil(14/2)`)
 
-### lessonNotesUpdateDropdown dead call removed
-- `lessonNotesUpdateDropdown()` at end of `lessonNotesPanelHandlePaste` — function never existed
+### Kana selector
+- `_lastCursorPos` now tracked on every `click` and `keyup` on the input
+- `kanaSetMode` uses `_lastCursorPos ?? selectionStart` for `_kataFrom` anchor
+- `_kanaSyncCursor` also uses `_lastCursorPos`
+- **Known remaining bug**: mid-sentence katakana conversion still unreliable; deferred pending DevTools investigation with per-keystroke button-state-reading approach identified as correct architecture
 
-## Session 51 Changes (2026-06-23)
+### StudentModel / progress
+- `video2` panel correctly attributed to strand 1 in both `PANEL_TO_WEIGHT` and `FALLBACK_STRAND`
+- `features-progress.js` recency tile `panel: 'video'` → `panel: 'video2'`
 
-### turn_id population — `lnPopulateTurnIds(waLessonId, recSessionId)`
-- Added to `src/features-lesson-notes.js`
-- Damerau-Levenshtein (`_dlDistance`) — handles transpositions (Whisper phonetic swaps)
-- Matches `lesson_phrases` (type != grammar) to `transcript_turns` by content similarity
-- Needle: first 20 chars of phrase; haystack window: needle.length + 4 chars
-- Threshold: distance ≤ max(3, floor(needle.length × 0.3))
-- Hit rate on session 80/82: 12/19 (7 misses genuinely absent from transcript)
-- Auto-wired in `Orchestrator.js` after `SESSION_SAVED` — fires non-blocking post-transcription
-- Also registered on `App` for manual DevTools calls: `await lnPopulateTurnIds(waId, recId)`
+### Video grammar-node linking design doc
+- Written and saved as `video-grammar-node-linking.md` in project knowledge
+- Key design: exclusion list (は, が, を, ます/です excluded), specificity tiers, structural centrality heuristic, video evidence capped at "partial" score, 4 implementation stages
 
-### note_confirmed signal — `nomRunAndCache()`
-- After ranking, queries `extracted_grammar` of linked WhatsApp session via JOIN
-- Sets `note_confirmed: true` on suggestions where `node_id` appears in Yoshi's grammar list
-- Rendered as `· ✓ Yoshi` badge on 集中 sprint suggestion cards
+---
 
-### WhatsApp paste date fix — `lessonNotesPanelHandlePaste()`
-- Session date now parsed from first dated WhatsApp message (`DD.MM.YY` format)
-- Falls back to today only if no dated messages found
+## Known Open Issues
 
-### lessonNotesEnsureDbRow fixes
-- `SELECT` now filters `AND source='whatsapp'` — was accidentally matching recording rows
-- `last_insert_rowid()` now fetched via `window.db.query` not `window.db.get` (was returning 0)
-- Auto-link guard relaxed: `AND (audio_duration_s > 600 OR audio_duration_s IS NULL)`
+### Kana selector mid-sentence katakana
+- Switching to カ then clicking into middle of existing text, or clicking into field first then switching: `_kataFrom` anchor unreliable
+- Architecture identified: read active button per keystroke, no zone anchor
+- Needs DevTools inspection to validate before implementation
+- **Do not attempt without DevTools confirmation**
 
-### audio_duration_s backfill
-- All existing recording sessions backfilled via `window.lessonAPI.finaliseRecording()`
-- Sessions 59/66/67/69/70/71/72/80 all written
+### `InvalidStateError: Cannot close a closed AudioContext` (features-core.js:363)
+- Resolved for the VoiceVox TTS path (persistent AudioContext)
+- May still appear from `qrCombineSegments` or `qrDrawWaveform` which create their own AudioContexts — these are short-lived and close correctly, so likely no longer an issue
 
-### First real WhatsApp import
-- Session 82 (whatsapp, date 2026-06-22) linked to session 80 (recording, 2658 turns)
-- lesson_phrases: 46 grammar + 16 phrase + 3 word with lesson_id=82
-- turn_id populated on 12/19 phrase rows
-- extracted_grammar: 22 node IDs
+### Electron renderer crashes
+- Two occurrences this week: whole nav bar dead on fresh load, required Mac restart
+- Suspected GPU process crash or memory pressure
+- `render-process-gone` event handler not yet added to `main.js`
+- Recommended: add crash logging to `main.js`
 
-## NoM Pipeline — Complete State (`src/features-nom.js`)
+---
 
-### Functions
-- `nomDetectClusters(sessionId)` → raw clusters (no API)
-- `nomClassifyClusters(clusters)` → confirmed clusters with topic/severity/node_id
-- `nomRankSuggestions(classified, topN=3)` → scored, deduplicated suggestions
-- `nomRunAndCache(sessionId)` → full pipeline + note_confirmed + cache write
-- `nomRenderSuggestions()` → reads cache, renders cards in 集中 setup (no API)
-- `nomTestSession80()` → DevTools test harness, 7/7 recall on session 80
+## File Locations — Changed This Session
 
-### Detection rules (five, client-side, no API)
-1. Dense repetition — same token 4+ times in 45s
-2. Morphological variation — same stem 3+ endings in 60s
-3. Particle alternation — same noun 2+ particles in 30s
-4. Repair markers — えーと, すみません, もう一度 etc.
-5. Vocab gap — English word (Latin ≥3 chars) + repetitive Japanese search in 90s
+| File | What changed |
+|------|-------------|
+| `src/features-grammar.js` | gramSent: prompt, feedback table, dots, Q&A, theme removal, create button |
+| `src/features-reading.js` | Arrow keys, TTS fix, parallel sentence arrays, qrListenPlay/Prev/Next |
+| `src/features-core.js` | Persistent AudioContext, `_getAudioCtx()` |
+| `src/features-video.js` | `vtWatchStop` → `drillLastCompletedWrite` on pause |
+| `src/features-progress.js` | `panel: 'video2'` in strand tile |
+| `src/StudentModel.js` | `video2` added to `PANEL_TO_WEIGHT` and `FALLBACK_STRAND` |
+| `src/core-counters.js` | 5 new counters, two-row checkbox layout, activeCounters default |
+| `src/data/counter_data.json` | 5 new counter entries (階 頭 羽 足 着) |
+| `src/core-writing.js` | Evaluation loading state, follow-up field label |
+| `src/features-kana.js` | `_lastCursorPos` tracking |
+| `index.html` | Theme field removed, Create button moved, gramSentFeedbackCol scroll, Q&A font |
 
-### note_confirmed logic
-- After ranking, queries `extracted_grammar` of linked WhatsApp session
-- `note_confirmed: true` when suggestion `node_id` ∈ Yoshi's `extracted_grammar`
-- Rendered as `· ✓ Yoshi` on card subtitle
+---
 
-### Deferred: Levenshtein confirmation layer (full)
-- Temporal + content match: NoM cluster offset X → lesson_phrases turn_id within ±30s → DL match
-- Prerequisites met (turn_id populated, WA data in DB)
-- Needs multiple sessions to tune and validate
+## Next Session Priorities
 
-## lesson_sessions — Link Architecture
-- One lesson = one WhatsApp row (`source='whatsapp'`) as anchor
-- Recording row (`source='recording'`) has `linked_session_id` → WhatsApp row id
-- Auto-link on paste: same-date recordings where `audio_duration_s > 600 OR IS NULL`
-- Date parsed from first WhatsApp message timestamp (DD.MM.YY format)
-- `lessonNotesEnsureDbRow` creates whatsapp row, sets `LessonNotesState.currentLessonId`
+### Immediate
+1. Add `render-process-gone` crash handler to `main.js`
+2. Kana selector DevTools inspection — validate per-keystroke architecture before coding
 
-## SQLite Schema — v14
-kv_store, corpus_entries, corpus_lookups, corpus_productions, counters,
-drill_results, error_history, failure_events, grammar_mastery, kanji_ref,
-learning_events, lesson_phrases, lesson_sessions, panel_sessions,
-pitch_data, schema_version, srs_items, transcript_turns, transcript_vocab,
-vocab_items, vocab_items_backup, vocab_srs, words, writing_sessions, writing_sittings
+### Medium-term
+3. Video grammar-node linking — Stage 1 (pure regex tagging, no API, no UI)
+4. Four Strands coverage gaps: fluency row sparsest, no decay on grammar mastery
+5. NoM multi-session aggregation (two-tier sprint suggestions)
 
-`lesson_sessions` key columns:
-- `source` — `'whatsapp'` | `'recording'`
-- `raw_content` — raw WhatsApp text
-- `extracted_grammar` — JSON array of node_ids
-- `linked_session_id` — recording → whatsapp anchor
-- `audio_duration_s` — set by ffprobe in `lesson:finaliseRecording`
+### Future
+6. `gramSentLastSnap` cleanup strategy (currently grows unbounded per target)
+7. Reading panel: `listenModeOpen` flag not being set correctly — currently guarded by `sentences.length` workaround; should fix the toggle
 
-`lesson_phrases` key columns:
-- `lesson_id` — FK to whatsapp lesson_sessions row
-- `node_id` — Genki grammar node (grammar rows only)
-- `turn_id` — FK to transcript_turns (populated by lnPopulateTurnIds via DL)
-- `type` — `'phrase'` | `'word'` | `'grammar'`
+---
 
-DB path: ~/Library/Application Support/japanese-studio/jpstudio.db
-
-## Pending — Priority Order
-
-### Bugs / cleanup open
-1. Video panel transcript overflow — open, with Claude Code (`video-panel-handoff.md`)
-2. `shuchuActivityBtns` / `shuchuR2Btns` — always empty (low priority)
-
-### NoM pipeline — next steps
-3. Multi-session aggregation — cluster node_ids across last N sessions
-4. Two-tier 集中 surface — "This week" vs "Recurring"
-5. Full Levenshtein confirmation layer — temporal + content match (needs more WA data)
-
-### Grammar coverage
-6. Gold dot detail panel — node_id → lesson_phrases → source sentences
-7. "Play from here" button — turn_id → audio seek (infrastructure in place)
-8. Genki II node integration
-
-### Vocab pipeline
-9. corpus_productions extraction fix — single-kanji in old rows
-10. Reading backfill — ~567 words still missing readings
-11. Yoshi word boost — 2-day surface window after lesson import (deferred pending filter btn review)
-
-### Future / larger features
-12. FLUENCY_432 emitter — 4/3/2 speaking session wiring
-13. Layer 6 — grammar drill + writing prompt with top-N words
-14. Book vocab import (18 pages, OCR artifact, deferred)
-15. Sight-reading feature (from scratch)
-16. Satellite (jpsat) redesign
-17. `lesson_sessions` full consolidation — single row per lesson (Claude Code)
-18. Stale docs cleanup — `context-static.md`, `html-map.md`
-
-## Vocab System — Complete State
-
-### All pipelines live
-| Source | Trigger | Destination |
-|---|---|---|
-| yoshi_phrases | LESSON_EXTRACTED → initLessonVocabListener | vocab_items |
-| yoshi_vocab | lessonNotesExtractVocabSilent direct write | vocab_items |
-| writing | WRITING_SUBMITTED → extractWritingVocabToItems (Claude) | vocab_items |
-| lookup | VOCAB_LOOKUP → initLookupVocabListener (≥2, len 2-10) | vocab_items |
-| n5 | one-time backfill | vocab_items |
-
-### Weighting
-- New words: `_base = entry_weight × source_weight`
-- Reviewed words: `_base = 0.35` FLAT
-- Direction weight and prep_boost (1.5×) applied to both
-- Session pool: all reviewed due words + max 5 new words, sorted by effective weight
-- Source weights: yoshi=1.0, writing=0.9, lookup=0.6, n5=0.3
-
-### SRS — SM-2
-- Known: interval = floor(interval × ease), ease +0.1
-- Got it: interval = floor(interval × max(1.3, ease − 0.10))
-- Again: interval = 1, ease −0.15 (min 1.3)
-
-## Dead-Code Lookup Tooling
-- check-syntax.js: callers + exported per function → audit-latest.md + index.json
-- find.js: `node find.js <name> function` → instant dead? answer
-- Known blind spot: closure-based calls not captured
-- Sole audit candidate: customTranscribe — confirmed NOT dead, ticket permanently closed
-
-## Terminal Workflow
-- python3 - << 'PYEOF' for multi-line edits
-- Always jp && prefix
-- SQLite DB: ~/Library/Application Support/japanese-studio/jpstudio.db
-- Close Electron before SQLite writes
-- window.db.run() returns {changes: 0} even on successful batch INSERTs — not an error
-- Files with giant single lines break view — use grep/sed, hand edits to Code
+## Commit Log This Session (approximate)
+- `fix(StudentModel): map video2 panel to strand 1 in collectStrandBalance`
+- `fix(video): mark strand chart on pause after ≥2min cumulative watch time`
+- `fix(gramSent): null-check dots for undefined results beyond current sentence`
+- `fix(gramSent): remove stats bar, expand dots to full 5 with pending state`
+- `fix(gramSent): use _lastCursorPos for _kataFrom — survives focus loss to mode button`
+- `fix(kana): anchor always tracks cursor position on move and mode switch` (reverted)
+- `feat(counters): add 5 new counter classes — 階 頭 羽 足 着`
+- `fix(counters): split checkbox row into two equal rows`
+- `fix(gramSent): guard against repeated sentences on restart via lastSnap`
+- `fix(writing): clear loading state for evaluation; relabel follow-up field`
+- `fix(reading/tts): persistent AudioContext, fix prev/next tracking, fix AudioContext close error`
+- `feat(reading): arrow key navigation in listen mode`
+- `fix(reading): use segment readings for TTS to prevent kanji misreading`
+- `fix(reading): parallel tts/kanji sentence arrays — fix highlighting after TTS reading fix`
+- `fix(gramSent): tighten Q&A prompt, fix missing try/catch closure`
+- `session: reading TTS fixes, gramSent UX, video strand tracking, counter drill, arrow key nav`
