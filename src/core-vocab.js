@@ -209,7 +209,7 @@ function startNewSession() {
   // Cap new (never-reviewed) words per session to avoid flooding when a new
   // Yoshi lesson arrives. Reviewed words fill most of the session; new words
   // are capped at MAX_NEW regardless of source weight.
-  const MAX_NEW = 5;
+  const MAX_NEW = 100;
   const newIdx = [], dueIdx = [];
   state.vocabItems.forEach((r, i) => { if (r._isNew) newIdx.push(i); else dueIdx.push(i); });
   const combined = [...dueIdx, ...newIdx.slice(0, MAX_NEW)];
@@ -1901,6 +1901,24 @@ async function vocabSettingsSave() {
 // ── Text entry drill mode ────────────────────────────────────────────
 let _vcTextEntry = false;
 let _vcCardShownAt = null; // timestamp when current card was rendered
+
+// ── Keyboard shortcuts for vocab drill ──────────────────────────────
+(function() {
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('panel-words')?.style.display === 'none') return;
+    if (_vcTextEntry) return;
+    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    switch (e.code) {
+      case 'Space':      e.preventDefault(); flipVocab(); break;
+      case 'Digit1':     e.preventDefault(); markVocab('again'); break;
+      case 'Digit2':     e.preventDefault(); markVocab('gotit'); break;
+      case 'Digit3':     e.preventDefault(); markVocab('know'); break;
+      case 'ArrowLeft':  e.preventDefault(); prevVocab(); break;
+      case 'ArrowRight': e.preventDefault(); nextVocab(); break;
+    }
+  });
+})();
 
 function toggleVcTextEntry() {
   _vcTextEntry = !_vcTextEntry;
