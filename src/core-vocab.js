@@ -549,7 +549,7 @@ function resetVocabDeck() {
   saveState();
   vocabSession = [];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
-  loadVocabItemsDeck();
+  loadVocabItemsDeck(vcDirection, true);
 }
 
 function vocabListCheckChanged() {
