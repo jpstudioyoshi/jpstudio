@@ -268,22 +268,16 @@ function markVocab(v) {
     }
 
   } else {
-    // 'again' — move card to back of session
-    delete _sessionKnown[vocabIdx];
+    // 'again' — schedule for tomorrow, remove from this session entirely
+    _sessionKnown[vocabIdx] = true; // treat as done for this session
     state.vocabProgress[vocabIdx] = 'again';
-    const sessionPos = vocabSession.indexOf(vocabIdx);
-    if (sessionPos !== -1) {
-      vocabSession.splice(sessionPos, 1);
-      vocabSession.push(vocabIdx);
-    }
-    const newEase     = curGraduated === 0 ? curEase : Math.max(1.3, curEase - 0.15);
-    const newInterval = 1;
+    const newEase = Math.max(1.3, curEase - 0.15);
     if (window.db && id != null) {
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
-         VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
+         VALUES (?, ?, ?, ?, 1, date('now', '+1 day'), datetime('now'))
          ON CONFLICT(vocab_id, direction) DO UPDATE SET srs_ease = excluded.srs_ease, srs_interval = excluded.srs_interval, srs_due = excluded.srs_due, last_reviewed = excluded.last_reviewed`,
-        [id, vcDirection, curGraduated, newEase, newInterval, newInterval]
+        [id, vcDirection, curGraduated, newEase]
       ).catch(() => {});
     }
   }
@@ -312,15 +306,9 @@ function markVocab(v) {
     renderVocab();
     return;
   }
-  if (v === 'again') {
-    // card moved to back — take next from front
-    const pos = deck.indexOf(vocabIdx);
-    vocabIdx = deck[pos === -1 ? 0 : (pos + 1 < deck.length ? pos : 0)] ?? deck[0];
-  } else {
-    // know or gotit — advance normally
-    const pos = deck.indexOf(vocabIdx);
-    vocabIdx = pos === -1 ? deck[0] : deck[pos % deck.length] ?? deck[0];
-  }
+  // advance normally — again is now treated as known for this session
+  const pos = deck.indexOf(vocabIdx);
+  vocabIdx = pos === -1 ? deck[0] : deck[pos % deck.length] ?? deck[0];
   renderVocab();
 }
 
