@@ -315,9 +315,17 @@ function markVocab(v) {
     renderVocab();
     return;
   }
-  // advance normally — again is now treated as known for this session
+  // advance normally — deck is already rebuilt without current card
+  // so deck[pos] is the next card; fall back to deck[0] if at end
   const pos = deck.indexOf(vocabIdx);
-  vocabIdx = pos === -1 ? deck[0] : deck[pos % deck.length] ?? deck[0];
+  if (pos === -1) {
+    // card was just marked known — stay at same position in new deck
+    const prevPos = vocabSession.indexOf(vocabIdx);
+    const nextInSession = vocabSession.slice(prevPos + 1).find(i => !_sessionKnown[i]);
+    vocabIdx = nextInSession ?? deck[0];
+  } else {
+    vocabIdx = deck[pos] ?? deck[0];
+  }
   renderVocab();
 }
 
@@ -1905,7 +1913,7 @@ let _vcCardShownAt = null; // timestamp when current card was rendered
 // ── Keyboard shortcuts for vocab drill ──────────────────────────────
 (function() {
   document.addEventListener('keydown', function(e) {
-    if (document.getElementById('panel-words')?.style.display === 'none') return;
+    if (!document.getElementById('panel-words')?.classList.contains('active')) return;
     if (_vcTextEntry) return;
     if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
