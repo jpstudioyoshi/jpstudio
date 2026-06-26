@@ -118,7 +118,7 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
   try {
     const sources = vocabGetActiveSources();
     const _localToday = new Date().toLocaleDateString('sv-SE');
-    let sql = "SELECT v.*, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded'))";
+    let sql = "SELECT v.*, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded' AND v.type != 'phrase'))";
     const params = [direction, _localToday];
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
