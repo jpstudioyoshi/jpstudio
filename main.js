@@ -1341,10 +1341,7 @@ function createMainWindow() {
   // Logs the reason and auto-reloads so a Mac restart isn't needed.
   mainWindow.webContents.on('render-process-gone', (event, details) => {
     console.error('[crash] Renderer process gone:', details.reason, '| exitCode:', details.exitCode);
-    if (details.reason !== 'clean-exit') {
-      console.error('[crash] Attempting auto-reload...');
-      mainWindow.reload();
-    }
+    // Auto-reload disabled — causes unrecoverable zombie state requiring full Mac restart.
   });
 
   mainWindow.on('closed', () => {
