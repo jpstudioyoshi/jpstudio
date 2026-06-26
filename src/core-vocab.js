@@ -246,12 +246,14 @@ function markVocab(v) {
   const curEase      = card.srs_ease || 2.5;
   const curGraduated = card.srs_graduated || 0;
 
+  const _focusMode = vocabFocusModeActive();
+
   if (v === 'know') {
     _sessionKnown[vocabIdx] = true;
-    const newGraduated = 1;
-    const newEase      = curGraduated === 0 ? curEase : Math.min(4.0, curEase + 0.1);
-    const newInterval  = Math.max(1, Math.floor(curInterval * curEase));
-    if (window.db && id != null) {
+    if (!_focusMode && window.db && id != null) {
+      const newGraduated = 1;
+      const newEase      = curGraduated === 0 ? curEase : Math.min(4.0, curEase + 0.1);
+      const newInterval  = Math.max(1, Math.floor(curInterval * curEase));
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
          VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
@@ -262,10 +264,10 @@ function markVocab(v) {
 
   } else if (v === 'gotit') {
     _sessionKnown[vocabIdx] = true;
-    const newGraduated = Math.max(curGraduated, 1);
-    const newEase      = Math.max(1.3, curEase - 0.10);
-    const newInterval  = Math.max(1, Math.floor(curInterval * newEase));
-    if (window.db && id != null) {
+    if (!_focusMode && window.db && id != null) {
+      const newGraduated = Math.max(curGraduated, 1);
+      const newEase      = Math.max(1.3, curEase - 0.10);
+      const newInterval  = Math.max(1, Math.floor(curInterval * newEase));
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
          VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
@@ -275,11 +277,11 @@ function markVocab(v) {
     }
 
   } else {
-    // 'again' — schedule for tomorrow, remove from this session entirely
-    _sessionKnown[vocabIdx] = true; // treat as done for this session
+    // 'again' — schedule for tomorrow (SRS mode) or just move on (focus mode)
+    _sessionKnown[vocabIdx] = true;
     state.vocabProgress[vocabIdx] = 'again';
-    const newEase = Math.max(1.3, curEase - 0.15);
-    if (window.db && id != null) {
+    if (!_focusMode && window.db && id != null) {
+      const newEase = Math.max(1.3, curEase - 0.15);
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
          VALUES (?, ?, ?, ?, 1, date('now', '+1 day'), datetime('now'))
