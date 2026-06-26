@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260626083629">
+<link rel="stylesheet" href="style.css?v=20260626083804">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260626083629"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260626083629"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260626083629"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260626083804"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260626083804"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260626083804"></script>
 </head>
 <body>
 
@@ -1426,11 +1426,7 @@
     <!-- Top bar: load controls -->
     <div class="listen-load-bar" style="width:100%">
       <div style="display:flex;gap:10px;margin-left:auto;align-items:center">
-        <button class="btn-toggle" id="srsToggleBtn" onclick="SRS.togglePanel()"
-          title="Rate this track for spaced repetition">
-          ⏱ <span id="srsDueBadge" style="display:none;background:var(--gold);color:#000;
-            border-radius:10px;padding:0 5px;font-size:0.65rem"></span>
-        </button>
+        
       </div>
       <input type="file" id="listenFileInput" multiple accept="audio/*"
              style="display:none" onchange="loadListenFiles(this.files, false)">
@@ -1682,28 +1678,7 @@
             oninput="saveListenNote()"></textarea>
         </div>
 
-        <!-- SRS Rate Panel -->
-        <div id="srsRatePanel" style="display:none;margin-top:14px;padding:12px 14px;background:var(--paper-dark);border:1px solid var(--border);border-radius:8px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <span style="font-family:var(--ui);font-size:0.72rem;letter-spacing:0.08em;color:var(--ink-light)">⏱ REVIEW THIS TRACK</span>
-            <span id="srsDueCount" style="font-family:var(--ui);font-size:0.72rem;color:var(--gold)"></span>
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="srs-rate-btn btn-rating btn-rating-red" onclick="SRS.rate(1)">
-              Again<br><span style="font-size:0.65rem;opacity:0.7">tomorrow</span>
-            </button>
-            <button class="srs-rate-btn btn-rating" onclick="SRS.rate(2)">
-              Hard<br><span id="srsHardDays" style="font-size:0.65rem;opacity:0.7">—</span>
-            </button>
-            <button class="srs-rate-btn btn-rating btn-rating-teal" onclick="SRS.rate(3)">
-              Good<br><span id="srsGoodDays" style="font-size:0.65rem;opacity:0.7">—</span>
-            </button>
-            <button class="srs-rate-btn btn-rating btn-rating-teal" onclick="SRS.rate(4)">
-              Easy<br><span id="srsEasyDays" style="font-size:0.65rem;opacity:0.7">—</span>
-            </button>
-          </div>
-          <div id="srsNextDue" style="font-family:var(--ui);font-size:0.78rem;color:var(--teal);margin-top:8px;min-height:1.2em"></div>
-        </div>
+        
 
       </div>
     </div>
@@ -2429,38 +2404,38 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260626083629"></script>
-<script src="src/core-anki.js?v=20260626083629"></script>
-<script src="src/core-counters.js?v=20260626083629"></script>
-<script src="src/core-srs.js?v=20260626083629"></script>
-<script src="src/core-stt.js?v=20260626083629"></script>
-<script src="src/core-writing.js?v=20260626083629"></script>
-<script src="src/core-listen.js?v=20260626083629"></script>
-<script src="src/core-vocab.js?v=20260626083629"></script>
-<script src="src/features-db-qa.js?v=20260626083629"></script>
-<script src="src/core.js?v=20260626083629"></script>
+<script src="src/core-foundation.js?v=20260626083804"></script>
+<script src="src/core-anki.js?v=20260626083804"></script>
+<script src="src/core-counters.js?v=20260626083804"></script>
+<script src="src/core-srs.js?v=20260626083804"></script>
+<script src="src/core-stt.js?v=20260626083804"></script>
+<script src="src/core-writing.js?v=20260626083804"></script>
+<script src="src/core-listen.js?v=20260626083804"></script>
+<script src="src/core-vocab.js?v=20260626083804"></script>
+<script src="src/features-db-qa.js?v=20260626083804"></script>
+<script src="src/core.js?v=20260626083804"></script>
 
-<script src="src/features-core.js?v=20260626083629"></script>
-<script src="src/features-kana.js?v=20260626083629"></script>
-<script src="src/briefing-prompt.js?v=20260626083629"></script>
-<script src="src/GrammarModel.js?v=20260626083629"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260626083629"></script>
-<script src="src/AppEvents.js?v=20260626083629"></script>
-<script src="src/features-lesson-notes.js?v=20260626083629"></script>
-  <script src="src/features-ln-p2.js?v=20260626083629"></script>
-<script src="src/features-grammar.js?v=20260626083629"></script>
-<script src="src/features-reading.js?v=20260626083629"></script>
-<script src="src/features-video.js?v=20260626083629"></script>
-<script src="src/features-pictures.js?v=20260626083629"></script>
-<script src="src/features-progress.js?v=20260626083629"></script>
-  <script src="src/features-listen-log.js?v=20260626083629"></script>
-<script src="src/features-stroke.js?v=20260626083629"></script>
-<script src="src/features-tools.js?v=20260626083629"></script>
-<script src="src/features-voice.js?v=20260626083629"></script>
-<script src="src/features-voice-drill.js?v=20260626083629"></script>
-<script src="src/features-custom-drill.js?v=20260626083629"></script>
-<script src="src/features-shuchu.js?v=20260626083629"></script>
-<script src="src/features-nom.js?v=20260626083629"></script>
+<script src="src/features-core.js?v=20260626083804"></script>
+<script src="src/features-kana.js?v=20260626083804"></script>
+<script src="src/briefing-prompt.js?v=20260626083804"></script>
+<script src="src/GrammarModel.js?v=20260626083804"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260626083804"></script>
+<script src="src/AppEvents.js?v=20260626083804"></script>
+<script src="src/features-lesson-notes.js?v=20260626083804"></script>
+  <script src="src/features-ln-p2.js?v=20260626083804"></script>
+<script src="src/features-grammar.js?v=20260626083804"></script>
+<script src="src/features-reading.js?v=20260626083804"></script>
+<script src="src/features-video.js?v=20260626083804"></script>
+<script src="src/features-pictures.js?v=20260626083804"></script>
+<script src="src/features-progress.js?v=20260626083804"></script>
+  <script src="src/features-listen-log.js?v=20260626083804"></script>
+<script src="src/features-stroke.js?v=20260626083804"></script>
+<script src="src/features-tools.js?v=20260626083804"></script>
+<script src="src/features-voice.js?v=20260626083804"></script>
+<script src="src/features-voice-drill.js?v=20260626083804"></script>
+<script src="src/features-custom-drill.js?v=20260626083804"></script>
+<script src="src/features-shuchu.js?v=20260626083804"></script>
+<script src="src/features-nom.js?v=20260626083804"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2471,20 +2446,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260626083629"></script>
-<script src="src/IssueTracker.js?v=20260626083629"></script>
-<script src="src/services/LessonSession.js?v=20260626083629"></script>
-<script src="src/services/AudioService.js?v=20260626083629"></script>
-<script src="src/services/PreflightService.js?v=20260626083629"></script>
-<script src="src/services/TranscriptionService.js?v=20260626083629"></script>
-<script src="src/services/AnalysisService.js?v=20260626083629"></script>
-<script src="src/services/StorageService.js?v=20260626083629"></script>
-<script src="src/Orchestrator.js?v=20260626083629"></script>
-<script src="src/ui/DrillCard.js?v=20260626083629"></script>
-<script src="src/ui/TextEntry.js?v=20260626083629"></script>
-<script src="src/ui/YoshiUI.js?v=20260626083629"></script>
+<script src="src/StudentModel.js?v=20260626083804"></script>
+<script src="src/IssueTracker.js?v=20260626083804"></script>
+<script src="src/services/LessonSession.js?v=20260626083804"></script>
+<script src="src/services/AudioService.js?v=20260626083804"></script>
+<script src="src/services/PreflightService.js?v=20260626083804"></script>
+<script src="src/services/TranscriptionService.js?v=20260626083804"></script>
+<script src="src/services/AnalysisService.js?v=20260626083804"></script>
+<script src="src/services/StorageService.js?v=20260626083804"></script>
+<script src="src/Orchestrator.js?v=20260626083804"></script>
+<script src="src/ui/DrillCard.js?v=20260626083804"></script>
+<script src="src/ui/TextEntry.js?v=20260626083804"></script>
+<script src="src/ui/YoshiUI.js?v=20260626083804"></script>
 
-<script src="src/design-overlay.js?v=20260626083629"></script>
+<script src="src/design-overlay.js?v=20260626083804"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 
