@@ -1031,6 +1031,8 @@ async function renderGrammarCoverage() {
 
   html += '</div>';
   el.innerHTML = html;
+  // Init kana toolbar for search bar every time the grid renders
+  try { (window.kanaToolbar || App.kanaToolbar)?.("ashiatoSearch", { noKanji: true }); } catch(e) {}
 }
 
 function grammarNodeClick(nodeId) {
@@ -1624,3 +1626,22 @@ Object.assign(App, {
   apiUsageReset, apiUsageTrack, gramSentPracticeError,
   grammarDismissEncounter, grammarDismissGold,
 });
+
+function ashiatoFilterPills(query) {
+  const q = query.trim().toLowerCase();
+  const grid = document.getElementById('grammarCoverageGrid');
+  if (!grid) return;
+  // Show/hide individual pills
+  grid.querySelectorAll('[data-nodeid]').forEach(pill => {
+    const text = ((pill.title || '') + ' ' + (pill.textContent || '')).toLowerCase();
+    pill.parentElement.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+  // Hide chapter rows where all pills are hidden
+  // Target only direct children of the grid that contain pills (the flex-start rows)
+  Array.from(grid.children[0]?.children || []).forEach(row => {
+    const pillWrappers = row.querySelectorAll('[data-nodeid]');
+    if (!pillWrappers.length) return;
+    const anyVisible = [...pillWrappers].some(p => p.parentElement.style.display !== 'none');
+    row.style.display = anyVisible ? '' : 'none';
+  });
+}

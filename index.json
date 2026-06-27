@@ -4960,7 +4960,7 @@
     "file": "src/features-kana.js",
     "line": 815,
     "desc": "Guards against double-init: safe to call on every panel render.",
-    "callers": 14,
+    "callers": 16,
     "exported": true
   },
   {
@@ -6660,7 +6660,7 @@
     "file": "src/features-video.js",
     "line": 811,
     "desc": "const urlEl = document.getElementById('resNewUrl');",
-    "callers": 4,
+    "callers": 5,
     "exported": true
   },
   {
@@ -7369,7 +7369,7 @@
     "type": "function",
     "name": "grammarNodeClick",
     "file": "src/features-progress.js",
-    "line": 1036,
+    "line": 1038,
     "desc": "const node = GrammarModel.getNode(nodeId);",
     "callers": 3,
     "exported": true
@@ -7378,7 +7378,7 @@
     "type": "function",
     "name": "grammarOverridePopup",
     "file": "src/features-progress.js",
-    "line": 1106,
+    "line": 1108,
     "desc": "const existing = document.getElementById('grammarOverrideModal');",
     "callers": 1,
     "exported": false
@@ -7387,7 +7387,7 @@
     "type": "function",
     "name": "grammarDismissEncounter",
     "file": "src/features-progress.js",
-    "line": 1144,
+    "line": 1146,
     "desc": "const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;",
     "callers": 2,
     "exported": true
@@ -7396,7 +7396,7 @@
     "type": "function",
     "name": "grammarDismissGold",
     "file": "src/features-progress.js",
-    "line": 1153,
+    "line": 1155,
     "desc": "const S = App.Storage || window.Storage;",
     "callers": 2,
     "exported": true
@@ -7405,7 +7405,7 @@
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1170,
+    "line": 1172,
     "desc": "Changes here apply to both.",
     "callers": 4,
     "exported": true
@@ -7414,7 +7414,7 @@
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1187,
+    "line": 1189,
     "desc": "const examples = (window._errorExamples || {})[key] || [];",
     "callers": 7,
     "exported": true
@@ -7423,7 +7423,7 @@
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1227,
+    "line": 1229,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};",
     "callers": 1,
     "exported": true
@@ -7432,7 +7432,7 @@
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1235,
+    "line": 1237,
     "desc": "const chartEl = document.getElementById('progress-error-chart');",
     "callers": 11,
     "exported": true
@@ -7441,7 +7441,7 @@
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1306,
+    "line": 1308,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;",
     "callers": 4,
     "exported": true
@@ -7450,7 +7450,7 @@
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1350,
+    "line": 1352,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');",
     "callers": 2,
     "exported": true
@@ -7459,7 +7459,7 @@
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1360,
+    "line": 1362,
     "desc": "const chart = document.getElementById('particleBreakdownChart');",
     "callers": 3,
     "exported": true
@@ -7468,7 +7468,7 @@
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1389,
+    "line": 1391,
     "desc": "showPanel('grammar2');",
     "callers": 3,
     "exported": true
@@ -7477,7 +7477,7 @@
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1446,
+    "line": 1448,
     "desc": "const el = document.getElementById('stPaneWeights');",
     "callers": 3,
     "exported": true
@@ -7486,7 +7486,7 @@
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1501,
+    "line": 1503,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;",
     "callers": 3,
     "exported": true
@@ -7495,7 +7495,7 @@
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1515,
+    "line": 1517,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;",
     "callers": 3,
     "exported": true
@@ -7504,7 +7504,7 @@
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1527,
+    "line": 1529,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };",
     "callers": 5,
     "exported": true
@@ -7513,10 +7513,19 @@
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1543,
+    "line": 1545,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');",
     "callers": 5,
     "exported": true
+  },
+  {
+    "type": "function",
+    "name": "ashiatoFilterPills",
+    "file": "src/features-progress.js",
+    "line": 1630,
+    "desc": "const q = query.trim().toLowerCase();",
+    "callers": 1,
+    "exported": false
   },
   {
     "type": "function",
