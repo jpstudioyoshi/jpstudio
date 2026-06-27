@@ -201,12 +201,12 @@ Requirements:
     if (intro.key_forms && intro.key_forms.length) {
       const label = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.82rem',letterSpacing:'0.08em',color:'var(--ink-light)',marginBottom:'8px'}, 'KEY FORMS');
       box.appendChild(label);
-      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto 1fr auto',gap:'6px 16px',alignItems:'baseline',marginBottom:'20px'});
+      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto auto 1fr',gap:'6px 16px',alignItems:'start',marginBottom:'20px',width:'100%'});
       intro.key_forms.forEach(f => {
         grid.appendChild(jpEl('span', {fontFamily:'var(--jp)',fontSize:'1.2rem',color:'var(--ink)'}, f.jp));
         grid.appendChild(jpEl('span', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--teal)'}, f.reading));
-        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)'}, f.en));
-        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)'}, f.note || ''));
+        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',display:'-webkit-box',WebkitLineClamp:'2',WebkitBoxOrient:'vertical',overflow:'hidden'}, f.en));
+        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)',lineHeight:'1.5'}, f.note || ''));
       });
       box.appendChild(grid);
     }
