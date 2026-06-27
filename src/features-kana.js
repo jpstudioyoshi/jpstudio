@@ -222,8 +222,10 @@ function kanaInputHandler(e) {
 
   // Walk left from insertStart to collect any preceding unconverted romaji
   // that belongs to the same sequence (e.g. 'k' left behind from last keystroke).
+  // Never cross _snapshotPos — that boundary marks pre-existing text.
+  const boundary = el._snapshotPos ?? 0;
   let runStart = insertStart;
-  while (runStart > 0 && raw.charCodeAt(runStart - 1) < 0x80 && raw.charCodeAt(runStart - 1) > 0x20) runStart--;
+  while (runStart > boundary && raw.charCodeAt(runStart - 1) < 0x80 && raw.charCodeAt(runStart - 1) > 0x20) runStart--;
 
   const before  = raw.slice(0, runStart);
   const run     = raw.slice(runStart, pos);
@@ -258,12 +260,9 @@ function hiraganaToKatakana(str) {
 
 // ── Cursor sync — resolves mode from button state ─────────────────────────
 // Mode itself is always read fresh from which toolbar button is
-// highlighted — that's ground truth and doesn't drift. This function's
-// only remaining job is that resolution (plus caret colour and making
-// sure the input listener is still attached). It used to also manage a
-// _modeSnapshot cursor-position boundary for the converter, but that's
-// gone — see kanaInputHandler, which now converts the whole field every
-// keystroke instead of needing a separately-tracked boundary.
+// highlighted — that's ground truth and doesn't drift. Also snapshots the
+// cursor position and current value into _snapshotPos / _prevValue so that
+// kanaInputHandler's walk-left never crosses into pre-existing text.
 function _kanaSyncCursor(el) {
   if (!el._kanaOn) return;
   // Defer one tick so focus has time to settle before reading button
@@ -283,12 +282,12 @@ function _kanaSyncCursor(el) {
       else if (hiraEl && hiraEl.classList.contains('active-hira')) activeMode = 'hiragana';
     }
     el._kanaMode = activeMode;
-    // Anchor is always the current cursor position — whatever mode is active,
-    // new text typed from here uses that mode. Both _kataFrom and the hiragana
-    // equivalent reset on every cursor move and every mode switch.
-    const cursorPos = el._lastCursorPos ?? el.selectionStart ?? el.value.length;
-    if (activeMode === 'katakana') el._kataFrom = cursorPos;
-    if (activeMode === 'hiragana') el._kataFrom = null;  // hiragana: no zone boundary needed
+    // Snapshot current cursor position and field value — state change boundary.
+    // kanaInputHandler's walk-left never crosses _snapshotPos into pre-existing text.
+    // _prevValue is reset here so the first keystroke diffs against the actual
+    // current field content, not stale content from a previous typing run.
+    el._snapshotPos = el.selectionStart ?? el.value.length;
+    el._prevValue   = el.value;
     if (activeMode === 'hiragana') el.style.caretColor = 'var(--teal)';
     else if (activeMode === 'katakana') el.style.caretColor = 'var(--gold)';
     else el.style.caretColor = '';
