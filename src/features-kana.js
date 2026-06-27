@@ -207,48 +207,40 @@ function kanaInputHandler(e) {
   
   const pos = el.selectionStart;
   const raw = el.value;
-  
-  // Convert the WHOLE field every keystroke. romajiToHiragana already
-  // skips any character that's already kana/kanji/punctuation (code >=
-  // 0x3000) one at a time, so re-running it over already-converted text
-  // is a safe no-op — it doesn't need a separately-tracked "where did I
-  // leave off" boundary to know what to leave alone. The old approach
-  // (_modeSnapshot, a cursor-position boundary re-anchored on clicks) kept
-  // drifting out of sync with where the user actually clicked/edited,
-  // orphaning characters typed right after a click (session 46). Removed.
-  let result = romajiToHiragana(raw);
-  
-  // Katakana only applies from the point the user actually switched into
-  // katakana mode (_kataFrom — set once, in kanaSetMode, when the mode
-  // button is clicked; never touched by ordinary clicks/edits). Text that
-  // existed before that point stays hiragana even though the whole string
-  // was just re-scanned above.
-  if (el._kanaMode === 'katakana' && el._kataFrom != null) {
-    const before = result.slice(0, el._kataFrom);
-    const after  = hiraganaToKatakana(result.slice(el._kataFrom));
-    result = before + after;
+  const prev = el._prevValue !== undefined ? el._prevValue : '';
+
+  // Find what was inserted: compare prev to raw around cursor.
+  // inserted = raw[insertStart..pos], where insertStart = pos - (raw.length - prev.length)
+  const insertLen = raw.length - prev.length;
+  if (insertLen <= 0) {
+    // Deletion — just update _prevValue and leave field alone
+    el._prevValue = raw;
+    return;
   }
-  
-  // Convert quotation marks to Japanese brackets — scan the whole result
-  // linearly to track open/close state; already-converted 「」 brackets
-  // update the toggle but aren't touched themselves, so this is also safe
-  // to run on the full string every time.
-  let quoteOpen = false;
-  result = result.split('').map(c => {
-    if (c === '「') { quoteOpen = true; return c; }
-    if (c === '」') { quoteOpen = false; return c; }
-    if (c === '"' || c === '\u201c' || c === '\u201d') {
-      quoteOpen = !quoteOpen;
-      return quoteOpen ? '「' : '」';
-    }
-    return c;
-  }).join('');
+  const insertStart = pos - insertLen;
+  const inserted = raw.slice(insertStart, pos);
+
+  // Walk left from insertStart to collect any preceding unconverted romaji
+  // that belongs to the same sequence (e.g. 'k' left behind from last keystroke).
+  let runStart = insertStart;
+  while (runStart > 0 && raw.charCodeAt(runStart - 1) < 0x80 && raw.charCodeAt(runStart - 1) > 0x20) runStart--;
+
+  const before  = raw.slice(0, runStart);
+  const run     = raw.slice(runStart, pos);
+  const after   = raw.slice(pos);
+  const kana    = el._kanaMode === 'katakana'
+    ? hiraganaToKatakana(romajiToHiragana(run))
+    : romajiToHiragana(run);
+  let result = before + kana + after;
   
   if (result !== raw) {
     el.value = result;
     const diff = raw.length - result.length;
     const newPos = Math.max(0, pos - diff);
     el.setSelectionRange(newPos, newPos);
+    el._prevValue = result;
+  } else {
+    el._prevValue = raw;
   }
 }
 
@@ -394,6 +386,7 @@ function kanaOff(el) {
   el._kanaOn = false;
   el._kanaMode = null;
   el._isComposing = false;
+  el._prevValue = undefined;
   el.removeEventListener('input', kanaInputHandler);
   el.style.caretColor = '';
 }
@@ -779,11 +772,9 @@ function kanaSetMode(inputId, mode, btnGroupId, btnIds) {
   if (mode === 'romaji') {
     kanaOff(inp); inp._kanaMode = 'romaji'; inp.style.caretColor = '';
   } else if (mode === 'hiragana') {
-    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp._kataFrom = null; inp.style.caretColor = 'var(--teal)';
+    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana'; inp._prevValue = inp.value; inp.style.caretColor = 'var(--teal)';
   } else if (mode === 'katakana') {
-    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'katakana';
-    inp._kataFrom = inp._lastCursorPos ?? inp.selectionStart ?? inp.value.length;
-    inp.style.caretColor = 'var(--gold)';
+    kanaOff(inp); kanaOn(inp); inp._kanaMode = 'katakana'; inp._prevValue = inp.value; inp.style.caretColor = 'var(--gold)';
   }
   // NOTE: no inp.focus() here — callers focus the input themselves if needed.
   // Calling focus() here triggers the focus listener which calls kanaSetMode again → loop.
