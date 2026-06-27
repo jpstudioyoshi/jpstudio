@@ -486,15 +486,10 @@ function renderVocab() {
 
   vocabCardEl.classList.remove('flipped');
   // Auto-play TTS on every new card (dedupe redundant re-renders of same card)
-  if (word && _vcLastAutoSpoken !== word) {
+  if (word && _vcLastAutoSpoken !== word && vcDirection !== 'en_jp') {
     _vcLastAutoSpoken = word;
     setTimeout(() => {
-      if (typeof jpSpeak === 'function') {
-        // jp→en: speak the JP word shown on front
-        // en→jp: speak the JP word shown on back (front is English)
-        const toSpeak = vcDirection === 'en_jp' ? word : word;
-        jpSpeak(toSpeak, 0.85);
-      }
+      if (typeof jpSpeak === 'function') jpSpeak(word, 0.85);
     }, 400);
   }
 
@@ -534,6 +529,13 @@ function flipVocab() {
   if (_vcSessionComplete) { resetVocabDeck(); return; }
   vocabFlipped = !vocabFlipped;
   document.getElementById('vocabCard').classList.toggle('flipped', vocabFlipped);
+  if (vocabFlipped) {
+    const card = state.vocabItems?.[vocabIdx];
+    if (card?.word && typeof jpSpeak === 'function') {
+      const toSpeak = card.reading || card.word;
+      jpSpeak(toSpeak, 0.85);
+    }
+  }
 }
 
 function toggleVcDirection() {
@@ -1909,24 +1911,6 @@ async function vocabSettingsSave() {
 // ── Text entry drill mode ────────────────────────────────────────────
 let _vcTextEntry = false;
 let _vcCardShownAt = null; // timestamp when current card was rendered
-
-// ── Keyboard shortcuts for vocab drill ──────────────────────────────
-(function() {
-  document.addEventListener('keydown', function(e) {
-    if (!document.getElementById('panel-words')?.classList.contains('active')) return;
-    if (_vcTextEntry) return;
-    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    switch (e.code) {
-      case 'Space':      e.preventDefault(); flipVocab(); break;
-      case 'Digit1':     e.preventDefault(); markVocab('again'); break;
-      case 'Digit2':     e.preventDefault(); markVocab('gotit'); break;
-      case 'Digit3':     e.preventDefault(); markVocab('know'); break;
-      case 'ArrowLeft':  e.preventDefault(); prevVocab(); break;
-      case 'ArrowRight': e.preventDefault(); nextVocab(); break;
-    }
-  });
-})();
 
 function toggleVcTextEntry() {
   _vcTextEntry = !_vcTextEntry;

@@ -499,7 +499,7 @@ function _countShowStandard(item, cpe2El) {
   const idx = Math.floor(Math.random() * item.counter.emoji.length);
   const emoji = item.counter.emoji[idx];
   const word = item.counter.words[idx];
-  cpe2El.textContent = emoji.repeat(Math.min(item.num, 5)) + (item.num > 5 ? '...' : '');
+  cpe2El.textContent = '';  // image removed — was pushing layout down
   const plurals = {
     'person':'people','mouse':'mice','fish':'fish','dictionary':'dictionaries',
     'family':'families','library':'libraries','leaf':'leaves','knife':'knives'
@@ -519,7 +519,7 @@ function countToggleObjectMode() {
   const cur = btn.dataset.mode || 'off';
   if (cur === 'off') {
     btn.dataset.mode = 'objects';
-    btn.textContent = '🖼 Objects';
+    btn.textContent = 'Objects';
     btn.style.color = 'var(--teal)';
   } else if (cur === 'objects') {
     btn.dataset.mode = 'category';
@@ -527,7 +527,7 @@ function countToggleObjectMode() {
     btn.style.color = 'var(--gold)';
   } else {
     btn.dataset.mode = 'off';
-    btn.textContent = '🖼 Objects';
+    btn.textContent = 'Objects';
     btn.style.color = '';
   }
 }
@@ -806,12 +806,14 @@ function countShowSummary2() {
 
 function countRenderProgress2() {
   const el = document.getElementById('countProgress2');
+  const headerEl = document.getElementById('countHeaderDots');
   const qEl = document.getElementById('countQIndicator2');
   
-  if (!el) return;
+  if (!el && !headerEl) return;
   
   if (CounterDrillState.queue.length === 0 || CounterDrillState.run === 0) { 
-    el.innerHTML = ''; 
+    if (el) el.innerHTML = ''; 
+    if (headerEl) headerEl.innerHTML = '';
     if (qEl) qEl.textContent = '';
     return; 
   }
@@ -841,7 +843,8 @@ function countRenderProgress2() {
     
     html += `<span style="display:inline-block;width:${size};height:${size};border-radius:50%;background:${bg};border:${borderWidth} solid ${border};box-sizing:border-box"></span>`;
   }
-  el.innerHTML = html;
+  if (el) el.innerHTML = html;
+  if (headerEl) headerEl.innerHTML = html;
 }
 
 function countUpdateUI2() {

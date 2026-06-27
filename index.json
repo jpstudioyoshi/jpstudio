@@ -93,7 +93,7 @@
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1357,
+    "line": 1354,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {",
     "callers": 4,
     "exported": false
@@ -102,7 +102,7 @@
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1445,
+    "line": 1442,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {",
     "callers": 2,
     "exported": false
@@ -1773,7 +1773,7 @@
     "type": "function",
     "name": "countUpdateUI2",
     "file": "src/core-counters.js",
-    "line": 847,
+    "line": 850,
     "desc": "const runEl = document.getElementById('countRunIndicator2');",
     "callers": 5,
     "exported": false
@@ -1782,7 +1782,7 @@
     "type": "function",
     "name": "countHear2",
     "file": "src/core-counters.js",
-    "line": 862,
+    "line": 865,
     "desc": "if (CounterDrillState.current) {",
     "callers": 3,
     "exported": true
@@ -1791,7 +1791,7 @@
     "type": "function",
     "name": "countShowLookup2",
     "file": "src/core-counters.js",
-    "line": 868,
+    "line": 871,
     "desc": "const _escLookup = (e) => {",
     "callers": 3,
     "exported": true
@@ -1800,7 +1800,7 @@
     "type": "function",
     "name": "daysToggleTable",
     "file": "src/core-counters.js",
-    "line": 958,
+    "line": 961,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');",
     "callers": 3,
     "exported": true
@@ -1809,7 +1809,7 @@
     "type": "function",
     "name": "daysStop",
     "file": "src/core-counters.js",
-    "line": 967,
+    "line": 970,
     "desc": "const drillEl = document.getElementById('daysDrillArea');",
     "callers": 3,
     "exported": true
@@ -1818,7 +1818,7 @@
     "type": "function",
     "name": "daysOfMonthInit",
     "file": "src/core-counters.js",
-    "line": 975,
+    "line": 978,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');",
     "callers": 2,
     "exported": true
@@ -1827,7 +1827,7 @@
     "type": "function",
     "name": "daysOfMonthDrill",
     "file": "src/core-counters.js",
-    "line": 1013,
+    "line": 1016,
     "desc": "const drillEl = document.getElementById('daysDrillArea');",
     "callers": 3,
     "exported": true
@@ -1836,7 +1836,7 @@
     "type": "function",
     "name": "daysNext",
     "file": "src/core-counters.js",
-    "line": 1031,
+    "line": 1034,
     "desc": "function daysCheck() {}",
     "callers": 3,
     "exported": true
@@ -1845,7 +1845,7 @@
     "type": "function",
     "name": "daysCheck",
     "file": "src/core-counters.js",
-    "line": 1032,
+    "line": 1035,
     "desc": "let _daysChecked = false;",
     "callers": 4,
     "exported": true
@@ -1854,7 +1854,7 @@
     "type": "function",
     "name": "conjugate",
     "file": "src/core-counters.js",
-    "line": 1044,
+    "line": 1047,
     "desc": "CONJUGATION DRILL",
     "callers": 10,
     "exported": false
@@ -1863,7 +1863,7 @@
     "type": "function",
     "name": "goalsLoad",
     "file": "src/core-counters.js",
-    "line": 1192,
+    "line": 1195,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -1872,7 +1872,7 @@
     "type": "function",
     "name": "goalsSave",
     "file": "src/core-counters.js",
-    "line": 1199,
+    "line": 1202,
     "desc": "const g = {",
     "callers": 6,
     "exported": false
@@ -1881,7 +1881,7 @@
     "type": "function",
     "name": "goalsRestoreUI",
     "file": "src/core-counters.js",
-    "line": 1214,
+    "line": 1217,
     "desc": "const g = goalsLoad();",
     "callers": 1,
     "exported": false
@@ -1890,7 +1890,7 @@
     "type": "function",
     "name": "getConjOptions",
     "file": "src/core-counters.js",
-    "line": 1233,
+    "line": 1236,
     "desc": "const verbTypes = [];",
     "callers": 1,
     "exported": false
@@ -1899,7 +1899,7 @@
     "type": "function",
     "name": "startConjDrill",
     "file": "src/core-counters.js",
-    "line": 1257,
+    "line": 1260,
     "desc": "const {verbTypes, forms, polarities, registers} = getConjOptions();",
     "callers": 4,
     "exported": true
@@ -1908,7 +1908,7 @@
     "type": "function",
     "name": "renderConjDrill",
     "file": "src/core-counters.js",
-    "line": 1280,
+    "line": 1283,
     "desc": "const area = document.getElementById('conjDrillArea');",
     "callers": 5,
     "exported": false
@@ -1917,7 +1917,7 @@
     "type": "function",
     "name": "handleConjKey",
     "file": "src/core-counters.js",
-    "line": 1329,
+    "line": 1332,
     "desc": "if (e.key === 'Enter') {",
     "callers": 1,
     "exported": false
@@ -1926,7 +1926,7 @@
     "type": "function",
     "name": "conjAutoConvert",
     "file": "src/core-counters.js",
-    "line": 1339,
+    "line": 1342,
     "desc": "if (!conjCurrentAnswer) return;",
     "callers": 1,
     "exported": false
@@ -1935,7 +1935,7 @@
     "type": "function",
     "name": "liveCheckConj",
     "file": "src/core-counters.js",
-    "line": 1363,
+    "line": 1366,
     "desc": "conjAutoConvert();",
     "callers": 1,
     "exported": false
@@ -1958,7 +1958,7 @@
     "type": "storage",
     "name": "GOALS",
     "file": "src/core-counters.js",
-    "line": 1208,
+    "line": 1211,
     "desc": "Storage.set"
   },
   {
@@ -3664,15 +3664,24 @@
     "name": "vocabSourceFilterChanged",
     "file": "src/core-vocab.js",
     "line": 82,
-    "desc": "if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);",
+    "desc": "const anyChecked = document.querySelectorAll('.vocab-source-filter:checked').length > 0;",
     "callers": 4,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "vocabFocusModeActive",
+    "file": "src/core-vocab.js",
+    "line": 89,
+    "desc": "return document.querySelectorAll('.vocab-source-filter:checked').length > 0;",
+    "callers": 1,
     "exported": false
   },
   {
     "type": "function",
     "name": "vocabResetSourceFilters",
     "file": "src/core-vocab.js",
-    "line": 86,
+    "line": 93,
     "desc": "document.querySelectorAll('.vocab-source-filter').forEach(el => el.checked = true);",
     "callers": 2,
     "exported": true
@@ -3681,7 +3690,7 @@
     "type": "function",
     "name": "vocabResetPosFilters",
     "file": "src/core-vocab.js",
-    "line": 91,
+    "line": 98,
     "desc": "document.querySelectorAll('.vocab-pos-filter').forEach(el => el.checked = true);",
     "callers": 2,
     "exported": true
@@ -3690,7 +3699,7 @@
     "type": "function",
     "name": "vocabGetActivePOS",
     "file": "src/core-vocab.js",
-    "line": 96,
+    "line": 103,
     "desc": "const all = [...document.querySelectorAll('.vocab-pos-filter')];",
     "callers": 1,
     "exported": false
@@ -3699,7 +3708,7 @@
     "type": "function",
     "name": "vocabPosFilterChanged",
     "file": "src/core-vocab.js",
-    "line": 104,
+    "line": 111,
     "desc": "if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);",
     "callers": 6,
     "exported": false
@@ -3708,7 +3717,7 @@
     "type": "function",
     "name": "loadVocabItemsDeck",
     "file": "src/core-vocab.js",
-    "line": 108,
+    "line": 115,
     "desc": "if (!window.db) return;",
     "callers": 19,
     "exported": true
@@ -3717,7 +3726,7 @@
     "type": "function",
     "name": "startNewSession",
     "file": "src/core-vocab.js",
-    "line": 196,
+    "line": 203,
     "desc": "if (!_dataLoaded || !state.vocabItems || !state.vocabItems.length) return;",
     "callers": 4,
     "exported": true
@@ -3726,7 +3735,7 @@
     "type": "function",
     "name": "getSessionDeck",
     "file": "src/core-vocab.js",
-    "line": 222,
+    "line": 229,
     "desc": "return vocabSession.filter(i => !_sessionKnown[i]);",
     "callers": 4,
     "exported": false
@@ -3735,7 +3744,7 @@
     "type": "function",
     "name": "markVocab",
     "file": "src/core-vocab.js",
-    "line": 228,
+    "line": 235,
     "desc": "if (!vocabSession.length) return;",
     "callers": 15,
     "exported": true
@@ -3744,7 +3753,7 @@
     "type": "function",
     "name": "renderVocab",
     "file": "src/core-vocab.js",
-    "line": 328,
+    "line": 333,
     "desc": "_vcCardShownAt = Date.now();",
     "callers": 16,
     "exported": true
@@ -3753,7 +3762,7 @@
     "type": "function",
     "name": "prevVocab",
     "file": "src/core-vocab.js",
-    "line": 511,
+    "line": 512,
     "desc": "const deck = getSessionDeck();",
     "callers": 3,
     "exported": true
@@ -3762,7 +3771,7 @@
     "type": "function",
     "name": "nextVocab",
     "file": "src/core-vocab.js",
-    "line": 518,
+    "line": 519,
     "desc": "const deck = getSessionDeck();",
     "callers": 4,
     "exported": true
@@ -3771,7 +3780,7 @@
     "type": "function",
     "name": "flipVocab",
     "file": "src/core-vocab.js",
-    "line": 527,
+    "line": 528,
     "desc": "if (_vcSessionComplete) { resetVocabDeck(); return; }",
     "callers": 6,
     "exported": true
@@ -3780,8 +3789,8 @@
     "type": "function",
     "name": "toggleVcDirection",
     "file": "src/core-vocab.js",
-    "line": 533,
-    "desc": "const cycle = { jp_en: 'en_jp', en_jp: 'speaking', speaking: 'jp_en' };",
+    "line": 541,
+    "desc": "const cycle = { jp_en: 'en_jp', en_jp: 'jp_en' };",
     "callers": 2,
     "exported": true
   },
@@ -3789,7 +3798,7 @@
     "type": "function",
     "name": "resetVocabDeck",
     "file": "src/core-vocab.js",
-    "line": 547,
+    "line": 555,
     "desc": "_vcSessionComplete = false;",
     "callers": 4,
     "exported": true
@@ -3798,7 +3807,7 @@
     "type": "function",
     "name": "vocabListCheckChanged",
     "file": "src/core-vocab.js",
-    "line": 557,
+    "line": 565,
     "desc": "const anyChecked = document.querySelectorAll('.vocab-del-cb:checked').length > 0;",
     "callers": 1,
     "exported": false
@@ -3807,7 +3816,7 @@
     "type": "function",
     "name": "vocabListDeleteSelected",
     "file": "src/core-vocab.js",
-    "line": 562,
+    "line": 570,
     "desc": "const checked = document.querySelectorAll('.vocab-del-cb:checked');",
     "callers": 1,
     "exported": false
@@ -3816,7 +3825,7 @@
     "type": "function",
     "name": "toggleVocabList",
     "file": "src/core-vocab.js",
-    "line": 574,
+    "line": 582,
     "desc": "const list = document.getElementById('vocabList');",
     "callers": 3,
     "exported": true
@@ -3825,7 +3834,7 @@
     "type": "function",
     "name": "renderVocabList",
     "file": "src/core-vocab.js",
-    "line": 586,
+    "line": 594,
     "desc": "const _fmtSourceList = (src, dt) => {",
     "callers": 6,
     "exported": false
@@ -3834,7 +3843,7 @@
     "type": "function",
     "name": "printVocabList",
     "file": "src/core-vocab.js",
-    "line": 630,
+    "line": 638,
     "desc": "const cards = state.vocab;",
     "callers": 2,
     "exported": true
@@ -3843,7 +3852,7 @@
     "type": "function",
     "name": "vcToggleHint",
     "file": "src/core-vocab.js",
-    "line": 650,
+    "line": 658,
     "desc": "const hint = document.getElementById('vcHint');",
     "callers": 2,
     "exported": true
@@ -3852,7 +3861,7 @@
     "type": "function",
     "name": "transAddToVocab",
     "file": "src/core-vocab.js",
-    "line": 659,
+    "line": 667,
     "desc": "const src = document.getElementById('transInput').value.trim();",
     "callers": 3,
     "exported": true
@@ -3861,7 +3870,7 @@
     "type": "function",
     "name": "renderGrammar",
     "file": "src/core-vocab.js",
-    "line": 681,
+    "line": 689,
     "desc": "GRAMMAR",
     "callers": 2,
     "exported": true
@@ -3870,7 +3879,7 @@
     "type": "function",
     "name": "toggleGrammar",
     "file": "src/core-vocab.js",
-    "line": 698,
+    "line": 706,
     "desc": "const el = document.getElementById('ge' + i);",
     "callers": 3,
     "exported": true
@@ -3879,7 +3888,7 @@
     "type": "function",
     "name": "appendChatMsg",
     "file": "src/core-vocab.js",
-    "line": 707,
+    "line": 715,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 5,
     "exported": false
@@ -3888,7 +3897,7 @@
     "type": "function",
     "name": "updateChatMsg",
     "file": "src/core-vocab.js",
-    "line": 744,
+    "line": 752,
     "desc": "const el = document.getElementById(id);",
     "callers": 4,
     "exported": false
@@ -3897,7 +3906,7 @@
     "type": "function",
     "name": "showChatHistoryEntry",
     "file": "src/core-vocab.js",
-    "line": 797,
+    "line": 805,
     "desc": "scraping #chatMessages (that DOM gets wiped by sendChat() on every",
     "callers": 3,
     "exported": true
@@ -3906,7 +3915,7 @@
     "type": "function",
     "name": "transSpeakOutput",
     "file": "src/core-vocab.js",
-    "line": 811,
+    "line": 819,
     "desc": "const inp = document.getElementById('transInput').value.trim();",
     "callers": 3,
     "exported": true
@@ -3915,7 +3924,7 @@
     "type": "function",
     "name": "chatQuick",
     "file": "src/core-vocab.js",
-    "line": 821,
+    "line": 829,
     "desc": "const input = document.getElementById('chatInput');",
     "callers": 2,
     "exported": true
@@ -3924,7 +3933,7 @@
     "type": "function",
     "name": "sendChat",
     "file": "src/core-vocab.js",
-    "line": 827,
+    "line": 835,
     "desc": "const input = document.getElementById('chatInput');",
     "callers": 7,
     "exported": true
@@ -3933,7 +3942,7 @@
     "type": "function",
     "name": "startChatSpeech",
     "file": "src/core-vocab.js",
-    "line": 884,
+    "line": 892,
     "desc": "sttStart('chatInput', 'chatSpeechBtn', 'ja');",
     "callers": 2,
     "exported": true
@@ -3942,7 +3951,7 @@
     "type": "function",
     "name": "kanjiCorpusFilter",
     "file": "src/core-vocab.js",
-    "line": 906,
+    "line": 914,
     "desc": "KanjiCorpusState — see above",
     "callers": 7,
     "exported": false
@@ -3951,7 +3960,7 @@
     "type": "function",
     "name": "kanjiCorpusSort",
     "file": "src/core-vocab.js",
-    "line": 913,
+    "line": 921,
     "desc": "KanjiCorpusState.sort = sort;",
     "callers": 5,
     "exported": false
@@ -3960,7 +3969,7 @@
     "type": "function",
     "name": "kanjiSetView",
     "file": "src/core-vocab.js",
-    "line": 922,
+    "line": 930,
     "desc": "KanjiCorpusState — see below",
     "callers": 2,
     "exported": false
@@ -3969,7 +3978,7 @@
     "type": "function",
     "name": "kanjiCorpusRender",
     "file": "src/core-vocab.js",
-    "line": 929,
+    "line": 937,
     "desc": "const grid   = document.getElementById('kanjiCorpusGrid');",
     "callers": 4,
     "exported": false
@@ -3978,7 +3987,7 @@
     "type": "function",
     "name": "kanjiCorpusShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1045,
+    "line": 1053,
     "desc": "const detail = document.getElementById('kanjiCorpusDetail');",
     "callers": 2,
     "exported": false
@@ -3987,7 +3996,7 @@
     "type": "function",
     "name": "vcFilter",
     "file": "src/core-vocab.js",
-    "line": 1120,
+    "line": 1128,
     "desc": "VocabCorpusState — see below",
     "callers": 4,
     "exported": false
@@ -3996,7 +4005,7 @@
     "type": "function",
     "name": "vcSort",
     "file": "src/core-vocab.js",
-    "line": 1127,
+    "line": 1135,
     "desc": "VocabCorpusState.sort = s;",
     "callers": 5,
     "exported": false
@@ -4005,7 +4014,7 @@
     "type": "function",
     "name": "vcLevels",
     "file": "src/core-vocab.js",
-    "line": 1134,
+    "line": 1142,
     "desc": "const levels = new Set();",
     "callers": 1,
     "exported": false
@@ -4014,7 +4023,7 @@
     "type": "function",
     "name": "vcRenderTargets",
     "file": "src/core-vocab.js",
-    "line": 1147,
+    "line": 1155,
     "desc": "Target words are now surfaced via the priority score in the Words drill.",
     "callers": 3,
     "exported": true
@@ -4023,7 +4032,7 @@
     "type": "function",
     "name": "vcRenderTargetsInline",
     "file": "src/core-vocab.js",
-    "line": 1151,
+    "line": 1159,
     "desc": "const list = document.getElementById('vcTargetsList2');",
     "callers": 2,
     "exported": true
@@ -4032,7 +4041,7 @@
     "type": "function",
     "name": "vcDrillWord",
     "file": "src/core-vocab.js",
-    "line": 1157,
+    "line": 1165,
     "desc": "try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}",
     "callers": 2,
     "exported": true
@@ -4041,7 +4050,7 @@
     "type": "function",
     "name": "vocabPriorityContext",
     "file": "src/core-vocab.js",
-    "line": 1167,
+    "line": 1175,
     "desc": "Returns a compact text block summarising vocabulary state for Claude.",
     "callers": 2,
     "exported": true
@@ -4050,7 +4059,7 @@
     "type": "function",
     "name": "wordPriorityScore",
     "file": "src/core-vocab.js",
-    "line": 1269,
+    "line": 1277,
     "desc": "srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown.",
     "callers": 2,
     "exported": true
@@ -4059,7 +4068,7 @@
     "type": "function",
     "name": "wordEnrichWithSRS",
     "file": "src/core-vocab.js",
-    "line": 1332,
+    "line": 1340,
     "desc": "Enrich a vcMergeEntry with its SRS data and priority score.",
     "callers": 2,
     "exported": true
@@ -4068,7 +4077,7 @@
     "type": "function",
     "name": "vcBuildPriorityList",
     "file": "src/core-vocab.js",
-    "line": 1346,
+    "line": 1354,
     "desc": "Build a priority-sorted word list. Thin wrapper over vcBuildList that adds",
     "callers": 2,
     "exported": true
@@ -4077,7 +4086,7 @@
     "type": "function",
     "name": "vcBuildList",
     "file": "src/core-vocab.js",
-    "line": 1352,
+    "line": 1360,
     "desc": "const corpus = kanjiCorpusGet(); // personal encounter data keyed by word",
     "callers": 6,
     "exported": false
@@ -4086,7 +4095,7 @@
     "type": "function",
     "name": "vcMergeEntry",
     "file": "src/core-vocab.js",
-    "line": 1382,
+    "line": 1390,
     "desc": "const lookupCount   = cached?.count || 0;",
     "callers": 4,
     "exported": false
@@ -4095,7 +4104,7 @@
     "type": "function",
     "name": "vcRender",
     "file": "src/core-vocab.js",
-    "line": 1418,
+    "line": 1426,
     "desc": "const tbody  = document.getElementById('vcTableBody');",
     "callers": 7,
     "exported": false
@@ -4104,7 +4113,7 @@
     "type": "function",
     "name": "vcShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1493,
+    "line": 1501,
     "desc": "const detail = document.getElementById('vcDetail');",
     "callers": 1,
     "exported": false
@@ -4113,7 +4122,7 @@
     "type": "function",
     "name": "migrateLearnedWordsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1581,
+    "line": 1589,
     "desc": "GRAMMAR NOTES",
     "callers": 4,
     "exported": true
@@ -4122,7 +4131,7 @@
     "type": "function",
     "name": "backfillLessonPhrasesToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1617,
+    "line": 1625,
     "desc": "",
     "callers": 4,
     "exported": true
@@ -4131,7 +4140,7 @@
     "type": "function",
     "name": "backfillLookupsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1639,
+    "line": 1647,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4140,7 +4149,7 @@
     "type": "function",
     "name": "backfillN5ToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1668,
+    "line": 1676,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4149,7 +4158,7 @@
     "type": "function",
     "name": "extractWritingVocabToItems",
     "file": "src/core-vocab.js",
-    "line": 1692,
+    "line": 1700,
     "desc": "if (!text || text.length < 2) return;",
     "callers": 2,
     "exported": true
@@ -4158,7 +4167,7 @@
     "type": "function",
     "name": "initWritingVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1736,
+    "line": 1744,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4167,7 +4176,7 @@
     "type": "function",
     "name": "initLessonVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1747,
+    "line": 1755,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4176,7 +4185,7 @@
     "type": "function",
     "name": "initLookupVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1777,
+    "line": 1785,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4185,7 +4194,7 @@
     "type": "function",
     "name": "vocabSettingsLoad",
     "file": "src/core-vocab.js",
-    "line": 1817,
+    "line": 1825,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4194,7 +4203,7 @@
     "type": "function",
     "name": "vocabSettingsSave",
     "file": "src/core-vocab.js",
-    "line": 1862,
+    "line": 1870,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4203,7 +4212,7 @@
     "type": "function",
     "name": "toggleVcTextEntry",
     "file": "src/core-vocab.js",
-    "line": 1907,
+    "line": 1915,
     "desc": "_vcTextEntry = !_vcTextEntry;",
     "callers": 2,
     "exported": true
@@ -4212,7 +4221,7 @@
     "type": "function",
     "name": "submitVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 1923,
+    "line": 1931,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 4,
     "exported": true
@@ -4221,7 +4230,7 @@
     "type": "function",
     "name": "vocabTypeMarkWrong",
     "file": "src/core-vocab.js",
-    "line": 1954,
+    "line": 1962,
     "desc": "const res = document.getElementById('vocabTypeResult');",
     "callers": 1,
     "exported": true
@@ -4230,7 +4239,7 @@
     "type": "function",
     "name": "skipVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 1962,
+    "line": 1970,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 2,
     "exported": true
@@ -4239,7 +4248,7 @@
     "type": "function",
     "name": "vocabKnownRecent",
     "file": "src/core-vocab.js",
-    "line": 1971,
+    "line": 1979,
     "desc": "",
     "callers": 6,
     "exported": true
@@ -4248,196 +4257,196 @@
     "type": "storage",
     "name": "VOCAB_DIRECTION",
     "file": "src/core-vocab.js",
-    "line": 538,
+    "line": 546,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1586,
+    "line": 1594,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1589,
+    "line": 1597,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1609,
+    "line": 1617,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1622,
+    "line": 1630,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1631,
+    "line": 1639,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1650,
+    "line": 1658,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1660,
+    "line": 1668,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1673,
+    "line": 1681,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1684,
+    "line": 1692,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_WEIGHTS",
     "file": "src/core-vocab.js",
-    "line": 1893,
+    "line": 1901,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_THRESHOLDS",
     "file": "src/core-vocab.js",
-    "line": 1894,
+    "line": 1902,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_INTERVALS",
     "file": "src/core-vocab.js",
-    "line": 1895,
+    "line": 1903,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 248,
+    "line": 257,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 262,
+    "line": 271,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 282,
+    "line": 285,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 294,
+    "line": 297,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 298,
+    "line": 301,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "src/core-vocab.js",
-    "line": 568,
+    "line": 576,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "DELETE",
     "file": "src/core-vocab.js",
-    "line": 569,
+    "line": 577,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1596,
+    "line": 1604,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1602,
+    "line": 1610,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1625,
+    "line": 1633,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1654,
+    "line": 1662,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1677,
+    "line": 1685,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1724,
+    "line": 1732,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1760,
+    "line": 1768,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1796,
+    "line": 1804,
     "desc": "db.run"
   },
   {
@@ -4726,7 +4735,7 @@
     "file": "src/features-core.js",
     "line": 535,
     "desc": "return TTS.speak(text, rate || 0.9, opts || {}); }",
-    "callers": 62,
+    "callers": 64,
     "exported": true
   },
   {
@@ -5794,7 +5803,7 @@
     "type": "function",
     "name": "qrClose",
     "file": "src/features-reading.js",
-    "line": 37,
+    "line": 38,
     "desc": "document.getElementById('qrOverlay').style.display = 'none';",
     "callers": 1,
     "exported": false
@@ -5803,7 +5812,7 @@
     "type": "function",
     "name": "qrOnInput",
     "file": "src/features-reading.js",
-    "line": 42,
+    "line": 43,
     "desc": "const val = document.getElementById('qrInput').value.trim();",
     "callers": 6,
     "exported": false
@@ -5812,7 +5821,7 @@
     "type": "function",
     "name": "qrDownloadTTS",
     "file": "src/features-reading.js",
-    "line": 51,
+    "line": 52,
     "desc": "const text = (document.getElementById('qrInput')?.value || '').trim();",
     "callers": 2,
     "exported": true
@@ -5821,7 +5830,7 @@
     "type": "function",
     "name": "qrSpeakRaw",
     "file": "src/features-reading.js",
-    "line": 88,
+    "line": 89,
     "desc": "const text = (document.getElementById('qrInput')?.value || '').trim();",
     "callers": 1,
     "exported": true
@@ -5830,7 +5839,7 @@
     "type": "function",
     "name": "qrLoadText",
     "file": "src/features-reading.js",
-    "line": 110,
+    "line": 111,
     "desc": "if (!text) return;",
     "callers": 3,
     "exported": true
@@ -5839,7 +5848,7 @@
     "type": "function",
     "name": "qrShowPaste",
     "file": "src/features-reading.js",
-    "line": 128,
+    "line": 129,
     "desc": "const rw = document.getElementById('qrReaderWrap');",
     "callers": 5,
     "exported": true
@@ -5848,7 +5857,7 @@
     "type": "function",
     "name": "qrClear",
     "file": "src/features-reading.js",
-    "line": 140,
+    "line": 145,
     "desc": "const inp = document.getElementById('qrInput');",
     "callers": 2,
     "exported": true
@@ -5857,7 +5866,7 @@
     "type": "function",
     "name": "qrSendToWrite",
     "file": "src/features-reading.js",
-    "line": 177,
+    "line": 182,
     "desc": "QuickReadState.plainOn — see declaration above",
     "callers": 2,
     "exported": true
@@ -5866,7 +5875,7 @@
     "type": "function",
     "name": "qrTogglePlain",
     "file": "src/features-reading.js",
-    "line": 192,
+    "line": 197,
     "desc": "QuickReadState.plainOn = !QuickReadState.plainOn;",
     "callers": 2,
     "exported": true
@@ -5875,7 +5884,7 @@
     "type": "function",
     "name": "qrToggleFuri",
     "file": "src/features-reading.js",
-    "line": 206,
+    "line": 211,
     "desc": "QuickReadState.furiOn = !QuickReadState.furiOn;",
     "callers": 3,
     "exported": true
@@ -5884,7 +5893,7 @@
     "type": "function",
     "name": "qrSegment",
     "file": "src/features-reading.js",
-    "line": 214,
+    "line": 219,
     "desc": "const rawText = document.getElementById('qrInput').value.trim();",
     "callers": 5,
     "exported": true
@@ -5893,7 +5902,7 @@
     "type": "function",
     "name": "qrRender",
     "file": "src/features-reading.js",
-    "line": 307,
+    "line": 312,
     "desc": "const container = document.getElementById('qrReader');",
     "callers": 6,
     "exported": false
@@ -5902,7 +5911,7 @@
     "type": "function",
     "name": "qrWordClick",
     "file": "src/features-reading.js",
-    "line": 351,
+    "line": 356,
     "desc": "if (el.classList.contains('qr-active')) { qrClosePopup(); return; }",
     "callers": 2,
     "exported": false
@@ -5911,7 +5920,7 @@
     "type": "function",
     "name": "qrPopupHtml",
     "file": "src/features-reading.js",
-    "line": 401,
+    "line": 406,
     "desc": "return `",
     "callers": 2,
     "exported": false
@@ -5920,7 +5929,7 @@
     "type": "function",
     "name": "qrClosePopup",
     "file": "src/features-reading.js",
-    "line": 411,
+    "line": 416,
     "desc": "if (QuickReadState.popupEl) { QuickReadState.popupEl.remove(); QuickReadState.popupEl = null; }",
     "callers": 5,
     "exported": false
@@ -5929,7 +5938,7 @@
     "type": "function",
     "name": "vgSetTts",
     "file": "src/features-reading.js",
-    "line": 431,
+    "line": 436,
     "desc": "── GAME SPEECH + TTS ────────────────────────────────────────────────────",
     "callers": 2,
     "exported": true
@@ -5938,7 +5947,7 @@
     "type": "function",
     "name": "vgSpeak",
     "file": "src/features-reading.js",
-    "line": 437,
+    "line": 442,
     "desc": "const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];",
     "callers": 2,
     "exported": true
@@ -5947,7 +5956,7 @@
     "type": "function",
     "name": "vgAutoSpeak",
     "file": "src/features-reading.js",
-    "line": 443,
+    "line": 448,
     "desc": "if (VehicleGameState.ttsOn) {",
     "callers": 1,
     "exported": false
@@ -5956,7 +5965,7 @@
     "type": "function",
     "name": "vgStopMic",
     "file": "src/features-reading.js",
-    "line": 452,
+    "line": 457,
     "desc": "Vocab game uses custom stt handling",
     "callers": 1,
     "exported": false
@@ -5965,7 +5974,7 @@
     "type": "function",
     "name": "qrLoadHistoryList",
     "file": "src/features-reading.js",
-    "line": 470,
+    "line": 475,
     "desc": "if (_qrHistoryCache !== null) return _qrHistoryCache;",
     "callers": 4,
     "exported": false
@@ -5974,7 +5983,7 @@
     "type": "function",
     "name": "qrSaveHistoryList",
     "file": "src/features-reading.js",
-    "line": 475,
+    "line": 480,
     "desc": "_qrHistoryCache = list;",
     "callers": 2,
     "exported": false
@@ -5983,7 +5992,7 @@
     "type": "function",
     "name": "qrLoadHistoryFromStorage",
     "file": "src/features-reading.js",
-    "line": 482,
+    "line": 487,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -5992,7 +6001,7 @@
     "type": "function",
     "name": "qrUpdateHistoryDropdown",
     "file": "src/features-reading.js",
-    "line": 506,
+    "line": 511,
     "desc": "const select = document.getElementById('qrHistorySelect');",
     "callers": 4,
     "exported": false
@@ -6001,7 +6010,7 @@
     "type": "function",
     "name": "qrSaveToHistory",
     "file": "src/features-reading.js",
-    "line": 523,
+    "line": 528,
     "desc": "if (!text || text.trim().length < 10) return; // Don't save very short texts",
     "callers": 4,
     "exported": false
@@ -6010,7 +6019,7 @@
     "type": "function",
     "name": "qrLoadHistory",
     "file": "src/features-reading.js",
-    "line": 553,
+    "line": 568,
     "desc": "if (!indexStr && indexStr !== 0) return;",
     "callers": 2,
     "exported": true
@@ -6019,7 +6028,7 @@
     "type": "function",
     "name": "qrDeleteHistory",
     "file": "src/features-reading.js",
-    "line": 613,
+    "line": 629,
     "desc": "const select = document.getElementById('qrHistorySelect');",
     "callers": 2,
     "exported": true
@@ -6028,7 +6037,7 @@
     "type": "function",
     "name": "qrGetRecordingsForStorage",
     "file": "src/features-reading.js",
-    "line": 637,
+    "line": 653,
     "desc": "return Promise.all(QuickReadState.segmentRecordings.map(async (rec) => {",
     "callers": 1,
     "exported": false
@@ -6037,7 +6046,7 @@
     "type": "function",
     "name": "qrToggleSeparateSentences",
     "file": "src/features-reading.js",
-    "line": 667,
+    "line": 683,
     "desc": "QuickReadState.separateSentences = !QuickReadState.separateSentences;",
     "callers": 1,
     "exported": true
@@ -6046,7 +6055,7 @@
     "type": "function",
     "name": "qrToggleListenMode",
     "file": "src/features-reading.js",
-    "line": 684,
+    "line": 700,
     "desc": "QuickReadState.sentences* — see declaration above",
     "callers": 2,
     "exported": true
@@ -6055,7 +6064,7 @@
     "type": "function",
     "name": "qrUpdateSentenceDisplay",
     "file": "src/features-reading.js",
-    "line": 723,
+    "line": 739,
     "desc": "const counter = document.getElementById('qrSentenceCounter');",
     "callers": 7,
     "exported": false
@@ -6064,7 +6073,7 @@
     "type": "function",
     "name": "qrListenPlay",
     "file": "src/features-reading.js",
-    "line": 737,
+    "line": 753,
     "desc": "const btn = document.getElementById('qrListenPlayBtn');",
     "callers": 2,
     "exported": true
@@ -6073,7 +6082,7 @@
     "type": "function",
     "name": "qrHighlightSentence",
     "file": "src/features-reading.js",
-    "line": 756,
+    "line": 772,
     "desc": "const reader = document.getElementById('qrReader');",
     "callers": 8,
     "exported": false
@@ -6082,7 +6091,7 @@
     "type": "function",
     "name": "qrClearSentenceHighlight",
     "file": "src/features-reading.js",
-    "line": 806,
+    "line": 822,
     "desc": "document.querySelectorAll('.qr-sentence-active').forEach(el => {",
     "callers": 3,
     "exported": false
@@ -6091,7 +6100,7 @@
     "type": "function",
     "name": "qrPauseAll",
     "file": "src/features-reading.js",
-    "line": 812,
+    "line": 828,
     "desc": "const btn = document.getElementById('qrPauseAllBtn');",
     "callers": 2,
     "exported": true
@@ -6100,7 +6109,7 @@
     "type": "function",
     "name": "qrPlayAll",
     "file": "src/features-reading.js",
-    "line": 829,
+    "line": 845,
     "desc": "const btn = document.getElementById('qrPlayAllBtn2');",
     "callers": 2,
     "exported": true
@@ -6109,7 +6118,7 @@
     "type": "function",
     "name": "qrPlayAllNext",
     "file": "src/features-reading.js",
-    "line": 853,
+    "line": 869,
     "desc": "if (!QuickReadState.playAllActive || QuickReadState.playAllPaused) return;",
     "callers": 4,
     "exported": true
@@ -6118,7 +6127,7 @@
     "type": "function",
     "name": "qrListenPrev",
     "file": "src/features-reading.js",
-    "line": 882,
+    "line": 898,
     "desc": "if (QuickReadState.sentenceIdx > 0) {",
     "callers": 2,
     "exported": true
@@ -6127,7 +6136,7 @@
     "type": "function",
     "name": "qrListenNext",
     "file": "src/features-reading.js",
-    "line": 892,
+    "line": 908,
     "desc": "if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {",
     "callers": 2,
     "exported": true
@@ -6136,7 +6145,7 @@
     "type": "function",
     "name": "_qrSpeakCurrent",
     "file": "src/features-reading.js",
-    "line": 903,
+    "line": 919,
     "desc": "const _TTS = App.TTS || window.TTS;",
     "callers": 3,
     "exported": false
@@ -6145,7 +6154,7 @@
     "type": "function",
     "name": "qrSetSpeed",
     "file": "src/features-reading.js",
-    "line": 950,
+    "line": 966,
     "desc": "QuickReadState.listenSpeed = speed;",
     "callers": 5,
     "exported": true
@@ -6154,7 +6163,7 @@
     "type": "function",
     "name": "qrUpdateSegmentUI",
     "file": "src/features-reading.js",
-    "line": 963,
+    "line": 979,
     "desc": "QuickReadState.recording* — see declaration above",
     "callers": 6,
     "exported": false
@@ -6163,7 +6172,7 @@
     "type": "function",
     "name": "qrSegDragStart",
     "file": "src/features-reading.js",
-    "line": 998,
+    "line": 1014,
     "desc": "QuickReadState.dragIdx — see declaration above",
     "callers": 1,
     "exported": false
@@ -6172,7 +6181,7 @@
     "type": "function",
     "name": "qrSegDragOver",
     "file": "src/features-reading.js",
-    "line": 1004,
+    "line": 1020,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -6181,7 +6190,7 @@
     "type": "function",
     "name": "qrSegDrop",
     "file": "src/features-reading.js",
-    "line": 1009,
+    "line": 1025,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -6190,7 +6199,7 @@
     "type": "function",
     "name": "qrSegDragEnd",
     "file": "src/features-reading.js",
-    "line": 1027,
+    "line": 1043,
     "desc": "e.target.style.opacity = '1';",
     "callers": 1,
     "exported": false
@@ -6199,7 +6208,7 @@
     "type": "function",
     "name": "qrStartReplace",
     "file": "src/features-reading.js",
-    "line": 1032,
+    "line": 1048,
     "desc": "if (QuickReadState.replaceIdx === idx) {",
     "callers": 1,
     "exported": false
@@ -6208,7 +6217,7 @@
     "type": "function",
     "name": "qrRecordToggle",
     "file": "src/features-reading.js",
-    "line": 1044,
+    "line": 1060,
     "desc": "const btn = document.getElementById('qrRecordBtn');",
     "callers": 2,
     "exported": true
@@ -6217,7 +6226,7 @@
     "type": "function",
     "name": "qrPlaySegment",
     "file": "src/features-reading.js",
-    "line": 1105,
+    "line": 1121,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;",
     "callers": 2,
     "exported": true
@@ -6226,7 +6235,7 @@
     "type": "function",
     "name": "qrDeleteSegment",
     "file": "src/features-reading.js",
-    "line": 1111,
+    "line": 1127,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;",
     "callers": 2,
     "exported": true
@@ -6235,7 +6244,7 @@
     "type": "function",
     "name": "qrClearSegments",
     "file": "src/features-reading.js",
-    "line": 1119,
+    "line": 1135,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6244,7 +6253,7 @@
     "type": "function",
     "name": "qrPlayAllSegments",
     "file": "src/features-reading.js",
-    "line": 1129,
+    "line": 1145,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6253,7 +6262,7 @@
     "type": "function",
     "name": "qrCombineSegments",
     "file": "src/features-reading.js",
-    "line": 1149,
+    "line": 1165,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6262,7 +6271,7 @@
     "type": "function",
     "name": "qrDrawWaveform",
     "file": "src/features-reading.js",
-    "line": 1204,
+    "line": 1220,
     "desc": "const canvas = document.getElementById('qrWaveform');",
     "callers": 1,
     "exported": false
@@ -6271,7 +6280,7 @@
     "type": "function",
     "name": "qrDownloadCombined",
     "file": "src/features-reading.js",
-    "line": 1241,
+    "line": 1257,
     "desc": "if (!QuickReadState.combinedBlob) return;",
     "callers": 2,
     "exported": true
@@ -6280,7 +6289,7 @@
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-reading.js",
-    "line": 1254,
+    "line": 1270,
     "desc": "if (!QuickReadState.segments.length) return;",
     "callers": 5,
     "exported": true
@@ -6289,7 +6298,7 @@
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1317,
+    "line": 1333,
     "desc": "if (!QuickReadState.segments.length) return;",
     "callers": 3,
     "exported": true
@@ -6298,7 +6307,7 @@
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1329,
+    "line": 1345,
     "desc": "",
     "callers": 3,
     "exported": true

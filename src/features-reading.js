@@ -17,6 +17,7 @@ const QuickReadState = {
   furiOn:            true,
   plainOn:           false,
   separateSentences: false,
+  _historyIdx:       -1,   // index of currently loaded history entry; -1 = new/unsaved
   // Sentence listening
   sentences:         [],
   sentenceIdx:       0,
@@ -135,6 +136,10 @@ function qrShowPaste() {
   if (fb) fb.style.display = 'none';
   document.getElementById('qrStatus').textContent = '';
   QuickReadState.segments = [];
+  // Preserve history index so re-analyse overwrites current entry rather than creating a new one
+  const sel = document.getElementById('qrHistorySelect');
+  const selIdx = sel ? parseInt(sel.value) : NaN;
+  if (!isNaN(selIdx) && selIdx >= 0) QuickReadState._historyIdx = selIdx;
 }
 
 function qrClear() {
@@ -525,24 +530,34 @@ function qrSaveToHistory(text, recordings, segments) {
   (App.drillLastCompletedWrite || window.drillLastCompletedWrite)?.('reading');
   const history = qrLoadHistoryList();
   
-  // Check if same text already exists
-  const existingIdx = history.findIndex(h => h.text === text);
-  if (existingIdx >= 0) {
-    // Update existing entry
-    history[existingIdx].timestamp = Date.now();
-    history[existingIdx].recordings = recordings || [];
-    if (segments && segments.length) history[existingIdx].segments = segments;
+  // If we have a known history index (edit of existing item), overwrite it in-place
+  const _knownIdx = QuickReadState._historyIdx;
+  if (_knownIdx >= 0 && _knownIdx < history.length) {
+    history[_knownIdx].text = text;
+    history[_knownIdx].timestamp = Date.now();
+    history[_knownIdx].recordings = recordings || [];
+    if (segments && segments.length) history[_knownIdx].segments = segments;
   } else {
-    // Add new entry
-    history.unshift({
-      text: text,
-      segments: segments || [],
-      timestamp: Date.now(),
-      recordings: recordings || []
-    });
-    // Keep only last 3
-    while (history.length > QR_HISTORY_MAX) {
-      history.pop();
+    // Check if same text already exists (dedup for new items)
+    const existingIdx = history.findIndex(h => h.text === text);
+    if (existingIdx >= 0) {
+      history[existingIdx].timestamp = Date.now();
+      history[existingIdx].recordings = recordings || [];
+      if (segments && segments.length) history[existingIdx].segments = segments;
+      QuickReadState._historyIdx = existingIdx;
+    } else {
+      // Add new entry
+      history.unshift({
+        text: text,
+        segments: segments || [],
+        timestamp: Date.now(),
+        recordings: recordings || []
+      });
+      QuickReadState._historyIdx = 0;
+      // Keep only last N
+      while (history.length > QR_HISTORY_MAX) {
+        history.pop();
+      }
     }
   }
   
@@ -565,6 +580,7 @@ async function qrLoadHistory(indexStr) {
   if (idx < 0 || idx >= history.length) return;
   
   const item = history[idx];
+  QuickReadState._historyIdx = idx;
   
   // Load text
   const inp = document.getElementById('qrInput');
