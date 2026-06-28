@@ -1804,7 +1804,7 @@ function initLookupVocabListener() {
         await window.db.run(
           `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at)
            VALUES (?, ?, ?, 'lookup', 'corpus_lookups', 'word', ?, ?, ?)
-           ON CONFLICT(word, source) DO UPDATE SET
+           ON CONFLICT(word) DO UPDATE SET
              meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
              reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
              encounter_at = excluded.encounter_at,
