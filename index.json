@@ -4248,8 +4248,8 @@
     "type": "function",
     "name": "vocabKnownRecent",
     "file": "src/core-vocab.js",
-    "line": 1989,
-    "desc": "",
+    "line": 1991,
+    "desc": "Async version — callers should await. Sync callers get cached value from last call.",
     "callers": 6,
     "exported": true
   },

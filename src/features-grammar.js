@@ -64,7 +64,7 @@ async function gdGenerate() {
                          register === 'polite' ? 'Use polite forms only (ます/です).' : 'Use plain forms only.';
     const contextNote = context ? `Set sentences in the context of: ${context}.` : '';
     const _vkr2 = (App.vocabKnownRecent || window.vocabKnownRecent);
-    const knownVocab2 = _vkr2 ? _vkr2() : '';
+    const knownVocab2 = _vkr2 ? (await _vkr2()) : '';
     const vocabNote2 = knownVocab2 ? `\nUse only vocabulary the learner already knows. Prefer words from this list where natural — do not force it:\n${knownVocab2}` : '';
     const prompt = `Generate ${count} Japanese sentences for a ${level} grammar drill targeting: "${target}".
 ${registerNote}${contextNote ? '\n' + contextNote : ''}${vocabNote2}
@@ -458,7 +458,7 @@ async function gramSentPracticePattern(pattern) {
 
 async function _gramSentGenerateOne(target, level, theme, avoidJp) {
   const _vkr = (App.vocabKnownRecent || window.vocabKnownRecent);
-  const knownVocab = _vkr ? _vkr() : '';
+  const knownVocab = _vkr ? (await _vkr()) : '';
   const vocabNote = knownVocab
     ? `Use only vocabulary the learner already knows. Prefer words from this list where natural — do not force it:\n${knownVocab}`
     : '';

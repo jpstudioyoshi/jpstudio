@@ -1986,9 +1986,11 @@ function skipVocabTypeAnswer() {
 }
 
 // Returns recently graduated vocab_items words for use as sentence scaffolding
-function vocabKnownRecent(limit = 20) {
+// Async version — callers should await. Sync callers get cached value from last call.
+let _vocabKnownRecentCache = '';
+async function vocabKnownRecent(limit = 20) {
   try {
-    const rows = window.db.query(
+    const rows = await window.db.query(
       `SELECT v.word, v.meaning FROM vocab_items v
        JOIN vocab_srs s ON s.vocab_id = v.id
        WHERE s.srs_graduated = 1
@@ -1996,10 +1998,11 @@ function vocabKnownRecent(limit = 20) {
        ORDER BY MAX(s.last_reviewed) DESC
        LIMIT ?`, [limit]
     );
-    return rows.map(r => r.word + '（' + r.meaning + '）').join(', ');
+    _vocabKnownRecentCache = (rows || []).map(r => r.word + '（' + r.meaning + '）').join(', ');
+    return _vocabKnownRecentCache;
   } catch(e) {
     console.warn('[vocabKnownRecent]', e.message);
-    return '';
+    return _vocabKnownRecentCache;
   }
 }
 
