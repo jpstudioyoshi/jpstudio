@@ -350,7 +350,7 @@ function createSchema() {
       encounter_at  TEXT,
       entry_weight  REAL DEFAULT 1.0,
       created_at    TEXT NOT NULL,
-      UNIQUE(word, source)
+      UNIQUE(word)
     );
     CREATE TABLE IF NOT EXISTS vocab_srs (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -408,7 +408,7 @@ function createSchema() {
   // Set schema version if not set
   const v = db.exec('SELECT version FROM schema_version');
   if (!v.length || !v[0].values.length) {
-    db.run('INSERT INTO schema_version VALUES (1)');
+    db.run('INSERT OR IGNORE INTO schema_version VALUES (1)');
   }
 
   // ── Migrations ──────────────────────────────────────────────────────────────
