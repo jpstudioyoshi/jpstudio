@@ -1631,8 +1631,11 @@ async function backfillLessonPhrasesToVocabItems() {
     const now = new Date().toISOString();
     for (const row of rows) {
       await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
-         VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)`,
+        `INSERT INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
+         VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)
+         ON CONFLICT(word) DO UPDATE SET
+           entry_weight = MAX(entry_weight, excluded.entry_weight),
+           source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
         [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now]
       );
     }
@@ -1730,8 +1733,11 @@ async function extractWritingVocabToItems(text) {
     for (const w of words) {
       if (!w.word || typeof w.word !== 'string') continue;
       await window.db.run(
-        `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at)
-         VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, ?)`,
+        `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at)
+         VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, ?)
+         ON CONFLICT(word) DO UPDATE SET
+           entry_weight = MAX(entry_weight, excluded.entry_weight),
+           source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
         [w.word, w.reading || null, w.meaning || null, w.pos || null, now, now]
       );
     }
@@ -1766,8 +1772,11 @@ function initLessonVocabListener() {
         for (const row of rows) {
           if (row.type === 'grammar') continue;
           await window.db.run(
-            `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
-             VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)`,
+            `INSERT INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
+             VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)
+             ON CONFLICT(word) DO UPDATE SET
+               entry_weight = MAX(entry_weight, excluded.entry_weight),
+               source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
             [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now]
           );
         }
@@ -1808,7 +1817,8 @@ function initLookupVocabListener() {
              meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
              reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
              encounter_at = excluded.encounter_at,
-             entry_weight = excluded.entry_weight`,
+             entry_weight = MAX(entry_weight, excluded.entry_weight),
+             source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
           [_vocabWord, _reading, _meaning, now, weight, now]
         );
         console.log('[vocab] lookup promoted:', _vocabWord, '(' + count + ' lookups, looked up as ' + word + ')');

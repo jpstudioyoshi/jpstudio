@@ -4140,7 +4140,7 @@
     "type": "function",
     "name": "backfillLookupsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1647,
+    "line": 1650,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4149,7 +4149,7 @@
     "type": "function",
     "name": "backfillN5ToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1676,
+    "line": 1679,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4158,7 +4158,7 @@
     "type": "function",
     "name": "extractWritingVocabToItems",
     "file": "src/core-vocab.js",
-    "line": 1700,
+    "line": 1703,
     "desc": "if (!text || text.length < 2) return;",
     "callers": 2,
     "exported": true
@@ -4167,7 +4167,7 @@
     "type": "function",
     "name": "initWritingVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1744,
+    "line": 1750,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4176,7 +4176,7 @@
     "type": "function",
     "name": "initLessonVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1755,
+    "line": 1761,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4185,7 +4185,7 @@
     "type": "function",
     "name": "initLookupVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1785,
+    "line": 1794,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4194,7 +4194,7 @@
     "type": "function",
     "name": "vocabSettingsLoad",
     "file": "src/core-vocab.js",
-    "line": 1825,
+    "line": 1835,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4203,7 +4203,7 @@
     "type": "function",
     "name": "vocabSettingsSave",
     "file": "src/core-vocab.js",
-    "line": 1870,
+    "line": 1880,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4212,7 +4212,7 @@
     "type": "function",
     "name": "toggleVcTextEntry",
     "file": "src/core-vocab.js",
-    "line": 1915,
+    "line": 1925,
     "desc": "_vcTextEntry = !_vcTextEntry;",
     "callers": 2,
     "exported": true
@@ -4221,7 +4221,7 @@
     "type": "function",
     "name": "submitVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 1931,
+    "line": 1941,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 4,
     "exported": true
@@ -4230,7 +4230,7 @@
     "type": "function",
     "name": "vocabTypeMarkWrong",
     "file": "src/core-vocab.js",
-    "line": 1962,
+    "line": 1972,
     "desc": "const res = document.getElementById('vocabTypeResult');",
     "callers": 1,
     "exported": true
@@ -4239,7 +4239,7 @@
     "type": "function",
     "name": "skipVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 1970,
+    "line": 1980,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 2,
     "exported": true
@@ -4248,7 +4248,7 @@
     "type": "function",
     "name": "vocabKnownRecent",
     "file": "src/core-vocab.js",
-    "line": 1979,
+    "line": 1989,
     "desc": "",
     "callers": 6,
     "exported": true
@@ -4292,56 +4292,56 @@
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1639,
+    "line": 1642,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1658,
+    "line": 1661,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1668,
+    "line": 1671,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1681,
+    "line": 1684,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1692,
+    "line": 1695,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_WEIGHTS",
     "file": "src/core-vocab.js",
-    "line": 1901,
+    "line": 1911,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_THRESHOLDS",
     "file": "src/core-vocab.js",
-    "line": 1902,
+    "line": 1912,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_INTERVALS",
     "file": "src/core-vocab.js",
-    "line": 1903,
+    "line": 1913,
     "desc": "kvAPI.set"
   },
   {
@@ -4418,35 +4418,35 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1662,
+    "line": 1665,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1685,
+    "line": 1688,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1732,
+    "line": 1735,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1768,
+    "line": 1774,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1804,
+    "line": 1813,
     "desc": "db.run"
   },
   {
