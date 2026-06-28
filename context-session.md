@@ -1,41 +1,40 @@
 # jpStudio — Session Context
-*Updated: 2026-06-26*
+*Updated: 2026-06-28*
 
 ---
 
-## Current Focus: Vocab Drill Redesign (completed this session)
-
-Full handoff doc at project root: `vocab-drill-handoff.md`
+## Current Focus: Vocab DB Cleanup (completed this session)
 
 ---
 
-## Vocab Drill — What Changed This Session
+## What Changed This Session (2026-06-28)
+
+### vocab_items deduplication
+- **294 cross-source duplicate rows removed** — same word inserted by different sources (n5, yoshi_vocab, writing, lookup) each created their own row under old `UNIQUE(word, source)` constraint
+- **`UNIQUE(word, source)` → `UNIQUE(word)`** — one row per word, enforced at DB level
+- **31 kana/kanji variant pairs merged** — e.g. わかる/分かる, まいにち/毎日, 朝ご飯/朝御飯/朝ごはん. Keeper = canonical written form; SRS rows remapped to keeper id
+- **vocab_items now 1191 words** (was 1545 with duplicates, 1222 after cross-source dedup, 1191 after kana/kanji merge)
+- **SRS rows remapped** — 259 `vocab_srs` rows pointed at duplicate ids; all remapped to keeper ids before deletion
+
+### Insert path upgrades
+All insert paths now use `ON CONFLICT(word) DO UPDATE SET entry_weight = MAX(entry_weight, excluded.entry_weight), source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`
+- Yoshi seeing an n5 word upgrades it from weight 0.3 → 1.0
+- `backfillLessonPhrasesToVocabItems` — upgraded
+- `initLessonVocabListener` — upgraded
+- `extractWritingVocabToItems` — upgraded
+- `initLookupVocabListener` — already had DO UPDATE, now also upgrades weight/source
+
+### `createSchema` in main.js
+- `vocab_items` schema definition updated from `UNIQUE(word, source)` to `UNIQUE(word)` — was causing fresh-install conflict
+- `INSERT INTO schema_version VALUES (1)` → `INSERT OR IGNORE INTO schema_version VALUES (1)` — fixes startup error log
 
 ### Bug fixes
-- **`render-process-gone` auto-reload disabled** (`main.js`) — was causing unrecoverable zombie state requiring full Mac restart. Now just logs. User must quit and relaunch.
-- **`again` = tomorrow** — previously requeued same session. Now sets `srs_due = tomorrow`, removes from session entirely.
-- **Double-advance bug fixed** — duplicate keydown listener in `core-vocab.js` was firing alongside existing one in `index.html`. Removed the duplicate.
-- **Phrases excluded from drill** — added `v.type != 'phrase'` to base SQL query in `loadVocabItemsDeck`.
+- **`vocabKnownRecent()`** — was synchronous `window.db.query()` (silently returned Promise object, not rows). Now `async`, returns graduated words correctly. Grammar sentence drill callers (`gdGenerate`, `_gramSentGenerateOne`) now `await` it — Claude now gets real vocab context for sentence construction
+- **270 graduated words** now passed to Claude for sentence generation
 
-### Behaviour changes
-- **Session size: 100** — was 30. Persisted in kvAPI `VOCAB_THRESHOLDS`.
-- **MAX_NEW: 100** — was 5. May need tuning back to 15–20 once review backlog builds.
-- **Speaking mode removed** — direction cycle is now `jp_en ↔ en_jp` only.
-- **TTS auto-plays on every card** — fires on card show regardless of direction.
-- **Source filters off by default** — no filter = full SRS pool (correct default).
-- **POS filters off by default** — no filter = all POS included.
-- **Focus mode banner** — gold "⚡ Focus mode — SRS paused" when any source filter active.
-- **Focus mode skips SRS writes** — `markVocab` does not write `vocab_srs` when source filter active. Pure flashcard drill.
-- **Listen panel SRS removed** — Hard/Good/Easy rating system (`const SRS`) fully removed from `core-listen.js` and `index.html`. Was never used.
-- **`vocab_srs` reset** — clean slate. Previous data corrupted by old `again` behaviour and shared direction intervals.
-
-### Keyboard shortcuts (already existed in index.html — not added this session)
-- Space — flip card
-- 1 — Again
-- 2 — Got it
-- 3 — Know
-- ← → — Prev / Next
-- Info button (?) added to toolbar showing shortcut popup
+### Cleanup
+- **Dead speaking mode UI removed** from `index.html` — `vocabWtDirSpeaking`, `vocabSessionSizeSpeaking` inputs
+- **Dead JS references removed** from `vocabSettingsLoad` / `vocabSettingsSave`
 
 ---
 
@@ -48,7 +47,7 @@ Full handoff doc at project root: `vocab-drill-handoff.md`
 4. Ratings write to `vocab_srs(vocab_id, direction, ...)` — direction-aware, separate intervals per direction
 5. Focus mode (any source filter checked) = no SRS writes, pure flashcards
 
-### vocab_items — 1545 words, sources
+### vocab_items — 1191 words, sources
 | source | entry_weight |
 |--------|-------------|
 | yoshi_phrases | 1.0 |
@@ -57,14 +56,14 @@ Full handoff doc at project root: `vocab-drill-handoff.md`
 | lookup | 0.6 |
 | n5 | 0.3 |
 
-### vocab_srs — clean slate as of 2026-06-26
+Source reflects highest-priority source that has seen the word. Insert paths upgrade on conflict.
+
+### vocab_srs — 270 graduated words as of 2026-06-28
 Direction-aware: separate `srs_interval`, `srs_ease`, `srs_due` per `(vocab_id, direction)`.
 
 ---
 
 ## Vocab Drill — Outstanding Work
-
-See `vocab-drill-handoff.md` for full detail. Summary:
 
 **High priority**
 - MAX_NEW tuning — bring back to 15–20 once review backlog builds
@@ -73,9 +72,13 @@ See `vocab-drill-handoff.md` for full detail. Summary:
 
 **Medium priority**
 - `wordEnrichWithSRS()` still reads from old `DrillSRS` / `STORAGE_KEYS.DRILL_SRS_WORDS` — should read from `vocab_srs` table
-- `isWordMastered()` still uses old SRS key
-- `vocabKnownRecent()` uses synchronous `window.db.query()` without await — will silently fail
-- Settings UI cleanup: speaking weight/session size inputs still in HTML (`vocabWtDirSpeaking`, `vocabSessionSizeSpeaking`)
+- `isWordMastered()` still uses old SRS key — currently always returns false; low impact as mastery display not used
+
+**Kana/kanji variants (separate problem, not fully solved)**
+- 45 reading-groups with multiple word forms remain (genuine homophones vs same-word variants)
+- Genuine homophones (花/鼻, 速い/早い) are correct — keep both
+- Occasional new kana variants may slip through at insert time; not worth engineering against
+- Writing extraction already normalises pure-hiragana → kanji via `words` table lookup
 
 ---
 
@@ -94,7 +97,7 @@ Passive evidence layer tracking exposure, noticing, production, consolidation as
 | 5 | Briefing integration | ⬜ Not started |
 
 ### Recommended next step: Stage 3
-- 5 sessions of real `extracted_grammar` data available
+- Real session data available
 - Pure query work — no pattern definitions required
 - Nodes appearing in `extracted_grammar` repeatedly but with low `grammar_mastery` score = structural blindness
 - Surface as sprint card in 集中 panel
@@ -104,7 +107,7 @@ Passive evidence layer tracking exposure, noticing, production, consolidation as
 |------|------|
 | `ashiato-plan.md` | Full design document |
 | `video-grammar-node-linking.md` | Stage 2 design doc |
-| `src/features-progress.js` | `renderGrammarCoverage`, `grammarNodeClick` |
+| `src/features-progress.js` | `renderGrammarCoverage`, `grammarNodeClick`, `ashiatoFilterPills` |
 | `src/features-lesson-notes.js` | `lessonNotesExtractGrammarSilent` |
 | `src/GrammarModel.js` | `getCoverageMap`, `recordEvidence`, mastery scoring |
 | `src/data/grammar_nodes.json` | 55 node definitions |
@@ -136,6 +139,12 @@ ORDER BY s.srs_due LIMIT 20;
 
 -- Vocab items by source
 SELECT source, COUNT(*) as n FROM vocab_items GROUP BY source;
+
+-- Graduated words count
+SELECT COUNT(*) FROM vocab_srs WHERE srs_graduated = 1;
+
+-- Duplicate check (should return 0)
+SELECT COUNT(*) FROM (SELECT word FROM vocab_items GROUP BY word HAVING COUNT(*) > 1);
 ```
 
 ---
@@ -144,10 +153,10 @@ SELECT source, COUNT(*) as n FROM vocab_items GROUP BY source;
 
 | File | Role |
 |------|------|
-| `src/core-vocab.js` | All drill logic: `loadVocabItemsDeck`, `startNewSession`, `markVocab`, `renderVocab`, focus mode |
+| `src/core-vocab.js` | All drill logic: `loadVocabItemsDeck`, `startNewSession`, `markVocab`, `renderVocab`, `vocabKnownRecent` (async) |
 | `src/core-srs.js` | `DrillSRS` SM-2 — used by counters, conjugation, times. NOT vocab drill. |
-| `src/core-listen.js` | Listen panel (SRS removed this session) |
-| `main.js` | `render-process-gone` handler (auto-reload disabled this session) |
+| `src/features-grammar.js` | Grammar/sentence drills — awaits `vocabKnownRecent()` for sentence context |
+| `main.js` | `createSchema` — `UNIQUE(word)` on vocab_items, `INSERT OR IGNORE` on schema_version |
 | `vocab-drill-handoff.md` | Full handoff doc for vocab drill redesign |
 
 ---
@@ -161,8 +170,7 @@ SELECT source, COUNT(*) as n FROM vocab_items GROUP BY source;
 - Read before theorising — always check actual source before proposing fixes
 - Hypothesis-first debugging — one command to confirm/deny, stop if not converging
 - MCP filesystem available at `/Users/paulandres/Documents/jpStudio/`
-- `index.html` is a single giant line — use Python index splice (`html.find()` + slicing), not line-based tools
+- `index.html` is a single giant line — use Python index slice (`html.find()` + slicing), not line-based tools
 - `assert html.count(old) == 1` before every replace
-- `dryRun: True` before every live `filesystem:edit_file`
 - `window.db.run()` returns `{changes: 0}` even on successful batch INSERTs — not an error
 - Live DB must be queried via `window.db.query()` in DevTools — sqlite3 CLI returns stale results when app is open

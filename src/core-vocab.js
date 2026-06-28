@@ -209,7 +209,7 @@ function startNewSession() {
   // Cap new (never-reviewed) words per session to avoid flooding when a new
   // Yoshi lesson arrives. Reviewed words fill most of the session; new words
   // are capped at MAX_NEW regardless of source weight.
-  const MAX_NEW = 100;
+  const MAX_NEW = 15;
   const newIdx = [], dueIdx = [];
   state.vocabItems.forEach((r, i) => { if (r._isNew) newIdx.push(i); else dueIdx.push(i); });
   const combined = [...dueIdx, ...newIdx.slice(0, MAX_NEW)];
