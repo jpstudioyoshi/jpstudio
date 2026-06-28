@@ -209,10 +209,15 @@ function startNewSession() {
   // Cap new (never-reviewed) words per session to avoid flooding when a new
   // Yoshi lesson arrives. Reviewed words fill most of the session; new words
   // are capped at MAX_NEW regardless of source weight.
-  const MAX_NEW = 15;
-  const newIdx = [], dueIdx = [];
-  state.vocabItems.forEach((r, i) => { if (r._isNew) newIdx.push(i); else dueIdx.push(i); });
-  const combined = [...dueIdx, ...newIdx.slice(0, MAX_NEW)];
+  const MAX_NEW_YOSHI = 8;  // cap new yoshi_vocab/yoshi_phrases per session
+  const MAX_NEW_OTHER = 7;  // cap new non-Yoshi words per session
+  const newYoshi = [], newOther = [], dueIdx = [];
+  state.vocabItems.forEach((r, i) => {
+    if (!r._isNew) { dueIdx.push(i); return; }
+    if (r.source === 'yoshi_vocab' || r.source === 'yoshi_phrases') newYoshi.push(i);
+    else newOther.push(i);
+  });
+  const combined = [...dueIdx, ...newYoshi.slice(0, MAX_NEW_YOSHI), ...newOther.slice(0, MAX_NEW_OTHER)];
   combined.sort((a, b) => (state.vocabItems[b]._effectiveWeight || 0) - (state.vocabItems[a]._effectiveWeight || 0));
   const pool = combined.slice(0, size);
   vocabSession    = pool;
