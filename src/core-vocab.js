@@ -1847,7 +1847,6 @@ async function vocabSettingsLoad() {
       if (document.getElementById('vocabWtN5')) document.getElementById('vocabWtN5').value = wt.n5 ?? 0.3;
       if (document.getElementById('vocabWtDirJpEn')) document.getElementById('vocabWtDirJpEn').value = (wt.directions?.jp_en) ?? 1.0;
       if (document.getElementById('vocabWtDirEnJp')) document.getElementById('vocabWtDirEnJp').value = (wt.directions?.en_jp) ?? 0.8;
-      if (document.getElementById('vocabWtDirSpeaking')) document.getElementById('vocabWtDirSpeaking').value = (wt.directions?.speaking) ?? 0.9;
     }
     if (t) {
       const th = JSON.parse(t);
@@ -1856,7 +1855,6 @@ async function vocabSettingsLoad() {
       if (document.getElementById('vocabThreshDecay')) document.getElementById('vocabThreshDecay').value = th.production_decay ?? 5;
       if (document.getElementById('vocabSessionSizeJpEn')) document.getElementById('vocabSessionSizeJpEn').value = th.session_size_jp_en ?? 30;
       if (document.getElementById('vocabSessionSizeEnJp')) document.getElementById('vocabSessionSizeEnJp').value = th.session_size_en_jp ?? 25;
-      if (document.getElementById('vocabSessionSizeSpeaking')) document.getElementById('vocabSessionSizeSpeaking').value = th.session_size_speaking ?? 20;
     }
     if (i) {
       const iv = JSON.parse(i);
@@ -1888,7 +1886,6 @@ async function vocabSettingsSave() {
       directions: {
         jp_en:    parseFloat(document.getElementById('vocabWtDirJpEn').value),
         en_jp:    parseFloat(document.getElementById('vocabWtDirEnJp').value),
-        speaking: parseFloat(document.getElementById('vocabWtDirSpeaking').value),
       },
     };
     const thresholds = {
@@ -1896,7 +1893,6 @@ async function vocabSettingsSave() {
       production_decay: parseInt(document.getElementById('vocabThreshDecay').value),
       session_size_jp_en:     parseInt(document.getElementById('vocabSessionSizeJpEn').value),
       session_size_en_jp:     parseInt(document.getElementById('vocabSessionSizeEnJp').value),
-      session_size_speaking: parseInt(document.getElementById('vocabSessionSizeSpeaking').value),
     };
     const intervals = {
       yoshi_phrases: parseInt(document.getElementById('vocabIntYoshiPhrases').value),
