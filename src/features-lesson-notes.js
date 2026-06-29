@@ -934,17 +934,6 @@ function lessonNotesUpdatePanelHeader() {
   `;
 }
 
-function lnSearchKanaMode(mode) {
-  const inp = document.getElementById('lnHeaderSearch');
-  if (!inp) return;
-  if (inp._kanaOn) kanaOff(inp);
-  if (mode !== 'off') {
-    kanaOn(inp);
-    inp._kanaMode = mode;
-  }
-  document.querySelectorAll('.ln-search-kana-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-}
-
 function lnHeaderSearch(term) {
   if (LessonNotesState.viewMode !== 'sourcenotes') {
     LessonNotesState.viewMode = 'sourcenotes';
