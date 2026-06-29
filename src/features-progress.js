@@ -1032,7 +1032,6 @@ async function renderGrammarCoverage() {
   html += '</div>';
   el.innerHTML = html;
   // Init kana toolbar for search bar every time the grid renders
-  try { (window.kanaToolbar || App.kanaToolbar)?.("ashiatoSearch", { noKanji: true }); } catch(e) {}
 }
 
 function grammarNodeClick(nodeId) {

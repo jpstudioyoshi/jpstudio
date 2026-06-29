@@ -148,7 +148,6 @@ function gdRenderCard() {
   const _gdAns = document.getElementById('gdAnswerInput');
   const _isJP = (gdConfig.direction || 'en-jp') === 'en-jp';
   if (_gdAns) {
-    kanaToolbar('gdAnswerInput', { defaultMode: _isJP ? 'hiragana' : 'romaji' });
     _gdAns.focus();
   }
   gdChecked = false;

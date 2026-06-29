@@ -166,10 +166,7 @@ function cdRenderTable() {
 
   // Attach kana toolbar to each Japanese input
   setTimeout(() => {
-    const _kanaToolbar = App.kanaToolbar || window.kanaToolbar;
-    if (!_kanaToolbar) return;
     (doc.pairs || []).forEach((_, i) => {
-      _kanaToolbar(`cd-jp-${i}`, { defaultMode: 'hiragana', btnClass: 'btn-kana' });
     });
   }, 30);
 }

@@ -84,9 +84,6 @@ const DrillCard = (() => {
         if (e.key === 'Enter') { e.preventDefault(); _checked ? _advance() : _check(); }
       });
       // Attach kana toolbar
-      if (typeof kanaToolbar === 'function') {
-        kanaToolbar('dc-input');
-      }
       inp.focus();
     }
   }

@@ -433,7 +433,6 @@ function toggleListenPlay() {
 
 // Transcription panel functions
 function listenTransToggleKana() {
-  listenTransSetMode('hiragana');
 }
 
 function listenTransClear() {
@@ -453,8 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const inp = document.getElementById('listenTranscribeText');
   if (inp) {
-    listenTransSetMode('hiragana');
-
+  
     // Pause audio when typing starts — resume is manual only
     inp.addEventListener('input', () => {
       const audio = document.getElementById('listenAudio');

@@ -148,7 +148,6 @@ function gramNotesShowTab(tab, btn) {
   if (btn) btn.classList.add('active');
   if (tab === 'lookups') {
     renderLookupsTable();
-    kanaSetMode('lookupsFilter','romaji','lookupsKana',{romaji:'lookupsRomajiBtn',hira:'lookupsHiraBtn',kata:'lookupsKataBtn'});
     return;
   }
   if (tab === 'counters') { ctrRefInit(); }
