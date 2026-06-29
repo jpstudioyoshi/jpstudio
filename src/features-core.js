@@ -456,15 +456,11 @@ const TTS = {
     const optionsHtml = pool.map(v =>
       `<option value="${v.voiceURI}" ${v.voiceURI === currentURI ? 'selected' : ''}>${v.name}${v.localService ? '' : ' ☁'}</option>`
     ).join('');
-    ['ttsVoiceSelect', 'ttsVoiceSelect2'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = optionsHtml;
-    });
+    const el = document.getElementById('ttsVoiceSelect');
+    if (el) el.innerHTML = optionsHtml;
     const hint = `${pool.length} voice${pool.length === 1 ? '' : 's'} available`;
     const h1 = document.getElementById('ttsVoiceHint');
-    const h2 = document.getElementById('ttsVoiceHint2');
     if (h1) h1.textContent = hint;
-    if (h2) h2.textContent = hint + ' · ';
   },
 
   setVoice(uri) {
@@ -472,10 +468,8 @@ const TTS = {
     if (!found) return;
     this._voice = found;
     (App.Storage || window.Storage).setTTSVoice(uri);
-    ['ttsVoiceSelect', 'ttsVoiceSelect2'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = uri;
-    });
+    const sel = document.getElementById('ttsVoiceSelect');
+    if (sel) sel.value = uri;
   },
 
   // ── Main speak entry point ────────────────────────────
@@ -538,24 +532,6 @@ function testVoice()               { TTS.test(); }
 function vvToggle(on)              { TTS.vvSetEnabled(on); }
 function vvSetSpeaker(id)          { TTS.vvSetSpeaker(id); }
 
-function toggleResourcesSettings() {
-  const panel = document.getElementById('resourcesSettingsPanel');
-  const btn   = document.getElementById('resSettingsBtn');
-  if (!panel) return;
-  const isHidden = panel.style.display === 'none';
-  panel.style.display = isHidden ? 'block' : 'none';
-  if (btn) {
-    btn.style.borderColor = isHidden ? 'var(--teal)' : '';
-    btn.style.color       = isHidden ? 'var(--teal)' : 'var(--ink-light)';
-  }
-  const status = document.getElementById('resApiStatus');
-  if (status) {
-    const _getApiKey = App.getApiKey || window.getApiKey;
-    status.textContent = _getApiKey?.() ? '✓ Set' : '✗ Not set';
-    status.style.color = _getApiKey?.() ? 'var(--teal)' : 'var(--red)';
-  }
-  TTS.loadVoice();
-}
 
 // ── VOCAB TTS ─────────────────────────────────────────────
 let vocabListenMode = false;
