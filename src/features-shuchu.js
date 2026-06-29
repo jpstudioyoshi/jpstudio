@@ -295,12 +295,7 @@ Requirements:
       const _wideEntry = (act.type === 'translate_to_jp' || act.type === 'error_correct');
       inp.style.cssText = 'width:100%;max-width:' + (_wideEntry ? '960px' : '480px') + ';padding:10px 14px;font-family:var(--jp);font-size:1.1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:12px';
       inp.onkeydown = e => { if (e.key === 'Enter') checkAnswer(act, inp.value.trim(), isR2); };
-      const kanaSpan = document.createElement('div');
-      kanaSpan.setAttribute('data-kana-for', 'shuchuAnswerInput');
-      kanaSpan.style.marginBottom = '10px';
       card.appendChild(inp);
-      card.appendChild(kanaSpan);
-      setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar('shuchuAnswerInput', { noRomaji: true }); }, 50);
       const sub = document.createElement('button');
       sub.className = 'btn-action';
       sub.textContent = 'Check';
@@ -323,15 +318,11 @@ Requirements:
     inp.type = 'text';
     inp.placeholder = 'Ask a question about this…';
     inp.style.cssText = 'width:100%;max-width:500px;padding:8px 12px;font-family:var(--jp);font-size:1rem;background:var(--field);border:1px solid var(--field-border);border-radius:8px;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:8px';
-    const kanaSpan = document.createElement('div');
     const kanaId = 'shuchuFQInput_' + Date.now();
     inp.id = kanaId;
-    kanaSpan.setAttribute('data-kana-for', kanaId);
-    kanaSpan.style.marginBottom = '8px';
     const replyEl = document.createElement('div');
     replyEl.style.cssText = 'font-family:var(--ui);font-size:1rem;color:var(--ink);line-height:1.7;margin-top:8px;min-height:1em';
     inputWrap.appendChild(inp);
-    inputWrap.appendChild(kanaSpan);
     inputWrap.appendChild(replyEl);
     wrap.appendChild(inputWrap);
     feedback.appendChild(wrap);
@@ -339,7 +330,7 @@ Requirements:
     btn.onclick = () => {
       inputWrap.style.display = inputWrap.style.display === 'none' ? '' : 'none';
       if (inputWrap.style.display !== 'none') {
-        setTimeout(() => { if (typeof kanaToolbar === 'function') kanaToolbar(kanaId, { noRomaji: true }); inp.focus(); }, 50);
+        setTimeout(() => { inp.focus(); }, 50);
       }
     };
 
@@ -470,7 +461,6 @@ Requirements:
     document.getElementById('shuchuWriteFeedback').innerHTML = '';
     show('shuchu-write');
     setTimeout(() => {
-      if (typeof kanaToolbar === 'function') kanaToolbar('shuchuWriteCompose');
       const compose = document.getElementById('shuchuWriteCompose');
       const area = document.getElementById('shuchuWriteInput');
       compose.onkeydown = e => {
