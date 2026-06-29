@@ -586,7 +586,6 @@ function gramSentRenderCard() {
         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
         onkeydown="if(event.key==='Enter'){gramSentCheck();}">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px">
-        <div data-kana-for="gramSentAnswerInput"></div>
         <div class="gd-btn-row" style="margin:0;flex-shrink:0">
           <button class="btn-action" id="gramSentCheckBtn" onclick="gramSentCheck()">Check</button>
           <button class="btn-action" onclick="gramSentSkip()">Skip</button>
@@ -599,7 +598,6 @@ function gramSentRenderCard() {
   // Attach kana toolbar to answer input
   const ansInp = document.getElementById('gramSentAnswerInput');
   if (ansInp) {
-    kanaToolbar('gramSentAnswerInput');
     ansInp.focus();
   }
 

@@ -924,9 +924,7 @@ function lessonNotesUpdatePanelHeader() {
     <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
       ${hasContent ? `
         <div style="display:flex;gap:4px">
-          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="off" onclick="lnSearchKanaMode('off')">A</button>
-          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="hiragana" onclick="lnSearchKanaMode('hiragana')">あ</button>
-          <button class="btn-toggle btn-sm ln-search-kana-btn" data-mode="katakana" onclick="lnSearchKanaMode('katakana')">ア</button>
+
         </div>
         <input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)"
           style="padding:6px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.95rem;border-radius:4px;width:320px">
