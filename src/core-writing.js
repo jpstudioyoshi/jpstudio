@@ -576,8 +576,8 @@ function deleteWritingEntry(idx) {
 }
 
 function handleWritingKey(e) {
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitWritingSentence(); }
-  else if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) { e.preventDefault(); checkWritingSentence(); }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.shiftKey) { e.preventDefault(); submitWritingSentence(); }
+  else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !e.shiftKey) { e.preventDefault(); checkWritingSentence(); }
 }
 
 function clearWritingFeedback() {

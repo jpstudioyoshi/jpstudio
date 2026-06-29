@@ -204,6 +204,7 @@ function kanaInputHandler(e) {
   
   // If mode is explicitly romaji/null, don't convert
   if (el._kanaMode === null || el._kanaMode === 'romaji') return;
+  if (el._useOsIme) return; // OS IME handles conversion
   
   const pos = el.selectionStart;
   const raw = el.value;
@@ -223,7 +224,7 @@ function kanaInputHandler(e) {
   // Walk left from insertStart to collect any preceding unconverted romaji
   // that belongs to the same sequence (e.g. 'k' left behind from last keystroke).
   // Never cross _snapshotPos — that boundary marks pre-existing text.
-  const boundary = el._snapshotPos ?? 0;
+  const boundary = Math.min(el._snapshotPos ?? 0, insertStart);
   let runStart = insertStart;
   while (runStart > boundary && raw.charCodeAt(runStart - 1) < 0x80 && raw.charCodeAt(runStart - 1) > 0x20) runStart--;
 
@@ -334,7 +335,7 @@ function kanaOn(el) {
         const composed = el.value.slice(start, start + composedLen);
         // Check if this was actual IME input (contains kanji or mixed) vs our romaji conversion
         const hasKanji = /[一-鿿]/.test(composed);
-        if (hasKanji) {
+        if (hasKanji && !el._useOsIme) {
           // Real IME input with kanji - remove it, user should use romaji
           el.value = before + after;
           el.setSelectionRange(start, start);
@@ -925,6 +926,7 @@ function _initKanaToolbars() {
     // Writing is hiragana/katakana only — romaji is never used there (per
     // Paul, session 46), so the option is removed rather than left dormant.
     kanaToolbar(id, id === 'writingInput' ? { noRomaji: true } : {});
+    if (id === 'writingInput') { const el = document.getElementById(id); if (el) el._useOsIme = true; }
   });
 }
 
