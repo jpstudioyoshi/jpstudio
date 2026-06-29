@@ -921,12 +921,7 @@ function _initKanaToolbars() {
   const ids = ['globalQTInput','chatInput','transInput','lookupsFilter','listenTranscribeText','vtDictateInput','gramSentQuestion','writingInput'];
   ids.forEach(id => {
     const el = document.getElementById(id);
-    const ph = document.querySelector('[data-kana-for="'+id+'"]');
-    console.log('[kana]', id, '→ el:', !!el, 'placeholder:', !!ph);
-    // Writing is hiragana/katakana only — romaji is never used there (per
-    // Paul, session 46), so the option is removed rather than left dormant.
-    kanaToolbar(id, id === 'writingInput' ? { noRomaji: true } : {});
-    if (id === 'writingInput') { const el = document.getElementById(id); if (el) el._useOsIme = true; }
+    if (el) el._useOsIme = true; // OS IME handles all kana conversion
   });
 }
 
