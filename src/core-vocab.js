@@ -69,10 +69,13 @@ function vcTogglePitch() {
 // ── Load due cards from vocab_items into state.vocabItems ───────────────────
 function vocabGetActiveSources() {
   const checked = [...document.querySelectorAll('.vocab-source-filter:checked')].map(el => el.value);
-  // Default (no filter checked) = core_vocab sprint only, not "all sources".
-  // Yoshi/Writing/Lookup/N5/Sprint checkboxes remain available to opt other
+  // Default (no filter checked) = the SRS-eligible pool: core_vocab sprint
+  // + lookup-promoted words (both already get graded SM-2 scoring per
+  // markVocab's _srsAllowed gate, so both belong in the default deck —
+  // otherwise lookup-promoted words could sit scored-but-unseen forever).
+  // Yoshi/Writing/N5/Sprint checkboxes remain available to opt other
   // sources back in deliberately — see filter-stack UX, to be decided later.
-  if (checked.length === 0) return ['core_vocab'];
+  if (checked.length === 0) return ['core_vocab', 'lookup'];
   // expand 'yoshi' to both yoshi source types
   const sources = [];
   for (const c of checked) {
