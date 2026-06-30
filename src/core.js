@@ -527,6 +527,16 @@ document.addEventListener('storageReady', function() {
   if (App.backfillLookupsToVocabItems) App.backfillLookupsToVocabItems();
   // Backfill N5 words → vocab_items (one-time, background fill)
   if (App.backfillN5ToVocabItems) App.backfillN5ToVocabItems();
+  // Core-vocab pool: lazy daily intake of N5/N4 sprint words (self-gated to
+  // run at most once per calendar day, with catch-up for missed days)
+  if (App.coreVocabDailyIntake) {
+    App.coreVocabDailyIntake().then(r => {
+      if (r && r.added > 0) {
+        console.log('[core-vocab] intake on launch:', r.added, 'words added to', r.sprint);
+        if (App.loadVocabItemsDeck) App.loadVocabItemsDeck();
+      }
+    });
+  }
   // Wire writing vocab extraction listener
   if (App.initWritingVocabListener) App.initWritingVocabListener();
   // Wire lesson extracted vocab listener

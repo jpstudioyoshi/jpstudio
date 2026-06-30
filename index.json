@@ -3719,7 +3719,7 @@
     "file": "src/core-vocab.js",
     "line": 115,
     "desc": "if (!window.db) return;",
-    "callers": 19,
+    "callers": 21,
     "exported": true
   },
   {
@@ -4196,7 +4196,7 @@
     "file": "src/core-vocab.js",
     "line": 1864,
     "desc": "left untagged for now; retroactive pool-tagging of those is a separate,",
-    "callers": 1,
+    "callers": 3,
     "exported": true
   },
   {
