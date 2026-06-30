@@ -405,6 +405,7 @@ function lessonNotesLoadSession(idx) {
       const allVocab = sessions[idx].vocab || [];
       LessonNotesState.vocab = allVocab.filter(v => !LessonNotesState.permanentlyLearned.has(v.word));
       LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
+      LessonNotesState.hiddenWords = new Set(sessions[idx].hiddenWords || []);
       LessonNotesState.stories = sessions[idx].stories || [];
       LessonNotesState.keyPhrases = sessions[idx].keyPhrases || [];
       LessonNotesState.grammar = sessions[idx].grammar || [];

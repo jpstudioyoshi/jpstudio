@@ -833,7 +833,7 @@ function lessonNotesGetHTML() {
   
   // Errors mode
   if (LessonNotesState.viewMode === 'allwords' || LessonNotesState.viewMode === 'vocab' || LessonNotesState.viewMode === '') {
-    const _vocab = LessonNotesState.vocab;
+    const _vocab = LessonNotesState.vocab.filter(function(v) { return !LessonNotesState.hiddenWords.has(v.word); });
     const _half = Math.ceil(_vocab.length / 2);
     function _makeTable(items) {
       const _rows = items.map(function(v) {
@@ -842,7 +842,7 @@ function lessonNotesGetHTML() {
           + '<td style="padding:6px 10px;color:var(--ink);font-family:var(--jp)">' + (v.word||'') + '</td>'
           + '<td style="padding:6px 10px;color:var(--ink-light);font-family:var(--jp)">' + (v.reading||'—') + '</td>'
           + '<td style="padding:6px 10px;color:var(--ink-light);font-size:inherit;font-family:var(--ui)">' + (v.meaning||v.en||'—') + '</td>'
-          + '<td style="padding:6px 4px"><button class="btn-icon" onclick="jpSpeak(\'' + _w + '\')">🔊</button></td>'
+          + '<td style="padding:6px 4px;white-space:nowrap"><button class="btn-icon" onclick="jpSpeak(\'' + _w + '\')">🔊</button><button class="btn-icon" onclick="lnHideWord(\'' + _w + '\')" title="Hide word">🚫</button></td>'
           + '</tr>';
       }).join('');
       const _hdr = '<thead style="position:sticky;top:0;background:var(--paper-dark)"><tr style="border-bottom:1px solid var(--border)">'
@@ -1033,6 +1033,16 @@ function lessonNotesRenderOverview(session) {
   html += '</div>';
   html += '</div>';
   return html;
+}
+
+function lnHideWord(word) {
+  LessonNotesState.hiddenWords.add(word);
+  const sessions = lessonNotesGetSessions();
+  if (LessonNotesState.currentIdx !== null && sessions[LessonNotesState.currentIdx]) {
+    sessions[LessonNotesState.currentIdx].hiddenWords = [...LessonNotesState.hiddenWords];
+    lessonNotesSaveSessions(sessions);
+  }
+  lessonNotesRender();
 }
 
 function lnOverviewCard(icon, label, count, onclick) {
