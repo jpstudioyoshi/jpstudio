@@ -1854,6 +1854,76 @@ function initLookupVocabListener() {
   }
 }
 
+// ── Core-vocab pool — daily intake ───────────────────────────────────
+// Lazily creates vocab_items + vocab_srs rows for the next batch of N5/N4
+// words, frequency-ordered, in two sequential sprints (N5 first, then N4).
+// Only touches words with no existing vocab_items row at all — words
+// already entered via another source (yoshi_vocab, writing, lookup) are
+// left untagged for now; retroactive pool-tagging of those is a separate,
+// not-yet-decided step.
+async function coreVocabDailyIntake(batchSize = 12) {
+  if (!window.db) return { added: 0 };
+  try {
+    const n5Remaining = await window.db.query(
+      `SELECT COUNT(*) as n FROM words w WHERE w.level='N5'
+       AND NOT EXISTS (SELECT 1 FROM vocab_items v WHERE v.word_id = w.id)`, []
+    );
+    const sprintLevel = (n5Remaining?.[0]?.n || 0) > 0 ? 'N5' : 'N4';
+    const poolTag = sprintLevel === 'N5' ? 'core_n5' : 'core_n4';
+
+    const today = new Date().toISOString().slice(0, 10);
+    const todayCount = await window.db.query(
+      `SELECT COUNT(*) as n FROM vocab_items WHERE pool = ? AND substr(created_at,1,10) = ?`,
+      [poolTag, today]
+    );
+    const already = todayCount?.[0]?.n || 0;
+    if (already >= batchSize) {
+      return { added: 0, reason: 'already introduced today', sprint: sprintLevel, todayCount: already };
+    }
+    const remaining = batchSize - already;
+
+    const candidates = await window.db.query(
+      `SELECT w.id, w.word, w.reading, w.meaning
+         FROM words w
+        WHERE w.level = ?
+          AND NOT EXISTS (SELECT 1 FROM vocab_items v WHERE v.word_id = w.id)
+        ORDER BY w.frequency IS NULL, w.frequency ASC
+        LIMIT ?`,
+      [sprintLevel, remaining]
+    );
+    if (!candidates || !candidates.length) {
+      return { added: 0, reason: 'sprint complete — no remaining ' + sprintLevel + ' words', sprint: sprintLevel };
+    }
+
+    const now = new Date().toISOString();
+    let added = 0;
+    for (const w of candidates) {
+      if (!w.reading || !w.meaning) continue; // skip incomplete dictionary rows
+      await window.db.run(
+        `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at, word_id, pool)
+         VALUES (?, ?, ?, 'core_vocab', 'sprint', 'word', ?, 1.0, ?, ?, ?)`,
+        [w.word, w.reading, w.meaning, now, now, w.id, poolTag]
+      );
+      const idRow = await window.db.get('SELECT id FROM vocab_items WHERE word_id = ? ORDER BY id DESC LIMIT 1', [w.id]);
+      const vocabId = idRow?.id;
+      if (!vocabId) continue;
+      for (const dir of ['jp_en', 'en_jp']) {
+        await window.db.run(
+          `INSERT OR IGNORE INTO vocab_srs (vocab_id, direction, srs_interval, srs_ease, srs_due)
+           VALUES (?, ?, 0, 2.5, date('now','localtime'))`,
+          [vocabId, dir]
+        );
+      }
+      added++;
+    }
+    console.log('[core-vocab] daily intake:', added, 'words added to', poolTag);
+    return { added, sprint: sprintLevel };
+  } catch (e) {
+    console.warn('[core-vocab] daily intake error', e);
+    return { added: 0, error: e.message };
+  }
+}
+
 // ── Vocab settings save/load ─────────────────────────────────────────
 async function vocabSettingsLoad() {
   try {
@@ -2027,5 +2097,5 @@ async function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
+  coreVocabDailyIntake, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });
