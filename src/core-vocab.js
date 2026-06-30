@@ -69,7 +69,10 @@ function vcTogglePitch() {
 // ── Load due cards from vocab_items into state.vocabItems ───────────────────
 function vocabGetActiveSources() {
   const checked = [...document.querySelectorAll('.vocab-source-filter:checked')].map(el => el.value);
-  if (checked.length === 0) return null; // no filter = all sources
+  // Default (no filter checked) = core_vocab sprint only, not "all sources".
+  // Yoshi/Writing/Lookup/N5/Sprint checkboxes remain available to opt other
+  // sources back in deliberately — see filter-stack UX, to be decided later.
+  if (checked.length === 0) return ['core_vocab'];
   // expand 'yoshi' to both yoshi source types
   const sources = [];
   for (const c of checked) {
@@ -91,7 +94,12 @@ function vocabFocusModeActive() {
 }
 
 function vocabResetSourceFilters() {
-  document.querySelectorAll('.vocab-source-filter').forEach(el => el.checked = true);
+  // Reset = back to the sprint-only baseline (no filters checked), not
+  // "check everything". Matches vocabGetActiveSources' default of
+  // core_vocab-only when no source filter is active.
+  document.querySelectorAll('.vocab-source-filter').forEach(el => el.checked = false);
+  const banner = document.getElementById('vocabFocusBanner');
+  if (banner) banner.style.display = 'none';
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
@@ -258,13 +266,21 @@ function markVocab(v) {
   const curGraduated = card.srs_graduated || 0;
 
   const _focusMode = vocabFocusModeActive();
+  // SRS scheduling is reserved for the deliberately-curated pool: the core
+  // N5/N4 sprint and lookup-promoted words (words that crossed the 3-day/
+  // 5-total threshold, so genuinely recurring need). Yoshi and writing
+  // vocabulary are exposure material, browsed without graded scheduling —
+  // this applies always, not just when a source filter is manually active.
+  const _srsAllowed = card.source === 'core_vocab' || card.source === 'lookup';
 
   if (v === 'know') {
     _sessionKnown[vocabIdx] = true;
-    if (!_focusMode && window.db && id != null) {
+    if (!_focusMode && _srsAllowed && window.db && id != null) {
       const newGraduated = 1;
       const newEase      = curGraduated === 0 ? curEase : Math.min(4.0, curEase + 0.1);
-      const newInterval  = Math.max(1, Math.floor(curInterval * curEase));
+      // First-ever successful review stays at exactly 1 day (standard SM-2 —
+      // the ease multiplier only applies from the SECOND review onward).
+      const newInterval  = curGraduated === 0 ? 1 : Math.max(1, Math.floor(curInterval * curEase));
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
          VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
@@ -275,10 +291,10 @@ function markVocab(v) {
 
   } else if (v === 'gotit') {
     _sessionKnown[vocabIdx] = true;
-    if (!_focusMode && window.db && id != null) {
+    if (!_focusMode && _srsAllowed && window.db && id != null) {
       const newGraduated = Math.max(curGraduated, 1);
       const newEase      = Math.max(1.3, curEase - 0.10);
-      const newInterval  = Math.max(1, Math.floor(curInterval * newEase));
+      const newInterval  = curGraduated === 0 ? 1 : Math.max(1, Math.floor(curInterval * newEase));
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
          VALUES (?, ?, ?, ?, ?, date('now', '+' || ? || ' days'), datetime('now'))
@@ -291,7 +307,7 @@ function markVocab(v) {
     // 'again' — schedule for tomorrow (SRS mode) or just move on (focus mode)
     _sessionKnown[vocabIdx] = true;
     state.vocabProgress[vocabIdx] = 'again';
-    if (!_focusMode && window.db && id != null) {
+    if (!_focusMode && _srsAllowed && window.db && id != null) {
       const newEase = Math.max(1.3, curEase - 0.15);
       window.db.run(
         `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
