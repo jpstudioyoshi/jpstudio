@@ -154,6 +154,7 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
       writing:       wt.writing       ?? 0.9,
       lookup:        wt.lookup        ?? 0.6,
       n5:            wt.n5            ?? 0.3,
+      core_vocab:    wt.core_vocab    ?? 1.0,
     };
     const dirWeights = wt.directions || { jp_en: 1.0, en_jp: 0.8, speaking: 0.9 };
     // Get active writing sittings for prep boost
@@ -209,15 +210,20 @@ function startNewSession() {
   // Cap new (never-reviewed) words per session to avoid flooding when a new
   // Yoshi lesson arrives. Reviewed words fill most of the session; new words
   // are capped at MAX_NEW regardless of source weight.
+  // core_vocab (the N5/N4 sprint pool) gets its own separate cap so it is
+  // additive alongside Yoshi/other new words, not competing with them for
+  // the same slots — matches coreVocabDailyIntake's default of 12/day.
   const MAX_NEW_YOSHI = 8;  // cap new yoshi_vocab/yoshi_phrases per session
-  const MAX_NEW_OTHER = 7;  // cap new non-Yoshi words per session
-  const newYoshi = [], newOther = [], dueIdx = [];
+  const MAX_NEW_OTHER = 7;  // cap new non-Yoshi, non-core-vocab words per session
+  const MAX_NEW_CORE  = 12; // cap new core_vocab (sprint pool) words per session
+  const newYoshi = [], newOther = [], newCore = [], dueIdx = [];
   state.vocabItems.forEach((r, i) => {
     if (!r._isNew) { dueIdx.push(i); return; }
     if (r.source === 'yoshi_vocab' || r.source === 'yoshi_phrases') newYoshi.push(i);
+    else if (r.source === 'core_vocab') newCore.push(i);
     else newOther.push(i);
   });
-  const combined = [...dueIdx, ...newYoshi.slice(0, MAX_NEW_YOSHI), ...newOther.slice(0, MAX_NEW_OTHER)];
+  const combined = [...dueIdx, ...newYoshi.slice(0, MAX_NEW_YOSHI), ...newOther.slice(0, MAX_NEW_OTHER), ...newCore.slice(0, MAX_NEW_CORE)];
   combined.sort((a, b) => (state.vocabItems[b]._effectiveWeight || 0) - (state.vocabItems[a]._effectiveWeight || 0));
   const pool = combined.slice(0, size);
   vocabSession    = pool;
@@ -1929,16 +1935,15 @@ async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
          VALUES (?, ?, ?, 'core_vocab', 'sprint', 'word', ?, 1.0, ?, ?, ?)`,
         [w.word, w.reading, w.meaning, now, now, w.id, poolTag]
       );
-      const idRow = await window.db.get('SELECT id FROM vocab_items WHERE word_id = ? ORDER BY id DESC LIMIT 1', [w.id]);
-      const vocabId = idRow?.id;
-      if (!vocabId) continue;
-      for (const dir of ['jp_en', 'en_jp']) {
-        await window.db.run(
-          `INSERT OR IGNORE INTO vocab_srs (vocab_id, direction, srs_interval, srs_ease, srs_due)
-           VALUES (?, ?, 0, 2.5, date('now','localtime'))`,
-          [vocabId, dir]
-        );
-      }
+      // Deliberately do NOT pre-create vocab_srs rows here. The session
+      // loader's new-word detection (_isNew = srs_due == null) relies on no
+      // vocab_srs row existing yet — that's the convention every other
+      // source already follows (e.g. lookup-promoted words). Pre-setting
+      // srs_due to today made these words look already-reviewed/due
+      // instead of new, dropping them to the flat 0.35 due-weight and
+      // skipping the MAX_NEW_CORE session cap entirely. vocab_srs rows now
+      // get created naturally on first review via markVocab(), same as
+      // every other source.
       added++;
     }
     console.log('[core-vocab] daily intake:', added, 'words added to', poolTag);
