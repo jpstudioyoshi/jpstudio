@@ -563,6 +563,28 @@ function toggleVcDirection() {
     if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, true);
   }
 }
+// Hide the current word from future sessions — sets type='excluded',
+// which loadVocabItemsDeck already filters out (v.type != 'excluded').
+// Reversible: no row is deleted, just tagged out of rotation. Useful for
+// junk/incidental lookups that crossed the old promotion threshold before
+// it was tightened, or anything not worth tracking in SRS.
+async function hideVocabWord() {
+  const card = state.vocabItems?.[vocabIdx];
+  if (!card || card.id == null) return;
+  if (!confirm('Hide "' + (card.word || '') + '" from future sessions? You can restore it later by editing its type in the database.')) return;
+  try {
+    await window.db.run('UPDATE vocab_items SET type = ? WHERE id = ?', ['excluded', card.id]);
+    _sessionKnown[vocabIdx] = true;
+    const deck = getSessionDeck();
+    if (!deck.length) { vocabSession = []; }
+    else {
+      const pos = deck.indexOf(vocabIdx);
+      vocabIdx = deck[pos] ?? deck[0];
+    }
+    renderVocab();
+  } catch(e) { console.warn('[vocab] hideVocabWord error', e); }
+}
+
 function resetVocabDeck() {
   _vcSessionComplete = false;
   state.vocabProgress = {};
@@ -2127,5 +2149,5 @@ async function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  coreVocabDailyIntake, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
+  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });
