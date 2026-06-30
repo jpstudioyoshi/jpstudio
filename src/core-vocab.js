@@ -1861,7 +1861,7 @@ function initLookupVocabListener() {
 // already entered via another source (yoshi_vocab, writing, lookup) are
 // left untagged for now; retroactive pool-tagging of those is a separate,
 // not-yet-decided step.
-async function coreVocabDailyIntake(batchSize = 12) {
+async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
   if (!window.db) return { added: 0 };
   try {
     const n5Remaining = await window.db.query(
@@ -1877,10 +1877,29 @@ async function coreVocabDailyIntake(batchSize = 12) {
       [poolTag, today]
     );
     const already = todayCount?.[0]?.n || 0;
-    if (already >= batchSize) {
-      return { added: 0, reason: 'already introduced today', sprint: sprintLevel, todayCount: already };
+
+    // Catch-up: compare actual introduced-so-far in this sprint against the
+    // expected count given elapsed calendar days since the sprint's first
+    // intake, at batchSize/day. A gap (missed days, or partial days) raises
+    // today's effective cap — bounded by maxCatchupMultiple so a long gap
+    // doesn't dump the whole backlog into a single session.
+    const sprintStartRow = await window.db.query(
+      `SELECT MIN(substr(created_at,1,10)) as d FROM vocab_items WHERE pool = ?`, [poolTag]
+    );
+    const sprintStart = sprintStartRow?.[0]?.d || today;
+    const daysElapsed = Math.max(1, Math.floor((new Date(today) - new Date(sprintStart)) / 86400000) + 1);
+    const totalIntroduced = await window.db.query(
+      `SELECT COUNT(*) as n FROM vocab_items WHERE pool = ?`, [poolTag]
+    );
+    const actualSoFar = totalIntroduced?.[0]?.n || 0;
+    const expectedSoFar = daysElapsed * batchSize;
+    const deficit = Math.max(0, expectedSoFar - actualSoFar);
+    const effectiveCap = Math.min(batchSize + deficit, batchSize * maxCatchupMultiple);
+
+    if (already >= effectiveCap) {
+      return { added: 0, reason: 'already introduced today', sprint: sprintLevel, todayCount: already, effectiveCap, deficit };
     }
-    const remaining = batchSize - already;
+    const remaining = effectiveCap - already;
 
     const candidates = await window.db.query(
       `SELECT w.id, w.word, w.reading, w.meaning
