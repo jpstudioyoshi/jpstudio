@@ -1814,15 +1814,21 @@ function initLookupVocabListener() {
       const word = payload?.word;
       if (!word || word.length < 2 || word.length > 10) return;
       try {
-        const threshold = 2;
+        // Promote on 3 separate days looked up, OR 5 total lookups —
+        // whichever comes first. Catches both the spaced-need case (genuinely
+        // recurring across different days) and the high-volume-burst case
+        // (heavy use within one dense reading/translate session) without
+        // requiring both conditions at once.
         const rows = await window.db.query(
-          'SELECT COUNT(*) as n FROM corpus_lookups WHERE word = ?',
+          `SELECT COUNT(*) as total, COUNT(DISTINCT substr(looked_up_at,1,10)) as days
+           FROM corpus_lookups WHERE word = ?`,
           [word]
         );
-        const count = rows?.[0]?.n || 0;
-        if (count < threshold) return;
+        const count = rows?.[0]?.total || 0;
+        const days  = rows?.[0]?.days  || 0;
+        if (days < 3 && count < 5) return;
         const now = new Date().toISOString();
-        const weight = Math.min(0.6 + (count - threshold) * 0.05, 1.0);
+        const weight = Math.min(0.6 + Math.max(0, count - 2) * 0.05, 1.0);
         const _meaning = payload.meaning || '';
         const _reading = payload.reading || '';
         // Use dictionary form if available (e.g. conjugated lookup → plain form)
