@@ -1294,11 +1294,14 @@ async function buildConjVerbPool() {
 
     // Step 1 — known words from vocab_items, strongest SRS first
     try {
+      // Join via word_id (FK) rather than text-matching v.word = w.word, and
+      // prefer words' canonical reading/meaning over vocab_items' own copy
+      // when a link exists — fixes the original duplicated/stale-data bug.
       const rows = await window.db.query(
-        `SELECT v.word AS dict, v.reading AS read, v.meaning AS en, v.pos AS pos, w.verb_class AS verb_class
+        `SELECT v.word AS dict, COALESCE(w.reading, v.reading) AS read, COALESCE(w.meaning, v.meaning) AS en, v.pos AS pos, w.verb_class AS verb_class
            FROM vocab_items v
            LEFT JOIN vocab_srs s ON s.vocab_id = v.id
-           LEFT JOIN words w ON v.word = w.word
+           LEFT JOIN words w ON v.word_id = w.id
           WHERE v.pos IN ('verb','i-adj','na-adj')
           GROUP BY v.word
           ORDER BY MAX(s.srs_ease) DESC, MAX(s.srs_graduated) DESC
