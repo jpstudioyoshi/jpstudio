@@ -1587,36 +1587,38 @@ ${docContent.slice(0, 10000)}` }]
     LessonNotesState.vocab = _lnParseJsonArray(text);
     LessonNotesState.vocabOriginal = [...LessonNotesState.vocab];
     console.log('[LN] vocab extracted:', LessonNotesState.vocab.length, 'items', LessonNotesState.vocab.slice(0,3).map(v=>v.word||v.phrase||v.jp||'?'));
-    // Write extracted vocab into words SQL table
-    try {
-      const _lessonId = LessonNotesState.currentLessonId || null;
-      for (const v of LessonNotesState.vocab) {
-        if (!v.word || !v.reading || !v.meaning) continue;
-        await window.db.run(
-          `INSERT INTO words (word, reading, meaning, level, list_source, lesson_id, source, example, pos)
-           VALUES (?,?,?,?,?,?,?,?,?)
-           ON CONFLICT(word) DO UPDATE SET
-             lesson_id = COALESCE(excluded.lesson_id, lesson_id),
-             source    = COALESCE(excluded.source, source)`,
-          [v.word, v.reading, v.meaning, 'custom', 'lesson', _lessonId, 'lesson', v.sourceText || null, v.pos || null]
-        );
-      }
-      console.log('[LN] vocab written to SQL:', LessonNotesState.vocab.length, 'words');
-    } catch(e) { console.warn('[LN] vocab SQL write failed:', e.message); }
-    // Also write to vocab_items as yoshi_vocab
+    // Write extracted vocab: upsert into words (canonical dictionary, now
+    // correctly refreshing reading/meaning on conflict instead of leaving
+    // stale values forever), then link vocab_items to it via word_id rather
+    // than duplicating reading/meaning as a second, unlinked copy.
     try {
       const _lessonId = LessonNotesState.currentLessonId || null;
       const now = new Date().toISOString();
       for (const v of LessonNotesState.vocab) {
         if (!v.word || !v.meaning) continue;
+        let _wordId = null;
+        if (v.reading) {
+          await window.db.run(
+            `INSERT INTO words (word, reading, meaning, level, list_source, lesson_id, source, example, pos)
+             VALUES (?,?,?,?,?,?,?,?,?)
+             ON CONFLICT(word) DO UPDATE SET
+               reading   = excluded.reading,
+               meaning   = excluded.meaning,
+               lesson_id = COALESCE(excluded.lesson_id, lesson_id),
+               source    = COALESCE(excluded.source, source)`,
+            [v.word, v.reading, v.meaning, 'custom', 'lesson', _lessonId, 'lesson', v.sourceText || null, v.pos || null]
+          );
+          const _wordRow = await window.db.get('SELECT id FROM words WHERE word = ?', [v.word]);
+          _wordId = _wordRow?.id || null;
+        }
         await window.db.run(
-          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, type, pos, encounter_at, entry_weight, created_at)
-           VALUES (?, ?, ?, 'yoshi_vocab', ?, 'word', ?, ?, 1.0, ?)`,
-          [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, (v.word.includes('〜') || v.word.includes('~')) ? 'fragment' : (v.pos || null), now, now]
+          `INSERT OR IGNORE INTO vocab_items (word, reading, meaning, source, source_ref, type, pos, encounter_at, entry_weight, created_at, word_id)
+           VALUES (?, ?, ?, 'yoshi_vocab', ?, 'word', ?, ?, 1.0, ?, ?)`,
+          [v.word, v.reading || null, v.meaning, _lessonId ? String(_lessonId) : null, (v.word.includes('〜') || v.word.includes('~')) ? 'fragment' : (v.pos || null), now, now, _wordId]
         );
       }
-      console.log('[LN] vocab written to vocab_items:', LessonNotesState.vocab.length, 'words');
-    } catch(e) { console.warn('[LN] vocab_items write failed:', e.message); }
+      console.log('[LN] vocab written to words + vocab_items:', LessonNotesState.vocab.length, 'words');
+    } catch(e) { console.warn('[LN] vocab write failed:', e.message); }
   } catch (e) { console.error('[vocab extraction] failed:', e.message, e); }
 }
 
