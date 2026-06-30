@@ -1737,13 +1737,19 @@ async function extractWritingVocabToItems(text) {
     const now = new Date().toISOString();
     for (const w of words) {
       if (!w.word || typeof w.word !== 'string') continue;
+      let _wordId = null;
+      try {
+        const _wr = await window.db.get('SELECT id FROM words WHERE word = ?', [w.word]);
+        _wordId = _wr?.id || null;
+      } catch(e) {}
       await window.db.run(
-        `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at)
-         VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, ?)
+        `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at, word_id)
+         VALUES (?, ?, ?, 'writing', 'writing_session', ?, ?, 0.9, ?, ?)
          ON CONFLICT(word) DO UPDATE SET
            entry_weight = MAX(entry_weight, excluded.entry_weight),
-           source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
-        [w.word, w.reading || null, w.meaning || null, w.pos || null, now, now]
+           source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END,
+           word_id = COALESCE(excluded.word_id, word_id)`,
+        [w.word, w.reading || null, w.meaning || null, w.pos || null, now, now, _wordId]
       );
     }
     console.log('[vocab] writing extraction: ' + words.length + ' words from submission');
@@ -1776,13 +1782,19 @@ function initLessonVocabListener() {
         const now = new Date().toISOString();
         for (const row of rows) {
           if (row.type === 'grammar') continue;
+          let _wordId = null;
+          try {
+            const _wr = await window.db.get('SELECT id FROM words WHERE word = ?', [row.phrase]);
+            _wordId = _wr?.id || null;
+          } catch(e) {}
           await window.db.run(
-            `INSERT INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at)
-             VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?)
+            `INSERT INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at, word_id)
+             VALUES (?, ?, ?, ?, 'yoshi_phrases', ?, ?, ?, 1.0, ?, ?)
              ON CONFLICT(word) DO UPDATE SET
                entry_weight = MAX(entry_weight, excluded.entry_weight),
-               source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
-            [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now]
+               source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END,
+               word_id = COALESCE(excluded.word_id, word_id)`,
+            [row.phrase, row.reading || null, row.meaning || null, row.example || null, String(row.id), row.type || 'phrase', row.created_at || now, now, _wordId]
           );
         }
         console.log('[vocab] lesson extracted — upserted ' + rows.length + ' phrases into vocab_items');
@@ -1815,16 +1827,22 @@ function initLookupVocabListener() {
         const _reading = payload.reading || '';
         // Use dictionary form if available (e.g. conjugated lookup → plain form)
         const _vocabWord = (payload.dictForm && payload.dictForm !== word) ? payload.dictForm : word;
+        let _wordId = null;
+        try {
+          const _wr = await window.db.get('SELECT id FROM words WHERE word = ?', [_vocabWord]);
+          _wordId = _wr?.id || null;
+        } catch(e) {}
         await window.db.run(
-          `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at)
-           VALUES (?, ?, ?, 'lookup', 'corpus_lookups', 'word', ?, ?, ?)
+          `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at, word_id)
+           VALUES (?, ?, ?, 'lookup', 'corpus_lookups', 'word', ?, ?, ?, ?)
            ON CONFLICT(word) DO UPDATE SET
              meaning = CASE WHEN excluded.meaning != '' THEN excluded.meaning ELSE meaning END,
              reading = CASE WHEN excluded.reading != '' THEN excluded.reading ELSE reading END,
              encounter_at = excluded.encounter_at,
              entry_weight = MAX(entry_weight, excluded.entry_weight),
-             source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END`,
-          [_vocabWord, _reading, _meaning, now, weight, now]
+             source = CASE WHEN excluded.entry_weight > entry_weight THEN excluded.source ELSE source END,
+             word_id = COALESCE(excluded.word_id, word_id)`,
+          [_vocabWord, _reading, _meaning, now, weight, now, _wordId]
         );
         console.log('[vocab] lookup promoted:', _vocabWord, '(' + count + ' lookups, looked up as ' + word + ')');
       } catch(e) {
