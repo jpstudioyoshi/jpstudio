@@ -413,8 +413,15 @@ English text: "${text}"`;
     const outputBtnRow = document.getElementById('transOutputBtnRow');
     if (addVocabBtn) addVocabBtn.style.display = 'inline-block';
     if (outputBtnRow) outputBtnRow.style.display = 'flex';
-    // Record kanji from the input text for the corpus
-    kanjiCorpusRecordLookup(text, text.slice(0, 40));
+    // Record kanji from the input text for the corpus —
+    // skip sentence-length input so kanji-corpus lookup counts (and the
+    // SRS lookup-promotion threshold built on them) only reflect genuine
+    // single-word/short-phrase lookups, not incidental kanji pasted as
+    // part of a full sentence.
+    const _isSentenceInput = /[。！？]/.test(text) || text.length > 8;
+    if (!_isSentenceInput) {
+      kanjiCorpusRecordLookup(text, text.slice(0, 40));
+    }
 
     const fillTab = (id, val, formatter) => {
       const el = document.getElementById(id);

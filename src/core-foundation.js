@@ -611,6 +611,8 @@ async function globalQuickTranslate() {
       if (_translateCache[word]) {
         _translateCache[word].count = (_translateCache[word].count || 1) + 1;
         _translateCache[word].lastLookup = new Date().toISOString();
+        if (!_translateCache[word].en && meaning) _translateCache[word].en = meaning;
+        if (!_translateCache[word].reading && reading) _translateCache[word].reading = reading;
       } else {
         _translateCache[word] = { jp: word, kanji, reading, en: meaning, count: 1, firstLookup: new Date().toISOString(), lastLookup: new Date().toISOString() };
       }
