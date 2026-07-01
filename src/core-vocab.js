@@ -1898,8 +1898,12 @@ async function extractWritingVocabToItems(text) {
       if (!w.word || typeof w.word !== 'string') continue;
       let _wordId = null;
       try {
-        const _wr = await window.db.get('SELECT id FROM words WHERE word = ?', [w.word]);
-        _wordId = _wr?.id || null;
+        const _wr = await window.db.get('SELECT id, reading, meaning FROM words WHERE word = ?', [w.word]);
+        if (_wr) {
+          _wordId = _wr.id;
+          if (!w.reading && _wr.reading) w.reading = _wr.reading;
+          if (!w.meaning && _wr.meaning) w.meaning = _wr.meaning;
+        }
       } catch(e) {}
       await window.db.run(
         `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, pos, encounter_at, entry_weight, created_at, word_id)
@@ -1943,8 +1947,12 @@ function initLessonVocabListener() {
           if (row.type === 'grammar') continue;
           let _wordId = null;
           try {
-            const _wr = await window.db.get('SELECT id FROM words WHERE word = ?', [row.phrase]);
-            _wordId = _wr?.id || null;
+            const _wr = await window.db.get('SELECT id, reading, meaning FROM words WHERE word = ?', [row.phrase]);
+            if (_wr) {
+              _wordId = _wr.id;
+              if (!row.reading && _wr.reading) row.reading = _wr.reading;
+              if (!row.meaning && _wr.meaning) row.meaning = _wr.meaning;
+            }
           } catch(e) {}
           await window.db.run(
             `INSERT INTO vocab_items (word, reading, meaning, example, source, source_ref, type, encounter_at, entry_weight, created_at, word_id)

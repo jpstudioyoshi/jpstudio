@@ -4239,7 +4239,7 @@
     "type": "function",
     "name": "initWritingVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1920,
+    "line": 1924,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4248,7 +4248,7 @@
     "type": "function",
     "name": "initLessonVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1931,
+    "line": 1935,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4257,7 +4257,7 @@
     "type": "function",
     "name": "initLookupVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1970,
+    "line": 1978,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4266,7 +4266,7 @@
     "type": "function",
     "name": "coreVocabDailyIntake",
     "file": "src/core-vocab.js",
-    "line": 2033,
+    "line": 2041,
     "desc": "left untagged for now; retroactive pool-tagging of those is a separate,",
     "callers": 4,
     "exported": true
@@ -4275,7 +4275,7 @@
     "type": "function",
     "name": "vocabSettingsLoad",
     "file": "src/core-vocab.js",
-    "line": 2115,
+    "line": 2123,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4284,7 +4284,7 @@
     "type": "function",
     "name": "vocabSettingsSave",
     "file": "src/core-vocab.js",
-    "line": 2158,
+    "line": 2166,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4293,7 +4293,7 @@
     "type": "function",
     "name": "toggleVcTextEntry",
     "file": "src/core-vocab.js",
-    "line": 2201,
+    "line": 2209,
     "desc": "_vcTextEntry = !_vcTextEntry;",
     "callers": 2,
     "exported": true
@@ -4302,7 +4302,7 @@
     "type": "function",
     "name": "submitVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 2217,
+    "line": 2225,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 4,
     "exported": true
@@ -4311,7 +4311,7 @@
     "type": "function",
     "name": "vocabTypeMarkWrong",
     "file": "src/core-vocab.js",
-    "line": 2248,
+    "line": 2256,
     "desc": "const res = document.getElementById('vocabTypeResult');",
     "callers": 1,
     "exported": true
@@ -4320,7 +4320,7 @@
     "type": "function",
     "name": "skipVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 2256,
+    "line": 2264,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 2,
     "exported": true
@@ -4329,7 +4329,7 @@
     "type": "function",
     "name": "vocabKnownRecent",
     "file": "src/core-vocab.js",
-    "line": 2267,
+    "line": 2275,
     "desc": "Async version — callers should await. Sync callers get cached value from last call.",
     "callers": 6,
     "exported": true
@@ -4408,21 +4408,21 @@
     "type": "storage",
     "name": "VOCAB_WEIGHTS",
     "file": "src/core-vocab.js",
-    "line": 2187,
+    "line": 2195,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_THRESHOLDS",
     "file": "src/core-vocab.js",
-    "line": 2188,
+    "line": 2196,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_INTERVALS",
     "file": "src/core-vocab.js",
-    "line": 2189,
+    "line": 2197,
     "desc": "kvAPI.set"
   },
   {
@@ -4527,28 +4527,28 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1904,
+    "line": 1908,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1949,
+    "line": 1957,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 2004,
+    "line": 2012,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 2090,
+    "line": 2098,
     "desc": "db.run"
   },
   {
