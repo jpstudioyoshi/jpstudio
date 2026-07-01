@@ -1223,6 +1223,7 @@ function lessonNotesToggleGrammarHide(idx) {
   }
   lessonNotesRender();
   lessonNotesRenderPanel();
+  (App.renderGrammarCoverage || window.renderGrammarCoverage)?.();
 }
 
 function lessonNotesToggleShowHidden() {
