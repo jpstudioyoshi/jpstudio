@@ -1480,6 +1480,12 @@ async function lessonNotesAutoExtractAll() {
   const docContent = lessonNotesCleanText(LessonNotesState.docContent);
   if (!docContent) { console.warn('[lessonNotes] No docContent to extract from'); return; }
   
+  if (!LessonNotesState.currentLessonId) {
+    LessonNotesState.extractionWarning = ['lesson not linked — try again in a moment'];
+    console.warn('[lessonNotes] Extraction blocked: currentLessonId not resolved');
+    return;
+  }
+  
   LessonNotesState.extracting = true;
   
   // Update all views
