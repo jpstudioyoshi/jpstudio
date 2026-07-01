@@ -917,7 +917,7 @@ function lessonNotesUpdatePanelHeader() {
   hdr.innerHTML = `
     <div class="panel-section-title" style="flex:1;gap:8px;flex-wrap:wrap;align-items:center">
       <span class="panel-section-title-jp">ヨシ</span>
-      <select id="yoshiSessionSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel()"
+      <select id="yoshiSessionSelect" onchange="lessonNotesLoadSession(parseInt(this.value));lessonNotesRenderPanel();(App.renderGrammarCoverage||window.renderGrammarCoverage)?.()"
         style="padding:4px 8px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.75rem;border-radius:4px;max-width:180px">
         <option value="-1">— Select lesson —</option>
         ${sessions.map((s, i) => `<option value="${i}" ${i === _cur.currentIdx ? 'selected' : ''}>${lnSessionDateLabel(s)}</option>`).join('')}
@@ -1213,6 +1213,13 @@ function lessonNotesToggleGrammarHide(idx) {
     LessonNotesState.grammarHidden.delete(idx);
   } else {
     LessonNotesState.grammarHidden.add(idx);
+  }
+  const _sessions = lessonNotesGetSessions();
+  if (LessonNotesState.currentIdx !== null && _sessions[LessonNotesState.currentIdx]) {
+    _sessions[LessonNotesState.currentIdx].grammarHiddenNodeIds = [...LessonNotesState.grammarHidden]
+      .map(i => LessonNotesState.grammar[i]?.grammarNodeIds?.[0])
+      .filter(Boolean);
+    lessonNotesSaveSessions(_sessions);
   }
   lessonNotesRender();
   lessonNotesRenderPanel();

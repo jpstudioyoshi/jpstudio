@@ -410,6 +410,12 @@ function lessonNotesLoadSession(idx) {
       LessonNotesState.stories = sessions[idx].stories || [];
       LessonNotesState.keyPhrases = sessions[idx].keyPhrases || [];
       LessonNotesState.grammar = sessions[idx].grammar || [];
+      const _hiddenNodeIds = new Set(sessions[idx].grammarHiddenNodeIds || []);
+      LessonNotesState.grammarHidden = new Set(
+        LessonNotesState.grammar
+          .map((g, i) => _hiddenNodeIds.has(g.grammarNodeIds?.[0]) ? i : null)
+          .filter(i => i !== null)
+      );
       LessonNotesState.errors = sessions[idx].errors || [];
       LessonNotesState.rawText = sessions[idx].rawText || '';
       LessonNotesState.docImages = sessions[idx].images || [];
