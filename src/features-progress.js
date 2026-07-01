@@ -942,7 +942,11 @@ async function renderGrammarCoverage() {
       : await window.db.query('SELECT extracted_grammar FROM lesson_sessions WHERE extracted_grammar IS NOT NULL AND extracted_grammar != ? ORDER BY id DESC LIMIT 1', ['[]']);
     if (_egRows.length && _egRows[0].extracted_grammar) {
       const _dismissed = (App.Storage || window.Storage).getJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);
-      JSON.parse(_egRows[0].extracted_grammar).forEach(id => { if (!_dismissed.includes(id)) activeGrammarIds.add(id); });
+      // Also exclude points hidden in the Yoshi grammar view for this lesson (in-memory, same session only)
+      const _yoshiHidden = (typeof LessonNotesState !== 'undefined' && _lessonId && LessonNotesState.currentLessonId === _lessonId)
+        ? new Set([...LessonNotesState.grammarHidden].map(i => LessonNotesState.grammar[i]?.grammarNodeIds?.[0]).filter(Boolean))
+        : new Set();
+      JSON.parse(_egRows[0].extracted_grammar).forEach(id => { if (!_dismissed.includes(id) && !_yoshiHidden.has(id)) activeGrammarIds.add(id); });
     }
   } catch(e) {}
 
