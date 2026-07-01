@@ -277,7 +277,6 @@ function countInit2() {
 }
 
 function countRenderRefGrid2() {
-  const grid = document.getElementById('countRefGrid2');
   const row  = document.getElementById('countCheckboxRow');
 
   const counters = [
@@ -313,8 +312,50 @@ function countRenderRefGrid2() {
   const row2 = makeRow(counters.slice(mid));
   const footerHtml = `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px">${row1}</div><div style="display:flex;flex-wrap:wrap;gap:4px">${row2}</div>`;
   if (row) row.innerHTML = footerHtml;
-  if (grid) grid.innerHTML = footerHtml;
 }
+
+function countToggleRefTable() {
+  const existing = document.querySelector('.count-fullref-overlay');
+  if (existing) { existing.remove(); return; }
+  if (!Object.keys(COUNTER_DATA).length) { setTimeout(countToggleRefTable, 200); return; }
+
+  const nums = [1,2,3,4,5,6,7,8,9,10];
+  const isContracted = (r) => /っ/.test(r) || /ぱん|ぴき|ぱい|ぼん|びき|ばい/.test(r);
+
+  let rows = '';
+  for (const key of Object.keys(COUNTER_DATA)) {
+    const c = COUNTER_DATA[key];
+    rows += `<tr><td style="padding:4px 8px 4px 0;white-space:nowrap"><span style="font-family:var(--jp);font-size:0.9rem;color:var(--teal)">${c.name}</span> <span style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light)">${c.desc}</span></td>`;
+    for (const n of nums) {
+      const r = c.readings[n] || '—';
+      const color = isContracted(r) ? 'var(--gold)' : 'var(--ink)';
+      rows += `<td style="padding:4px 6px;text-align:center;font-family:var(--jp);white-space:nowrap;color:${color};cursor:pointer" onclick="jpSpeak('${r}')" title="${c.name} ${n}">${r}</td>`;
+    }
+    rows += '</tr>';
+  }
+  const headerCells = nums.map(n => `<th style="padding:4px 3px;text-align:center;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);border-bottom:1px solid var(--border)">${n}</th>`).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'count-fullref-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  const escHandler = (e) => { if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escHandler); } };
+  document.addEventListener('keydown', escHandler);
+
+  overlay.innerHTML = `
+    <div style="background:var(--paper);border-radius:12px;padding:20px;max-width:900px;width:96%;max-height:82vh;overflow-y:auto;position:relative">
+      <button class="btn-icon" onclick="this.closest('.count-fullref-overlay').remove()" style="position:absolute;top:10px;right:10px">✕</button>
+      <div style="font-family:var(--ui);font-size:0.8rem;color:var(--ink-light);margin-bottom:12px">Counter reference — tap any reading to hear it</div>
+      <table style="border-collapse:collapse;font-size:0.75rem;width:100%">
+        <thead><tr><th style="padding:4px 8px 4px 0;text-align:left;font-family:var(--ui);font-size:0.65rem;color:var(--ink-light);border-bottom:1px solid var(--border)">Counter</th>${headerCells}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="font-family:var(--ui);font-size:0.62rem;color:var(--ink-light);margin-top:10px"><span style="color:var(--gold)">amber</span> = contraction/sound change</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+window['countToggleRefTable'] = countToggleRefTable;
 
 function countShowRefPopup2(counterKey) {
   const counter = COUNTER_DATA[counterKey];

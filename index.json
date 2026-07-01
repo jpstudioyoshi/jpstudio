@@ -1630,15 +1630,24 @@
     "name": "countRenderRefGrid2",
     "file": "src/core-counters.js",
     "line": 279,
-    "desc": "const grid = document.getElementById('countRefGrid2');",
-    "callers": 2,
+    "desc": "const row  = document.getElementById('countCheckboxRow');",
+    "callers": 1,
     "exported": false
+  },
+  {
+    "type": "function",
+    "name": "countToggleRefTable",
+    "file": "src/core-counters.js",
+    "line": 317,
+    "desc": "const existing = document.querySelector('.count-fullref-overlay');",
+    "callers": 4,
+    "exported": true
   },
   {
     "type": "function",
     "name": "countShowRefPopup2",
     "file": "src/core-counters.js",
-    "line": 319,
+    "line": 360,
     "desc": "const counter = COUNTER_DATA[counterKey];",
     "callers": 1,
     "exported": true
@@ -1647,7 +1656,7 @@
     "type": "function",
     "name": "countUpdateOptions2",
     "file": "src/core-counters.js",
-    "line": 359,
+    "line": 400,
     "desc": "CounterDrillState.activeCounters = [];",
     "callers": 3,
     "exported": true
@@ -1656,7 +1665,7 @@
     "type": "function",
     "name": "countBuildPool2",
     "file": "src/core-counters.js",
-    "line": 368,
+    "line": 409,
     "desc": "const pool = [];",
     "callers": 1,
     "exported": false
@@ -1665,7 +1674,7 @@
     "type": "function",
     "name": "countStartSession2",
     "file": "src/core-counters.js",
-    "line": 399,
+    "line": 440,
     "desc": "if (CounterDrillState.activeCounters.length === 0) {",
     "callers": 3,
     "exported": true
@@ -1674,7 +1683,7 @@
     "type": "function",
     "name": "countForceNewSession2",
     "file": "src/core-counters.js",
-    "line": 415,
+    "line": 456,
     "desc": "CounterDrillState.run = 1;",
     "callers": 2,
     "exported": false
@@ -1683,7 +1692,7 @@
     "type": "function",
     "name": "countResumeSession2",
     "file": "src/core-counters.js",
-    "line": 427,
+    "line": 468,
     "desc": "CounterDrillState.queue = saved.queue.map(item => {",
     "callers": 1,
     "exported": false
@@ -1692,7 +1701,7 @@
     "type": "function",
     "name": "countBuildRunQueue2",
     "file": "src/core-counters.js",
-    "line": 454,
+    "line": 495,
     "desc": "const pool = countBuildPool2();",
     "callers": 2,
     "exported": false
@@ -1701,7 +1710,7 @@
     "type": "function",
     "name": "_countShowStandard",
     "file": "src/core-counters.js",
-    "line": 498,
+    "line": 539,
     "desc": "const idx = Math.floor(Math.random() * item.counter.emoji.length);",
     "callers": 2,
     "exported": false
@@ -1710,7 +1719,7 @@
     "type": "function",
     "name": "countToggleObjectMode",
     "file": "src/core-counters.js",
-    "line": 515,
+    "line": 556,
     "desc": "const btn = document.getElementById('countObjectModeBtn');",
     "callers": 1,
     "exported": false
@@ -1719,7 +1728,7 @@
     "type": "function",
     "name": "countShowQuestion2",
     "file": "src/core-counters.js",
-    "line": 536,
+    "line": 577,
     "desc": "if (CounterDrillState.idx >= CounterDrillState.queue.length) {",
     "callers": 5,
     "exported": false
@@ -1728,7 +1737,7 @@
     "type": "function",
     "name": "countCheck2",
     "file": "src/core-counters.js",
-    "line": 608,
+    "line": 649,
     "desc": "if (CounterDrillState.run === 0) { countStartSession2(); return; }",
     "callers": 4,
     "exported": true
@@ -1737,7 +1746,7 @@
     "type": "function",
     "name": "countAdvance2",
     "file": "src/core-counters.js",
-    "line": 664,
+    "line": 705,
     "desc": "if (DrillFlow._advancing) return;",
     "callers": 5,
     "exported": true
@@ -1746,7 +1755,7 @@
     "type": "function",
     "name": "countEndRun2",
     "file": "src/core-counters.js",
-    "line": 676,
+    "line": 717,
     "desc": "const pct = Math.round((CounterDrillState.correct / CounterDrillState.queue.length) * 100);",
     "callers": 1,
     "exported": false
@@ -1755,7 +1764,7 @@
     "type": "function",
     "name": "countShowSummary2",
     "file": "src/core-counters.js",
-    "line": 767,
+    "line": 808,
     "desc": "const problems = Object.entries(CounterDrillState.sessionWrong)",
     "callers": 1,
     "exported": false
@@ -1764,7 +1773,7 @@
     "type": "function",
     "name": "countRenderProgress2",
     "file": "src/core-counters.js",
-    "line": 807,
+    "line": 848,
     "desc": "const el = document.getElementById('countProgress2');",
     "callers": 4,
     "exported": false
@@ -1773,7 +1782,7 @@
     "type": "function",
     "name": "countUpdateUI2",
     "file": "src/core-counters.js",
-    "line": 850,
+    "line": 891,
     "desc": "const runEl = document.getElementById('countRunIndicator2');",
     "callers": 5,
     "exported": false
@@ -1782,7 +1791,7 @@
     "type": "function",
     "name": "countHear2",
     "file": "src/core-counters.js",
-    "line": 865,
+    "line": 906,
     "desc": "if (CounterDrillState.current) {",
     "callers": 3,
     "exported": true
@@ -1791,7 +1800,7 @@
     "type": "function",
     "name": "countShowLookup2",
     "file": "src/core-counters.js",
-    "line": 871,
+    "line": 912,
     "desc": "const _escLookup = (e) => {",
     "callers": 3,
     "exported": true
@@ -1800,7 +1809,7 @@
     "type": "function",
     "name": "daysToggleTable",
     "file": "src/core-counters.js",
-    "line": 961,
+    "line": 1002,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');",
     "callers": 3,
     "exported": true
@@ -1809,7 +1818,7 @@
     "type": "function",
     "name": "daysStop",
     "file": "src/core-counters.js",
-    "line": 970,
+    "line": 1011,
     "desc": "const drillEl = document.getElementById('daysDrillArea');",
     "callers": 3,
     "exported": true
@@ -1818,7 +1827,7 @@
     "type": "function",
     "name": "daysOfMonthInit",
     "file": "src/core-counters.js",
-    "line": 978,
+    "line": 1019,
     "desc": "const tableEl = document.getElementById('daysOfMonthTable');",
     "callers": 2,
     "exported": true
@@ -1827,7 +1836,7 @@
     "type": "function",
     "name": "daysOfMonthDrill",
     "file": "src/core-counters.js",
-    "line": 1016,
+    "line": 1057,
     "desc": "const drillEl = document.getElementById('daysDrillArea');",
     "callers": 3,
     "exported": true
@@ -1836,7 +1845,7 @@
     "type": "function",
     "name": "daysNext",
     "file": "src/core-counters.js",
-    "line": 1034,
+    "line": 1075,
     "desc": "function daysCheck() {}",
     "callers": 3,
     "exported": true
@@ -1845,7 +1854,7 @@
     "type": "function",
     "name": "daysCheck",
     "file": "src/core-counters.js",
-    "line": 1035,
+    "line": 1076,
     "desc": "let _daysChecked = false;",
     "callers": 4,
     "exported": true
@@ -1854,7 +1863,7 @@
     "type": "function",
     "name": "conjugate",
     "file": "src/core-counters.js",
-    "line": 1047,
+    "line": 1088,
     "desc": "CONJUGATION DRILL",
     "callers": 10,
     "exported": false
@@ -1863,7 +1872,7 @@
     "type": "function",
     "name": "goalsLoad",
     "file": "src/core-counters.js",
-    "line": 1195,
+    "line": 1236,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -1872,7 +1881,7 @@
     "type": "function",
     "name": "goalsSave",
     "file": "src/core-counters.js",
-    "line": 1202,
+    "line": 1243,
     "desc": "const g = {",
     "callers": 6,
     "exported": false
@@ -1881,7 +1890,7 @@
     "type": "function",
     "name": "goalsRestoreUI",
     "file": "src/core-counters.js",
-    "line": 1217,
+    "line": 1258,
     "desc": "const g = goalsLoad();",
     "callers": 1,
     "exported": false
@@ -1890,7 +1899,7 @@
     "type": "function",
     "name": "getConjOptions",
     "file": "src/core-counters.js",
-    "line": 1236,
+    "line": 1277,
     "desc": "const verbTypes = [];",
     "callers": 1,
     "exported": false
@@ -1899,7 +1908,7 @@
     "type": "function",
     "name": "startConjDrill",
     "file": "src/core-counters.js",
-    "line": 1260,
+    "line": 1301,
     "desc": "const {verbTypes, forms, polarities, registers} = getConjOptions();",
     "callers": 4,
     "exported": true
@@ -1908,7 +1917,7 @@
     "type": "function",
     "name": "renderConjDrill",
     "file": "src/core-counters.js",
-    "line": 1283,
+    "line": 1324,
     "desc": "const area = document.getElementById('conjDrillArea');",
     "callers": 5,
     "exported": false
@@ -1917,7 +1926,7 @@
     "type": "function",
     "name": "handleConjKey",
     "file": "src/core-counters.js",
-    "line": 1332,
+    "line": 1373,
     "desc": "if (e.key === 'Enter') {",
     "callers": 1,
     "exported": false
@@ -1926,7 +1935,7 @@
     "type": "function",
     "name": "conjAutoConvert",
     "file": "src/core-counters.js",
-    "line": 1342,
+    "line": 1383,
     "desc": "if (!conjCurrentAnswer) return;",
     "callers": 1,
     "exported": false
@@ -1935,7 +1944,7 @@
     "type": "function",
     "name": "liveCheckConj",
     "file": "src/core-counters.js",
-    "line": 1366,
+    "line": 1407,
     "desc": "conjAutoConvert();",
     "callers": 1,
     "exported": false
@@ -1958,7 +1967,7 @@
     "type": "storage",
     "name": "GOALS",
     "file": "src/core-counters.js",
-    "line": 1211,
+    "line": 1252,
     "desc": "Storage.set"
   },
   {
@@ -4767,7 +4776,7 @@
     "file": "src/features-core.js",
     "line": 529,
     "desc": "return TTS.speak(text, rate || 0.9, opts || {}); }",
-    "callers": 64,
+    "callers": 65,
     "exported": true
   },
   {
@@ -7732,7 +7741,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 69,
     "desc": "return LessonNotesState.sessions;",
-    "callers": 28,
+    "callers": 29,
     "exported": false
   },
   {
@@ -7741,7 +7750,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 73,
     "desc": "LessonNotesState.sessions = sessions;",
-    "callers": 23,
+    "callers": 24,
     "exported": false
   },
   {
@@ -7759,7 +7768,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 123,
     "desc": "const el3 = document.getElementById('lessonNotesPanelContent');",
-    "callers": 42,
+    "callers": 44,
     "exported": false
   },
   {
@@ -7973,7 +7982,7 @@
     "type": "function",
     "name": "lessonNotesUpdatePanelHeader",
     "file": "src/features-lesson-notes.js",
-    "line": 904,
+    "line": 908,
     "desc": "const hdr = document.getElementById('yoshiPanelHeader');",
     "callers": 3,
     "exported": false
@@ -7982,7 +7991,7 @@
     "type": "function",
     "name": "lnHeaderSearch",
     "file": "src/features-lesson-notes.js",
-    "line": 937,
+    "line": 941,
     "desc": "if (LessonNotesState.viewMode !== 'sourcenotes') {",
     "callers": 2,
     "exported": false
@@ -7991,7 +8000,7 @@
     "type": "function",
     "name": "lessonNotesSetView",
     "file": "src/features-lesson-notes.js",
-    "line": 947,
+    "line": 951,
     "desc": "LessonNotesState.viewMode = mode;",
     "callers": 13,
     "exported": true
@@ -8000,7 +8009,7 @@
     "type": "function",
     "name": "lnFormatWaDate",
     "file": "src/features-lesson-notes.js",
-    "line": 980,
+    "line": 984,
     "desc": "if (!raw) return null;",
     "callers": 4,
     "exported": false
@@ -8009,7 +8018,7 @@
     "type": "function",
     "name": "lnSessionDateLabel",
     "file": "src/features-lesson-notes.js",
-    "line": 992,
+    "line": 996,
     "desc": "const dc = session.docContent || [];",
     "callers": 1,
     "exported": false
@@ -8018,7 +8027,7 @@
     "type": "function",
     "name": "lnFirstMessageDate",
     "file": "src/features-lesson-notes.js",
-    "line": 999,
+    "line": 1003,
     "desc": "const dc = LessonNotesState.docContent || [];",
     "callers": 1,
     "exported": false
@@ -8027,7 +8036,7 @@
     "type": "function",
     "name": "lessonNotesRenderOverview",
     "file": "src/features-lesson-notes.js",
-    "line": 1006,
+    "line": 1010,
     "desc": "if (!session) return '';",
     "callers": 1,
     "exported": false
@@ -8036,8 +8045,26 @@
     "type": "function",
     "name": "lnHideWord",
     "file": "src/features-lesson-notes.js",
-    "line": 1038,
+    "line": 1042,
     "desc": "LessonNotesState.hiddenWords.add(word);",
+    "callers": 1,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "lnUnhideWord",
+    "file": "src/features-lesson-notes.js",
+    "line": 1052,
+    "desc": "LessonNotesState.hiddenWords.delete(word);",
+    "callers": 1,
+    "exported": false
+  },
+  {
+    "type": "function",
+    "name": "lnToggleShowHidden",
+    "file": "src/features-lesson-notes.js",
+    "line": 1062,
+    "desc": "LessonNotesState.showHidden = !LessonNotesState.showHidden;",
     "callers": 1,
     "exported": false
   },
@@ -8045,7 +8072,7 @@
     "type": "function",
     "name": "lnOverviewCard",
     "file": "src/features-lesson-notes.js",
-    "line": 1048,
+    "line": 1067,
     "desc": "return '<div onclick=\"' + onclick + '\" class=\"row-hover-border\" style=\"background:var(--paper-dark);",
     "callers": 6,
     "exported": false
@@ -8054,7 +8081,7 @@
     "type": "function",
     "name": "lessonNotesGenerateSummary",
     "file": "src/features-lesson-notes.js",
-    "line": 1055,
+    "line": 1074,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 1,
     "exported": false
@@ -8063,7 +8090,7 @@
     "type": "function",
     "name": "lessonNotesRenderStories",
     "file": "src/features-lesson-notes.js",
-    "line": 1066,
+    "line": 1085,
     "desc": "return `",
     "callers": 1,
     "exported": false
@@ -8072,7 +8099,7 @@
     "type": "function",
     "name": "lessonNotesRenderKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1083,
+    "line": 1102,
     "desc": "return `",
     "callers": 1,
     "exported": false
@@ -8081,7 +8108,7 @@
     "type": "function",
     "name": "lessonNotesRenderGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1132,
+    "line": 1151,
     "desc": "const visibleGrammar = LessonNotesState.grammar.map((g, i) => ({...g, _idx: i})).filter((g, i) => Le",
     "callers": 1,
     "exported": false
@@ -8090,7 +8117,7 @@
     "type": "function",
     "name": "lessonNotesToggleGrammarHide",
     "file": "src/features-lesson-notes.js",
-    "line": 1192,
+    "line": 1211,
     "desc": "if (LessonNotesState.grammarHidden.has(idx)) {",
     "callers": 2,
     "exported": true
@@ -8099,7 +8126,7 @@
     "type": "function",
     "name": "lessonNotesToggleShowHidden",
     "file": "src/features-lesson-notes.js",
-    "line": 1202,
+    "line": 1221,
     "desc": "LessonNotesState.showHiddenGrammar = !LessonNotesState.showHiddenGrammar;",
     "callers": 2,
     "exported": true
@@ -8108,7 +8135,7 @@
     "type": "function",
     "name": "lessonNotesEditGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1209,
+    "line": 1228,
     "desc": "const g = LessonNotesState.grammar[idx];",
     "callers": 2,
     "exported": true
@@ -8117,7 +8144,7 @@
     "type": "function",
     "name": "lessonNotesSaveGrammarEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 1260,
+    "line": 1279,
     "desc": "const pattern = document.getElementById('grammarEditPattern').value.trim();",
     "callers": 2,
     "exported": true
@@ -8126,7 +8153,7 @@
     "type": "function",
     "name": "lessonNotesDeleteGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1284,
+    "line": 1303,
     "desc": "const g = LessonNotesState.grammar[idx];",
     "callers": 2,
     "exported": true
@@ -8135,7 +8162,7 @@
     "type": "function",
     "name": "lessonNotesExtractKeyPhrases",
     "file": "src/features-lesson-notes.js",
-    "line": 1305,
+    "line": 1324,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": true
@@ -8144,7 +8171,7 @@
     "type": "function",
     "name": "lessonNotesExtractGrammar",
     "file": "src/features-lesson-notes.js",
-    "line": 1348,
+    "line": 1367,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": true
@@ -8153,7 +8180,7 @@
     "type": "function",
     "name": "lessonNotesPushToGramNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 1368,
+    "line": 1387,
     "desc": "if (!grammarItems || !grammarItems.length) return;",
     "callers": 1,
     "exported": false
@@ -8162,7 +8189,7 @@
     "type": "function",
     "name": "lessonNotesClassifyGramTab",
     "file": "src/features-lesson-notes.js",
-    "line": 1403,
+    "line": 1422,
     "desc": "const text = ((item.pattern || '') + ' ' + (item.explanation || '')).toLowerCase();",
     "callers": 1,
     "exported": false
@@ -8171,7 +8198,7 @@
     "type": "function",
     "name": "lessonNotesParseWithTimestamps",
     "file": "src/features-lesson-notes.js",
-    "line": 1418,
+    "line": 1437,
     "desc": "Parses lines like: [DD/MM/YYYY, HH:MM:SS] Name: message",
     "callers": 2,
     "exported": false
@@ -8180,7 +8207,7 @@
     "type": "function",
     "name": "lessonNotesCleanText",
     "file": "src/features-lesson-notes.js",
-    "line": 1450,
+    "line": 1469,
     "desc": "return docContent",
     "callers": 3,
     "exported": false
@@ -8189,7 +8216,7 @@
     "type": "function",
     "name": "lessonNotesAutoExtractAll",
     "file": "src/features-lesson-notes.js",
-    "line": 1457,
+    "line": 1476,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 4,
     "exported": false
@@ -8198,7 +8225,7 @@
     "type": "function",
     "name": "_lnParseJsonArray",
     "file": "src/features-lesson-notes.js",
-    "line": 1532,
+    "line": 1551,
     "desc": "const raw = text || '[]';",
     "callers": 4,
     "exported": false
@@ -8207,7 +8234,7 @@
     "type": "function",
     "name": "lessonNotesExtractSummarySilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1547,
+    "line": 1566,
     "desc": "",
     "callers": 2,
     "exported": false
@@ -8216,7 +8243,7 @@
     "type": "function",
     "name": "lessonNotesExtractVocabSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1562,
+    "line": 1581,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8225,7 +8252,7 @@
     "type": "function",
     "name": "lessonNotesExtractStoriesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1635,
+    "line": 1654,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8234,7 +8261,7 @@
     "type": "function",
     "name": "lessonNotesExtractKeyPhrasesSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1678,
+    "line": 1697,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -8243,7 +8270,7 @@
     "type": "function",
     "name": "lessonNotesExtractGrammarSilent",
     "file": "src/features-lesson-notes.js",
-    "line": 1711,
+    "line": 1730,
     "desc": "(App.Storage || window.Storage).setJSON(STORAGE_KEYS.GRAMMAR_GOLD_DISMISSED, []);",
     "callers": 2,
     "exported": false
@@ -8252,7 +8279,7 @@
     "type": "function",
     "name": "lessonNotesSaveCurrentSession",
     "file": "src/features-lesson-notes.js",
-    "line": 1778,
+    "line": 1797,
     "desc": "if (LessonNotesState.currentIdx === null) return;",
     "callers": 3,
     "exported": false
@@ -8261,7 +8288,7 @@
     "type": "function",
     "name": "lessonNotesOpenGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1794,
+    "line": 1813,
     "desc": "if (idx < 0 || idx >= LessonNotesState.grammar.length) return;",
     "callers": 4,
     "exported": true
@@ -8270,7 +8297,7 @@
     "type": "function",
     "name": "lessonNotesCloseGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 1805,
+    "line": 1824,
     "desc": "LessonNotesState.grammarDetail = null;",
     "callers": 2,
     "exported": true
@@ -8279,7 +8306,7 @@
     "type": "function",
     "name": "lessonNotesGrammarGenerateDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1811,
+    "line": 1830,
     "desc": "if (LessonNotesState.grammarDetail === null) return;",
     "callers": 3,
     "exported": true
@@ -8288,7 +8315,7 @@
     "type": "function",
     "name": "lessonNotesGrammarCheckDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1879,
+    "line": 1898,
     "desc": "const inp = document.getElementById('lnGrammarDrillInput');",
     "callers": 3,
     "exported": true
@@ -8297,7 +8324,7 @@
     "type": "function",
     "name": "lessonNotesGrammarNextDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1948,
+    "line": 1967,
     "desc": "toggleLnGrammarKanaType replaced by kanaSetMode",
     "callers": 2,
     "exported": true
@@ -8306,7 +8333,7 @@
     "type": "function",
     "name": "lessonNotesGrammarPrevDrill",
     "file": "src/features-lesson-notes.js",
-    "line": 1967,
+    "line": 1986,
     "desc": "if (LessonNotesState.grammarDrillIdx > 0) {",
     "callers": 2,
     "exported": true
@@ -8315,7 +8342,7 @@
     "type": "function",
     "name": "lessonNotesGrammarAsk",
     "file": "src/features-lesson-notes.js",
-    "line": 1986,
+    "line": 2005,
     "desc": "if (LessonNotesState.grammarDetail === null) return;",
     "callers": 3,
     "exported": true
@@ -8324,7 +8351,7 @@
     "type": "function",
     "name": "lessonNotesRenderGrammarDetail",
     "file": "src/features-lesson-notes.js",
-    "line": 2030,
+    "line": 2049,
     "desc": "if (LessonNotesState.grammarDetail === null) return '';",
     "callers": 1,
     "exported": false
@@ -8333,7 +8360,7 @@
     "type": "function",
     "name": "lessonNotesOpenStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2138,
+    "line": 2157,
     "desc": "LessonNotesState.currentStory = LessonNotesState.stories[idx];",
     "callers": 2,
     "exported": true
@@ -8342,7 +8369,7 @@
     "type": "function",
     "name": "lessonNotesParseStory",
     "file": "src/features-lesson-notes.js",
-    "line": 2149,
+    "line": 2168,
     "desc": "const apiKey = _fy_getApiKey();",
     "callers": 3,
     "exported": false
@@ -8351,7 +8378,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryText",
     "file": "src/features-lesson-notes.js",
-    "line": 2196,
+    "line": 2215,
     "desc": "const container = document.getElementById('lnStoryReader');",
     "callers": 4,
     "exported": false
@@ -8360,7 +8387,7 @@
     "type": "function",
     "name": "lessonNotesSetStoryTab",
     "file": "src/features-lesson-notes.js",
-    "line": 2232,
+    "line": 2251,
     "desc": "LessonNotesState.storyTab = tab;",
     "callers": 7,
     "exported": true
@@ -8369,7 +8396,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryVocab",
     "file": "src/features-lesson-notes.js",
-    "line": 2244,
+    "line": 2263,
     "desc": "const all = LessonNotesState.vocab || [];",
     "callers": 1,
     "exported": false
@@ -8378,7 +8405,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 2280,
+    "line": 2299,
     "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');",
     "callers": 1,
     "exported": false
@@ -8387,7 +8414,7 @@
     "type": "function",
     "name": "lessonNotesSaveStoryNotes",
     "file": "src/features-lesson-notes.js",
-    "line": 2292,
+    "line": 2311,
     "desc": "const story = LessonNotesState.currentStory;",
     "callers": 2,
     "exported": true
@@ -8396,7 +8423,7 @@
     "type": "function",
     "name": "lessonNotesRenderStoryEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 2306,
+    "line": 2325,
     "desc": "const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');",
     "callers": 1,
     "exported": false
@@ -8405,7 +8432,7 @@
     "type": "function",
     "name": "lessonNotesSaveStoryEdit",
     "file": "src/features-lesson-notes.js",
-    "line": 2324,
+    "line": 2343,
     "desc": "const titleEl = document.getElementById('lnStoryEditTitle');",
     "callers": 2,
     "exported": true
@@ -8414,7 +8441,7 @@
     "type": "function",
     "name": "lessonNotesRenderReading",
     "file": "src/features-lesson-notes.js",
-    "line": 2350,
+    "line": 2369,
     "desc": "const story = LessonNotesState.currentStory;",
     "callers": 1,
     "exported": false
@@ -8423,7 +8450,7 @@
     "type": "function",
     "name": "lnSetRecordMode",
     "file": "src/features-lesson-notes.js",
-    "line": 2474,
+    "line": 2493,
     "desc": "LessonNotesState.ln* — see declaration above",
     "callers": 2,
     "exported": false
@@ -8432,7 +8459,7 @@
     "type": "function",
     "name": "lnShowCurrentSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2486,
+    "line": 2505,
     "desc": "const display = document.getElementById('lnSentenceDisplay');",
     "callers": 5,
     "exported": false
@@ -8441,7 +8468,7 @@
     "type": "function",
     "name": "lessonNotesSplitSentences",
     "file": "src/features-lesson-notes.js",
-    "line": 2503,
+    "line": 2522,
     "desc": "if (!text) return [];",
     "callers": 5,
     "exported": false
@@ -8450,7 +8477,7 @@
     "type": "function",
     "name": "lnPrevSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2511,
+    "line": 2530,
     "desc": "if (LessonNotesState.lnCurrentSentence > 0) {",
     "callers": 1,
     "exported": false
@@ -8459,7 +8486,7 @@
     "type": "function",
     "name": "lnNextSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2520,
+    "line": 2539,
     "desc": "const sentences = lessonNotesSplitSentences(LessonNotesState.currentStory?.text || '');",
     "callers": 1,
     "exported": false
@@ -8468,7 +8495,7 @@
     "type": "function",
     "name": "lnGoToSentence",
     "file": "src/features-lesson-notes.js",
-    "line": 2530,
+    "line": 2549,
     "desc": "LessonNotesState.lnCurrentSentence = idx;",
     "callers": 1,
     "exported": false
@@ -8477,7 +8504,7 @@
     "type": "function",
     "name": "lnParseSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2540,
+    "line": 2559,
     "desc": "LessonNotesState.lnSentenceFuriganaCache — see declaration above",
     "callers": 5,
     "exported": false
@@ -8486,7 +8513,7 @@
     "type": "function",
     "name": "lnRenderSentenceFurigana",
     "file": "src/features-lesson-notes.js",
-    "line": 2606,
+    "line": 2625,
     "desc": "const display = document.getElementById('lnSentenceDisplay');",
     "callers": 3,
     "exported": false
@@ -8495,7 +8522,7 @@
     "type": "function",
     "name": "yoshiParseWhatsapp",
     "file": "src/features-lesson-notes.js",
-    "line": 2621,
+    "line": 2640,
     "desc": "const lines = raw.split('\\n');",
     "callers": 12,
     "exported": true
@@ -8504,7 +8531,7 @@
     "type": "function",
     "name": "_dlDistance",
     "file": "src/features-lesson-notes.js",
-    "line": 2642,
+    "line": 2661,
     "desc": "Only updates rows where a confident match is found (distance ≤ threshold).",
     "callers": 1,
     "exported": false
@@ -8513,7 +8540,7 @@
     "type": "function",
     "name": "lnPopulateTurnIds",
     "file": "src/features-lesson-notes.js",
-    "line": 2659,
+    "line": 2678,
     "desc": "if (!window.db) return;",
     "callers": 4,
     "exported": false
@@ -8557,49 +8584,49 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1611,
+    "line": 1630,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1624,
+    "line": 1643,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1700,
+    "line": 1719,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/features-lesson-notes.js",
-    "line": 1762,
+    "line": 1781,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/features-lesson-notes.js",
-    "line": 1769,
+    "line": 1788,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/features-lesson-notes.js",
-    "line": 2687,
+    "line": 2706,
     "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/features-lesson-notes.js",
-    "line": 1723,
+    "line": 1742,
     "desc": "Analyze these Japanese lesson notes and identify grammatical patterns that a lea"
   },
   {
@@ -8876,7 +8903,7 @@
     "type": "storage",
     "name": "lnLastSessionId",
     "file": "src/features-ln-p2.js",
-    "line": 403,
+    "line": 404,
     "desc": "localStorage"
   },
   {

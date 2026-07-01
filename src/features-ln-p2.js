@@ -396,6 +396,7 @@ function lessonNotesLoadSession(idx) {
     LessonNotesState.docImages = [];
     LessonNotesState.docContent = [];
     LessonNotesState.summary = '';
+    LessonNotesState.hiddenWords = new Set();
   } else {
     const sessions = lessonNotesGetSessions();
     if (sessions[idx]) {
@@ -457,7 +458,6 @@ function lessonNotesLoadSession(idx) {
   LessonNotesState.drillIdx = 0;
   LessonNotesState.drillRevealed = 0;
   LessonNotesState.shuffled = false;
-  LessonNotesState.hiddenWords.clear();
   LessonNotesState.currentStory = null;
   LessonNotesState.grammarDetail = null;
   
