@@ -131,7 +131,7 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
   try {
     const sources = vocabGetActiveSources();
     const _localToday = new Date().toLocaleDateString('sv-SE');
-    let sql = "SELECT v.*, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded' AND v.type != 'phrase'))";
+    let sql = "SELECT v.id, v.source, v.source_ref, v.type, v.pos, v.entry_weight, v.encounter_at, v.created_at, v.word_id, v.pool, v.word, COALESCE(NULLIF(v.reading,''), w.reading) as reading, COALESCE(NULLIF(v.meaning,''), w.meaning) as meaning, v.example, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN words w ON w.id = v.word_id LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded' AND v.type != 'phrase'))";
     const params = [direction, _localToday];
     if (sources && sources.length > 0) {
       sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
@@ -642,7 +642,7 @@ function _triageClose() {
 async function triageStart(level = 'N5') {
   if (!window.db) return;
   const rows = await window.db.query(
-    `SELECT v.id, v.word, v.reading, v.meaning, w.frequency
+    `SELECT v.id, v.word, COALESCE(NULLIF(v.reading,''), w.reading) as reading, COALESCE(NULLIF(v.meaning,''), w.meaning) as meaning, w.frequency
      FROM vocab_items v JOIN words w ON w.id = v.word_id
      WHERE w.level = ?
        AND v.id NOT IN (SELECT vocab_id FROM vocab_srs WHERE direction = ?)
