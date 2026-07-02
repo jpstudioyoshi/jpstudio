@@ -137,6 +137,17 @@ function vocabGetActiveLevel() {
 }
 
 function vocabLevelFilterChanged() {
+  // A level-filter change reshapes state.vocabItems (different words,
+  // different order), but two things stay keyed by the OLD array index
+  // and would otherwise go stale:
+  //   - _sessionKnown (which cards were marked known this session)
+  //   - _vcDirState (the OTHER direction's cached session, restored as-is
+  //     on toggleVcDirection() without ever re-querying)
+  // Without clearing both, switching direction after changing the filter
+  // can silently restore a stale unfiltered session, or suppress cards
+  // whose old index happens to coincide with a now-irrelevant "known" flag.
+  Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
+  Object.keys(_vcDirState).forEach(k => delete _vcDirState[k]);
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
@@ -803,9 +814,20 @@ function toggleGrammar(i) {
 // QUESTIONS (AI Chat on Home panel)
 // ═══════════════════════════════════════════════════════
 
+let _chatMsgIdSeq = 0;
 function appendChatMsg(role, html) {
   const container = document.getElementById('chatMessages');
-  const id = 'msg' + Date.now();
+  // Date.now() alone is millisecond-resolution — sendChat() calls this twice
+  // back-to-back (user bubble, then the "Thinking..." AI bubble) with no
+  // await between them, so both calls can land in the same millisecond and
+  // get the SAME id. With duplicate ids, getElementById() returns the FIRST
+  // matching element (the user bubble) — so updateChatMsg(thinkingId, reply)
+  // later writes the real answer into the user's white bubble instead of
+  // the AI bubble, while the actual "Thinking..." node (a distinct DOM
+  // element that just happens to share that id string) is never touched
+  // and spins forever. The counter guarantees two calls in the same tick
+  // never collide.
+  const id = 'msg' + Date.now() + '_' + (_chatMsgIdSeq++);
   const div = document.createElement('div');
   div.className = `chat-msg ${role}`;
   div.id = id;
@@ -2005,6 +2027,14 @@ async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
     }
     const remaining = effectiveCap - already;
 
+    // Over-fetch: rows missing a reading/meaning get skipped below without
+    // consuming a daily slot, but a LIMIT of exactly `remaining` meant a
+    // handful of incomplete dictionary rows at the front of frequency
+    // order could permanently cap daily intake below batchSize forever —
+    // every day re-selects the same stuck rows, skips them again, and
+    // never reaches the words behind them. Fetching a wider window and
+    // stopping once `remaining` real inserts have happened fixes this
+    // without changing frequency ordering or insert logic.
     const candidates = await window.db.query(
       `SELECT w.id, w.word, w.reading, w.meaning
          FROM words w
@@ -2012,7 +2042,7 @@ async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
           AND NOT EXISTS (SELECT 1 FROM vocab_items v WHERE v.word_id = w.id)
         ORDER BY w.frequency IS NULL, w.frequency ASC
         LIMIT ?`,
-      [sprintLevel, remaining]
+      [sprintLevel, remaining * 5]
     );
     if (!candidates || !candidates.length) {
       return { added: 0, reason: 'sprint complete — no remaining ' + sprintLevel + ' words', sprint: sprintLevel };
@@ -2020,8 +2050,10 @@ async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
 
     const now = new Date().toISOString();
     let added = 0;
+    let skippedIncomplete = 0;
     for (const w of candidates) {
-      if (!w.reading || !w.meaning) continue; // skip incomplete dictionary rows
+      if (added >= remaining) break;
+      if (!w.reading || !w.meaning) { skippedIncomplete++; continue; } // skip incomplete dictionary rows
       await window.db.run(
         `INSERT INTO vocab_items (word, reading, meaning, source, source_ref, type, encounter_at, entry_weight, created_at, word_id, pool)
          VALUES (?, ?, ?, 'core_vocab', 'sprint', 'word', ?, 1.0, ?, ?, ?)`,
@@ -2038,11 +2070,44 @@ async function coreVocabDailyIntake(batchSize = 12, maxCatchupMultiple = 2) {
       // every other source.
       added++;
     }
+    if (skippedIncomplete) console.warn('[core-vocab] daily intake skipped', skippedIncomplete, 'words missing reading/meaning — see the pending readings backfill');
     console.log('[core-vocab] daily intake:', added, 'words added to', poolTag);
     return { added, sprint: sprintLevel };
   } catch (e) {
     console.warn('[core-vocab] daily intake error', e);
     return { added: 0, error: e.message };
+  }
+}
+
+// ── One-time pool-tag backfill for pre-sprint core_vocab rows ───────────
+// The 2026-06-30 bulk relabel (source='n5'→'core_vocab') predates the
+// pool-tagged sprint mechanism above and left `pool` NULL on those ~640
+// rows. Those words are already present in the drill — no duplicate-insert
+// risk, that part is unaffected by this — but the sprint's own bookkeeping
+// (pool counts, catch-up pacing math in coreVocabDailyIntake) only ever
+// saw words it introduced itself, undercounting true N5/N4 coverage. This
+// backfill tags the pre-existing rows by their words.level so that
+// bookkeeping reflects reality. Purely additive: only touches rows where
+// pool IS NULL, never re-tags, never inserts/deletes, and leaves the 63
+// 'custom'-level stragglers (no N5/N4 dictionary level) untouched by design.
+async function backfillCoreVocabPoolTags() {
+  try {
+    const flag = await window.kvAPI.get('VOCAB_POOL_TAG_BACKFILL_V1');
+    if (flag) return;
+    await window.db.run(
+      `UPDATE vocab_items SET pool = 'core_n5'
+       WHERE source = 'core_vocab' AND pool IS NULL
+         AND word_id IN (SELECT id FROM words WHERE level = 'N5')`
+    );
+    await window.db.run(
+      `UPDATE vocab_items SET pool = 'core_n4'
+       WHERE source = 'core_vocab' AND pool IS NULL
+         AND word_id IN (SELECT id FROM words WHERE level = 'N4')`
+    );
+    await window.kvAPI.set('VOCAB_POOL_TAG_BACKFILL_V1', '1');
+    console.log('[vocab] pool-tag backfill complete');
+  } catch (e) {
+    console.warn('[vocab] pool-tag backfill error', e);
   }
 }
 
@@ -2219,5 +2284,5 @@ async function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
+  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, backfillCoreVocabPoolTags, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });

@@ -527,6 +527,12 @@ document.addEventListener('storageReady', function() {
   if (App.backfillLookupsToVocabItems) App.backfillLookupsToVocabItems();
   // Backfill N5 words → vocab_items (one-time, background fill)
   if (App.backfillN5ToVocabItems) App.backfillN5ToVocabItems();
+  // Backfill `pool` tag onto pre-sprint core_vocab rows so sprint
+  // bookkeeping/pacing reflects full N5/N4 coverage, not just words the
+  // sprint mechanism introduced itself (see backfillCoreVocabPoolTags).
+  // Must run before coreVocabDailyIntake below so today's pacing math
+  // already sees the correct pool counts.
+  if (App.backfillCoreVocabPoolTags) App.backfillCoreVocabPoolTags();
   // Core-vocab pool: lazy daily intake of N5/N4 sprint words (self-gated to
   // run at most once per calendar day, with catch-up for missed days)
   if (App.coreVocabDailyIntake) {
