@@ -125,6 +125,21 @@ function vocabPosFilterChanged() {
   if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
+// N5/N4 level filter — isolates the core_vocab sprint pool by level so
+// e.g. an N5-only sprint isn't diluted by N4 or the old bulk-relabeled
+// 'custom'-level words also tagged source='core_vocab'. Same all-checked-
+// or-none-checked = no-filter convention as vocabGetActivePOS.
+function vocabGetActiveLevel() {
+  const all = [...document.querySelectorAll('.vocab-level-filter')];
+  const checked = all.filter(el => el.checked).map(el => el.value);
+  if (checked.length === 0 || checked.length === all.length) return null;
+  return checked;
+}
+
+function vocabLevelFilterChanged() {
+  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
+}
+
 async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
   if (!window.db) return;
   if (resetSession) vocabSession = [];
@@ -134,7 +149,7 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
     let sql = "SELECT v.id, v.source, v.source_ref, v.type, v.pos, v.entry_weight, v.encounter_at, v.created_at, v.word_id, v.pool, v.word, COALESCE(NULLIF(v.reading,''), w.reading) as reading, COALESCE(NULLIF(v.meaning,''), w.meaning) as meaning, v.example, w.level, s.srs_interval, s.srs_ease, s.srs_due, s.srs_graduated, s.last_reviewed FROM vocab_items v LEFT JOIN words w ON w.id = v.word_id LEFT JOIN vocab_srs s ON s.vocab_id = v.id AND s.direction = ? WHERE (s.srs_due <= date('now','localtime') OR s.srs_due IS NULL) AND (s.last_reviewed IS NULL OR s.last_reviewed < ?) AND v.word NOT LIKE '〜%' AND (v.type IS NULL OR (v.type != 'grammar' AND v.type != 'excluded' AND v.type != 'phrase'))";
     const params = [direction, _localToday];
     if (sources && sources.length > 0) {
-      sql += ' AND source IN (' + sources.map(() => '?').join(',') + ')';
+      sql += ' AND v.source IN (' + sources.map(() => '?').join(',') + ')';
       params.push(...sources);
     }
     const pos = vocabGetActivePOS();
@@ -150,6 +165,11 @@ async function loadVocabItemsDeck(direction = 'jp_en', resetSession = true) {
       // If phrases not selected, exclude NULL pos items (they are untagged phrases)
       if (!pos.includes('phrase')) sql += " AND pos IS NOT NULL";
       if (posFilters.length > 0) sql += ' AND (' + posFilters.join(' OR ') + ')';
+    }
+    const level = vocabGetActiveLevel();
+    if (level && level.length > 0) {
+      sql += ' AND w.level IN (' + level.map(() => '?').join(',') + ')';
+      params.push(...level);
     }
     sql += ' ORDER BY entry_weight DESC, encounter_at DESC LIMIT 200';
     const rows = await window.db.query(sql, params);
