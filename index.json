@@ -3773,7 +3773,7 @@
     "file": "src/core-vocab.js",
     "line": 282,
     "desc": "if (!vocabSession.length) return;",
-    "callers": 17,
+    "callers": 20,
     "exported": true
   },
   {
@@ -3791,7 +3791,7 @@
     "file": "src/core-vocab.js",
     "line": 581,
     "desc": "const deck = getSessionDeck();",
-    "callers": 3,
+    "callers": 4,
     "exported": true
   },
   {
@@ -3800,7 +3800,7 @@
     "file": "src/core-vocab.js",
     "line": 588,
     "desc": "const deck = getSessionDeck();",
-    "callers": 4,
+    "callers": 5,
     "exported": true
   },
   {
@@ -3809,7 +3809,7 @@
     "file": "src/core-vocab.js",
     "line": 597,
     "desc": "if (_vcSessionComplete) { resetVocabDeck(); return; }",
-    "callers": 6,
+    "callers": 7,
     "exported": true
   },
   {

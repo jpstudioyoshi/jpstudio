@@ -593,12 +593,26 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// Global keyboard shortcuts on Listening + Watch tabs
+// Global keyboard shortcuts on Listening + Watch tabs, and Words → Vocab drill
 document.addEventListener('keydown', function(e) {
   const active = document.querySelector('.panel.active');
   if (!active) return;
   const tag = document.activeElement && document.activeElement.tagName;
   const isTyping = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+  // Vocab drill shortcuts (Words → Vocab sub-tab) — matches the shortcuts
+  // listed in the drill's own "?" help popup (#vcShortcutPopup).
+  if (active.id === 'panel-words' && !isTyping) {
+    const vocabSub = document.getElementById('words-sub-vocab');
+    if (vocabSub && vocabSub.style.display !== 'none') {
+      if (e.code === 'Space')       { e.preventDefault(); flipVocab();          return; }
+      if (e.key === '1')            { e.preventDefault(); markVocab('again');   return; }
+      if (e.key === '2')            { e.preventDefault(); markVocab('gotit');   return; }
+      if (e.key === '3')            { e.preventDefault(); markVocab('know');    return; }
+      if (e.key === 'ArrowLeft')    { e.preventDefault(); prevVocab();          return; }
+      if (e.key === 'ArrowRight')   { e.preventDefault(); nextVocab();          return; }
+    }
+  }
 
   if (!active || active.id !== 'panel-listening') return;
   if (e.code === 'Space' && !isTyping) {
