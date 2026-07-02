@@ -626,18 +626,64 @@ function renderSavedTexts() {
   const list = document.getElementById('savedTextsList');
   if (!saved.length) { if (area) area.style.display = 'none'; return; }
   if (area) area.style.display = 'block';
-  list.innerHTML = saved.map((t,i) => `
-    <div class="saved-text-item">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
-        <div class="sti-date">${t.date} · ${t.count} sentences</div>
+  list.innerHTML = saved.map((t,i) => {
+    const firstLine = (t.text.split('　')[0] || '').trim();
+    return `
+    <div class="saved-text-item" onclick="stiToggle(this)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div class="sti-date"><span class="sti-toggle" style="display:inline-block;width:12px">▸</span>${t.date} · ${t.count} sentences</div>
         <div style="display:flex;gap:6px;align-items:center">
-          <button class="btn-action" onclick="copySavedText(${i})" id="sti-copy-${i}" title="Copy full text">Copy</button>
-          <button class="btn-icon btn-icon-del" onclick="deleteSavedText(${i})" title="Delete">✕</button>
+          <button class="btn-action" onclick="event.stopPropagation();extractSavedText(${i})" title="Load each sentence into the sentence board for editing">Extract</button>
+          <button class="btn-action" onclick="event.stopPropagation();copySavedText(${i})" id="sti-copy-${i}" title="Copy full text">Copy</button>
+          <button class="btn-icon btn-icon-del" onclick="event.stopPropagation();deleteSavedText(${i})" title="Delete">✕</button>
         </div>
       </div>
-      <div class="sti-preview" style="font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap;user-select:text;cursor:text">${t.text}</div>
+      <div class="sti-firstline" style="margin-top:4px;padding-left:20px;font-family:var(--jp);font-size:0.85rem;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(firstLine)}</div>
+      <div class="sti-preview" style="display:none;margin-top:6px;font-family:var(--jp);font-size:inherit;line-height:1.8;color:var(--ink);white-space:pre-wrap;user-select:text;cursor:text">${t.text}</div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+}
+
+function stiToggle(el) {
+  const preview = el.querySelector('.sti-preview');
+  const firstLine = el.querySelector('.sti-firstline');
+  const tog = el.querySelector('.sti-toggle');
+  if (!preview) return;
+  const open = preview.style.display === 'none';
+  preview.style.display = open ? 'block' : 'none';
+  if (firstLine) firstLine.style.display = open ? 'none' : 'block';
+  if (tog) tog.textContent = open ? '▾' : '▸';
+}
+
+// Load a saved text's sentences into the sentence board, one per line, for
+// editing/resubmission. Splits on the same ideographic full-width space
+// character that saveWritingText() uses to join sentences. Replaces the
+// current board (with confirmation if it isn't empty) rather than
+// appending, since "edit a saved text" reads as working on that text
+// specifically.
+function extractSavedText(i) {
+  const saved = (App.Storage || window.Storage).getStudioTexts();
+  const t = saved[i];
+  if (!t) return;
+  const sentences = t.text.split('　').map(s => s.trim()).filter(Boolean);
+  if (!sentences.length) return;
+  if (writingSentences.length && !confirm('This will replace the ' + writingSentences.length + ' sentence(s) currently on the board. Continue?')) return;
+  const board = document.getElementById('writingBoard');
+  if (board) board.innerHTML = '';
+  writingSentences = [];
+  writingChatHistory = [];
+  _writingCheckedSentences.clear();
+  _writingFirstAttempt = null;
+  _writingCheckCount = 0;
+  sentences.forEach(s => {
+    const entry = { original: s, corrected: s, isCorrect: true, note: '', detail: '' };
+    writingSentences.push(entry);
+    wbAddItem(entry, writingSentences.length - 1);
+  });
+  const empty = document.getElementById('writingBoardEmpty');
+  if (empty) empty.style.display = 'none';
+  wbUpdateCount();
 }
 
 function copySavedText(i) {
