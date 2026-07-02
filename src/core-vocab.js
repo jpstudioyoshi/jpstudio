@@ -523,14 +523,28 @@ function renderVocab() {
 
   const vcPitchEl = document.getElementById('vcPitch');
   if (vcPitchEl) {
+    // Pitch curve is a Japanese-pronunciation aid — it belongs on whichever
+    // side currently shows the Japanese word. In JP→EN that's the front
+    // (vcJp = word); in EN→JP the front shows the English meaning instead,
+    // so relocate this same element into the back (where the Japanese
+    // word+reading render via vcEn/vcBackReading) rather than duplicating
+    // the lookup/render logic for a second element.
+    const targetParent = isReverse
+      ? document.querySelector('.vocab-back')
+      : document.querySelector('.vocab-front');
+    if (targetParent && vcPitchEl.parentElement !== targetParent) {
+      const hint = targetParent.querySelector('.vocab-tap-hint');
+      if (hint) targetParent.insertBefore(vcPitchEl, hint);
+      else targetParent.appendChild(vcPitchEl);
+    }
     if (window.pitchAPI && reading) {
       vcPitchEl.innerHTML = '';
-      const safeWord = word.replace(/'/g, "\\'");
+      const safeReading = reading.replace(/'/g, "\\'");
       window.pitchAPI.lookup(word, reading).then(function(pitchStr) {
         if (pitchStr != null) {
           vcPitchEl.innerHTML =
             '<div title="Hover to hear" style="cursor:pointer;display:block;margin:0 auto" ' +
-            'onmouseenter="this._t=setTimeout(()=>jpSpeak(\'' + safeWord + '\',0.85),600)" ' +
+            'onmouseenter="this._t=setTimeout(()=>jpSpeak(\'' + safeReading + '\',0.85),600)" ' +
             'onmouseleave="clearTimeout(this._t)">' + renderPitchCurve(reading, pitchStr) + '</div>';
         }
       });
