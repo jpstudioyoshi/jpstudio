@@ -89,7 +89,7 @@
   /* ── SIDEBAR ── */
   .app-layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
   }
   .sidebar {
     width: 52px;
@@ -355,8 +355,7 @@
   #panel-dashboard { overflow: hidden; box-sizing: border-box; }
   #panel-read { padding-bottom: 20vh; }
   #panel-grammar2 { overflow: hidden; }
-  #panel-writing { padding-bottom: 20vh; overflow-y: auto; }
-  #panel-writing.active { height: calc(100vh - 32px); }
+  #panel-writing { overflow: hidden; }
   #panel-listening { padding-bottom: 20vh; }
   #panel-read,
   #panel-listening,
@@ -961,10 +960,18 @@
   .keyword-reveal { font-family: 'Fraunces', serif; font-style: italic; font-size: 2rem; color: var(--ink); opacity: 0; transition: opacity 0.3s; margin-top: 8px; }
   .keyword-reveal.show { opacity: 1; }
   /* ── WRITING STUDIO ── */
-  .writing-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; align-items: start; }
-  @media (max-width: 780px) { .writing-layout { grid-template-columns: 1fr; } }
+  /* Both columns share one fixed-height row (bounded by #panel-writing,
+     which does NOT scroll itself — see below) and each scrolls internally.
+     This replaces an earlier position:sticky attempt that never reliably
+     stuck; independent-scroll flex columns don't depend on scroll-linked
+     positioning at all, so there's nothing to break. The right column's
+     top edge lands just below #writingPanelHeader for free, since that
+     header is a real flex-flow sibling of <main> (not position:fixed),
+     so #panel-writing already starts immediately below it. */
+  .writing-layout { display: flex; gap: 24px; align-items: stretch; flex: 1; min-height: 0; }
+  @media (max-width: 780px) { .writing-layout { flex-direction: column; } }
 
-  .writing-main { display: flex; flex-direction: column; gap: 16px; }
+  .writing-main { display: flex; flex-direction: column; gap: 16px; flex: 3; min-height: 0; overflow-y: auto; }
 
   .text-so-far {
     background: var(--paper-dark); border: 1px solid var(--border);
@@ -1156,8 +1163,7 @@
   /* Feedback panel */
   .feedback-panel {
     display: flex; flex-direction: column; gap: 0;
-    position: sticky; top: 0;
-    max-height: calc(100vh - 120px);
+    flex: 2; min-height: 0;
     overflow: hidden;
   }
   .feedback-panel-header {
