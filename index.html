@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260702092253">
+<link rel="stylesheet" href="style.css?v=20260702234121">
 <style>
   .vocab-btn.gotit { border-color: var(--gold); color: var(--gold); }
   .vocab-btn.gotit:hover { background: var(--gold); color: var(--paper); }
@@ -29,9 +29,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260702092253"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260702092253"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260702092253"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260702234121"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260702234121"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260702234121"></script>
 </head>
 <body>
 
@@ -114,9 +114,9 @@
     <textarea class="writing-textarea-hero" id="writingInput"
       placeholder="Write a sentence in Japanese then Check or Submit."
       onkeydown="handleWritingKey(event)" style="min-height:60px"></textarea>
-    <div class="writing-btn-row">
+    <div class="writing-btn-row" style="justify-content:flex-start">
       <span data-kana-for="writingInput"></span>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
+      <div style="display:flex;gap:8px;align-items:center">
         <button class="btn-action" onclick="wbCopyInput()" title="Copy text">Copy</button>
         <button class="btn-action" onclick="saveWritingText()">Save</button>
         <button class="btn-action" id="writingSubmitBtn" onclick="submitWritingSentence()">Submit</button>
@@ -1173,26 +1173,27 @@
   <div id="panel-writing" class="panel">
 
     <!-- Two columns: left = input + board, right = sticky feedback -->
-    <div class="writing-layout" style="align-items:start">
+    <div class="writing-layout">
 
       <!-- Left column: input + sentence board -->
       <div class="writing-main">
         <!-- Sentence board lives in the left column -->
         <div style="margin-top:16px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">SENTENCES</span>
-            <div style="display:flex;gap:8px;align-items:center">
-  
-            </div>
-          </div>
           <div id="writingBoard" style="display:flex;flex-direction:column;gap:8px;min-height:40px"></div>
           <div id="writingBoardEmpty" style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);padding:16px 0;text-align:center">
             Submitted sentences will appear here — drag to reorder
           </div>
+
+          <!-- Saved texts — lives in the left (scrolling) column so it
+               stays reachable now that #panel-writing itself no longer scrolls. -->
+          <div class="saved-texts" id="savedTextsArea" style="display:none;margin-top:16px">
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light);font-family:var(--ui);margin-bottom:10px">Saved texts</div>
+            <div id="savedTextsList"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Right column: sticky feedback panel -->
+      <!-- Right column: fixed-in-place feedback panel, own internal scroll -->
       <div class="feedback-panel" style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
         <div class="feedback-entries" id="feedbackEntries">
           <div class="feedback-empty">Type a sentence and click here to check it.</div>
@@ -1201,13 +1202,7 @@
 
     </div>
 
-    <!-- Saved texts -->
-    <div class="saved-texts" id="savedTextsArea" style="display:none;margin-top:16px;max-width:60%">
-      <div style="font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light);font-family:var(--ui);margin-bottom:10px">Saved texts</div>
-      <div id="savedTextsList"></div>
-    </div>
-
-  </div>
+</div>
   <!-- TRANSLATE -->
   <div id="panel-translate" class="panel">
     <div class="section-title"><span class="jp">翻訳</span><span class="en-block"><span class="reading">ほんやく</span><span class="en">(Translate)</span></span></div>
@@ -2363,38 +2358,38 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260702092253"></script>
-<script src="src/core-anki.js?v=20260702092253"></script>
-<script src="src/core-counters.js?v=20260702092253"></script>
-<script src="src/core-srs.js?v=20260702092253"></script>
-<script src="src/core-stt.js?v=20260702092253"></script>
-<script src="src/core-writing.js?v=20260702092253"></script>
-<script src="src/core-listen.js?v=20260702092253"></script>
-<script src="src/core-vocab.js?v=20260702092253"></script>
-<script src="src/features-db-qa.js?v=20260702092253"></script>
-<script src="src/core.js?v=20260702092253"></script>
+<script src="src/core-foundation.js?v=20260702234121"></script>
+<script src="src/core-anki.js?v=20260702234121"></script>
+<script src="src/core-counters.js?v=20260702234121"></script>
+<script src="src/core-srs.js?v=20260702234121"></script>
+<script src="src/core-stt.js?v=20260702234121"></script>
+<script src="src/core-writing.js?v=20260702234121"></script>
+<script src="src/core-listen.js?v=20260702234121"></script>
+<script src="src/core-vocab.js?v=20260702234121"></script>
+<script src="src/features-db-qa.js?v=20260702234121"></script>
+<script src="src/core.js?v=20260702234121"></script>
 
-<script src="src/features-core.js?v=20260702092253"></script>
-<script src="src/features-kana.js?v=20260702092253"></script>
-<script src="src/briefing-prompt.js?v=20260702092253"></script>
-<script src="src/GrammarModel.js?v=20260702092253"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260702092253"></script>
-<script src="src/AppEvents.js?v=20260702092253"></script>
-<script src="src/features-lesson-notes.js?v=20260702092253"></script>
-  <script src="src/features-ln-p2.js?v=20260702092253"></script>
-<script src="src/features-grammar.js?v=20260702092253"></script>
-<script src="src/features-reading.js?v=20260702092253"></script>
-<script src="src/features-video.js?v=20260702092253"></script>
-<script src="src/features-pictures.js?v=20260702092253"></script>
-<script src="src/features-progress.js?v=20260702092253"></script>
-  <script src="src/features-listen-log.js?v=20260702092253"></script>
-<script src="src/features-stroke.js?v=20260702092253"></script>
-<script src="src/features-tools.js?v=20260702092253"></script>
-<script src="src/features-voice.js?v=20260702092253"></script>
-<script src="src/features-voice-drill.js?v=20260702092253"></script>
-<script src="src/features-custom-drill.js?v=20260702092253"></script>
-<script src="src/features-shuchu.js?v=20260702092253"></script>
-<script src="src/features-nom.js?v=20260702092253"></script>
+<script src="src/features-core.js?v=20260702234121"></script>
+<script src="src/features-kana.js?v=20260702234121"></script>
+<script src="src/briefing-prompt.js?v=20260702234121"></script>
+<script src="src/GrammarModel.js?v=20260702234121"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260702234121"></script>
+<script src="src/AppEvents.js?v=20260702234121"></script>
+<script src="src/features-lesson-notes.js?v=20260702234121"></script>
+  <script src="src/features-ln-p2.js?v=20260702234121"></script>
+<script src="src/features-grammar.js?v=20260702234121"></script>
+<script src="src/features-reading.js?v=20260702234121"></script>
+<script src="src/features-video.js?v=20260702234121"></script>
+<script src="src/features-pictures.js?v=20260702234121"></script>
+<script src="src/features-progress.js?v=20260702234121"></script>
+  <script src="src/features-listen-log.js?v=20260702234121"></script>
+<script src="src/features-stroke.js?v=20260702234121"></script>
+<script src="src/features-tools.js?v=20260702234121"></script>
+<script src="src/features-voice.js?v=20260702234121"></script>
+<script src="src/features-voice-drill.js?v=20260702234121"></script>
+<script src="src/features-custom-drill.js?v=20260702234121"></script>
+<script src="src/features-shuchu.js?v=20260702234121"></script>
+<script src="src/features-nom.js?v=20260702234121"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2405,20 +2400,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260702092253"></script>
-<script src="src/IssueTracker.js?v=20260702092253"></script>
-<script src="src/services/LessonSession.js?v=20260702092253"></script>
-<script src="src/services/AudioService.js?v=20260702092253"></script>
-<script src="src/services/PreflightService.js?v=20260702092253"></script>
-<script src="src/services/TranscriptionService.js?v=20260702092253"></script>
-<script src="src/services/AnalysisService.js?v=20260702092253"></script>
-<script src="src/services/StorageService.js?v=20260702092253"></script>
-<script src="src/Orchestrator.js?v=20260702092253"></script>
-<script src="src/ui/DrillCard.js?v=20260702092253"></script>
-<script src="src/ui/TextEntry.js?v=20260702092253"></script>
-<script src="src/ui/YoshiUI.js?v=20260702092253"></script>
+<script src="src/StudentModel.js?v=20260702234121"></script>
+<script src="src/IssueTracker.js?v=20260702234121"></script>
+<script src="src/services/LessonSession.js?v=20260702234121"></script>
+<script src="src/services/AudioService.js?v=20260702234121"></script>
+<script src="src/services/PreflightService.js?v=20260702234121"></script>
+<script src="src/services/TranscriptionService.js?v=20260702234121"></script>
+<script src="src/services/AnalysisService.js?v=20260702234121"></script>
+<script src="src/services/StorageService.js?v=20260702234121"></script>
+<script src="src/Orchestrator.js?v=20260702234121"></script>
+<script src="src/ui/DrillCard.js?v=20260702234121"></script>
+<script src="src/ui/TextEntry.js?v=20260702234121"></script>
+<script src="src/ui/YoshiUI.js?v=20260702234121"></script>
 
-<script src="src/design-overlay.js?v=20260702092253"></script>
+<script src="src/design-overlay.js?v=20260702234121"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 
