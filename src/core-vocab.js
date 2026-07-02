@@ -544,7 +544,7 @@ function renderVocab() {
   if (word && _vcLastAutoSpoken !== word && vcDirection !== 'en_jp') {
     _vcLastAutoSpoken = word;
     setTimeout(() => {
-      if (typeof jpSpeak === 'function') jpSpeak(word, 0.85);
+      if (typeof jpSpeak === 'function') jpSpeak(reading || word, 0.85);
     }, 400);
   }
 
@@ -637,117 +637,6 @@ function resetVocabDeck() {
   vocabSession = [];
   Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
   loadVocabItemsDeck(vcDirection, true);
-}
-
-// ── Core-vocab triage — one-off bulk pass over untouched core_vocab words ────
-// Not a normal drill session: bypasses MAX_NEW_CORE entirely so the whole
-// backlog can be sorted in one sitting. "Already know" seeds both directions
-// straight to a 14-day interval; "don't know" is a no-op — the word falls
-// back into the normal 12/session onboarding flow untouched.
-let _triageQueue = [];
-let _triageIdx = 0;
-let _triageFlipped = false;
-
-function _triageKeyHandler(e) {
-  if (!document.getElementById('triageOverlay')) return;
-  const tag = document.activeElement && document.activeElement.tagName;
-  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-  if (e.code === 'Space') { e.preventDefault(); if (!_triageFlipped) _triageFlip(); }
-  else if (e.key === '1' && _triageFlipped) { e.preventDefault(); _triageMark(false); }
-  else if (e.key === '2' && _triageFlipped) { e.preventDefault(); _triageMark(true); }
-}
-
-function _triageClose() {
-  document.removeEventListener('keydown', _triageKeyHandler);
-  const el = document.getElementById('triageOverlay');
-  if (el) el.remove();
-}
-
-async function triageStart(level = 'N5') {
-  if (!window.db) return;
-  const rows = await window.db.query(
-    `SELECT v.id, v.word, COALESCE(NULLIF(v.reading,''), w.reading) as reading, COALESCE(NULLIF(v.meaning,''), w.meaning) as meaning, w.frequency
-     FROM vocab_items v JOIN words w ON w.id = v.word_id
-     WHERE w.level = ?
-       AND v.id NOT IN (SELECT vocab_id FROM vocab_srs WHERE direction = ?)
-     ORDER BY w.frequency IS NULL, w.frequency ASC, v.id ASC`,
-    [level, vcDirection]
-  );
-  _triageQueue = rows || [];
-  _triageIdx = 0;
-  if (!_triageQueue.length) { alert('No untriaged ' + level + ' words.'); return; }
-  document.addEventListener('keydown', _triageKeyHandler);
-  _triageRenderOverlay();
-}
-
-function _triageRenderOverlay() {
-  let overlay = document.getElementById('triageOverlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'triageOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:9999';
-    document.body.appendChild(overlay);
-  }
-  if (_triageIdx >= _triageQueue.length) {
-    overlay.innerHTML = '<div style="background:var(--paper);border-radius:12px;padding:32px;text-align:center;font-family:var(--ui)">'
-      + '<div style="font-size:1.5rem;margin-bottom:8px">\u2713 Triage complete</div>'
-      + '<button class="btn-action" onclick="_triageClose()">Close</button></div>';
-    return;
-  }
-  const w = _triageQueue[_triageIdx];
-  const isReverse = vcDirection === 'en_jp';
-  const dirLabel = isReverse ? 'EN \u2192 JP' : 'JP \u2192 EN';
-
-  let body = '<div style="font-family:var(--ui);font-size:0.7rem;color:var(--ink-light);margin-bottom:4px">' + (_triageIdx+1) + ' / ' + _triageQueue.length + ' \u2014 core vocab triage \u00b7 ' + dirLabel + '</div>';
-
-  if (isReverse) {
-    // EN->JP: question = meaning only, answer = word+reading
-    body += '<div style="font-family:var(--ui);font-size:1.6rem;color:var(--ink);margin:20px 0 24px;min-height:2.4rem">' + (w.meaning||'') + '</div>';
-  } else {
-    // JP->EN (vocab-knowledge triage): question = word+reading together, answer = meaning only
-    body += '<div style="font-family:var(--jp);font-size:2rem;color:var(--ink);margin:20px 0 4px">' + (w.word||'') + '</div>'
-      + '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--teal);margin-bottom:24px">' + (w.reading||'') + '</div>';
-  }
-
-  if (!_triageFlipped) {
-    body += '<button class="btn-action" style="padding:12px 32px" onclick="_triageFlip()">Show answer</button>'
-      + '<div style="margin-top:14px"><button class="btn-icon" onclick="_triageClose()" style="font-size:0.7rem;color:var(--ink-light)">Stop for now</button></div>';
-  } else {
-    const backHtml = isReverse
-      ? '<div style="font-family:var(--jp);font-size:1.4rem;color:var(--ink);margin-bottom:4px">' + (w.word||'') + '</div>'
-        + '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--teal);margin-bottom:24px">' + (w.reading||'') + '</div>'
-      : '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-bottom:24px">' + (w.meaning||'') + '</div>';
-    body += backHtml
-      + '<div style="display:flex;gap:10px;justify-content:center">'
-      + '<button class="btn-action" style="flex:1;padding:12px" onclick="_triageMark(false)">\u2717 Don\'t know yet</button>'
-      + '<button class="btn-action" style="flex:1;padding:12px;background:var(--teal);color:#1c1c1e" onclick="_triageMark(true)">\u2713 Already know it</button>'
-      + '</div>'
-      + '<div style="margin-top:14px"><button class="btn-icon" onclick="_triageClose()" style="font-size:0.7rem;color:var(--ink-light)">Stop for now</button></div>';
-  }
-
-  overlay.innerHTML = '<div style="background:var(--paper);border-radius:12px;padding:28px;width:420px;max-width:92%;text-align:center">' + body + '</div>';
-  if (_triageFlipped && typeof jpSpeak === 'function' && w.word) jpSpeak(w.word, 0.85);
-}
-
-function _triageFlip() {
-  _triageFlipped = true;
-  _triageRenderOverlay();
-}
-
-async function _triageMark(know) {
-  const w = _triageQueue[_triageIdx];
-  _triageFlipped = false;
-  if (know && window.db) {
-    const now = new Date().toISOString();
-    await window.db.run(
-      `INSERT INTO vocab_srs (vocab_id, direction, srs_graduated, srs_ease, srs_interval, srs_due, last_reviewed)
-       VALUES (?, ?, 1, 2.5, 14, date('now','+14 days'), ?)
-       ON CONFLICT(vocab_id, direction) DO NOTHING`,
-      [w.id, vcDirection, now]
-    ).catch(() => {});
-  }
-  _triageIdx++;
-  _triageRenderOverlay();
 }
 
 function vocabListCheckChanged() {
@@ -2316,5 +2205,5 @@ async function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  triageStart, _triageFlip, _triageClose, coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
+  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });
