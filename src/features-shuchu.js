@@ -10,10 +10,11 @@
   let _r2Idx       = 0;     // round 2 index
   let _phase       = 'setup'; // setup | intro | activity | round2 | write | results
   let _sprintReady = null;  // Promise for background call 2 (activities 2-10 + round2_pool)
+  let _refPrevId   = null;  // phase id to return to when 参考 is toggled off
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function show(id) {
-    ['shuchu-setup','shuchu-sprint','shuchu-intro','shuchu-activity',
+    ['shuchu-setup','shuchu-sprint','shuchu-ref','shuchu-intro','shuchu-activity',
      'shuchu-round2','shuchu-write','shuchu-results'].forEach(s => {
       const el = document.getElementById(s);
       if (el) el.style.display = (s === id) ? '' : 'none';
@@ -27,6 +28,10 @@
     if (headerNextBtn) headerNextBtn.style.display = 'none';
     const refBtn = document.getElementById('shuchuRefBtn');
     if (refBtn) refBtn.style.display = (id === 'shuchu-setup') ? 'none' : (_sprint ? '' : 'none');
+    const analyseSel = document.getElementById('shuchuAnalyseSelect');
+    const analyseStatus = document.getElementById('nomAnalyseStatus');
+    if (analyseSel) analyseSel.style.display = (id === 'shuchu-setup') ? '' : 'none';
+    if (analyseStatus) analyseStatus.style.display = (id === 'shuchu-setup') ? '' : 'none';
   }
 
   function apiKey() {
@@ -38,6 +43,14 @@
     if (styles) Object.assign(el.style, styles);
     if (text !== undefined) el.textContent = text;
     return el;
+  }
+
+  // Converts inline "漢字(かな)" notation to real <ruby> markup for display.
+  function furiToRuby(str) {
+    if (!str) return '';
+    const esc = (App.escHtml || window.escHtml) ? (App.escHtml || window.escHtml)(str) : str;
+    return esc.replace(/([\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3005]+)\(([^)]+)\)/g,
+      '<ruby>$1<rt style="font-size:0.7em;color:var(--ink-light)">$2</rt></ruby>');
   }
 
   // ── Start: call 1 (fast) — intro + activity 1 ──────────────────────────────
@@ -180,7 +193,7 @@ Requirements:
     const el = document.getElementById('shuchuHeaderSubject');
     if (!el) return;
     if (_sprint && _sprint.topic_jp) {
-      el.innerHTML = _sprint.topic_jp + ' <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">(' + _sprint.topic + ')</span>';
+      el.innerHTML = furiToRuby(_sprint.topic_jp) + ' <span style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light)">(' + _sprint.topic + ')</span>';
     } else {
       el.innerHTML = '';
     }
@@ -194,19 +207,23 @@ Requirements:
 
     shuchuUpdateHeaderSubject();
 
-    const summary = jpEl('p', {fontFamily:'var(--ui)',fontSize:'1rem',lineHeight:'1.8',color:'var(--ink)',marginBottom:'20px'}, intro.summary);
+    const summary = jpEl('p', {fontFamily:'var(--ui)',fontSize:'1rem',lineHeight:'1.8',color:'var(--ink)',marginBottom:'20px'});
+    summary.innerHTML = furiToRuby(intro.summary);
     box.appendChild(summary);
 
     // Key forms table
     if (intro.key_forms && intro.key_forms.length) {
       const label = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.82rem',letterSpacing:'0.08em',color:'var(--ink-light)',marginBottom:'8px'}, 'KEY FORMS');
       box.appendChild(label);
-      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto auto 1fr',gap:'6px 16px',alignItems:'start',marginBottom:'20px',width:'100%'});
+      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto 1fr',gap:'6px 16px',alignItems:'start',marginBottom:'20px',width:'100%'});
       intro.key_forms.forEach(f => {
-        grid.appendChild(jpEl('span', {fontFamily:'var(--jp)',fontSize:'1.2rem',color:'var(--ink)'}, f.jp));
-        grid.appendChild(jpEl('span', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--teal)'}, f.reading));
+        const jpCell = jpEl('span', {fontFamily:'var(--jp)',fontSize:'1.4rem',color:'var(--ink)'});
+        jpCell.innerHTML = furiToRuby(f.jp);
+        grid.appendChild(jpCell);
         grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',display:'-webkit-box',WebkitLineClamp:'2',WebkitBoxOrient:'vertical',overflow:'hidden'}, f.en));
-        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)',lineHeight:'1.5'}, f.note || ''));
+        const noteCell = jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)',lineHeight:'1.5'});
+        noteCell.innerHTML = furiToRuby(f.note || '');
+        grid.appendChild(noteCell);
       });
       box.appendChild(grid);
     }
@@ -216,9 +233,10 @@ Requirements:
       const label = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.82rem',letterSpacing:'0.08em',color:'var(--ink-light)',marginBottom:'8px'}, 'EXAMPLES');
       box.appendChild(label);
       intro.examples.forEach(ex => {
-        const row = jpEl('div', {marginBottom:'10px',paddingLeft:'12px',borderLeft:'2px solid var(--border)'});
-        row.appendChild(jpEl('div', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--ink)'}, ex.jp));
-        row.appendChild(jpEl('div', {fontFamily:'var(--jp)',fontSize:'0.95rem',color:'var(--teal)',margin:'2px 0'}, ex.reading));
+        const row = jpEl('div', {display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap',marginBottom:'10px',paddingLeft:'12px',borderLeft:'2px solid var(--border)'});
+        const jpLine = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.15rem',color:'var(--ink)'});
+        jpLine.innerHTML = furiToRuby(ex.jp);
+        row.appendChild(jpLine);
         row.appendChild(jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink-light)'}, ex.en));
         box.appendChild(row);
       });
@@ -275,7 +293,7 @@ Requirements:
   function renderActivityItem(act, card, feedback, btns, isR2) {
     // Question
     const q = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.2rem',color:'var(--ink)',marginBottom:'16px',lineHeight:'1.7'});
-    q.innerHTML = '<span style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);display:block;margin-bottom:6px">' + act.prompt + '</span>' + act.question;
+    q.innerHTML = '<span style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);display:block;margin-bottom:6px">' + act.prompt + '</span>' + furiToRuby(act.question);
     card.appendChild(q);
 
     if (act.type === 'multiple_choice' && act.options) {
@@ -283,7 +301,7 @@ Requirements:
         const btn = document.createElement('button');
         btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:8px;font-family:var(--jp);font-size:1.1rem;padding:12px 16px;background:#1a1a1a;border:1px solid var(--border);color:var(--ink);border-radius:8px;cursor:pointer';
         const cleanOpt = String(opt).replace(/^[A-D][\.\)\uff0e\uff09:\uff1a]\s*/, '');
-        btn.textContent = ['A','B','C','D'][i] + '.  ' + cleanOpt;
+        btn.innerHTML = ['A','B','C','D'][i] + '.  ' + furiToRuby(cleanOpt);
         btn.onclick = () => checkAnswer(act, opt, isR2);
         card.appendChild(btn);
       });
@@ -349,7 +367,7 @@ Requirements:
           body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,messages:[{role:'user',content:prompt}]})
         });
         const data = await res.json();
-        replyEl.textContent = (data.content && data.content[0] && data.content[0].text) || '';
+        replyEl.innerHTML = furiToRuby((data.content && data.content[0] && data.content[0].text) || '');
       } catch(e) { replyEl.textContent = 'Error: ' + e.message; }
     }
 
@@ -395,13 +413,13 @@ Requirements:
     if (act.type === 'translate_to_jp' || act.type === 'error_correct') {
       if (!isR2) _wrong.push(act);
       const result = jpEl('div', {marginBottom:'10px'});
-      result.innerHTML = '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px">Model answer: ' + act.answer + '</div>'
-        + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:4px;line-height:1.6">' + act.explanation + '</div>';
+      result.innerHTML = '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px">Model answer: ' + furiToRuby(act.answer) + '</div>'
+        + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:4px;line-height:1.6">' + furiToRuby(act.explanation) + '</div>';
       feedback.appendChild(result);
       const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
       feedback.appendChild(analysisEl);
       addNextBtn(btns, isR2);
-      fetchAnalysis(act, given).then(result => { analysisEl.textContent = (result && result.text) || ''; addFurtherQuestion(feedback, act); });
+      fetchAnalysis(act, given).then(result => { analysisEl.innerHTML = furiToRuby((result && result.text) || ''); addFurtherQuestion(feedback, act); });
       return;
     }
 
@@ -414,10 +432,11 @@ Requirements:
       if (!result.correct && !isR2) _wrong.push(act);
       checkingEl.innerHTML = (result.correct
         ? '<span style="color:var(--teal);font-size:1.1rem">✓ Correct</span>'
-        : '<span style="color:var(--red,#e05);font-size:1.1rem">✗  Answer: <span style="font-family:var(--jp)">' + act.answer + '</span></span>'
-      ) + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:6px;line-height:1.6">' + act.explanation + '</div>';
+        : '<span style="color:var(--red,#e05);font-size:1.1rem">✗  Answer: <span style="font-family:var(--jp)">' + furiToRuby(act.answer) + '</span></span>'
+      ) + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:6px;line-height:1.6">' + furiToRuby(act.explanation) + '</div>';
       if (result.text) {
-        const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, result.text);
+        const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'});
+        analysisEl.innerHTML = furiToRuby(result.text);
         feedback.appendChild(analysisEl);
       }
       addFurtherQuestion(feedback, act);
@@ -511,7 +530,7 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
       });
       const data = await res.json();
       const reply = data.content && data.content[0] && data.content[0].text;
-      fb.innerHTML = reply ? reply.replace(/\n/g, '<br>') : 'No response.';
+      fb.innerHTML = reply ? furiToRuby(reply).replace(/\n/g, '<br>') : 'No response.';
       // Show results summary after a moment
       setTimeout(shuchuShowResults, 400);
     } catch(e) {
@@ -536,7 +555,7 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
       box.appendChild(label);
       _wrong.forEach(w => {
         const row = jpEl('div', {fontFamily:'var(--jp)',fontSize:'0.9rem',color:'var(--ink)',marginBottom:'4px'});
-        row.innerHTML = w.question + ' <span style="color:var(--teal)">→ ' + w.answer + '</span>';
+        row.innerHTML = furiToRuby(w.question) + ' <span style="color:var(--teal)">→ ' + furiToRuby(w.answer) + '</span>';
         box.appendChild(row);
       });
     }
@@ -546,37 +565,23 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
 
   // ── Reset ────────────────────────────────────────────────────────────────────
   window.shuchuToggleRef = function() {
-    let overlay = document.getElementById('shuchuRefOverlay');
-    if (!overlay) {
-      // Create overlay lazily on first open
-      overlay = document.createElement('div');
-      overlay.id = 'shuchuRefOverlay';
-      overlay.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:var(--surface,#1a1a1a);border:1px solid var(--border);border-radius:12px;width:min(640px,90vw);max-height:75vh;overflow-y:auto;padding:28px 28px 24px;box-shadow:0 8px 40px rgba(0,0,0,0.6);display:none';
-      const closeBtn = document.createElement('button');
-      closeBtn.textContent = '✕ Back';
-      closeBtn.style.cssText = 'position:fixed;top:calc(50% - min(75vh,640px)/2 - 40px);left:50%;transform:translateX(-50%) translateY(calc(-50vh + 12px));z-index:1000;font-family:var(--ui);font-size:0.82rem;padding:5px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--ink-light);cursor:pointer';
-      closeBtn.id = 'shuchuRefBackBtn';
-      closeBtn.onclick = () => { overlay.style.display = 'none'; closeBtn.style.display = 'none'; };
-      const content = document.createElement('div');
-      content.id = 'shuchuRefContent';
-      overlay.appendChild(content);
-      document.body.appendChild(overlay);
-      document.body.appendChild(closeBtn);
-    }
-    const closeBtn = document.getElementById('shuchuRefBackBtn');
-    if (overlay.style.display !== 'none') {
-      overlay.style.display = 'none';
-      if (closeBtn) closeBtn.style.display = 'none';
-      return;
-    }
     if (!_sprint) return;
-    // Copy intro content into overlay
-    const refContent = document.getElementById('shuchuRefContent');
-    const introContent = document.getElementById('shuchuIntroContent');
-    if (introContent) refContent.innerHTML = introContent.innerHTML;
-    overlay.style.display = '';
-    if (closeBtn) closeBtn.style.display = '';
-    overlay.scrollTop = 0;
+    const refEl = document.getElementById('shuchu-ref');
+    const refBtn = document.getElementById('shuchuRefBtn');
+    const isShowingRef = refEl && refEl.style.display !== 'none';
+    if (isShowingRef) {
+      show(_refPrevId || 'shuchu-intro');
+      if (refBtn) refBtn.classList.remove('toggle-on');
+    } else {
+      // Remember current phase so toggling off returns here
+      _refPrevId = ['shuchu-intro','shuchu-activity','shuchu-round2','shuchu-write','shuchu-results']
+        .find(s => { const el = document.getElementById(s); return el && el.style.display !== 'none'; }) || 'shuchu-intro';
+      const refContent = document.getElementById('shuchuRefContent');
+      const introContent = document.getElementById('shuchuIntroContent');
+      if (introContent && refContent) refContent.innerHTML = introContent.innerHTML;
+      show('shuchu-ref');
+      if (refBtn) { refBtn.style.display = ''; refBtn.classList.add('toggle-on'); }
+    }
   };
 
   window.shuchuConfirmReset = function() {
@@ -608,33 +613,41 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
         return;
       }
     }
-    // Inject NoM suggestion container + analyse button if not already present
+    // Inject NoM suggestion container if not already present
     const setupEl = document.getElementById('shuchu-setup');
     if (setupEl && !document.getElementById('nomSuggestionsWrap')) {
       const wrap = document.createElement('div');
       wrap.id = 'nomSuggestionsWrap';
       wrap.style.display = 'none';
       setupEl.insertBefore(wrap, setupEl.firstChild);
-
-      const analyseRow = document.createElement('div');
-      analyseRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:14px';
-      const analyseBtn = document.createElement('button');
-      analyseBtn.className = 'btn-action';
-      analyseBtn.style.fontSize = '0.78rem';
-      analyseBtn.textContent = 'Analyse last lesson';
-      analyseBtn.onclick = async () => {
-        const rows = await window.db.query("SELECT id FROM lesson_sessions WHERE source='recording' ORDER BY id DESC LIMIT 1");
-        if (rows && rows[0]) nomRunAndCache(rows[0].id);
-        else document.getElementById('nomAnalyseStatus').textContent = 'No recording sessions found.';
-      };
-      const analyseStatus = document.createElement('span');
-      analyseStatus.id = 'nomAnalyseStatus';
-      analyseStatus.style.cssText = 'font-family:var(--ui);font-size:0.78rem;color:var(--ink-light)';
-      analyseRow.appendChild(analyseBtn);
-      analyseRow.appendChild(analyseStatus);
-      setupEl.insertBefore(analyseRow, setupEl.firstChild);
     }
     if (typeof nomRenderSuggestions === 'function') nomRenderSuggestions();
+    shuchuPopulateAnalyseSelect();
+  };
+
+  // ── Header "Analyse lesson" dropdown ────────────────────────────────────
+  async function shuchuPopulateAnalyseSelect() {
+    const sel = document.getElementById('shuchuAnalyseSelect');
+    if (!sel || !window.db) return;
+    try {
+      const rows = await window.db.query(
+        "SELECT id, date, created_at, audio_path FROM lesson_sessions WHERE source='recording' ORDER BY id DESC LIMIT 20"
+      );
+      const opts = (rows || []).map(r => {
+        const tsMatch = r.audio_path ? r.audio_path.match(/_(\d{13})\.webm/) : null;
+        const label = tsMatch
+          ? new Date(parseInt(tsMatch[1])).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})
+          : (r.date || (r.created_at ? r.created_at.slice(0,10) : ('session ' + r.id)));
+        return '<option value="' + r.id + '">' + label + '</option>';
+      }).join('');
+      sel.innerHTML = '<option value="">Analyse lesson…</option>' + opts;
+    } catch(e) { console.warn('[shuchu] Failed to populate analyse select:', e.message); }
+  }
+
+  window.shuchuAnalyseSelected = function(id) {
+    if (!id) return;
+    nomRunAndCache(Number(id));
+    document.getElementById('shuchuAnalyseSelect').value = '';
   };
 
 })();

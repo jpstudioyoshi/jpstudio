@@ -1271,7 +1271,7 @@
     "file": "src/core-foundation.js",
     "line": 1646,
     "desc": "const currentPanel = document.querySelector('.panel.active');",
-    "callers": 39,
+    "callers": 40,
     "exported": true
   },
   {
@@ -3791,7 +3791,7 @@
     "file": "src/core-vocab.js",
     "line": 293,
     "desc": "if (!vocabSession.length) return;",
-    "callers": 20,
+    "callers": 14,
     "exported": true
   },
   {
@@ -3827,7 +3827,7 @@
     "file": "src/core-vocab.js",
     "line": 608,
     "desc": "if (_vcSessionComplete) { resetVocabDeck(); return; }",
-    "callers": 7,
+    "callers": 5,
     "exported": true
   },
   {
@@ -6344,14 +6344,14 @@
     "file": "src/features-reading.js",
     "line": 1270,
     "desc": "if (!QuickReadState.segments.length) return;",
-    "callers": 5,
+    "callers": 2,
     "exported": true
   },
   {
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1333,
+    "line": 1341,
     "desc": "if (!QuickReadState.segments.length) return;",
     "callers": 3,
     "exported": true
@@ -6360,7 +6360,7 @@
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1345,
+    "line": 1353,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -7429,9 +7429,18 @@
   },
   {
     "type": "function",
+    "name": "grammarJumpToLesson",
+    "file": "src/features-progress.js",
+    "line": 1112,
+    "desc": "const btn = document.getElementById('grammarJumpBtn');",
+    "callers": 3,
+    "exported": true
+  },
+  {
+    "type": "function",
     "name": "grammarOverridePopup",
     "file": "src/features-progress.js",
-    "line": 1111,
+    "line": 1165,
     "desc": "const existing = document.getElementById('grammarOverrideModal');",
     "callers": 1,
     "exported": false
@@ -7440,7 +7449,7 @@
     "type": "function",
     "name": "grammarDismissEncounter",
     "file": "src/features-progress.js",
-    "line": 1149,
+    "line": 1203,
     "desc": "const GM = (typeof GrammarModel !== 'undefined') ? GrammarModel : null;",
     "callers": 2,
     "exported": true
@@ -7449,7 +7458,7 @@
     "type": "function",
     "name": "grammarDismissGold",
     "file": "src/features-progress.js",
-    "line": 1158,
+    "line": 1212,
     "desc": "const S = App.Storage || window.Storage;",
     "callers": 2,
     "exported": true
@@ -7458,7 +7467,7 @@
     "type": "function",
     "name": "renderErrorList",
     "file": "src/features-progress.js",
-    "line": 1175,
+    "line": 1229,
     "desc": "Changes here apply to both.",
     "callers": 4,
     "exported": true
@@ -7467,7 +7476,7 @@
     "type": "function",
     "name": "errorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1192,
+    "line": 1246,
     "desc": "const examples = (window._errorExamples || {})[key] || [];",
     "callers": 7,
     "exported": true
@@ -7476,7 +7485,7 @@
     "type": "function",
     "name": "writtenErrorShowPopup",
     "file": "src/features-progress.js",
-    "line": 1232,
+    "line": 1286,
     "desc": "window._errorExamples = window._writtenErrorExamples || {};",
     "callers": 1,
     "exported": true
@@ -7485,7 +7494,7 @@
     "type": "function",
     "name": "progressRenderErrors",
     "file": "src/features-progress.js",
-    "line": 1240,
+    "line": 1294,
     "desc": "const chartEl = document.getElementById('progress-error-chart');",
     "callers": 11,
     "exported": true
@@ -7494,7 +7503,7 @@
     "type": "function",
     "name": "_renderErrorPieRight",
     "file": "src/features-progress.js",
-    "line": 1311,
+    "line": 1365,
     "desc": "const SIZE = 120, CX = 60, CY = 60, R = 54;",
     "callers": 4,
     "exported": true
@@ -7503,7 +7512,7 @@
     "type": "function",
     "name": "particleBreakdownToggle",
     "file": "src/features-progress.js",
-    "line": 1355,
+    "line": 1409,
     "desc": "const chart  = document.getElementById('particleBreakdownChart');",
     "callers": 2,
     "exported": true
@@ -7512,7 +7521,7 @@
     "type": "function",
     "name": "particleBreakdownRender",
     "file": "src/features-progress.js",
-    "line": 1365,
+    "line": 1419,
     "desc": "const chart = document.getElementById('particleBreakdownChart');",
     "callers": 3,
     "exported": true
@@ -7521,7 +7530,7 @@
     "type": "function",
     "name": "gramSentPracticeError",
     "file": "src/features-progress.js",
-    "line": 1394,
+    "line": 1448,
     "desc": "showPanel('grammar2');",
     "callers": 3,
     "exported": true
@@ -7530,7 +7539,7 @@
     "type": "function",
     "name": "weightsRender",
     "file": "src/features-progress.js",
-    "line": 1451,
+    "line": 1505,
     "desc": "const el = document.getElementById('stPaneWeights');",
     "callers": 3,
     "exported": true
@@ -7539,7 +7548,7 @@
     "type": "function",
     "name": "weightsSave",
     "file": "src/features-progress.js",
-    "line": 1506,
+    "line": 1560,
     "desc": "const GM = App.GrammarModel || window.GrammarModel;",
     "callers": 3,
     "exported": true
@@ -7548,7 +7557,7 @@
     "type": "function",
     "name": "weightsReset",
     "file": "src/features-progress.js",
-    "line": 1520,
+    "line": 1574,
     "desc": "if (!confirm('Reset all grammar weights to defaults?')) return;",
     "callers": 3,
     "exported": true
@@ -7557,7 +7566,7 @@
     "type": "function",
     "name": "progRangeSet",
     "file": "src/features-progress.js",
-    "line": 1532,
+    "line": 1586,
     "desc": "const strandMap = { today: 'week', week: 'week', prev: 'month', all: 'all' };",
     "callers": 5,
     "exported": true
@@ -7566,7 +7575,7 @@
     "type": "function",
     "name": "renderGramSentHeatmap",
     "file": "src/features-progress.js",
-    "line": 1548,
+    "line": 1602,
     "desc": "const wrap = document.getElementById('gramSentHeatmapWrap');",
     "callers": 5,
     "exported": true
@@ -7575,7 +7584,7 @@
     "type": "function",
     "name": "ashiatoFilterPills",
     "file": "src/features-progress.js",
-    "line": 1633,
+    "line": 1687,
     "desc": "const q = query.trim().toLowerCase();",
     "callers": 1,
     "exported": false
@@ -7762,7 +7771,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 69,
     "desc": "return LessonNotesState.sessions;",
-    "callers": 30,
+    "callers": 31,
     "exported": false
   },
   {
@@ -7780,7 +7789,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 82,
     "desc": "",
-    "callers": 1,
+    "callers": 2,
     "exported": false
   },
   {
@@ -7798,7 +7807,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 135,
     "desc": "LessonNotesState.view* — see declaration above",
-    "callers": 30,
+    "callers": 31,
     "exported": true
   },
   {
@@ -7987,7 +7996,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 784,
     "desc": "const student = document.getElementById('lnAudioStudent');",
-    "callers": 4,
+    "callers": 5,
     "exported": true
   },
   {
@@ -8023,7 +8032,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 951,
     "desc": "LessonNotesState.viewMode = mode;",
-    "callers": 13,
+    "callers": 14,
     "exported": true
   },
   {
@@ -8545,7 +8554,7 @@
     "file": "src/features-lesson-notes.js",
     "line": 2654,
     "desc": "const lines = raw.split('\\n');",
-    "callers": 12,
+    "callers": 14,
     "exported": true
   },
   {
@@ -8764,7 +8773,7 @@
     "file": "src/features-ln-p2.js",
     "line": 380,
     "desc": "LessonNotesState.loadingSession — see declaration above",
-    "callers": 6,
+    "callers": 7,
     "exported": true
   },
   {
@@ -9001,7 +9010,7 @@
     "type": "function",
     "name": "toggleChatHistory",
     "file": "src/features-tools.js",
-    "line": 381,
+    "line": 380,
     "desc": "const drawer = document.getElementById('chatHistoryDrawer');",
     "callers": 3,
     "exported": false
@@ -9010,19 +9019,10 @@
     "type": "function",
     "name": "buildChatHistoryList",
     "file": "src/features-tools.js",
-    "line": 391,
+    "line": 390,
     "desc": "const list = document.getElementById('chatHistoryList');",
     "callers": 2,
     "exported": false
-  },
-  {
-    "type": "function",
-    "name": "qrPrintPage",
-    "file": "src/features-tools.js",
-    "line": 412,
-    "desc": "const reader = document.getElementById('qrReader');",
-    "callers": 5,
-    "exported": true
   },
   {
     "type": "function",
