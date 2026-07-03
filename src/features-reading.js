@@ -1286,12 +1286,14 @@ function qrPrintPage() {
     }
   };
 
-  QuickReadState.segments.forEach(seg => {
+  const isCloser = w => /^[」』）】〕]+$/.test(w);
+  for (let i = 0; i < QuickReadState.segments.length; i++) {
+    const seg = QuickReadState.segments[i];
     const w = seg.word;
-    if (!w) return;
+    if (!w) continue;
     if (w === '\n' || w === '\r\n' || w === '\r') {
       flushSentence();
-      return;
+      continue;
     }
     let token = '';
     if (furiOn && seg.reading && hasKanji(w)) {
@@ -1301,9 +1303,15 @@ function qrPrintPage() {
     }
     currentSentence += token;
     if (sep && /[。！？]$/.test(w)) {
+      // Absorb any immediately-following closing bracket/quote so it stays
+      // on the same line instead of starting the next one alone.
+      while (i + 1 < QuickReadState.segments.length && isCloser(QuickReadState.segments[i + 1].word)) {
+        i++;
+        currentSentence += QuickReadState.segments[i].word;
+      }
       flushSentence();
     }
-  });
+  }
   flushSentence(); // flush any remaining
 
   if (window.printAPI && window.printAPI.htmlToPDF) {
