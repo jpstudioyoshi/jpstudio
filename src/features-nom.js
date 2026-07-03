@@ -757,20 +757,19 @@ async function nomRenderSuggestions() {
 
   // Header
   const header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px';
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:6px';
   header.innerHTML =
-    `<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">FROM LAST LESSON — ${date}</span>` +
-    `<span style="font-family:var(--ui);font-size:0.65rem;color:var(--ink-light)">session ${sessionId}</span>`;
+    `<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-light)">${date}</span>`;
   container.appendChild(header);
 
   // Cards
   const grid = document.createElement('div');
-  grid.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-bottom:14px';
+  grid.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-bottom:8px';
 
   for (const s of suggestions) {
     const card = document.createElement('div');
     card.style.cssText = [
-      'padding:12px 14px',
+      'padding:8px 14px',
       'background:var(--paper-dark)',
       'border:1px solid var(--border)',
       'border-left:3px solid var(--teal)',
@@ -818,7 +817,7 @@ async function nomRenderSuggestions() {
 
   // Divider
   const divider = document.createElement('div');
-  divider.style.cssText = 'border-top:1px solid var(--border);margin-bottom:14px';
+  divider.style.cssText = 'border-top:1px solid var(--border);margin-bottom:8px';
   container.appendChild(divider);
 }
 
