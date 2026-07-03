@@ -345,7 +345,7 @@ function wbAddItem(entry, idx) {
     <span class="wb-grip">⠿</span>
     <span class="wb-num">${idx + 1}.</span>
     <span class="wb-text" id="wb-text-${idx}">${entry.original}</span>
-    <span style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+    <span style="display:flex;flex-direction:row;gap:4px;flex-shrink:0">
       <button class="wb-edit btn-icon-teal" title="Edit">✎</button>
       <button class="wb-del" title="Delete">✕</button>
     </span>
