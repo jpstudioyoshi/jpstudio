@@ -577,27 +577,15 @@ function deleteWritingEntry(idx) {
 
 function handleWritingKey(e) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.shiftKey) { e.preventDefault(); submitWritingSentence(); }
-  else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !e.shiftKey) { e.preventDefault(); checkWritingSentence(); }
+  else if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); checkWritingSentence(); }
 }
 
 function clearWritingFeedback() {
   document.getElementById('feedbackEntries').innerHTML = '<div class="feedback-empty">Type a sentence and click here to check it.</div>';
-  document.getElementById('feedbackCount').textContent = '—';
   const inp = document.getElementById('writingInput');
   if (inp) { inp.value = ''; inp.focus(); }
   const _fp = document.querySelector('.feedback-panel');
   if (_fp) { _fp.style.background = ''; }
-  // Full reset: clear submitted sentences board + underlying state + chat context
-  const board = document.getElementById('writingBoard');
-  if (board) board.innerHTML = '';
-  const empty = document.getElementById('writingBoardEmpty');
-  if (empty) empty.style.display = 'block';
-  writingSentences = [];
-  writingChatHistory = [];
-  _writingCheckedSentences.clear();
-  _writingFirstAttempt = null;
-  _writingCheckCount = 0;
-  wbUpdateCount();
 }
 
 function saveWritingText() {
