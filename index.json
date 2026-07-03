@@ -1452,7 +1452,7 @@
     "name": "prompt",
     "file": "src/core-foundation.js",
     "line": 589,
-    "desc": "Translate this English word/phrase to Japanese. If multiple translations exist, "
+    "desc": "Translate this English word/phrase to Japanese for an N5-N4 beginner. If multipl"
   },
   {
     "type": "function",
@@ -2611,7 +2611,7 @@
     "file": "src/core-writing.js",
     "line": 413,
     "desc": "const n = writingSentences.length;",
-    "callers": 6,
+    "callers": 5,
     "exported": true
   },
   {
@@ -2744,7 +2744,7 @@
     "type": "function",
     "name": "saveWritingText",
     "file": "src/core-writing.js",
-    "line": 603,
+    "line": 591,
     "desc": "if (writingSentences.length === 0) { alert('Nothing to save yet!'); return; }",
     "callers": 4,
     "exported": true
@@ -2753,7 +2753,7 @@
     "type": "function",
     "name": "renderSavedTexts",
     "file": "src/core-writing.js",
-    "line": 623,
+    "line": 611,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": false
@@ -2762,7 +2762,7 @@
     "type": "function",
     "name": "stiToggle",
     "file": "src/core-writing.js",
-    "line": 648,
+    "line": 636,
     "desc": "const preview = el.querySelector('.sti-preview');",
     "callers": 1,
     "exported": false
@@ -2771,7 +2771,7 @@
     "type": "function",
     "name": "extractSavedText",
     "file": "src/core-writing.js",
-    "line": 665,
+    "line": 653,
     "desc": "appending, since \"edit a saved text\" reads as working on that text",
     "callers": 1,
     "exported": false
@@ -2780,7 +2780,7 @@
     "type": "function",
     "name": "copySavedText",
     "file": "src/core-writing.js",
-    "line": 689,
+    "line": 677,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2789,7 +2789,7 @@
     "type": "function",
     "name": "deleteSavedText",
     "file": "src/core-writing.js",
-    "line": 706,
+    "line": 694,
     "desc": "const saved = (App.Storage || window.Storage).getStudioTexts();",
     "callers": 3,
     "exported": true
@@ -2798,7 +2798,7 @@
     "type": "function",
     "name": "_tokenExistsInOriginal",
     "file": "src/core-writing.js",
-    "line": 718,
+    "line": 706,
     "desc": "const tLen = token.length;",
     "callers": 2,
     "exported": false
@@ -2807,7 +2807,7 @@
     "type": "function",
     "name": "highlightCorrectedParticles",
     "file": "src/core-writing.js",
-    "line": 732,
+    "line": 720,
     "desc": "if (!original || !corrected || original === corrected) return escHtml(corrected);",
     "callers": 2,
     "exported": true
@@ -2830,7 +2830,7 @@
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-writing.js",
-    "line": 613,
+    "line": 601,
     "desc": "db.run"
   },
   {

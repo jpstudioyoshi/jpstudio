@@ -586,7 +586,7 @@ async function globalQuickTranslate() {
     if (hasJapanese) {
       prompt = `Translate this Japanese word/phrase to English. Reply in this exact format only:\nKANJI: [kanji/dictionary form — leave empty if input is already plain kana]\nREADING: [hiragana or katakana reading]\nMEANING: [brief English meaning, always in English]\n\n${word}`;
     } else {
-      prompt = `Translate this English word/phrase to Japanese. If multiple translations exist, prefer the N5-level word where one is appropriate for the meaning. Reply in this exact format only:\nKANJI: [kanji form if applicable, otherwise leave empty]\nREADING: [hiragana or katakana reading, always]\nMEANING: [brief English meaning or gloss]\n\n${word}`;
+      prompt = `Translate this English word/phrase to Japanese for an N5-N4 beginner. If multiple translations exist, prefer the N5-level word where one is appropriate for the meaning. For verbs, use the plain dictionary form (e.g. 食べる, not 召し上がる or 食べます) — never use keigo (honorific 尊敬語 or humble 謙譲語 forms) unless the English explicitly asks for a formal/respectful phrase. Reply in this exact format only:\nKANJI: [kanji form if applicable, otherwise leave empty]\nREADING: [hiragana or katakana reading, always]\nMEANING: [brief English meaning or gloss]\n\n${word}`;
     }
     
     const data = await claudeAPI({
