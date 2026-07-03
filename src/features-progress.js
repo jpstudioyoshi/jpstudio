@@ -1095,6 +1095,7 @@ function grammarNodeClick(nodeId) {
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <div onclick="grammarOverridePopup('${nodeId}')" title="Click to set override"
           style="display:inline-block;padding:5px 10px;border-radius:5px;background:${statusCol};color:${statusText};font-family:var(--ui);font-size:0.76rem;font-weight:600;cursor:pointer">${node.label}</div>
+        <button id="grammarJumpBtn" onclick="grammarJumpToLesson('${nodeId}')" class="btn-action btn-xs">▶ Jump to lesson audio</button>
         <button onclick="const p=document.getElementById('grammarDetailPanel');p.innerHTML='';p.style.display='none';p.dataset.node='';document.querySelectorAll('#grammarCoverageGrid [data-nodeid]').forEach(el=>el.style.outline='')"
           class="btn-action btn-xs" style="margin-left:auto">Clear</button>
       </div>
@@ -1106,6 +1107,59 @@ function grammarNodeClick(nodeId) {
       ${node.notes ? `<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);line-height:1.6;padding-top:10px">${node.notes.replace(/\n/g,'<br>')}</div>` : ''}
     </div>
   `;
+}
+
+async function grammarJumpToLesson(nodeId) {
+  const btn = document.getElementById('grammarJumpBtn');
+  if (btn) { btn.textContent = '⏳ Finding…'; btn.disabled = true; }
+  try {
+    if (!LessonNotesState._sessionsLoaded) {
+      await lessonNotesLoadSessionsFromStorage();
+      LessonNotesState._sessionsLoaded = true;
+    }
+    const sessions = lessonNotesGetSessions();
+    let hit = null, sessionIdx = -1;
+    for (let i = 0; i < sessions.length; i++) {
+      const g = (sessions[i].grammar || []).find(g => g.grammarNodeIds && g.grammarNodeIds[0] === nodeId && g.example);
+      if (g) { hit = g; sessionIdx = i; break; }
+    }
+    if (!hit) { alert('No grammar example found for this point in any lesson.'); return; }
+    const session = sessions[sessionIdx];
+    if (!session.linked_recording_id) { alert('This lesson has no linked recording.'); return; }
+    const waAlignments = session.waAlignments || {};
+    if (!Object.keys(waAlignments).length) {
+      alert('This lesson\'s audio hasn\'t been aligned yet. Open the lesson\'s Recording tab and click "⚡ Align" first, then try again.');
+      return;
+    }
+    const _parseWA = App.yoshiParseWhatsapp || window.yoshiParseWhatsapp;
+    const msgs = _parseWA ? _parseWA(session.rawText || '') : [];
+    const exampleClean = hit.example.replace(/\s+/g, '');
+    const match = msgs.find(m => m.text.replace(/\s+/g, '').includes(exampleClean.slice(0, 15)));
+    if (!match || waAlignments[match.time] === undefined) {
+      alert('Could not match this example to an aligned point in the audio.');
+      return;
+    }
+    const offset = waAlignments[match.time];
+
+    // Switch to the lesson, open Recording tab, seek once the player exists
+    showPanel('lessonnotes');
+    LessonNotesState.currentIdx = sessionIdx;
+    lessonNotesLoadSession(sessionIdx);
+    lessonNotesRenderPanel();
+    lessonNotesSetView('recording');
+    let tries = 0;
+    const trySeek = () => {
+      const el = document.getElementById('lnAudioStudent');
+      if (el) { lnSeekToTime(offset); }
+      else if (tries++ < 20) setTimeout(trySeek, 150);
+    };
+    setTimeout(trySeek, 150);
+  } catch(e) {
+    console.error('[grammarJumpToLesson]', e);
+    alert('Error: ' + e.message);
+  } finally {
+    if (btn) { btn.textContent = '▶ Jump to lesson audio'; btn.disabled = false; }
+  }
 }
 
 function grammarOverridePopup(nodeId) {
@@ -1627,7 +1681,7 @@ Object.assign(App, {
   progressRenderErrors, progressRenderCost, _renderErrorPieRight, writtenErrorShowPopup,
   renderErrorList, errorShowPopup,
   apiUsageReset, apiUsageTrack, gramSentPracticeError,
-  grammarDismissEncounter, grammarDismissGold,
+  grammarDismissEncounter, grammarDismissGold, grammarJumpToLesson,
 });
 
 function ashiatoFilterPills(query) {
