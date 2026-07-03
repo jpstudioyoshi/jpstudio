@@ -268,7 +268,6 @@ try {
   window["prevVocab"] = prevVocab;
   window["printVocabList"] = printVocabList;
   window["progressExport"] = progressExport;
-  window["qrPrintPage"] = qrPrintPage;
   window["qrSegment"] = qrSegment;
   window["qrSendToWrite"] = qrSendToWrite;
   window["qrShowPaste"] = qrShowPaste;
@@ -406,78 +405,6 @@ function buildChatHistoryList() {
     };
     list.appendChild(row);
   });
-}
-
-
-function qrPrintPage() {
-  const reader = document.getElementById('qrReader');
-  if (!reader || !QuickReadState.segments.length) return;
-  
-  // Build HTML with ruby text for furigana
-  let html = '';
-  QuickReadState.segments.forEach(seg => {
-    if (seg.reading && seg.reading !== seg.word) {
-      html += `<ruby>${seg.word}<rp>(</rp><rt>${seg.reading}</rt><rp>)</rp></ruby>`;
-    } else {
-      html += seg.word;
-    }
-  });
-  
-  // Get print settings
-  const fontSize = (App.Storage || window.Storage).getPrintFontSize();
-  const lineHeight = (App.Storage || window.Storage).getPrintLineHeight();
-  
-  // Create or reuse print iframe
-  let printFrame = document.getElementById('printFrame');
-  if (!printFrame) {
-    printFrame = document.createElement('iframe');
-    printFrame.id = 'printFrame';
-    printFrame.style.cssText = 'position:absolute;left:-9999px;width:800px;height:600px;';
-    document.body.appendChild(printFrame);
-  }
-  
-  const doc = printFrame.contentDocument || printFrame.contentWindow.document;
-  doc.open();
-  doc.write(`<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Japanese Reading</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap');
-    body {
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: ${fontSize}pt;
-      line-height: ${lineHeight};
-      color: black;
-      background: white;
-      padding: 40px 60px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    ruby {
-      ruby-align: center;
-    }
-    rt {
-      font-size: 0.5em;
-      color: #444;
-    }
-    @media print {
-      body { padding: 20px; }
-    }
-  </style>
-</head>
-<body>
-  ${html}
-</body>
-</html>`);
-  doc.close();
-  
-  // Wait for fonts to load then print
-  setTimeout(() => {
-    printFrame.contentWindow.focus();
-    printFrame.contentWindow.print();
-  }, 500);
 }
 
 
