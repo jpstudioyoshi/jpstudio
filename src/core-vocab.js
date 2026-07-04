@@ -87,13 +87,6 @@ function vocabGetActiveSources() {
   return sources.filter(s => s !== 'yoshi_phrases' && s !== 'yoshi_vocab');
 }
 
-function vocabSourceFilterChanged() {
-  const anyChecked = document.querySelectorAll('.vocab-source-filter:checked').length > 0;
-  const banner = document.getElementById('vocabFocusBanner');
-  if (banner) banner.style.display = anyChecked ? 'inline' : 'none';
-  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
-}
-
 function vocabFocusModeActive() {
   return document.querySelectorAll('.vocab-source-filter:checked').length > 0;
 }
@@ -119,10 +112,6 @@ function vocabGetActivePOS() {
   // All checked or none checked = no filter
   if (checked.length === 0 || checked.length === all.length) return null;
   return checked;
-}
-
-function vocabPosFilterChanged() {
-  if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection);
 }
 
 // N5/N4 level filter — isolates the core_vocab sprint pool by level so
