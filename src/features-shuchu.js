@@ -71,6 +71,37 @@
     if (GM && !GM.loaded) { try { await GM.load(); } catch(e) {} }
     const nodeCatalog = (GM && GM.loaded) ? GM.getAllNodes().map(n => n.id + ' — ' + n.label).join('\n') : '';
 
+    const includeTTS = document.getElementById('shuchuIncludeTTS')?.checked;
+    const includeSTT = document.getElementById('shuchuIncludeSTT')?.checked;
+    let optionalBlock = '';
+    if (includeTTS) {
+      optionalBlock += `
+
+ALSO include exactly one additional activity of type "listen_tts" (a listening comprehension check — the "question" text will be spoken aloud via TTS and is NEVER shown to the learner before they answer):
+{
+  "id": 90,
+  "type": "listen_tts",
+  "prompt": "Listen and choose what you hear.",
+  "question": "string — a Japanese sentence using this topic, with furigana in brackets",
+  "options": ["4 English meaning choices, exactly one correct"],
+  "answer": "the correct option text, exact match to one of options",
+  "explanation": "brief explanation"
+}`;
+    }
+    if (includeSTT) {
+      optionalBlock += `
+
+ALSO include exactly one additional activity of type "speak_stt" (a spoken-production check — the learner records themselves answering aloud in Japanese, which is transcribed and checked against "answer"):
+{
+  "id": 91,
+  "type": "speak_stt",
+  "prompt": "string — English instruction telling the learner what to say aloud in Japanese",
+  "question": "string — the English prompt/situation they should respond to",
+  "answer": "string — an acceptable target Japanese sentence using this topic, with furigana in brackets",
+  "explanation": "brief explanation"
+}`;
+    }
+
     const prompt = `You are a Japanese language tutor creating a focused study sprint for an adult learner at JLPT N5/N4 level.
 
 Topic: "${topic}"
@@ -101,9 +132,10 @@ Generate a JSON object with this exact structure (no markdown, no backticks, raw
 
 GRAMMAR NODES (pick grammar_node_id from this list — use the id before the —, or null):
 ${nodeCatalog}
+${optionalBlock}
 
 Requirements:
-- 1 activity only (id: 1)
+- 1 required activity (id: 1), plus any additional optional activities listed above
 - Vocabulary at N5/N4 level, kanji with furigana in brackets
 - multiple_choice must have exactly 4 options
 - gap_fill uses ___ in the question
@@ -116,7 +148,7 @@ Requirements:
         headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 1500,
+          max_tokens: 1900,
           messages: [{ role: 'user', content: prompt }]
         })
       });
@@ -307,12 +339,28 @@ Requirements:
   }
 
   function renderActivityItem(act, card, feedback, btns, isR2) {
-    // Question
+    // Question — for listen_tts, hide the Japanese text (that's the point of a listening check);
+    // it's revealed only in the post-answer feedback.
     const q = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.2rem',color:'var(--ink)',marginBottom:'16px',lineHeight:'1.7'});
-    q.innerHTML = '<span style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);display:block;margin-bottom:6px">' + act.prompt + '</span>' + furiToRuby(act.question);
+    if (act.type === 'listen_tts') {
+      q.innerHTML = '<span style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);display:block;margin-bottom:6px">' + act.prompt + '</span>';
+    } else {
+      q.innerHTML = '<span style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);display:block;margin-bottom:6px">' + act.prompt + '</span>' + furiToRuby(act.question);
+    }
     card.appendChild(q);
 
-    if (act.type === 'multiple_choice' && act.options) {
+    if (act.type === 'listen_tts') {
+      const playBtn = document.createElement('button');
+      playBtn.className = 'btn-action';
+      playBtn.textContent = '▶ Play';
+      playBtn.style.cssText = 'margin-bottom:16px;font-size:1rem';
+      const _speak = () => { const _s = App.jpSpeak || window.jpSpeak; if (_s) _s(act.question, 0.85); };
+      playBtn.onclick = _speak;
+      card.appendChild(playBtn);
+      setTimeout(_speak, 300); // auto-play once on render
+    }
+
+    if ((act.type === 'multiple_choice' || act.type === 'listen_tts') && act.options) {
       act.options.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:8px;font-family:var(--jp);font-size:1.1rem;padding:12px 16px;background:#1a1a1a;border:1px solid var(--border);color:var(--ink);border-radius:8px;cursor:pointer';
@@ -321,6 +369,16 @@ Requirements:
         btn.onclick = () => checkAnswer(act, opt, isR2);
         card.appendChild(btn);
       });
+    } else if (act.type === 'speak_stt') {
+      const micBtn = document.createElement('button');
+      micBtn.className = 'btn-action';
+      micBtn.id = 'shuchuSttRecordBtn';
+      micBtn.textContent = '🎙️ Record';
+      micBtn.style.cssText = 'margin-bottom:8px';
+      const statusEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)',marginBottom:'8px'}, 'Tap Record, say your answer in Japanese, tap Stop.');
+      card.appendChild(micBtn);
+      card.appendChild(statusEl);
+      micBtn.onclick = () => shuchuSttToggle(micBtn, statusEl, act, isR2);
     } else {
       // Text input for gap_fill, translate_to_jp, error_correct
       const inp = document.createElement('input');
@@ -335,6 +393,62 @@ Requirements:
       sub.textContent = 'Check';
       sub.onclick = () => checkAnswer(act, inp.value.trim(), isR2);
       card.appendChild(sub);
+    }
+  }
+
+  // ── speak_stt recording — MediaRecorder → Whisper transcription → checkAnswer ──
+  // NOTE: each recording is one Whisper API call (paid, per the setup-screen cost notice).
+  let _sttRecording = false, _sttMediaRec = null, _sttChunks = [];
+
+  function shuchuSttToggle(btn, statusEl, act, isR2) {
+    if (_sttRecording) { _sttMediaRec.stop(); }
+    else { shuchuSttStart(btn, statusEl, act, isR2); }
+  }
+
+  async function shuchuSttStart(btn, statusEl, act, isR2) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      _sttChunks = [];
+      _sttMediaRec = new MediaRecorder(stream);
+      _sttMediaRec.ondataavailable = e => _sttChunks.push(e.data);
+      _sttMediaRec.onstop = () => shuchuSttTranscribe(stream, statusEl, act, isR2);
+      _sttMediaRec.start();
+      _sttRecording = true;
+      btn.textContent = '⏹ Stop';
+      statusEl.textContent = 'Recording… tap Stop when done';
+    } catch(e) {
+      statusEl.textContent = 'Mic access denied.';
+    }
+  }
+
+  async function shuchuSttTranscribe(stream, statusEl, act, isR2) {
+    stream.getTracks().forEach(t => t.stop());
+    _sttRecording = false;
+    const btn = document.getElementById('shuchuSttRecordBtn');
+    if (btn) btn.textContent = '🎙️ Record';
+    statusEl.textContent = 'Transcribing…';
+    const blob = new Blob(_sttChunks, { type: 'audio/webm' });
+    const _getApiKey = App.getApiKey || window.getApiKey;
+    const key = _getApiKey ? _getApiKey() : '';
+    if (!key) { statusEl.textContent = 'No API key — set in Resources → Settings.'; return; }
+    try {
+      const fd = new FormData();
+      fd.append('file', blob, 'speak.webm');
+      fd.append('model', 'whisper-1');
+      fd.append('language', 'ja');
+      const resp = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+        method: 'POST', headers: { Authorization: 'Bearer ' + key }, body: fd,
+      });
+      const data = await resp.json();
+      const transcript = (data.text || '').trim();
+      if (transcript) {
+        statusEl.textContent = 'Heard: ' + transcript;
+        checkAnswer(act, transcript, isR2);
+      } else {
+        statusEl.textContent = 'Nothing heard — tap Record to try again.';
+      }
+    } catch(e) {
+      statusEl.textContent = 'STT error: ' + e.message;
     }
   }
 
@@ -425,8 +539,8 @@ Requirements:
     feedback.innerHTML = '';
     btns.innerHTML = '';
 
-    // translate_to_jp and error_correct: always show model answer + analysis, always add to round 2
-    if (act.type === 'translate_to_jp' || act.type === 'error_correct') {
+    // translate_to_jp, error_correct, and speak_stt: always show model answer + analysis, always add to round 2
+    if (act.type === 'translate_to_jp' || act.type === 'error_correct' || act.type === 'speak_stt') {
       if (!isR2) _wrong.push(act);
       const result = jpEl('div', {marginBottom:'10px'});
       result.innerHTML = '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px">Model answer: ' + furiToRuby(act.answer) + '</div>'
