@@ -431,36 +431,6 @@ document.addEventListener('keydown', e => {
     qrClose();
   }
 });
-// ── GAME SPEECH + TTS ────────────────────────────────────────────────────
-
-function vgSetTts(on, btn) {
-  VehicleGameState.ttsOn = on;
-  btn.closest('.vg-time-btns').querySelectorAll('.vg-time-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-
-function vgSpeak() {
-  const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];
-  if (!target) return;
-  jpSpeak(target.jp, 1.0);
-}
-
-function vgAutoSpeak() {
-  if (VehicleGameState.ttsOn) {
-    const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];
-    if (target) setTimeout(() => jpSpeak(target.jp, 1.0), 300);
-  }
-}
-
-// Vocab game uses custom stt handling
-
-function vgStopMic() {
-  VehicleGameState.micOn = false;
-  VehicleGameState.sttRecording = false;
-  VehicleGameState.sttRecorder = null;
-  const btn = document.getElementById('vg-mic-btn');
-  if (btn) { btn.textContent = '🎙'; btn.classList.remove('btn-active-red'); }
-}
 
 
 

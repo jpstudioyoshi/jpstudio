@@ -4824,7 +4824,7 @@
     "file": "src/features-core.js",
     "line": 529,
     "desc": "return TTS.speak(text, rate || 0.9, opts || {}); }",
-    "callers": 65,
+    "callers": 63,
     "exported": true
   },
   {
@@ -5755,45 +5755,9 @@
   },
   {
     "type": "function",
-    "name": "vgSetTts",
-    "file": "src/features-reading.js",
-    "line": 436,
-    "desc": "── GAME SPEECH + TTS ────────────────────────────────────────────────────",
-    "callers": 2,
-    "exported": true
-  },
-  {
-    "type": "function",
-    "name": "vgSpeak",
-    "file": "src/features-reading.js",
-    "line": 442,
-    "desc": "const target = VehicleGameState.targets && VehicleGameState.targets[VehicleGameState.current];",
-    "callers": 2,
-    "exported": true
-  },
-  {
-    "type": "function",
-    "name": "vgAutoSpeak",
-    "file": "src/features-reading.js",
-    "line": 448,
-    "desc": "if (VehicleGameState.ttsOn) {",
-    "callers": 0,
-    "exported": false
-  },
-  {
-    "type": "function",
-    "name": "vgStopMic",
-    "file": "src/features-reading.js",
-    "line": 457,
-    "desc": "Vocab game uses custom stt handling",
-    "callers": 0,
-    "exported": false
-  },
-  {
-    "type": "function",
     "name": "qrLoadHistoryList",
     "file": "src/features-reading.js",
-    "line": 475,
+    "line": 445,
     "desc": "if (_qrHistoryCache !== null) return _qrHistoryCache;",
     "callers": 4,
     "exported": false
@@ -5802,7 +5766,7 @@
     "type": "function",
     "name": "qrSaveHistoryList",
     "file": "src/features-reading.js",
-    "line": 480,
+    "line": 450,
     "desc": "_qrHistoryCache = list;",
     "callers": 2,
     "exported": false
@@ -5811,7 +5775,7 @@
     "type": "function",
     "name": "qrLoadHistoryFromStorage",
     "file": "src/features-reading.js",
-    "line": 487,
+    "line": 457,
     "desc": "",
     "callers": 1,
     "exported": false
@@ -5820,7 +5784,7 @@
     "type": "function",
     "name": "qrUpdateHistoryDropdown",
     "file": "src/features-reading.js",
-    "line": 511,
+    "line": 481,
     "desc": "const select = document.getElementById('qrHistorySelect');",
     "callers": 4,
     "exported": false
@@ -5829,7 +5793,7 @@
     "type": "function",
     "name": "qrSaveToHistory",
     "file": "src/features-reading.js",
-    "line": 528,
+    "line": 498,
     "desc": "if (!text || text.trim().length < 10) return; // Don't save very short texts",
     "callers": 4,
     "exported": false
@@ -5838,7 +5802,7 @@
     "type": "function",
     "name": "qrLoadHistory",
     "file": "src/features-reading.js",
-    "line": 568,
+    "line": 538,
     "desc": "if (!indexStr && indexStr !== 0) return;",
     "callers": 2,
     "exported": true
@@ -5847,7 +5811,7 @@
     "type": "function",
     "name": "qrDeleteHistory",
     "file": "src/features-reading.js",
-    "line": 629,
+    "line": 599,
     "desc": "const select = document.getElementById('qrHistorySelect');",
     "callers": 2,
     "exported": true
@@ -5856,7 +5820,7 @@
     "type": "function",
     "name": "qrGetRecordingsForStorage",
     "file": "src/features-reading.js",
-    "line": 653,
+    "line": 623,
     "desc": "return Promise.all(QuickReadState.segmentRecordings.map(async (rec) => {",
     "callers": 1,
     "exported": false
@@ -5865,7 +5829,7 @@
     "type": "function",
     "name": "qrToggleSeparateSentences",
     "file": "src/features-reading.js",
-    "line": 683,
+    "line": 653,
     "desc": "QuickReadState.separateSentences = !QuickReadState.separateSentences;",
     "callers": 1,
     "exported": true
@@ -5874,7 +5838,7 @@
     "type": "function",
     "name": "qrToggleListenMode",
     "file": "src/features-reading.js",
-    "line": 700,
+    "line": 670,
     "desc": "QuickReadState.sentences* — see declaration above",
     "callers": 2,
     "exported": true
@@ -5883,7 +5847,7 @@
     "type": "function",
     "name": "qrUpdateSentenceDisplay",
     "file": "src/features-reading.js",
-    "line": 739,
+    "line": 709,
     "desc": "const counter = document.getElementById('qrSentenceCounter');",
     "callers": 7,
     "exported": false
@@ -5892,7 +5856,7 @@
     "type": "function",
     "name": "qrListenPlay",
     "file": "src/features-reading.js",
-    "line": 753,
+    "line": 723,
     "desc": "const btn = document.getElementById('qrListenPlayBtn');",
     "callers": 2,
     "exported": true
@@ -5901,7 +5865,7 @@
     "type": "function",
     "name": "qrHighlightSentence",
     "file": "src/features-reading.js",
-    "line": 772,
+    "line": 742,
     "desc": "const reader = document.getElementById('qrReader');",
     "callers": 8,
     "exported": false
@@ -5910,7 +5874,7 @@
     "type": "function",
     "name": "qrClearSentenceHighlight",
     "file": "src/features-reading.js",
-    "line": 822,
+    "line": 792,
     "desc": "document.querySelectorAll('.qr-sentence-active').forEach(el => {",
     "callers": 3,
     "exported": false
@@ -5919,7 +5883,7 @@
     "type": "function",
     "name": "qrPauseAll",
     "file": "src/features-reading.js",
-    "line": 828,
+    "line": 798,
     "desc": "const btn = document.getElementById('qrPauseAllBtn');",
     "callers": 2,
     "exported": true
@@ -5928,7 +5892,7 @@
     "type": "function",
     "name": "qrPlayAll",
     "file": "src/features-reading.js",
-    "line": 845,
+    "line": 815,
     "desc": "const btn = document.getElementById('qrPlayAllBtn2');",
     "callers": 2,
     "exported": true
@@ -5937,7 +5901,7 @@
     "type": "function",
     "name": "qrPlayAllNext",
     "file": "src/features-reading.js",
-    "line": 869,
+    "line": 839,
     "desc": "if (!QuickReadState.playAllActive || QuickReadState.playAllPaused) return;",
     "callers": 4,
     "exported": true
@@ -5946,7 +5910,7 @@
     "type": "function",
     "name": "qrListenPrev",
     "file": "src/features-reading.js",
-    "line": 898,
+    "line": 868,
     "desc": "if (QuickReadState.sentenceIdx > 0) {",
     "callers": 2,
     "exported": true
@@ -5955,7 +5919,7 @@
     "type": "function",
     "name": "qrListenNext",
     "file": "src/features-reading.js",
-    "line": 908,
+    "line": 878,
     "desc": "if (QuickReadState.sentenceIdx < QuickReadState.sentences.length - 1) {",
     "callers": 2,
     "exported": true
@@ -5964,7 +5928,7 @@
     "type": "function",
     "name": "_qrSpeakCurrent",
     "file": "src/features-reading.js",
-    "line": 919,
+    "line": 889,
     "desc": "const _TTS = App.TTS || window.TTS;",
     "callers": 3,
     "exported": false
@@ -5973,7 +5937,7 @@
     "type": "function",
     "name": "qrSetSpeed",
     "file": "src/features-reading.js",
-    "line": 966,
+    "line": 936,
     "desc": "QuickReadState.listenSpeed = speed;",
     "callers": 5,
     "exported": true
@@ -5982,7 +5946,7 @@
     "type": "function",
     "name": "qrUpdateSegmentUI",
     "file": "src/features-reading.js",
-    "line": 979,
+    "line": 949,
     "desc": "QuickReadState.recording* — see declaration above",
     "callers": 6,
     "exported": false
@@ -5991,7 +5955,7 @@
     "type": "function",
     "name": "qrSegDragStart",
     "file": "src/features-reading.js",
-    "line": 1014,
+    "line": 984,
     "desc": "QuickReadState.dragIdx — see declaration above",
     "callers": 1,
     "exported": false
@@ -6000,7 +5964,7 @@
     "type": "function",
     "name": "qrSegDragOver",
     "file": "src/features-reading.js",
-    "line": 1020,
+    "line": 990,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -6009,7 +5973,7 @@
     "type": "function",
     "name": "qrSegDrop",
     "file": "src/features-reading.js",
-    "line": 1025,
+    "line": 995,
     "desc": "e.preventDefault();",
     "callers": 1,
     "exported": false
@@ -6018,7 +5982,7 @@
     "type": "function",
     "name": "qrSegDragEnd",
     "file": "src/features-reading.js",
-    "line": 1043,
+    "line": 1013,
     "desc": "e.target.style.opacity = '1';",
     "callers": 1,
     "exported": false
@@ -6027,7 +5991,7 @@
     "type": "function",
     "name": "qrStartReplace",
     "file": "src/features-reading.js",
-    "line": 1048,
+    "line": 1018,
     "desc": "if (QuickReadState.replaceIdx === idx) {",
     "callers": 1,
     "exported": false
@@ -6036,7 +6000,7 @@
     "type": "function",
     "name": "qrRecordToggle",
     "file": "src/features-reading.js",
-    "line": 1060,
+    "line": 1030,
     "desc": "const btn = document.getElementById('qrRecordBtn');",
     "callers": 2,
     "exported": true
@@ -6045,7 +6009,7 @@
     "type": "function",
     "name": "qrPlaySegment",
     "file": "src/features-reading.js",
-    "line": 1121,
+    "line": 1091,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;",
     "callers": 2,
     "exported": true
@@ -6054,7 +6018,7 @@
     "type": "function",
     "name": "qrDeleteSegment",
     "file": "src/features-reading.js",
-    "line": 1127,
+    "line": 1097,
     "desc": "if (idx < 0 || idx >= QuickReadState.segmentRecordings.length) return;",
     "callers": 2,
     "exported": true
@@ -6063,7 +6027,7 @@
     "type": "function",
     "name": "qrClearSegments",
     "file": "src/features-reading.js",
-    "line": 1135,
+    "line": 1105,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6072,7 +6036,7 @@
     "type": "function",
     "name": "qrPlayAllSegments",
     "file": "src/features-reading.js",
-    "line": 1145,
+    "line": 1115,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6081,7 +6045,7 @@
     "type": "function",
     "name": "qrCombineSegments",
     "file": "src/features-reading.js",
-    "line": 1165,
+    "line": 1135,
     "desc": "if (QuickReadState.segmentRecordings.length === 0) return;",
     "callers": 2,
     "exported": true
@@ -6090,7 +6054,7 @@
     "type": "function",
     "name": "qrDrawWaveform",
     "file": "src/features-reading.js",
-    "line": 1220,
+    "line": 1190,
     "desc": "const canvas = document.getElementById('qrWaveform');",
     "callers": 1,
     "exported": false
@@ -6099,7 +6063,7 @@
     "type": "function",
     "name": "qrDownloadCombined",
     "file": "src/features-reading.js",
-    "line": 1257,
+    "line": 1227,
     "desc": "if (!QuickReadState.combinedBlob) return;",
     "callers": 2,
     "exported": true
@@ -6108,7 +6072,7 @@
     "type": "function",
     "name": "qrPrintPage",
     "file": "src/features-reading.js",
-    "line": 1270,
+    "line": 1240,
     "desc": "if (!QuickReadState.segments.length) return;",
     "callers": 2,
     "exported": true
@@ -6117,7 +6081,7 @@
     "type": "function",
     "name": "qrSaveSession",
     "file": "src/features-reading.js",
-    "line": 1341,
+    "line": 1311,
     "desc": "if (!QuickReadState.segments.length) return;",
     "callers": 3,
     "exported": true
@@ -6126,7 +6090,7 @@
     "type": "function",
     "name": "qrRestoreSession",
     "file": "src/features-reading.js",
-    "line": 1353,
+    "line": 1323,
     "desc": "",
     "callers": 3,
     "exported": true
