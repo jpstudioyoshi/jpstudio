@@ -1269,99 +1269,6 @@ function vcDrillWord(word, meaning) {
   try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}
 }
 
-// Export priority functions for use by briefing and voice features
-
-// ── Vocab context for briefing ────────────────────────────────────────────────
-// Returns a compact text block summarising vocabulary state for Claude.
-// Called by the briefing builder in features.js.
-function vocabPriorityContext() {
-  try {
-    const all      = vcBuildPriorityList();
-    const now      = Date.now();
-    const DAY      = 86400000;
-    const WEEK     = 7 * DAY;
-
-    // Words encountered in last 7 days
-    const recentlyLooked = all.filter(e =>
-      e.lastLookup && (now - new Date(e.lastLookup).getTime()) < WEEK
-    );
-
-    // Top priority encountered words (review candidates)
-    const reviewCandidates = all
-      .filter(e => e.encountered && !e.produced)
-      .slice(0, 8);
-
-    // Production gaps — looked up 2+ times, never produced
-    const gaps = all
-      .filter(e => e.lookupCount >= 2 && !e.produced)
-      .slice(0, 5);
-
-    // High-frequency N5 words never encountered at all
-    const unencountered = all
-      .filter(e => !e.encountered && e.l === 'N5' && e.f && e.f <= 400)
-      .sort((a, b) => (a.f ?? 9999) - (b.f ?? 9999))
-      .slice(0, 5);
-
-    // Words produced (confirmed active vocabulary)
-    const produced = all.filter(e => e.produced);
-
-    // SRS stats
-    const srsAll   = all.filter(e => e.srsInterval > 0);
-    const srsDue   = srsAll.filter(e => e.srsDue && e.srsDue <= now);
-
-    let lines = ['### Vocabulary (priority model)'];
-
-    // Summary line
-    lines.push(`Encountered: ${all.filter(e=>e.encountered).length} of ${all.length} words | Produced: ${produced.length} | Looked up this week: ${recentlyLooked.length}`);
-
-    // SRS line
-    if (srsAll.length) {
-      lines.push(`SRS: ${srsAll.length} words tracked | Due now: ${srsDue.length}`);
-    }
-
-    // Lesson doc words — teacher introduced, highest provenance
-    const lessonDocWords = all.filter(e => e.lessonDoc).slice(0, 10);
-    if (lessonDocWords.length) {
-      const fmt = lessonDocWords.map(e => `${e.w}(${e.r})`).join(', ');
-      lines.push(`Teacher-introduced vocabulary (${lessonDocWords.length} words from lesson notes): ${fmt}`);
-    }
-
-    // Review candidates
-    if (reviewCandidates.length) {
-      const fmt = reviewCandidates.map(e =>
-        `${e.w}(${e.r}) lkp:${e.lookupCount} score:${e.priority}`
-      ).join(', ');
-      lines.push(`Top review candidates: ${fmt}`);
-    }
-
-    // Production gaps
-    if (gaps.length) {
-      const fmt = gaps.map(e => `${e.w}(${e.r}) ×${e.lookupCount}`).join(', ');
-      lines.push(`Looked up repeatedly, never produced: ${fmt}`);
-    }
-
-    // High-frequency N5 gaps
-    if (unencountered.length) {
-      const fmt = unencountered.map(e => `${e.w}(${e.r}) f#${e.f}`).join(', ');
-      lines.push(`High-frequency N5 words not yet encountered: ${fmt}`);
-    }
-
-    // Recently looked up
-    if (recentlyLooked.length) {
-      const fmt = recentlyLooked
-        .slice(0, 6)
-        .map(e => `${e.w}(${e.r})`)
-        .join(', ');
-      lines.push(`Looked up this week: ${fmt}${recentlyLooked.length > 6 ? ` +${recentlyLooked.length - 6} more` : ''}`);
-    }
-
-    return lines.join('\n');
-  } catch(e) {
-    console.warn('[vocabPriorityContext]', e.message);
-    return '';
-  }
-}
-
 // Returns 0–100. Higher = review sooner / include in drill / surface to Claude.
 //
 // Input: a vcMergeEntry-shaped object (or any object with the fields below).
@@ -1375,89 +1282,8 @@ function vocabPriorityContext() {
 //   produced     — boolean: ever produced
 //   srsInterval  — current SRS interval in days (0 = unseen/failed)
 //   srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown.
-// ═══════════════════════════════════════════════════════════════════════════
-function wordPriorityScore(entry) {
-  const now = Date.now();
-  let score = 0;
 
-  // ── 1. JLPT level (0–15) ────────────────────────────────────────────────
-  // N5 is foundational — highest priority. N4 slightly lower. Unknown = low.
-  const levelBonus = { N5: 15, N4: 10 };
-  score += levelBonus[entry.l] ?? 3;
 
-  // ── 2. Frequency rank (0–20) ────────────────────────────────────────────
-  // Rank 1 = most common. Scale smoothly: top-10 = 20pts, rank 500 = 4pts,
-  // rank 1000+ = 1pt, null = 0. Log scale so common words stand out but
-  // even rank-400 N5 words still get meaningful points.
-  if (entry.f != null && entry.f > 0) {
-    score += Math.max(1, Math.round(20 - Math.log(entry.f) * 2.5));
-  }
-
-  // ── 3. Lookup count (0–20) ──────────────────────────────────────────────
-  // Looked up = encountered but not yet internalized. Diminishing returns.
-  // 0 lookups = 0, 1 = 8, 2 = 12, 3 = 15, 5+ = 20
-  const lc = entry.lookupCount || 0;
-  if (lc > 0) score += Math.min(20, Math.round(20 * (1 - 1 / Math.sqrt(lc + 0.5))));
-
-  // ── 4. Production gap (0–25) ────────────────────────────────────────────
-  // Looked up repeatedly but never produced = highest-signal gap.
-  // Produced at least once = smaller bonus (confirms active knowledge).
-  const produced = entry.produced || (entry.writeCount > 0) || (entry.chatCount > 0);
-  if (lc >= 2 && !produced) {
-    // Gap: looked up but never produced — maximally important
-    score += Math.min(25, 10 + lc * 3);
-  } else if (produced) {
-    // Produced — slight reduction (don't over-prioritise known words)
-    score -= 8;
-  }
-
-  // ── 5. Recency (0–15) ───────────────────────────────────────────────────
-  // Looked up recently = actively in your working vocabulary right now.
-  // Decay: full points within 3 days, half at 14 days, zero at 60+ days.
-  if (entry.lastLookup) {
-    const daysSince = (now - new Date(entry.lastLookup).getTime()) / 86400000;
-    if (daysSince <= 3)        score += 15;
-    else if (daysSince <= 14)  score += Math.round(15 * (1 - (daysSince - 3) / 11));
-    else if (daysSince <= 60)  score += Math.round(7  * (1 - (daysSince - 14) / 46));
-  }
-
-  // ── 6. SRS overdue bonus (0–20) ─────────────────────────────────────────
-  // If this word is in the SRS and overdue, push it up.
-  const srsDue      = entry.srsDue      || 0;
-  const srsInterval = entry.srsInterval || 0;
-  if (srsInterval > 0 && srsDue > 0 && srsDue <= now) {
-    const daysOverdue = (now - srsDue) / 86400000;
-    score += Math.min(20, Math.round(10 + daysOverdue * 2));
-  }
-
-  // ── 7. Lesson doc provenance (+15) ──────────────────────────────────────
-  // Teacher-introduced vocabulary is the highest-confidence signal.
-  if (entry.lessonDoc) score += 15;
-
-  return Math.max(0, Math.min(100, Math.round(score)));
-}
-
-// Enrich a vcMergeEntry with its SRS data and priority score.
-// Returns the entry with added: srsInterval, srsDue, priority fields.
-function wordEnrichWithSRS(entry) {
-  const srsData = DrillSRS.get(STORAGE_KEYS.DRILL_SRS_WORDS, entry.r || entry.w);
-  return Object.assign({}, entry, {
-    srsInterval: srsData?.interval ?? 0,
-    srsDue:      srsData?.due      ?? 0,
-    priority:    wordPriorityScore(Object.assign({}, entry, {
-      srsInterval: srsData?.interval ?? 0,
-      srsDue:      srsData?.due      ?? 0,
-    })),
-  });
-}
-
-// Build a priority-sorted word list. Thin wrapper over vcBuildList that adds
-// SRS data and score to every entry. Used by briefing and future drill queries.
-function vcBuildPriorityList() {
-  return vcBuildList()
-    .map(wordEnrichWithSRS)
-    .sort((a, b) => b.priority - a.priority);
-}
 
 function vcBuildList() {
   const corpus = kanjiCorpusGet(); // personal encounter data keyed by word
@@ -2273,5 +2099,5 @@ async function vocabKnownRecent(limit = 20) {
 
 // ── App registry — core-vocab.js exports ───────────────────────────────────
 Object.assign(App, {
-  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, wordPriorityScore, wordEnrichWithSRS, vcBuildPriorityList, vocabPriorityContext, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, backfillCoreVocabPoolTags, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
+  coreVocabDailyIntake, hideVocabWord, flipVocab, toggleVcDirection, vcRenderTargetsInline, vcDrillWord, vcRenderTargets, vocabKnownRecent, startNewSession, renderVocab, markVocab, isWordMastered, renderGrammar, toggleVcTextEntry, submitVocabTypeAnswer, skipVocabTypeAnswer, vocabTypeMarkWrong, vocabResetSourceFilters, vocabResetPosFilters, migrateLearnedWordsToVocabItems, backfillLessonPhrasesToVocabItems, backfillLookupsToVocabItems, backfillN5ToVocabItems, backfillCoreVocabPoolTags, extractWritingVocabToItems, initWritingVocabListener, initLessonVocabListener, initLookupVocabListener, loadVocabItemsDeck, vocabSettingsSave, vocabSettingsLoad, showChatHistoryEntry,
 });
