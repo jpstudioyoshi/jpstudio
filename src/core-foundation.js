@@ -395,8 +395,8 @@ function qtHistoryAdd(word) {
   // Remove if already in history, then add to front
   _qtHistory = _qtHistory.filter(w => w !== word);
   _qtHistory.unshift(word);
-  // Keep only last 5
-  if (_qtHistory.length > 5) _qtHistory = _qtHistory.slice(0, 5);
+  // Keep only last 10
+  if (_qtHistory.length > 10) _qtHistory = _qtHistory.slice(0, 10);
   Storage.set(QT_HISTORY_KEY, JSON.stringify(_qtHistory));
   qtHistoryUpdate();
 }
