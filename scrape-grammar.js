@@ -67,7 +67,7 @@ const URL_MAP = {
   desho:                 'desho-genki-i-chapter-12',
 };
 
-const BASE = 'https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/';
+const BASE = 'https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/';
 
 function fetchPage(url) {
   return new Promise((resolve, reject) => {
@@ -83,9 +83,12 @@ function fetchPage(url) {
 }
 
 function extractContent(html) {
-  // Start after the contact email block, stop before footer
+  // Start after the LAST contact-email marker (the desktop sidebar widget) —
+  // the page also has a duplicate mobile-nav copy of this widget earlier in
+  // the raw HTML, so indexOf() (first match) was pulling in all the nav junk
+  // between the two. lastIndexOf() lands right before the real content.
   const startMarker = 'brookl@stolaf.edu';
-  const startIdx = html.indexOf(startMarker);
+  const startIdx = html.lastIndexOf(startMarker);
   if (startIdx === -1) return null;
   const afterContact = html.slice(startIdx + startMarker.length);
 
@@ -114,8 +117,8 @@ function extractContent(html) {
     .trim();
 
   // Strip anything before and including the email marker residue
-  const emailClean = clean.replace(/^[^a-zA-Zあ-ん一-龯\n]*brookl@stolaf\.edu\s*/,'');
-  return emailClean.slice(0, 1200); // cap at 1200 chars
+  const emailClean = clean.replace(/^[^a-zA-Zあ-ん一-鿯\n]*brookl@stolaf\.edu\s*/,'');
+  return emailClean.slice(0, 2000); // cap at 2000 chars (was 1200 — no longer eaten by nav junk)
 }
 
 async function main() {
