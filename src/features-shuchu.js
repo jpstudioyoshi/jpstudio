@@ -65,6 +65,12 @@
     const key = apiKey();
     if (!key) { status.textContent = 'No API key found — add it in Settings.'; btn.disabled = false; return; }
 
+    // Ensure the grammar node catalog is loaded so the model can link this sprint
+    // to a specific curated reference node (used by 参考). Local JSON load, no API call.
+    const GM = App.GrammarModel || window.GrammarModel;
+    if (GM && !GM.loaded) { try { await GM.load(); } catch(e) {} }
+    const nodeCatalog = (GM && GM.loaded) ? GM.getAllNodes().map(n => n.id + ' — ' + n.label).join('\n') : '';
+
     const prompt = `You are a Japanese language tutor creating a focused study sprint for an adult learner at JLPT N5/N4 level.
 
 Topic: "${topic}"
@@ -74,6 +80,7 @@ Generate a JSON object with this exact structure (no markdown, no backticks, raw
   "topic": "string — topic name in English",
   "topic_jp": "string — topic name in Japanese with furigana in brackets e.g. 見(み)る",
   "type": "semantic" or "grammar",
+  "grammar_node_id": "string — the id (before the —) from the GRAMMAR NODES list below that best matches this topic, or null if none apply",
   "intro": {
     "summary": "string — 2-3 sentence explanation of the topic",
     "key_forms": [{"jp": "...", "reading": "...", "en": "...", "note": "..."}],
@@ -91,6 +98,9 @@ Generate a JSON object with this exact structure (no markdown, no backticks, raw
     }
   ]
 }
+
+GRAMMAR NODES (pick grammar_node_id from this list — use the id before the —, or null):
+${nodeCatalog}
 
 Requirements:
 - 1 activity only (id: 1)
@@ -215,31 +225,35 @@ Requirements:
     if (intro.key_forms && intro.key_forms.length) {
       const label = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.82rem',letterSpacing:'0.08em',color:'var(--ink-light)',marginBottom:'8px'}, 'KEY FORMS');
       box.appendChild(label);
-      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto 1fr',gap:'6px 16px',alignItems:'start',marginBottom:'20px',width:'100%'});
+      const card = jpEl('div', {background:'#1a1a1a',border:'1px solid var(--border)',borderRadius:'10px',padding:'16px 18px',marginBottom:'24px'});
+      const grid = jpEl('div', {display:'grid',gridTemplateColumns:'auto auto 1fr',gap:'10px 16px',alignItems:'start',width:'100%'});
       intro.key_forms.forEach(f => {
-        const jpCell = jpEl('span', {fontFamily:'var(--jp)',fontSize:'1.4rem',color:'var(--ink)'});
+        const jpCell = jpEl('span', {fontFamily:'var(--jp)',fontSize:'1.5rem',color:'var(--ink)'});
         jpCell.innerHTML = furiToRuby(f.jp);
         grid.appendChild(jpCell);
-        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',display:'-webkit-box',WebkitLineClamp:'2',WebkitBoxOrient:'vertical',overflow:'hidden'}, f.en));
-        const noteCell = jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.85rem',color:'var(--ink-light)',lineHeight:'1.5'});
+        grid.appendChild(jpEl('span', {fontFamily:'var(--ui)',fontSize:'1.05rem',color:'var(--ink)',display:'-webkit-box',WebkitLineClamp:'2',WebkitBoxOrient:'vertical',overflow:'hidden'}, f.en));
+        const noteCell = jpEl('span', {fontFamily:'var(--ui)',fontSize:'0.95rem',color:'var(--ink-light)',lineHeight:'1.6'});
         noteCell.innerHTML = furiToRuby(f.note || '');
         grid.appendChild(noteCell);
       });
-      box.appendChild(grid);
+      card.appendChild(grid);
+      box.appendChild(card);
     }
 
     // Examples
     if (intro.examples && intro.examples.length) {
       const label = jpEl('div', {fontFamily:'var(--ui)',fontSize:'0.82rem',letterSpacing:'0.08em',color:'var(--ink-light)',marginBottom:'8px'}, 'EXAMPLES');
       box.appendChild(label);
-      intro.examples.forEach(ex => {
-        const row = jpEl('div', {display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap',marginBottom:'10px',paddingLeft:'12px',borderLeft:'2px solid var(--border)'});
-        const jpLine = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.15rem',color:'var(--ink)'});
+      const card = jpEl('div', {background:'#1a1a1a',border:'1px solid var(--border)',borderRadius:'10px',padding:'16px 18px',marginBottom:'24px'});
+      intro.examples.forEach((ex, i) => {
+        const row = jpEl('div', {display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap',paddingLeft:'12px',borderLeft:'2px solid var(--border)',marginBottom: i < intro.examples.length - 1 ? '10px' : '0'});
+        const jpLine = jpEl('div', {fontFamily:'var(--jp)',fontSize:'1.25rem',color:'var(--ink)'});
         jpLine.innerHTML = furiToRuby(ex.jp);
         row.appendChild(jpLine);
-        row.appendChild(jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink-light)'}, ex.en));
-        box.appendChild(row);
+        row.appendChild(jpEl('div', {fontFamily:'var(--ui)',fontSize:'1.05rem',color:'var(--ink-light)'}, ex.en));
+        card.appendChild(row);
       });
+      box.appendChild(card);
     }
 
     show('shuchu-intro');
@@ -578,7 +592,21 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
         .find(s => { const el = document.getElementById(s); return el && el.style.display !== 'none'; }) || 'shuchu-intro';
       const refContent = document.getElementById('shuchuRefContent');
       const introContent = document.getElementById('shuchuIntroContent');
-      if (introContent && refContent) refContent.innerHTML = introContent.innerHTML;
+      let html = introContent ? introContent.innerHTML : '';
+      // Exact grammar-node lookup by id (set at sprint-generation time) — no fuzzy matching.
+      const GM = App.GrammarModel || window.GrammarModel;
+      if (GM && GM.loaded && _sprint.grammar_node_id) {
+        const node = GM.getNode(_sprint.grammar_node_id);
+        if (node && node.notes) {
+          html = '<div style="background:#1a1a1a;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:24px">'
+            + '<div style="font-family:var(--ui);font-size:0.82rem;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:10px">GRAMMAR REFERENCE — ' + node.label + '</div>'
+            + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink);line-height:1.8">' + furiToRuby(node.notes).replace(/\n/g,'<br>') + '</div>'
+            + '</div>'
+            + '<div style="border-top:1px solid var(--border);margin-bottom:16px"></div>'
+            + html;
+        }
+      }
+      if (refContent) refContent.innerHTML = html;
       show('shuchu-ref');
       if (refBtn) { refBtn.style.display = ''; refBtn.classList.add('toggle-on'); }
     }
@@ -605,6 +633,9 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
 
   // ── Panel open hook (for future use) ────────────────────────────────────────
   window.shuchuOnOpen = function() {
+    // Kick off GrammarModel load early (non-blocking) so it's ready by the time 参考 is clicked.
+    const GM = App.GrammarModel || window.GrammarModel;
+    if (GM && !GM.loaded) GM.load();
     if (!_sprint) {
       const saved = Storage.getJSON('shuchu_last_sprint', null);
       if (saved) {
