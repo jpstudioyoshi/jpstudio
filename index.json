@@ -2267,19 +2267,10 @@
   },
   {
     "type": "function",
-    "name": "_transKanjiKeyHandler",
-    "file": "src/core-stt.js",
-    "line": 325,
-    "desc": "AppState.transKanaOn — see declaration below",
-    "callers": 0,
-    "exported": false
-  },
-  {
-    "type": "function",
     "name": "doTranslate",
     "file": "src/core-stt.js",
-    "line": 332,
-    "desc": "const text = document.getElementById('transInput').value.trim();",
+    "line": 326,
+    "desc": "AppState.transKanaOn — see declaration below",
     "callers": 7,
     "exported": true
   },
@@ -2287,7 +2278,7 @@
     "type": "function",
     "name": "escBdHtml",
     "file": "src/core-stt.js",
-    "line": 494,
+    "line": 488,
     "desc": "return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\n/g,'<br>",
     "callers": 27,
     "exported": false
@@ -2296,7 +2287,7 @@
     "type": "function",
     "name": "showBdTab",
     "file": "src/core-stt.js",
-    "line": 498,
+    "line": 492,
     "desc": "document.querySelectorAll('.trans-breakdown-tab').forEach(b => b.classList.remove('active'));",
     "callers": 10,
     "exported": true
@@ -2305,7 +2296,7 @@
     "type": "function",
     "name": "transShowHistory",
     "file": "src/core-stt.js",
-    "line": 506,
+    "line": 500,
     "desc": "const sessionTab = document.getElementById('transSessionTab');",
     "callers": 3,
     "exported": true
@@ -2314,7 +2305,7 @@
     "type": "function",
     "name": "renderTransHistory",
     "file": "src/core-stt.js",
-    "line": 520,
+    "line": 514,
     "desc": "const el = document.getElementById('transSessionList');",
     "callers": 5,
     "exported": false
@@ -2323,7 +2314,7 @@
     "type": "function",
     "name": "loadTransHistory",
     "file": "src/core-stt.js",
-    "line": 562,
+    "line": 556,
     "desc": "const h = transHistory[i];",
     "callers": 3,
     "exported": true
@@ -2332,7 +2323,7 @@
     "type": "function",
     "name": "transToggleStar",
     "file": "src/core-stt.js",
-    "line": 612,
+    "line": 606,
     "desc": "if (transHistory[i]) {",
     "callers": 1,
     "exported": false
@@ -2341,7 +2332,7 @@
     "type": "function",
     "name": "transSpeakHistoryItem",
     "file": "src/core-stt.js",
-    "line": 619,
+    "line": 613,
     "desc": "const h = transHistory[i];",
     "callers": 1,
     "exported": false
@@ -2350,7 +2341,7 @@
     "type": "function",
     "name": "transDeleteHistoryItem",
     "file": "src/core-stt.js",
-    "line": 627,
+    "line": 621,
     "desc": "if (i >= 0 && i < transHistory.length) {",
     "callers": 1,
     "exported": false
@@ -2359,7 +2350,7 @@
     "type": "function",
     "name": "transEditHistoryItem",
     "file": "src/core-stt.js",
-    "line": 634,
+    "line": 628,
     "desc": "const h = transHistory[i];",
     "callers": 1,
     "exported": false
@@ -2368,7 +2359,7 @@
     "type": "function",
     "name": "transClearHistory",
     "file": "src/core-stt.js",
-    "line": 647,
+    "line": 641,
     "desc": "if (transHistory.length === 0) return;",
     "callers": 1,
     "exported": false
@@ -2377,7 +2368,7 @@
     "type": "function",
     "name": "transExportHistory",
     "file": "src/core-stt.js",
-    "line": 654,
+    "line": 648,
     "desc": "if (transHistory.length === 0) {",
     "callers": 1,
     "exported": false
@@ -2386,7 +2377,7 @@
     "type": "function",
     "name": "startTransSpeech",
     "file": "src/core-stt.js",
-    "line": 707,
+    "line": 701,
     "desc": "const currentText = document.getElementById('transInput')?.value || '';",
     "callers": 2,
     "exported": true
@@ -2395,7 +2386,7 @@
     "type": "function",
     "name": "_conjRecordGrammarEvidence",
     "file": "src/core-stt.js",
-    "line": 741,
+    "line": 735,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -2404,7 +2395,7 @@
     "type": "function",
     "name": "toHiragana",
     "file": "src/core-stt.js",
-    "line": 759,
+    "line": 753,
     "desc": "return str.replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));",
     "callers": 9,
     "exported": false
@@ -2413,7 +2404,7 @@
     "type": "function",
     "name": "checkConj",
     "file": "src/core-stt.js",
-    "line": 763,
+    "line": 757,
     "desc": "const input = document.getElementById('conjInput');",
     "callers": 4,
     "exported": true
@@ -2422,7 +2413,7 @@
     "type": "function",
     "name": "advanceConj",
     "file": "src/core-stt.js",
-    "line": 792,
+    "line": 786,
     "desc": "if (DrillFlow._advancing) return;",
     "callers": 6,
     "exported": true

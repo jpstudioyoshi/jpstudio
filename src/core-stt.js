@@ -322,12 +322,6 @@ function clearTranslate() {
 
 // AppState.transKanaOn — see declaration below
 
-function _transKanjiKeyHandler(e) {
-  if (e.key === '+') {
-    e.preventDefault();
-    transDoKanjiConvert();
-  }
-}
 
 async function doTranslate() {
   const text = document.getElementById('transInput').value.trim();
