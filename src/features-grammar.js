@@ -1909,7 +1909,7 @@ function checkConjG() {
       conjSessionCorrect[item.key] = (conjSessionCorrect[item.key] || 0) + 1;
       // Record to SRS for mastery tracking
       if (!_conjTrackingPaused) {
-        try { (App.DrillSRS || window.DrillSRS)?.record(STORAGE_KEYS.DRILL_SRS_CONJ, item.key, true); } catch(e) {}
+        if (_conjSrsMode) { try { (App.DrillSRS || window.DrillSRS)?.record(STORAGE_KEYS.DRILL_SRS_CONJ, item.key, true); } catch(e) {} }
         if (typeof _conjRecordGrammarEvidence === 'function') {
           _conjRecordGrammarEvidence(item, true, null);
         }
@@ -1929,7 +1929,7 @@ function checkConjG() {
           _conjRecordGrammarEvidence(item, false, levClass);
         }
         // Record to SRS for mastery tracking
-        try { (App.DrillSRS || window.DrillSRS)?.record(STORAGE_KEYS.DRILL_SRS_CONJ, item.key, false); } catch(e) {}
+        if (_conjSrsMode) { try { (App.DrillSRS || window.DrillSRS)?.record(STORAGE_KEYS.DRILL_SRS_CONJ, item.key, false); } catch(e) {} }
       }
       conjMiss++; 
       conjResults[conjIdx] = levClass.severity === 'slip' ? 'slip' : 'miss';
