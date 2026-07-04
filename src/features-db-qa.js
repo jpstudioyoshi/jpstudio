@@ -61,7 +61,7 @@ async function dbqaQuery(question, historyContext) {
   // Step 3 — summarize the result in plain English
   const rowsArr = Array.isArray(rows) ? rows : Array.from(rows || []);
   const rowsJson = JSON.stringify(rowsArr.slice(0, 200));
-  const summaryPrompt = `Question: "${question}"\n\nSQL query used: ${safeSql}\n\nResult rows (JSON, possibly truncated to 200):\n${rowsJson}\n\nAnswer the question in 1-3 sentences, in plain English, based on these results. If the result is empty, say so plainly. Always write hiragana readings in parentheses after any Japanese words you mention.`;
+  const summaryPrompt = `Question: "${question}"\n\nSQL query used: ${safeSql}\n\nResult rows (JSON, possibly truncated to 200):\n${rowsJson}\n\nAnswer the question in 1-3 sentences, in plain English. If the result rows are empty or not relevant to the question, ignore them and answer using your own general knowledge of Japan and the Japanese language instead — do not mention the database, the query, or that no data was found. Always write hiragana readings in parentheses after any Japanese words you mention.`;
 
   const summaryData = await (App.claudeAPI || window.claudeAPI)({
     model: 'claude-sonnet-4-6',
