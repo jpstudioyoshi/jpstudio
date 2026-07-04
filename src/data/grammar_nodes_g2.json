@@ -1,0 +1,744 @@
+[
+  {
+    "id": "potential_verbs",
+    "label": "Potential verbs",
+    "genki": 13,
+    "slug": "potential-verbs-genki-ii-chapter-13",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/potential-verbs-genki-ii-chapter-13/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Potential Verbs\n\nPotential verbs are used to say that someone \"can\" or \"has the ability to\" do something, or that something is possible\n\nConstructing potential verbs:\n\nru-verbs:  Drop the final –ru and add –rareru  Ex: 見る -> 見られる\n\nu-verbs:  Drop the final –u and add –eru  Ex:  行く -> 行ける\n\nIrregular verbs:  くる -> こられる, する -> できる\n\nAlternative potential forms:  見る -> 見れる　(drop the ra, only for –ru verbs)\n\nPotential Verb Conjugation Chart\n\nPresent:\n\nShort Forms –\n\nAffirmative – 見られる\n\nNegative – 見られない\n\nLong Forms –\n\nAffirmative – 見られます\n\nNegative – 見られません\n\nPast:\n\nShort Forms –\n\nAffirmative – 見られた\n\nNegative – 見られなかった\n\nLong Forms –\n\nAffirmative – 見られました\n\nNegative – 見られませんでした\n\nte-form: 見られて"
+  },
+  {
+    "id": "nara",
+    "label": "なら conditional",
+    "genki": 13,
+    "slug": "nara-genki-ii-chapter-13",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/nara-genki-ii-chapter-13/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "なら\n\nA statement of the form \"noun A なら predicate X\" says that the predicate X applies only to A and is not more generally valid.  The main ideas of a なら sentence, in other words, are \"limitation\" and \"contrast\".\n\nEx:  Q:ブラジルに行ったことがありますか。\n\nHave you ever been to Brazil?\n\nA:メキシコなら行ったことがありますが、ブラジルは行ったことがありません。\n\nI've been to Mexico, but never been to Brazil"
+  },
+  {
+    "id": "so_desu_looks",
+    "label": "〜そうです (looks like)",
+    "genki": 13,
+    "slug": "so-desu-looks-like-genki-ii-chapter-13",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/so-desu-looks-like-genki-ii-chapter-13/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…そうです\n\nWhen we say …そうです, we are guessing what something is like on the basis of our impressions.\n\nEx:  このりんごはおいしそうです。\n\nThis apple looks delicious\n\nTo form …そうです sentences with い-adjectives, drop the final い (exception-いい, change to よさ before そう); with な-adjectives, you just drop な.\n\nい-adjectives:  おいしい -> おいしそうです\n\n(exception):  いい -> よさそうです\n\nな-adjectives:  元気(な) -> 元気そうです"
+  },
+  {
+    "id": "shi",
+    "label": "〜し (listing reasons)",
+    "genki": 13,
+    "slug": "shi-genki-ii-chapter-13",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/shi-genki-ii-chapter-13/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "し\n\nWhen you want to mention not just one, but two or more reasons, you can use し in place of から.  し usually follows a predicate in the short form.\n\nreason し、reason し、situation.\n\n    Ex:  家族はら手紙が来たし、かれと電話で話したし、きのうはとてもいい日でした。\n\nYesterday was a great day–a letter came from my family, and I talked with my boyfriend on the phone\n\nNotye that し follows the short forms.  In present tense sentences, this means that だ appears with な-adjectives and nouns, but not with い-adjectives."
+  },
+  {
+    "id": "temiru",
+    "label": "〜てみる (try doing)",
+    "genki": 13,
+    "slug": "temiru-genki-ii-chapter-13",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/temiru-genki-ii-chapter-13/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…てみる\n\nYou can use the te-form of a verb plus the helping verb みる to express the idea of \"doing something tentatively\" or \"trying something\".\n\nEx:  友だちがあのみせのケーキはおいしと言っていましたから、今度たべてみます。\n\n　　                   My friends say that the cake at the shop is good. I will have a piece one of these days"
+  },
+  {
+    "id": "ageru_kureru_morau",
+    "label": "あげる／くれる／もらう",
+    "genki": 14,
+    "slug": "ageru-kureru-morau-genki-ii-chapter-14",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/ageru-kureru-morau-genki-ii-chapter-14/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "あげる/くれる/もらう\n\nJapanese has two verbs for giving. The choice between the pair depends on the direciton of the transaction. Imagine a set of concentric spheres of relative psychological distances, with me at the center, you next to me, and all the others on the edge. When a thing moves away from the center, the transaction is described in terms of the verb あげる. When a thing moves toward the center, the verb we use is くれる.\n\nあげる -> I give to you, you give to others, I give to others, somebody gives to somebody else\n\nくれる -> Somebody gives me, you give me, somebody gives you\n\nWith both あげる and くれる, the giver is the subject of the sentence, and is accompanied by the particle は or が. The recipient is accompanied by the particle に.\n\n(Giver) は/が (Recipient) に – (giver) gives to (recipient)\n\n(Recipient) は/が (Giver) に/から もらう – (recipient) receives from (giver)"
+  },
+  {
+    "id": "hoshii",
+    "label": "〜ほしい (want someone to)",
+    "genki": 14,
+    "slug": "hoshi-genki-ii-chapter-14",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/hoshi-genki-ii-chapter-14/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "ほしい\n\nほしい means \"(I) want (something)\". It is an -adjective and conjugates as such. The object of desire is usually followed by the particle が. In negative sentences, the particle はis also used.\n\nEx: いい漢字のじしょがほしいです。(I want a good kanji dictionary)\n\nほしい is similar to たい, in that its use is primarily limited to the first person, the speaker. These words are called \"private predicates\", and they refer to the inner sensations which are known only to the person feeling them. Therefore, one must use extra devices for sentences with private predicates as applied to the second or third person.\n\nEx: ロバートさんはコンピュゥターがほしいと言っていました。（Robert says he wants a computer)"
+  },
+  {
+    "id": "kamoshiremasen",
+    "label": "〜かもしれません (maybe)",
+    "genki": 14,
+    "slug": "kamoshiremasen-genki-ii-chapter-14",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/kamoshiremasen-genki-ii-chapter-14/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…かもしれません\n\nWith the expression でしょう, we can say a given state of affairs is probable or likely. The new sentence-final expression かもしれません, and its short form counterpart かもしれない, are much like でしょう, and mean that something is a \"possibility\"\n\nEx: あしたは雨がふるかもしれません。(It may rain tomorrow)\n\n田中さんより、すずきさんのほうがせが高いかもしれません。(Suzuki is perhaps taller than Tanaka)\n\nPresent tense, affirmative:\n\nVerbs: 行くかもしれません\n\nい-adjectives: さむいかもしれません\n\nな-adjectives: 元気(な)かもしれません\n\nnoun+です: 先生かもしれあせん"
+  },
+  {
+    "id": "tara_dodesuka",
+    "label": "〜たらどうですか (why don't you)",
+    "genki": 14,
+    "slug": "tara-dodesuka-genki-ii-chapter-14",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/tara-dodesuka-genki-ii-chapter-14/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…たらどうですか\n\nたらどうですか after a verb conveys advice or recommendation. The initial た stands for the same ending as in the past tense short form of a verb in the affirmative. In casual speech, たらどうですか may be shortened to たらどう.\n\nもっとべんきょうしたらどうですか。(Why don't you study harder?)\n\nくすりを飲んだらどうですか。(How about taking some medicine?)\n\nThis pattern should not be used for extending visitations. Rather, use …ませんか."
+  },
+  {
+    "id": "number_mo_shika",
+    "label": "Number+も／しか+neg",
+    "genki": 14,
+    "slug": "number-mo-number-shika-negative-genki-ii-chapter-14",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/number-mo-number-shika-negative-genki-ii-chapter-14/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Number + も/Number + しか + negative\n\nYou can add も to the number word, when you want to say \"as many as\"\n\nEx: きのうのパーテイーには学生が二十人も来ました。(As many as twenty students showed up at the party yesterday.)\n\nYou can add しか to the number word and turn the predicate into a negative when you want to say \"as few as\" or \"only\"\n\nEx: 私は日本語のじしょをいっさつしかもっていません。(I have only one Japanese dictionary.)"
+  },
+  {
+    "id": "volitional",
+    "label": "Volitional form (〜よう)",
+    "genki": 15,
+    "slug": "volitional-form-genki-ii-chapter-15",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/volitional-form-genki-ii-chapter-15/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Volitional Form\n\nThe volitional form of a verb is a less formal, more casual equivalent of ましょう. You can use it to suggest a plan to a close friend, for example.\n\nru-verbs: Drop the final –ru and add –yoo Ex: 食べる -> 食べよう\n\nu-verbs: Drop the final –u and add –oo Ex: 行く -> 行こう, 話す -> 話そう\n\nEx: あしたはじゅごうがないから、こんや、どこかに食べに行こう。(We don't have any classes tomorrow. Let's go some place for dinner tonight.)\n\nYou can use the volitional plus the question particle か to ask for an opinion in your offer or suggestion.\n\nEx: 友だちがおもしろいと言っていたから、このえいがを見ようか。(Shall we see this film? My friends say it is good.)\n\nWe also use the volitional + と思っています to talk about our determinations.\n\nEx: まいにち三時かん日本語をべんきょうしようと思っています。(I've decided to study Japanese for three hours every day)"
+  },
+  {
+    "id": "teoku",
+    "label": "〜ておく (do in advance)",
+    "genki": 15,
+    "slug": "teoku-genki-ii-chapter-15",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/teoku-genki-ii-chapter-15/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…ておく\n\nThe te-form of a verb plus the helping verb おく describes an action performed in preparation for something.\n\nEx: あしたしけんがあるので、こんばんべんきょうしておきます。(Since there will be an exam tomorrow, I will study for it tonight.)"
+  },
+  {
+    "id": "using_sentences_nouns",
+    "label": "Using sentences to qualify nouns",
+    "genki": 15,
+    "slug": "using-sentences-to-qualify-nouns-genki-ii-chapter-15",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/using-sentences-to-qualify-nouns-genki-ii-chapter-15/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Using Sentences to Qualify Nouns\n\nYou can also use sentences to qualify nouns.\n\nEx: きのうかった本(the book that I bought yesterday.)\n\nEx: かれがくれた本(the book my boyfriend gave me.)\n\nQualifier sentences in these examples tell us what kind of book we are talking about, just like adjectives. The verbs used in such qualifier sentences are in thier short forms, either in the present, and either in the affirmative or negative. When the subject of the verb appears inside a qualifier sentence, it is accompanied by the particle が, and not は."
+  },
+  {
+    "id": "toii",
+    "label": "〜といい (I hope/it would be good)",
+    "genki": 16,
+    "slug": "toii-genki-ii-chapter-16",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/toii-genki-ii-chapter-16/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…といい\n\nYou can use the present tense short form + といいですね to say that you hopoe something nice happens.\n\nEx: いいアルバイトがあるといいですね。(I hope that you find a good part time job.)\n\nTo say what you hope for your own good, you can use といいんですが. This shows the speaker's attitude is more tentative and makes the sentence sound more modest.\n\nEx: しけんがやさしいといいんですが。(I'm hoping that the exam is easy).\n\n(short, present) と…いいですね(I hope for you/them)\n\n(short, present) と…いいんですが(I hope for myself )"
+  },
+  {
+    "id": "toki",
+    "label": "〜とき (when)",
+    "genki": 16,
+    "slug": "toki-genki-ii-chapter-16",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/toki-genki-ii-chapter-16/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…とき\n\nWe use the word とき to describe when something happens or happened.\n\nsentence A とき, sentence B\n\nWhen A, B\n\nSentence A always ends in short form, either in the past or present tense.\n\nIf (at the time the main event B takes place) A is current or is still in \"in the future\", use the present tense in A.\n\nIf (at the time of main event B) A is already \"in the past\" use the past tense in A"
+  },
+  {
+    "id": "tekureru_ageru_morau",
+    "label": "〜てくれる／あげる／もらう",
+    "genki": 16,
+    "slug": "tekureruagerumorau-genki-ii-chapter-16",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/tekureruagerumorau-genki-ii-chapter-16/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…てくれ/あげる/まらう\n\nThe verbs くれる、あげる、and もらう descirbe transactions of things. When these verbs follow the te-form fo a verb, they describ the giving and receiving of services.\n\nte-form + あげる: I do something for you, you do something for others, I do something for others, somebody does something for somebody else\n\nte-form + くれる: Somebody does something for me, you do something for me, somebody does something for you\n\nWe use the te-form + あげる when we do something for the sake of others, or somebody does something for somebody else. The addition of the helping verb あげる does not change the basic meaning of the sentences, but puts focus on the fact that the actions were performed \"on demand\" or \"as a favor\"\n\nWe use くれる when somebody does something for us.\n\nWe use the te-form + もらう to say that we get, persuade or arrange for somebody to do something for us."
+  },
+  {
+    "id": "teitadakemasen",
+    "label": "〜ていただけませんか (request)",
+    "genki": 16,
+    "slug": "teitadakemasen-genki-ii-chapter-16",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/teitadakemasen-genki-ii-chapter-16/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…ていただけませんか\n\n…て…\n\nいただけませんか: Used with the te-form of a verb. More appropriate than ください when you request a favor from a nonpeer or from a stranger.\n\nくれませんか: Used with the te-form of a verb. Roughly the same as ください. Most appropriate in the host-family context.\n\nくれない？: Used with the te-form of a verb. Asks for a favor in a very casual way. This is good for speaking with members of your peer group."
+  },
+  {
+    "id": "te_sumimasen",
+    "label": "〜てすみませんでした (apology)",
+    "genki": 16,
+    "slug": "te-sumimasen-deshita-genki-ii-chapter-16",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/te-sumimasen-deshita-genki-ii-chapter-16/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "…てすみませんでした\n\nYou use the te-form of a verb to describe the things you have done that you want to apologize for.\n\nEｘ: デートのやくそくをわすれて、ごめん。(Sorry that I stood you up)\n\nUse …なくてto apologize for something that you failed to do.\n\nEx: しゅくだいをもっていなくて、すみませんでした。(I am sorry for not bringing in the work.)"
+  },
+  {
+    "id": "tara",
+    "label": "〜たら (if/when)",
+    "genki": 17,
+    "slug": "tara-genki-ii-chapter-17",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/tara-genki-ii-chapter-17/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～たら\n\nたら is one of several words in Japanese that refer to conditional (if) dependance.\n\nWhen we say \"A　たら　B,\" we must mean that B is valid, contingent on the fulfillment of A.\n\nにほんにいったら、きものをかいます。\n\nThe initial た in たら comes from the short form past tense endings of predicates.\n\nverbs: よむ->　よんだら\n\nい-adjectives: やさしい -> やさしかったら\n\nな-adjectives: しずかだ -> しずかだったら\n\nnoun + です: やすみだ -> やすみだったら\n\nnegative clauses: ～ない -> ～なかったら"
+  },
+  {
+    "id": "tara_nakutemo",
+    "label": "〜なくてもいいです",
+    "genki": 17,
+    "slug": "nakutemoiidesu-genki-ii-chapter-17",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/nakutemoiidesu-genki-ii-chapter-17/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～なくてもいいです\n\nTo describe what you do not need to do, take a negative sentence in the short form, drop the final い of ない, and add くともいいです. なくてis the negative te-form.\n\nくつをぬがくてもいいです。\n\nYou do not need to take off you shoes.\n\nプレゼントはたかくなくてもいいです。\n\nThe present does not need to be expensive."
+  },
+  {
+    "id": "so_desu_hear",
+    "label": "〜そうです (I hear)",
+    "genki": 17,
+    "slug": "so-desu-i-hear-genki-ii-chapter-17",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/so-desu-i-hear-genki-ii-chapter-17/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～そうです(I hear)\n\nTo report hearsay use the following predicates with そうです。\n\nverbs: short form plus そうです: はなす-> はなすそうです。\n\nい-adjectives: さびしい -> さびしいそうです。\n\nな-adjectives: すきだ->すきだすうです。\n\nnoun + です: がくせいだ-> がくせいだそうです。"
+  },
+  {
+    "id": "mitai",
+    "label": "〜みたいです (looks like)",
+    "genki": 17,
+    "slug": "mitaidesu-genki-ii-chapter-17",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/mitaidesu-genki-ii-chapter-17/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～みたいです\n\nみたいです　follows a noun and expresses the idea that something or somebody resembles the thing or the person described by the noun. The resemblance noted is usually in terms of external characteristics, but not necessarily so.\n\nあめがふったみたいです。\n\nI looks like it has rained.\n\nあのひとはおなかがすいているみたいです。\n\nIt looks like that person is hungry."
+  },
+  {
+    "id": "maeni_tekara",
+    "label": "〜前に／〜てから",
+    "genki": 17,
+    "slug": "maeni-tekara-genki-ii-chapter-17",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/maeni-tekara-genki-ii-chapter-17/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～まえに/～てから\n\nYou can use the present tense short form and まえに to describe the event before which something happens.\n\nverb A (short present)+ まえに verb B: B before A.\n\nくににかえるまえに、もいちどとうきょうにいきます。\n\nI will go to Tokyo one more time before I go back .\n\nにほんにくるまえに、いちがっきにほんごをべんきょうしました。\n\nI studied Japanese for one semester before I came to Japan.\n\nverb A + てから verb B : A, and then B. / B after A.\n\nべんきょうしてから、ともだちにてがみをかきました。\n\nI studied and then wrote letters to my friends.\n\nけんさんがきてから、たべましょう。\n\nWhy don't we start eating after Ken has arrived."
+  },
+  {
+    "id": "teshimau",
+    "label": "〜てしまう (end up doing)",
+    "genki": 18,
+    "slug": "teshimau-genki-ii-chapter-18",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/teshimau-genki-ii-chapter-18/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～てしまう\n\nThe te-form of a verb + しまう has two sences, which at first might appear rather inconruous. One sense it means carries the verb out with determination.\n\nほんをよんでしまいました。\n\nI read the book comletely./ I finished reading the book.\n\nThe second sense is lack of control on how things turn out. This is usually pared with a sense of regret, something happens regretably.\n\nでんしゃのなかにかべんをわすれてしまいました。\n\nI inadvertently left my bag on the train."
+  },
+  {
+    "id": "to_conditional",
+    "label": "〜と (if/when, natural result)",
+    "genki": 18,
+    "slug": "to-genki-ii-chapter-18",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/to-genki-ii-chapter-18/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～と\n\nThe present tense short form of a predicate+ と means whenever a situation described by the predicate holds, another thing happens. In most と sentences, the first clause describes the clause, and the second the effect.\n\nわたしはそのひととはなすとげんきになる。\n\nWhenever I talk that person, I feel uplifted.\n\nclause A と clause B。 When ever A happens, B happens too."
+  },
+  {
+    "id": "nagara",
+    "label": "〜ながら (while doing)",
+    "genki": 18,
+    "slug": "nagara-genki-ii-chapter-18",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/nagara-genki-ii-chapter-18/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ながら\n\nYou can connect two verbs with ながら to say that the two actions are preformed at the same time. ながら follows a verb stem. The second, which goes after ながら, can be in any form.\n\nわたしはいつもおんがくをききながらにほんごをべんきょうします。\n\nI always study Japanese while listening to music.\n\nたけしさんはうたをうたいながらせんたくをしています。\n\nTakeshi is doing laundry singing a song.\n\nNote the two verbs must be preformed by the same person."
+  },
+  {
+    "id": "bayokatta",
+    "label": "〜ばよかった (should have)",
+    "genki": 18,
+    "slug": "bayokatta-desu-genki-ii-chapter-18",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/bayokatta-desu-genki-ii-chapter-18/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ばよかったです\n\nばようかったです means I wish I had done or I should have done something. You can use it to describe an alternative course of action you, to your regret, did not take.\n\nあのとき、あいしているといえばとっかたです。\n\nI wish I had told her that I loved her.\n\nAll verbs can regularly be turned into a ばよかったです sentence with no exception or irregularity. YOu form the ば-form on the basis of the present tense short forms.\n\nVerbs in the affermative:\n\nDrop the う and add: えば:　　たべる -> たべれば\n\nVerbs in the negative:\n\nDrop the final い and add ければ:　　 たべる -> たべなければ"
+  },
+  {
+    "id": "transitive_pairs",
+    "label": "Transitive/intransitive pairs",
+    "genki": 18,
+    "slug": "transitive-pairs-genki-ii-chapter-18",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/transitive-pairs-genki-ii-chapter-18/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Transitive Pairs\n\nSome verbs describe situaltions in which humans act on something (transitive verbs),\n\nother verbs describe changes that happen to things or people(intransitive verbs).\n\nTransitive verbs:あける= open something, しめる= close something, いれる= put something in\n\nIntrasitive verbs:あく= something opens, しまる= something closes, はいる= something goes inside\n\nたけしさんがでんきをつけました。\n\nTakeshi turned the lights on.\n\nでんきだつきました。\n\nThe light went on."
+  },
+  {
+    "id": "honorific_verbs",
+    "label": "Honorific verbs (keigo)",
+    "genki": 19,
+    "slug": "honorific-verbs-keigo-genki-ii-chapter-19",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/honorific-verbs-keigo-genki-ii-chapter-19/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Honorific Verbs\n\nWe use special verbs to describe the actions of people whom you respect.\n\nIrregular Honorifics:\n\n行く, いる, and くる -> いらっしゃる (conjugates as いらっしゃいます)\n\n見る -> ごらんになる\n\n言う -> おっしゃる (conjugates as おっしゃいます）\n\nする -> なさる (conjugates as なさいます）\n\n食べる and のむ -> めしあがる\n\nくれる -> くたさる　(conjugates as くたさいます）\n\nねる -> おやすみになる\n\n～ている -> ていらっしゃる (conjugates as ていらっしゃいます）\n\nWe use honorific verbs when we talk about what is done by somebody higher up in the social hierarchy, or somebody whom you do not know very well, especially when addressing them directly.\n\nIn cases in which we lack honorific verbs, we use ～ていらっしゃいます or お+verb stem+になる."
+  },
+  {
+    "id": "hazudesu",
+    "label": "〜はずです (supposed to)",
+    "genki": 19,
+    "slug": "hazudesu-genki-ii-chapter-19",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/hazudesu-genki-ii-chapter-19/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～はずです\n\nYou can say something is \"supposed to be the case,\" by adding はずです to a sentence ending in the short form.\n\nEx: きのうメアリーさんはどこにもいかなかったはずです。 (I believe that Mary did not go anywhere yesterday.)\n\nYou can turn はずです into the past tense to describe something that was supposed to have been the case but which actually turned out otherwise. The part that precedes はずでした is in the present tense."
+  },
+  {
+    "id": "teyokatta",
+    "label": "〜てよかった (glad that)",
+    "genki": 19,
+    "slug": "teyokattadesu-genki-ii-chapter-19",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/teyokattadesu-genki-ii-chapter-19/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～てよかったです\n\nTe-form+よかったです means \"I'm glad such and such is/was the case.\" If you want to mention something in the negative in the part before よかった、you can use the negative te-form なくて.\n\nEx: 日本語をべんきょうしてよかったです。 (I am glad that I've studied Japanese.)\n\nEx: きのうパーティーにいかなくてよかったです。 (I'm glad that I didn't go to the party yesterday.)"
+  },
+  {
+    "id": "kurete_arigato",
+    "label": "〜てくれてありがとう",
+    "genki": 19,
+    "slug": "kuretearigato-genki-ii-chapter-19",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/kuretearigato-genki-ii-chapter-19/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～てくれてありがとう\n\nWhen you want to express gratitude to someone, you can use the te-form+くれてありがとう.\n\nEx: てつだってくれてありがとう。 (Thank you for helping me out.)\n\nIf you are thanking someone who needs to be talked to with the honorific language, you should use te-form+くださってありがとうございました.\n\nEx: すいせんじょうをかいてくださってありがとうございました。 (Thank you for writing a letter of recommendation for me.)"
+  },
+  {
+    "id": "respectful_advice",
+    "label": "Giving respectful advice",
+    "genki": 19,
+    "slug": "giving-respectful-advice-genki-ii-chapter-19",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/giving-respectful-advice-genki-ii-chapter-19/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Giving Respectful Advice\n\nBy using the form お+verb stem+ください, you are giving a courteously phrased command, rather than a request.\n\nEx: せつめいをお読みください。(Please read the instructions.)\n\nWith most する compounds, the prefix ご is used instead of お. Also there are some honorific verbs that have some exceptions.\n\nEx: ごらんください。 （ごらんになる -> 見る） (Please look.)\n\nEx: おめしあがりください。 （めしあげる -> 食べる） (Please help yourself.)"
+  },
+  {
+    "id": "extra_modest",
+    "label": "Extra modest expressions",
+    "genki": 20,
+    "slug": "extra-modest-expressions-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/extra-modest-expressions-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Extra Modest Expressions\n\nWe use the verbs below to show an extra amount of deference to the listener and to talk modestly of our own actions. Having one of these verbs is like ending a sentence with words like sir and ma'am.\n\nいる -> おります (おる）\n\n行く and くる -> まいります (まいる）\n\n言う -> もうします (もうす）\n\nする -> いたします (いたす）\n\n食べる and のむ -> いただきます （いただく）\n\nある -> ございます （ござる）\n\n～ている -> ～ております （～ておる）\n\n～です -> ～でございます （～でござる）\n\nYou can use these verbs instead of the normal ones on very formal occasions, for example, when you introduce yourself at a job interview (They are typically used with the more stilted first-person word わたくし, rather than わたし）. Or you can also use these expressions to talk modestly about your own family or about the company you work for."
+  },
+  {
+    "id": "humble_expressions",
+    "label": "Humble expressions",
+    "genki": 20,
+    "slug": "humble-expressions-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/humble-expressions-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Humble Expressions\n\nWhen you do something out of respect for somebody, you can sometimes describe your action using a verb in the humble pattern \"お+verb stem+する.\" Not all verbs are used this way, so you may want to use only the ones you have actually heard used.\n\nする compound verbs do not follow this pattern. Instead they simply have the prefix ご or お, such as ごしょうがいする、ごあんないする、and おでんわする.\n\nもらう and あげる have special replacement verbs (もらう -> いただく、あげる -> さしあげる）"
+  },
+  {
+    "id": "questions_in_sentences",
+    "label": "Questions within larger sentences",
+    "genki": 20,
+    "slug": "questions-within-larger-sentences-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/questions-within-larger-sentences-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Questions within Larger Sentences\n\nYou can include a question as a part of a longer sentence and express ideas such as \"I don't know when the test is\" and \"I don't remember whether Mary came to the party.\" When constructing questions within sentences, use the affirmative short forms in the question part of the sentence (present or past)\n\nEx: やましたせんせいはきのうなにをたべたかおぼえていません。 (Professor Yamashita does not remember what he ate yesterday.)\n\nEx: わたしはあしたがっこうにいくかどうかわかりません。 (I do not know whether I will go to school tomorrow.)\n\nSentence～question-word (e.g. なに、だれ) question か～わかりません etc…\n\nSentence～yes/no question かどうか～わかりません etc…"
+  },
+  {
+    "id": "name_toiu",
+    "label": "〜という (called/named)",
+    "genki": 20,
+    "slug": "name-toiu-item-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/name-toiu-item-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Name という Item\n\nWhen you want to talk about a person or a thing that goes by a certain name, but if you believe the person you are talking with is not familiar with it, you can use the following pattern.\n\n(name) という (item) – (item) called (name)\n\nEx: ポチといういぬをかっていました。 (I used to have a dog named Pochi)"
+  },
+  {
+    "id": "naide",
+    "label": "〜ないで (without doing)",
+    "genki": 20,
+    "slug": "naide-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/naide-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ないで\n\nIf you do something without doing something else, the missed action can be mentioned as ～ない plus で. Note that the present tense form ～ない is used for both the present and past actions.\n\nEx: ゆうべは、ねないで、べんきょうしました。 (Last night I studied without getting any sleep.)"
+  },
+  {
+    "id": "yasui_nikui",
+    "label": "〜やすい／にくい",
+    "genki": 20,
+    "slug": "yasui-nikui-genki-ii-chapter-20",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/yasui-nikui-genki-ii-chapter-20/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～やすい/にくい\n\nYou can describe something that is \"easy to do\" or \"hard to do\" by adding the suffix やすい or にくい, respectively.\n\nEx: このコンピューターはつかいやすいです。 (This computer is easy to use.)\n\nEx: さかなはたべにくいです。 (Fish are hard to eat.)"
+  },
+  {
+    "id": "passive",
+    "label": "Passive sentences",
+    "genki": 21,
+    "slug": "passive-sentences-genki-ii-chapter-21",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/passive-sentences-genki-ii-chapter-21/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Passive Sentences\n\nWhen you are inconvenienced by something somebody else has done, you can express your dissatisfaction using the passive sentence.\n\nBasic make up of a passive sentence:\n\n私はともだちにくるまをつかわれました。\n\n(victim)は (villian)に (evil act).\n\nI had my car used by a friend.\n\nThe victim is affected by an event. Marked with the particle は or が.\n\nThe villian preforms an action which causes the suffering. Marked with に.\n\nThe evil act is described with the passive form of a verb.\n\nForming passive verb forms:\n\nru–verbs: Drop the final -ru and add -rare-ru :食べる -> 食べられる\n\nu-verbs: Drop the final -u and add -are-ru : はなす -> はなされる\n\nirregular verbs:する -> される　くる -> こられる\n\nPassive forms of verbs conjugate as regular ru–verb."
+  },
+  {
+    "id": "tearu",
+    "label": "〜てある (resultant state)",
+    "genki": 21,
+    "slug": "tearu-genki-ii-chapter-21",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/tearu-genki-ii-chapter-21/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～てある\n\nYou can use the te-form of a verb + the helping verb ある to characterize a situation that has been brought about on purpose by somebody who remains unnnamed in the sentence.\n\nさむいので、ストーブがつけてあります。\n\nThe heater is on, because it is cold.\n\nYou can say ～てあります if somebody, possibly yourself, preformed an action on purpose earlier which can be described in term of ～ておきましたand if the result of that action can still be observed at this moment. Note that ～てあります describes a current state, hence the present tense."
+  },
+  {
+    "id": "tehoshii",
+    "label": "〜てほしい (want someone to)",
+    "genki": 21,
+    "slug": "tehoshi-genki-ii-chapter-21",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/tehoshi-genki-ii-chapter-21/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～てほしい\n\nWhen you want somebody to do something, you can describe your wish by using the te-form of a verb and the adjective ほしい. The person the wish is directed to is marked with the particle に.\n\n私はびょうきのともだちにげんきになってほしいです。\n\nI want my sick friend to get well.\n\n（私わは）personに　verb te-form ほしい 　　　= I want (person) to do…\n\nWhen you want to say you don't want them to do something, you can negate ほしい　and say ～てほしくありません or negate the verb and say ～ないでほしいです。"
+  },
+  {
+    "id": "noni",
+    "label": "〜のに (even though)",
+    "genki": 21,
+    "slug": "noni-genki-ii-chapter-21",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/noni-genki-ii-chapter-21/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～のに\n\nのに connects two facts, A and B, which hold in spite of the expectation that if A is the case, B is not the case. \"AのにB,\" therefore means \"A, but contrary to expectations B, too\" or \"B, despite the fact A.\"\n\nこのかいしゃはおかねがあるのに、きゅうりょうはひくいです。\n\nThis company is rich, but it's workers' salaries are low.\n\nThe predicate in the part A is in the short form. When A ends with a な-adjective or with a noun+です, it appears as な, just like in teh exlanatory んです construction.\n\nたなかさんはしんせつなのに、やまださんはたなかさんがきらいです。\n\nMs. Tanaka is nice, but Ms. Yamada does not like her."
+  },
+  {
+    "id": "adjective_suru",
+    "label": "Adjective + する",
+    "genki": 21,
+    "slug": "adjective-suru-genki-ii-chapter-21",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/adjective-suru-genki-ii-chapter-21/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Adjective + する\n\nTo make something \"adjective\".\n\nつめたい -> つめたくする : To make some thing cold or colder.\n\nかんたんな -> かんたんにする : To make something simple or simpler."
+  },
+  {
+    "id": "causative",
+    "label": "Causative sentences",
+    "genki": 22,
+    "slug": "causative-sentences-genki-ii-chapter-22",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/causative-sentences-genki-ii-chapter-22/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Causative Sentences\n\nWhen you use the causative form of a verb, you can describe who makes someone do something, and who lets someone do something.\n\nForming causative verbs:\n\nru-verbs: Drop the -ru and add -sase-ru\n\n食べる -> 食べさせる\n\nu-verbs: Drop the –u and add -ase-ru.\n\nはなす -> はなさせる\n\nirregular verbs:\n\nする -> させる\n\nくる -> こさせる\n\nThe basic strusture of a causative sentence is as follows:\n\nせんせいはがくせいにかいわをおぼえさせました。\n\n(dirctor)は (cast)に (action).\n\nThe professor made the students memorize the dialogue.\n\nThe director decides what is allowed and what is to be done. Marked with は or が.\n\nThe cast preforms the action. Usually goes with に.\n\nThe action is described with a causative form of a verb.\n\nThere are two meanings of the causative form. Any causative verb can be interpreted either as \"make sombody do\" or \"let somebody do\". Context can be used to determine which meaning is correct.\n\nIf the helping verb てあげる, てくれる　or　てもらう follows a causative verb, you can assume in almost all cases that it is a \"let\" causative verb."
+  },
+  {
+    "id": "ba_conditional",
+    "label": "〜ば conditional",
+    "genki": 22,
+    "slug": "ba-genki-ii-chapter-22",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/ba-genki-ii-chapter-22/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ば\n\n\"Clause A ば clause B\" is a conditional statement \"if A, then B.\"\n\nIn a \"AばB\" sentence, the A part describes the condition, provided which the consequence described in B will follow.\n\nくるまがあれば、いろいろなところにいけます。\n\nIf you have a car, you can go various places.\n\nThis sentence structure usually implies that B is good. Because of this AばB is usually used advise A."
+  },
+  {
+    "id": "noyona_noyoni",
+    "label": "〜ような／ように",
+    "genki": 22,
+    "slug": "noyona-noyoni-genki-ii-chapter-22",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/noyona-noyoni-genki-ii-chapter-22/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～のような/～のように\n\n\"noun A のような noun B\" means \"a B like/similar to A.\" When you say \"A のような B,\" the A either has the same quality or appearance as B, or is an example of B.\n\n私はかまくらのｙ９おうなまちがすきです。\n\nI like towns like Kamakura.\n\nYou use \"noun A のように\" when you want to describe an action which is \"done in the same way as A\" or a \"characteristic which is comparable to A.\"\n\nメアリさんはさかなのようにじょうずにおよげます。\n\nMary can swim very well, just like a fish."
+  },
+  {
+    "id": "nasai",
+    "label": "Verb stem + なさい (command)",
+    "genki": 22,
+    "slug": "verb-stem-nasai-genki-ii-chapter-22",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/verb-stem-nasai-genki-ii-chapter-22/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "verb stem + なさい\n\nThe verb stem + なさい has a strong implication that you are \"talking down\" to somebody, or that you are more mature, know better, and should be obeyed. なさい, therefoer is appropriate for parents to use toward their children or for teachers toward their students.\n\nうちにまいにちでんわしなさい。\n\nCall every day."
+  },
+  {
+    "id": "causative_passive",
+    "label": "Causative-passive sentences",
+    "genki": 23,
+    "slug": "causative-passive-sentences-genki-ii-chapter-23",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/causative-passive-sentences-genki-ii-chapter-23/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "Causative-passive Sentences\n\n\"Causative-passive\" sentences are the passive version of the causative sentences. You can use causative-passive sentences when you want to say that you were made to do, or harassed or talked into doing something.\n\nForming causative-passive forms:\n\n1)ru-verbs: Drop –ru and add –sase-rare-ru.\n\nたべる -> たべさせられる\n\n2)u-verbs that end with す: Drop -u and add ase-rare-ru.\n\nはなす -> はなさせられる\n\n3)all other u-verbs: Drop –u and add asare-ru.\n\nかく -> かかされる\n\n4)irregular verb:\n\nする -> させられる\n\nくる -> こさせられる\n\nうたをうたわされました。\n\nI was forced to sing."
+  },
+  {
+    "id": "kata",
+    "label": "〜方 (way of doing)",
+    "genki": 23,
+    "slug": "kara-explanation-within-sentence-genki-i-chapter-9-2",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/kara-explanation-within-sentence-genki-i-chapter-9-2/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～かた\n\nThe noun-forming suffix かた follows the stem of a verb and means \"the way in which the action is preformed\" or \"how to do….\"\n\nおよぐ -> およぐかた : how to swim\n\nNouns that are marked with other particles when they go with a verb are marked with の before ～かた.\n\nかんじをよむ -> かんじのよみかた : how to read the kanji; pronunciation\n\nWith compound する verbs, such as べんきょうする, we have:\n\n日本語をべんきょうする -> 日本語のべんきょうのしかた。\n\n～かた is a noun and is followed by particles like は and を.\n\nたけしさんのスパゲッティの食べかたはおもしろいです。\n\nThe way in which Takeshi eats spaghetti is interesting."
+  },
+  {
+    "id": "temo",
+    "label": "〜ても (even if)",
+    "genki": 23,
+    "slug": "temo-genki-ii-chapter-23",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/temo-genki-ii-chapter-23/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ても\n\n\"AてもB\" is \"B, even if A.\" That is B is still true in case of A (so is certianly true if A is not the case).\n\nYou can form a ても-clause be adding も to the verb or adjective te-form. With な-adjectives and nouns, you have でも. Note that verb たら and ても forms look very much like each other, but adjective たら and ても forms look quite distinct.\n\nverbs: かう -> かっても\n\nい-adjectives: かなしい -> かなしくても\n\nな-adjectives: げんき（な） -> けんきでも\n\nnouns: がくせい -> がくせいでも\n\nNote: The ても clause itself does not have tense. It can be followed either by present tense clause, or by a past tense clause."
+  },
+  {
+    "id": "kotonisuru",
+    "label": "〜ことにする (decide to)",
+    "genki": 23,
+    "slug": "kotonisuru-genki-ii-chapter-23",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/kotonisuru-genki-ii-chapter-23/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～ことにする\n\nことにする means \"decide to do ….\" It follows the short form present tense of a verb. You can use a negated verb, too.\n\nくるまをかうことにしました。\n\nWe have decided to buy a car.\n\nことにしている means \"do something as a regular practice,\" that is, you have made up your mind that you should do something and have stuck to that determination.\n\nみいにちじゅういちじにねることにしています。\n\nI make it a rule to go to bed at eleven every night.\n\n～ことにする = decide to do …\n\n～ことにしている = as a regular practice"
+  },
+  {
+    "id": "mare",
+    "label": "〜まれ (passive of birth)",
+    "genki": 23,
+    "slug": "mare-genki-ii-chapter-23",
+    "url": "https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/mare-genki-ii-chapter-23/",
+    "group": "functional",
+    "prerequisites": [],
+    "evidence": [
+      "writing",
+      "speaking"
+    ],
+    "notes": "～まで\n\nA まで means \"till A.\" The A in \"A まで B\" is the description of the change that coincides or causes the end of B. The A, therefore, is usually a verb of the \"change\" kind. The verb in A is always in the present tense and in the affirmative.\n\nにほんごがじょうずになるまで、くににかえりません。\n\nI will no go back to my country, till I become fluent in Japanese.\n\nWhen the subject of A is different from the subject of B, the former is marked with the particle が rather than は.\n\nあかちゃんがねるまで、わたしはうたをうたってあげます。\n\nI will sing a lullaby till the baby falls asleep.\n\nYou can use \"A まで B\" in the sentence describing a situation in the past. Note that the verb in A is in the present tense nonetheless.\n\nにほんのせいかつになれるまで、たいへんでした。\n\nIt was tough untill I got used to Japan."
+  }
+]

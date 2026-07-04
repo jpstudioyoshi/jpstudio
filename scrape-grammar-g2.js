@@ -8,7 +8,7 @@ const path = require('path');
 const https = require('https');
 
 const OUT_PATH = path.join(__dirname, 'src/data/grammar_nodes_g2.json');
-const BASE = 'https://wp.stolaf.edu/japanese/ressource-projects/genki-i-ii-grammar-index/';
+const BASE = 'https://wp.stolaf.edu/japanese/grammar-index/genki-i-ii-grammar-index/';
 
 // Genki II nodes — chapters 13–23
 const G2_NODES = [
@@ -81,8 +81,10 @@ function fetchPage(url) {
 }
 
 function extractContent(html) {
+  // lastIndexOf: page has a duplicate mobile-nav copy of the contact widget
+  // earlier in raw HTML; first match pulls in nav junk. See scrape-grammar.js.
   const startMarker = 'brookl@stolaf.edu';
-  const startIdx = html.indexOf(startMarker);
+  const startIdx = html.lastIndexOf(startMarker);
   if (startIdx === -1) return null;
   const afterContact = html.slice(startIdx + startMarker.length);
 
@@ -108,8 +110,8 @@ function extractContent(html) {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
-  const emailClean = clean.replace(/^[^a-zA-Zあ-ん一-龯\n]*brookl@stolaf\.edu\s*/, '');
-  return emailClean.slice(0, 1200);
+  const emailClean = clean.replace(/^[^a-zA-Zあ-ん一-鿯\n]*brookl@stolaf\.edu\s*/, '');
+  return emailClean.slice(0, 2000);
 }
 
 async function main() {
