@@ -1065,8 +1065,8 @@ function grammarNodeClick(nodeId) {
   }).join('') || '<span style="color:var(--ink-light)">none</span>';
 
   const _pill = document.querySelector('#grammarCoverageGrid [data-nodeid="' + nodeId + '"]');
-  const statusCol = _pill ? _pill.style.background : 'var(--paper-dark)';
-  const statusText = (statusCol === 'var(--paper-dark)' || !statusCol) ? 'var(--ink)' : '#000';
+  const statusCol = _pill ? _pill.style.background : 'var(--paper)';
+  const statusText = (statusCol === 'var(--paper)' || !statusCol) ? 'var(--ink)' : '#000';
 
   const qSection = m.questionCount > 0
     ? `<div style="margin-top:8px;font-size:0.75rem;color:var(--ink-light)">
