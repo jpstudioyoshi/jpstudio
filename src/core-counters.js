@@ -269,11 +269,6 @@ function countInit2() {
   countRenderRefGrid2();
   countUpdateOptions2();
   countUpdateUI2();
-  // Input is always hiragana — attach kana toggle directly
-  setTimeout(() => {
-    const inp = document.getElementById('countAnswer2');
-    if (inp) kanaAddToggle(inp, true);
-  }, 50);
 }
 
 function countRenderRefGrid2() {
@@ -1023,11 +1018,6 @@ function daysOfMonthInit() {
   if (drillEl) drillEl.style.display = 'none';
   if (stopBtn) stopBtn.style.display = 'none';
   if (!tableEl) return;
-  // Attach hiragana input to drill field
-  setTimeout(() => {
-    const inp = document.getElementById('daysDrillInput');
-    if (inp) kanaAddToggle(inp, true);
-  }, 50);
 
   const readings = DAYS_OF_MONTH;
   const IREG = new Set([1,2,3,4,5,6,7,8,9,10,14,20,24]);
@@ -1364,7 +1354,6 @@ function renderConjDrill() {
     <div class="conj-feedback" id="conjFeedback"></div>
   `;
   const _conjEl = document.getElementById('conjInput');
-  kanaAddToggle(_conjEl, true);
   _conjEl.focus();
   conjRevealed = false;
   conjCurrentAnswer = item;

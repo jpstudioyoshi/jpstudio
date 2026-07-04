@@ -322,34 +322,6 @@ function clearTranslate() {
 
 // AppState.transKanaOn — see declaration below
 
-function setTransMode(mode) {
-  kanaSetMode('transInput', mode, 'transInputKana', {romaji:'transInputRomajiBtn', hira:'transInputHiraBtn', kata:'transInputKataBtn'});
-  // Kanji key handler only needed in hiragana mode
-  const inp = document.getElementById('transInput');
-  if (inp) {
-    inp.removeEventListener('keydown', _transKanjiKeyHandler);
-    if (mode === 'hiragana') inp.addEventListener('keydown', _transKanjiKeyHandler);
-  }
-}
-
-// Legacy toggle kept for any remaining onclick refs
-function toggleTransKana() {
-  const inp = document.getElementById('transInput');
-  const mode = inp?._kanaOn ? 'romaji' : 'hiragana';
-  setTransMode(mode);
-}
-
-function toggleTransKana() {
-  const inp = document.getElementById('transInput');
-  if (!inp) return;
-
-  // Toggle between hiragana and katakana
-  const nextMode = (!inp._kanaOn || inp._KanaDrillState.mode === 'katakana') ? 'hiragana' : 'katakana';
-  kanaSetMode('transInput', nextMode, 'transInputKana', {romaji:'transInputRomajiBtn', hira:'transInputHiraBtn', kata:'transInputKataBtn'});
-  if (nextMode === 'hiragana') inp.addEventListener('keydown', _transKanjiKeyHandler);
-  inp.focus();
-}
-
 function _transKanjiKeyHandler(e) {
   if (e.key === '+') {
     e.preventDefault();

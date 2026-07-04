@@ -359,11 +359,9 @@ function wbAddItem(entry, idx) {
     inp.value = current;
     inp.style.background = 'var(--paper-dark)'; inp.style.border = '1px solid var(--teal)'; inp.style.color = 'var(--ink)'; inp.style.fontFamily = "'Noto Sans JP',sans-serif"; inp.style.fontSize = '1rem'; inp.style.padding = '2px 6px'; inp.style.borderRadius = '4px'; inp.style.width = '100%';
     textSpan.replaceWith(inp);
-    kanaOn(inp);
     inp.focus();
     const save = () => {
       const newText = inp.value.trim() || current;
-      kanaOff(inp);
       const span = document.createElement('span');
       span.className = 'wb-text';
       span.id = 'wb-text-' + idx;
@@ -608,12 +606,26 @@ function saveWritingText() {
   alert('Saved!');
 }
 
+function toggleSavedTextsPopup() {
+  const area = document.getElementById('savedTextsArea');
+  if (!area) return;
+  const isOpen = area.style.display === 'flex';
+  if (isOpen) {
+    area.style.display = 'none';
+  } else {
+    renderSavedTexts();
+    area.style.display = 'flex';
+  }
+}
+
 function renderSavedTexts() {
   const saved = (App.Storage || window.Storage).getStudioTexts();
-  const area = document.getElementById('savedTextsArea');
   const list = document.getElementById('savedTextsList');
-  if (!saved.length) { if (area) area.style.display = 'none'; return; }
-  if (area) area.style.display = 'block';
+  if (!list) return;
+  if (!saved.length) {
+    list.innerHTML = '<div style="font-family:var(--ui);font-size:0.85rem;color:var(--ink-light);text-align:center;padding:20px 0">No saved texts yet.</div>';
+    return;
+  }
   list.innerHTML = saved.map((t,i) => {
     const firstLine = (t.text.split('　')[0] || '').trim();
     return `
@@ -790,5 +802,7 @@ try {
     wbUpdateCount,
     highlightCorrectedParticles,
     writingFollowUp,
+    toggleSavedTextsPopup,
+    renderSavedTexts,
   });
 } catch(e) { console.error('[core-writing] App registry failed:', e); }

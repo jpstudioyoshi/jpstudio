@@ -80,7 +80,6 @@ function strokeShowInput() {
 function strokePanelInit() {
   const inp = document.getElementById('strokeSearchInput');
   if (!inp) return;
-  if (!inp._kanaOn && typeof kanaOn === 'function') kanaOn(inp);
   if (!inp._strokeListening) {
     inp._strokeListening = true;
     inp.addEventListener('input', () => {

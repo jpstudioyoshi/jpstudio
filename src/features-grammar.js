@@ -1782,7 +1782,6 @@ function renderConjDrillG() {
       '</div>' +
     '</div>';
   const inp = document.getElementById('conjInputG');
-  kanaAddToggle(inp, true);
   conjRevealed = false;
   conjCurrentAnswer = item;
   // Pre-fill kanji stem to reduce typos — user types the ending only
@@ -2036,10 +2035,6 @@ function gram2Switch(name) {
   }
   if (name === 'conj') {
     // Don't auto-start — user presses Start explicitly
-    setTimeout(() => {
-      const inp = document.getElementById('conjInput');
-      if (inp) { kanaOff(inp); kanaOn(inp); inp._KanaDrillState.mode = 'hiragana'; inp.style.caretColor = 'var(--teal)'; }
-    }, 0);
   }
   if (name === 'sent') {
     setTimeout(() => {

@@ -584,7 +584,7 @@ function renderVocab() {
   const _typeInp = document.getElementById('vocabTypeInput');
   const _typeRes = document.getElementById('vocabTypeResult');
   const _typeNext = document.getElementById('vocabTypeNextBtn');
-  if (_typeInp) { _typeInp.value = ''; if (_vcTextEntry) { _typeInp.focus(); kanaSetMode('vocabTypeInput', vcDirection === 'en_jp' ? 'hiragana' : 'romaji'); } }
+  if (_typeInp) { _typeInp.value = ''; if (_vcTextEntry) { _typeInp.focus(); } }
   if (_typeRes) _typeRes.textContent = '';
   if (_typeNext) _typeNext.style.display = 'none';
 }
@@ -2208,7 +2208,7 @@ function toggleVcTextEntry() {
   if (typeControls) typeControls.style.display = _vcTextEntry ? 'block' : 'none';
   if (_vcTextEntry) {
     const inp = document.getElementById('vocabTypeInput');
-    if (inp) { inp.value = ''; inp.focus(); kanaSetMode('vocabTypeInput', vcDirection === 'en_jp' ? 'hiragana' : 'romaji'); }
+    if (inp) { inp.value = ''; inp.focus(); }
     const res = document.getElementById('vocabTypeResult');
     if (res) res.textContent = '';
   }

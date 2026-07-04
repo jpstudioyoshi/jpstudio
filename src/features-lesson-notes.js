@@ -1989,9 +1989,6 @@ function lessonNotesGrammarNextDrill() {
     lessonNotesRenderPanel();
     setTimeout(() => {
       const inp = document.getElementById('lnGrammarDrillInput');
-      if (inp && !inp._kanaOn) {
-        kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana';
-      }
       inp?.focus();
     }, 100);
   }
@@ -2008,9 +2005,6 @@ function lessonNotesGrammarPrevDrill() {
     lessonNotesRenderPanel();
     setTimeout(() => {
       const inp = document.getElementById('lnGrammarDrillInput');
-      if (inp && !inp._kanaOn) {
-        kanaOff(inp); kanaOn(inp); inp._kanaMode = 'hiragana';
-      }
       inp?.focus();
     }, 100);
   }
