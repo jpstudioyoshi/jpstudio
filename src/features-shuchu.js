@@ -217,9 +217,11 @@ Requirements:
 
     shuchuUpdateHeaderSubject();
 
-    const summary = jpEl('p', {fontFamily:'var(--ui)',fontSize:'1rem',lineHeight:'1.8',color:'var(--ink)',marginBottom:'20px'});
+    const summaryCard = jpEl('div', {background:'#1a1a1a',border:'1px solid var(--border)',borderRadius:'10px',padding:'16px 18px',marginBottom:'24px'});
+    const summary = jpEl('p', {fontFamily:'var(--ui)',fontSize:'1.05rem',lineHeight:'1.8',color:'var(--ink)',margin:'0'});
     summary.innerHTML = furiToRuby(intro.summary);
-    box.appendChild(summary);
+    summaryCard.appendChild(summary);
+    box.appendChild(summaryCard);
 
     // Key forms table
     if (intro.key_forms && intro.key_forms.length) {
