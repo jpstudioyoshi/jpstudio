@@ -541,7 +541,6 @@ Requirements:
 
     // translate_to_jp, error_correct, and speak_stt: always show model answer + analysis, always add to round 2
     if (act.type === 'translate_to_jp' || act.type === 'error_correct' || act.type === 'speak_stt') {
-      if (!isR2) _wrong.push(act);
       const result = jpEl('div', {marginBottom:'10px'});
       result.innerHTML = '<div style="font-family:var(--jp);font-size:1.1rem;color:var(--ink);margin-bottom:6px">Model answer: ' + furiToRuby(act.answer) + '</div>'
         + '<div style="font-family:var(--ui);font-size:1rem;color:var(--ink-light);margin-top:4px;line-height:1.6">' + furiToRuby(act.explanation) + '</div>';
@@ -549,7 +548,11 @@ Requirements:
       const analysisEl = jpEl('div', {fontFamily:'var(--ui)',fontSize:'1rem',color:'var(--ink)',marginTop:'12px',lineHeight:'1.7',borderLeft:'2px solid var(--teal)',paddingLeft:'10px'}, 'Analysing…');
       feedback.appendChild(analysisEl);
       addNextBtn(btns, isR2);
-      fetchAnalysis(act, given).then(result => { analysisEl.innerHTML = furiToRuby((result && result.text) || ''); addFurtherQuestion(feedback, act); });
+      fetchAnalysis(act, given).then(analysis => {
+        if (!isR2 && (!analysis || !analysis.correct)) _wrong.push(act);
+        analysisEl.innerHTML = furiToRuby((analysis && analysis.text) || '');
+        addFurtherQuestion(feedback, act);
+      });
       return;
     }
 
@@ -726,6 +729,11 @@ Keep it concise. Use Japanese examples where helpful. Do not rewrite their whole
       show('shuchu-ref');
       if (refBtn) { refBtn.style.display = ''; refBtn.classList.add('toggle-on'); }
     }
+  };
+
+  window.shuchuToggleFurigana = function(show) {
+    const el = document.getElementById('shuchu-sprint');
+    if (el) el.classList.toggle('shuchu-hide-furi', !show);
   };
 
   window.shuchuConfirmReset = function() {
