@@ -718,8 +718,6 @@ try {
     vocabSpeak,
     conjSpeak,
     toggleConjListenMode,
-    // Settings panel
-    toggleResourcesSettings,
     // Audio utilities
     trimSilence,
     audioBufferToWav,
@@ -738,5 +736,4 @@ try {
   window['vvToggle']               = vvToggle;
   window['vvSetSpeaker']           = vvSetSpeaker;
   window['toggleConjListenMode']   = toggleConjListenMode;
-  window['toggleResourcesSettings']= toggleResourcesSettings;
 } catch(e) { console.error('[features-core] App registry failed:', e); }

@@ -148,7 +148,7 @@ Requirements:
         headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 1900,
+          max_tokens: (includeTTS || includeSTT) ? 3000 : 1900,
           messages: [{ role: 'user', content: prompt }]
         })
       });
@@ -212,7 +212,7 @@ Requirements:
         headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 5000,
+          max_tokens: 7000,
           messages: [{ role: 'user', content: prompt }]
         })
       });

@@ -1021,9 +1021,6 @@ try {
     showConjLookupG,
     retreatConjG,
     conjToggleTts,
-    pdSelectLeft,
-    pdSelectRight,
-    pdTryMatch,
   });
 } catch(e) { console.error('[features-grammar] App registry failed:', e); }
 
