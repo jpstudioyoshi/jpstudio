@@ -334,7 +334,7 @@ function qrRender(segments) {
       return;
     }
     if (!isJP(w)) { html += `<span>${w}</span>`; return; }
-    if (QuickReadState.furiOn && seg.reading && hasKanji(w) && !(App.FURIGANA_EXCLUDE || window.FURIGANA_EXCLUDE || new Set()).has(w)) {
+    if (QuickReadState.furiOn && seg.reading && hasKanji(w) && !(App.furiganaIsExcluded || window.furiganaIsExcluded || (()=>false))(w)) {
       html += `<ruby class="qr-ruby qr-boundary" data-idx="${i}">${w}<rt style="font-size:0.65em;color:var(--ink-light);pointer-events:none">${seg.reading}</rt></ruby>`;
     } else {
       html += `<span class="qr-word qr-boundary" data-idx="${i}">${w}</span>`;
@@ -1266,7 +1266,7 @@ function qrPrintPage() {
       continue;
     }
     let token = '';
-    if (furiOn && seg.reading && hasKanji(w) && !(App.FURIGANA_EXCLUDE || window.FURIGANA_EXCLUDE || new Set()).has(w)) {
+    if (furiOn && seg.reading && hasKanji(w) && !(App.furiganaIsExcluded || window.furiganaIsExcluded || (()=>false))(w)) {
       token = `<ruby>${w}<rp>(</rp><rt>${seg.reading}</rt><rp>)</rp></ruby>`;
     } else {
       token = w;

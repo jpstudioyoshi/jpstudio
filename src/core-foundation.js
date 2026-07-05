@@ -14,7 +14,11 @@ function escHtml(s) {
 // Words that should never show a reading annotation (already known well enough
 // that furigana is just visual noise). Editable from ⚙ Settings → Furigana
 // Exclusions. Seeded with a default on first run; persisted via Storage after.
+// Two lists: exact words, and "stems" that also match conjugated forms via
+// prefix match (e.g. stem 食 matches 食べる/食べた/食べます since the kanji
+// portion of a verb/adjective doesn't change across conjugations).
 const FURIGANA_EXCLUDE = new Set(['私']);
+const FURIGANA_EXCLUDE_STEMS = new Set();
 const FURIGANA_EXCLUDE_KEY = 'furiganaExcludeList';
 
 function furiganaExcludeLoad() {
@@ -22,63 +26,102 @@ function furiganaExcludeLoad() {
     const saved = Storage.getJSON(FURIGANA_EXCLUDE_KEY, null);
     if (Array.isArray(saved)) {
       FURIGANA_EXCLUDE.clear();
-      saved.forEach(w => { if (w) FURIGANA_EXCLUDE.add(w); });
+      FURIGANA_EXCLUDE_STEMS.clear();
+      saved.forEach(entry => {
+        if (typeof entry === 'string') { if (entry) FURIGANA_EXCLUDE.add(entry); return; }
+        if (entry && entry.word) {
+          if (entry.stem) FURIGANA_EXCLUDE_STEMS.add(entry.word);
+          else FURIGANA_EXCLUDE.add(entry.word);
+        }
+      });
     }
   } catch(e) {}
   furiganaExcludeRender();
 }
 
 function furiganaExcludeSave() {
-  Storage.setJSON(FURIGANA_EXCLUDE_KEY, [...FURIGANA_EXCLUDE]);
+  const entries = [
+    ...[...FURIGANA_EXCLUDE].map(word => ({ word, stem: false })),
+    ...[...FURIGANA_EXCLUDE_STEMS].map(word => ({ word, stem: true })),
+  ];
+  Storage.setJSON(FURIGANA_EXCLUDE_KEY, entries);
+}
+
+// Single source of truth for "should this word skip furigana" — checked by
+// Quick Read + Yoshi read view (word-level tokens, need this to catch
+// conjugated forms via stem prefix match).
+function furiganaIsExcluded(word) {
+  if (!word) return false;
+  if (FURIGANA_EXCLUDE.has(word)) return true;
+  for (const stem of FURIGANA_EXCLUDE_STEMS) {
+    if (stem && word.startsWith(stem)) return true;
+  }
+  return false;
 }
 
 function furiganaExcludeRender() {
   const el = document.getElementById('furiganaExcludeList');
   if (!el) return;
-  const words = [...FURIGANA_EXCLUDE].sort();
-  if (!words.length) {
+  const all = [
+    ...[...FURIGANA_EXCLUDE].map(w => ({ word: w, stem: false })),
+    ...[...FURIGANA_EXCLUDE_STEMS].map(w => ({ word: w, stem: true })),
+  ].sort((a, b) => a.word.localeCompare(b.word, 'ja'));
+  if (!all.length) {
     el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);font-style:italic">No exclusions yet.</div>';
     return;
   }
   el.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:inherit">'
-    + words.map(w => '<tr style="border-bottom:1px solid var(--border)">'
-      + '<td style="padding:6px 10px 6px 0;font-family:var(--jp);font-size:1rem;color:var(--ink)">' + escHtml(w) + '</td>'
-      + '<td style="padding:6px 0;text-align:right;width:32px"><button class="btn-icon btn-icon-del" onclick="furiganaExcludeDelete(' + JSON.stringify(w) + ')" title="Remove">\u2715</button></td>'
+    + all.map(e => '<tr style="border-bottom:1px solid var(--border)">'
+      + '<td style="padding:6px 10px 6px 0;font-family:var(--jp);font-size:1rem;color:var(--ink)">' + escHtml(e.word)
+      + (e.stem ? ' <span style="font-family:var(--ui);font-size:0.65rem;color:var(--teal);border:1px solid var(--teal);border-radius:8px;padding:1px 6px;margin-left:6px;vertical-align:middle">+conjugations</span>' : '')
+      + '</td>'
+      + '<td style="padding:6px 0;text-align:right;width:32px"><button class="btn-icon btn-icon-del" onclick="furiganaExcludeDelete(' + JSON.stringify(e.word) + ',' + e.stem + ')" title="Remove">\u2715</button></td>'
       + '</tr>').join('')
     + '</table>';
 }
 
 function furiganaExcludeAdd() {
   const inp = document.getElementById('furiganaExcludeInput');
+  const stemCheck = document.getElementById('furiganaExcludeStemCheck');
   if (!inp) return;
   const word = inp.value.trim();
   if (!word) return;
-  FURIGANA_EXCLUDE.add(word);
+  const wantStem = !!(stemCheck && stemCheck.checked);
+  FURIGANA_EXCLUDE.delete(word);
+  FURIGANA_EXCLUDE_STEMS.delete(word);
+  if (wantStem) FURIGANA_EXCLUDE_STEMS.add(word); else FURIGANA_EXCLUDE.add(word);
   furiganaExcludeSave();
   furiganaExcludeRender();
   inp.value = '';
+  if (stemCheck) stemCheck.checked = false;
   inp.focus();
 }
 
-function furiganaExcludeDelete(word) {
-  FURIGANA_EXCLUDE.delete(word);
+function furiganaExcludeDelete(word, isStem) {
+  if (isStem) FURIGANA_EXCLUDE_STEMS.delete(word);
+  else FURIGANA_EXCLUDE.delete(word);
   furiganaExcludeSave();
   furiganaExcludeRender();
 }
 
 // For renderers that build ruby markup client-side from separate word+reading
-// data (Quick Read, Yoshi read view, Focus Sprint): check FURIGANA_EXCLUDE.has(word)
+// data (Quick Read, Yoshi read view, Focus Sprint): call furiganaIsExcluded(word)
 // before wrapping in <ruby>.
 //
 // For renderers that receive ruby HTML directly from Claude (Video transcript,
 // Epub reader — the model builds the <ruby> tags itself), use this to strip
-// excluded words back down to plain text after the response comes back.
+// excluded words (and stem-matched conjugated forms) back down to plain text
+// after the response comes back.
 function furiganaStripExcluded(html) {
   if (!html) return html;
   let out = html;
   FURIGANA_EXCLUDE.forEach(function(w) {
     const re = new RegExp('<ruby>' + w + '<rt[^>]*>[^<]*</rt></ruby>', 'g');
     out = out.replace(re, w);
+  });
+  FURIGANA_EXCLUDE_STEMS.forEach(function(stem) {
+    const re = new RegExp('<ruby>(' + stem + '[^<]*)<rt[^>]*>[^<]*</rt></ruby>', 'g');
+    out = out.replace(re, '$1');
   });
   return out;
 }
@@ -2079,7 +2122,7 @@ Object.assign(App, {
   // Core utilities
   escHtml, formatDate, claudeAPI, claudeText,
   FURIGANA_EXCLUDE, furiganaStripExcluded,
-  furiganaExcludeLoad, furiganaExcludeSave, furiganaExcludeRender, furiganaExcludeAdd, furiganaExcludeDelete,
+  furiganaExcludeLoad, furiganaExcludeSave, furiganaExcludeRender, furiganaExcludeAdd, furiganaExcludeDelete, furiganaIsExcluded, FURIGANA_EXCLUDE_STEMS,
   getApiKey, getOpenAIKey, saveApiKey, saveOpenAIKey, recordError,
   Storage, STORAGE_KEYS, state, saveState,
   // API usage

@@ -93,7 +93,7 @@
     "type": "function",
     "name": "openLessonOverlay",
     "file": "main.js",
-    "line": 1354,
+    "line": 1367,
     "desc": "if (overlayWindow && !overlayWindow.isDestroyed()) {",
     "callers": 4,
     "exported": false
@@ -102,7 +102,7 @@
     "type": "function",
     "name": "openYouTubeWindow",
     "file": "main.js",
-    "line": 1442,
+    "line": 1455,
     "desc": "if (youtubeWindow && !youtubeWindow.isDestroyed()) {",
     "callers": 2,
     "exported": false
@@ -918,7 +918,7 @@
     "type": "function",
     "name": "furiganaExcludeLoad",
     "file": "src/core-foundation.js",
-    "line": 20,
+    "line": 24,
     "desc": "",
     "callers": 2,
     "exported": true
@@ -927,16 +927,25 @@
     "type": "function",
     "name": "furiganaExcludeSave",
     "file": "src/core-foundation.js",
-    "line": 31,
-    "desc": "Storage.setJSON(FURIGANA_EXCLUDE_KEY, [...FURIGANA_EXCLUDE]);",
+    "line": 42,
+    "desc": "const entries = [",
     "callers": 3,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaIsExcluded",
+    "file": "src/core-foundation.js",
+    "line": 53,
+    "desc": "Quick Read + Yoshi read view (word-level tokens, need this to catch",
+    "callers": 10,
     "exported": true
   },
   {
     "type": "function",
     "name": "furiganaExcludeRender",
     "file": "src/core-foundation.js",
-    "line": 35,
+    "line": 62,
     "desc": "const el = document.getElementById('furiganaExcludeList');",
     "callers": 5,
     "exported": true
@@ -945,7 +954,7 @@
     "type": "function",
     "name": "furiganaExcludeAdd",
     "file": "src/core-foundation.js",
-    "line": 51,
+    "line": 83,
     "desc": "const inp = document.getElementById('furiganaExcludeInput');",
     "callers": 5,
     "exported": true
@@ -954,8 +963,8 @@
     "type": "function",
     "name": "furiganaExcludeDelete",
     "file": "src/core-foundation.js",
-    "line": 63,
-    "desc": "FURIGANA_EXCLUDE.delete(word);",
+    "line": 100,
+    "desc": "if (isStem) FURIGANA_EXCLUDE_STEMS.delete(word);",
     "callers": 4,
     "exported": true
   },
@@ -963,8 +972,8 @@
     "type": "function",
     "name": "furiganaStripExcluded",
     "file": "src/core-foundation.js",
-    "line": 76,
-    "desc": "Epub reader — the model builds the <ruby> tags itself), use this to strip",
+    "line": 115,
+    "desc": "excluded words (and stem-matched conjugated forms) back down to plain text",
     "callers": 7,
     "exported": true
   },
@@ -972,7 +981,7 @@
     "type": "function",
     "name": "formatDate",
     "file": "src/core-foundation.js",
-    "line": 98,
+    "line": 141,
     "desc": "if (!ts) return '';",
     "callers": 1,
     "exported": true
@@ -981,7 +990,7 @@
     "type": "function",
     "name": "translateCacheSave",
     "file": "src/core-foundation.js",
-    "line": 433,
+    "line": 476,
     "desc": "const keys = Object.keys(_translateCache);",
     "callers": 4,
     "exported": false
@@ -990,7 +999,7 @@
     "type": "function",
     "name": "_corpusWriteLookup",
     "file": "src/core-foundation.js",
-    "line": 444,
+    "line": 487,
     "desc": "Write a single translate-cache entry into corpus_entries + corpus_lookups.",
     "callers": 3,
     "exported": false
@@ -999,7 +1008,7 @@
     "type": "function",
     "name": "qtHistoryAdd",
     "file": "src/core-foundation.js",
-    "line": 469,
+    "line": 512,
     "desc": "if (!word || /^(KANJI|READING|MEANING|DICT|JAPANESE):/i.test(word)) return;",
     "callers": 3,
     "exported": false
@@ -1008,7 +1017,7 @@
     "type": "function",
     "name": "qtHistoryUpdate",
     "file": "src/core-foundation.js",
-    "line": 481,
+    "line": 524,
     "desc": "const menu = document.getElementById('globalQTHistoryMenu');",
     "callers": 4,
     "exported": true
@@ -1017,7 +1026,7 @@
     "type": "function",
     "name": "toggleQTHistory",
     "file": "src/core-foundation.js",
-    "line": 503,
+    "line": 546,
     "desc": "e.stopPropagation();",
     "callers": 4,
     "exported": true
@@ -1026,7 +1035,7 @@
     "type": "function",
     "name": "selectQTHistory",
     "file": "src/core-foundation.js",
-    "line": 511,
+    "line": 554,
     "desc": "const input = document.getElementById('globalQTInput');",
     "callers": 2,
     "exported": true
@@ -1035,7 +1044,7 @@
     "type": "function",
     "name": "globalQTSelectHistory",
     "file": "src/core-foundation.js",
-    "line": 529,
+    "line": 572,
     "desc": "if (!word) return;",
     "callers": 2,
     "exported": true
@@ -1044,7 +1053,7 @@
     "type": "function",
     "name": "globalQuickTranslate",
     "file": "src/core-foundation.js",
-    "line": 586,
+    "line": 629,
     "desc": "const input = document.getElementById('globalQTInput');",
     "callers": 8,
     "exported": true
@@ -1053,7 +1062,7 @@
     "type": "function",
     "name": "globalQTSpeak",
     "file": "src/core-foundation.js",
-    "line": 749,
+    "line": 792,
     "desc": "if (!_qtLastJapanese) return;",
     "callers": 1,
     "exported": false
@@ -1062,7 +1071,7 @@
     "type": "function",
     "name": "globalQTClear",
     "file": "src/core-foundation.js",
-    "line": 763,
+    "line": 806,
     "desc": "_qtLastJapanese = '';",
     "callers": 4,
     "exported": true
@@ -1071,7 +1080,7 @@
     "type": "function",
     "name": "renderPitchCurve",
     "file": "src/core-foundation.js",
-    "line": 772,
+    "line": 815,
     "desc": "if (!kana || pitchStr === null || pitchStr === undefined) return '';",
     "callers": 1,
     "exported": false
@@ -1080,7 +1089,7 @@
     "type": "function",
     "name": "renderLookupsTable",
     "file": "src/core-foundation.js",
-    "line": 795,
+    "line": 838,
     "desc": "const tbody    = document.getElementById('lookupsTableBody');",
     "callers": 8,
     "exported": true
@@ -1089,7 +1098,7 @@
     "type": "function",
     "name": "lookupDelete",
     "file": "src/core-foundation.js",
-    "line": 894,
+    "line": 937,
     "desc": "const tmp = document.createElement('div');",
     "callers": 1,
     "exported": false
@@ -1098,7 +1107,7 @@
     "type": "function",
     "name": "clearLookupCache",
     "file": "src/core-foundation.js",
-    "line": 906,
+    "line": 949,
     "desc": "if (!confirm('Clear all cached translations?')) return;",
     "callers": 4,
     "exported": true
@@ -1107,7 +1116,7 @@
     "type": "function",
     "name": "apiUsageLoad",
     "file": "src/core-foundation.js",
-    "line": 996,
+    "line": 1039,
     "desc": "AppState.apiUsage — see declaration below",
     "callers": 3,
     "exported": true
@@ -1116,7 +1125,7 @@
     "type": "function",
     "name": "apiUsageSave",
     "file": "src/core-foundation.js",
-    "line": 1003,
+    "line": 1046,
     "desc": "Storage.set(STORAGE_KEYS.API_USAGE, JSON.stringify(AppState.apiUsage));",
     "callers": 3,
     "exported": true
@@ -1125,7 +1134,7 @@
     "type": "function",
     "name": "apiUsageTrack",
     "file": "src/core-foundation.js",
-    "line": 1007,
+    "line": 1050,
     "desc": "AppState.apiUsage.inputTokens += inputTokens;",
     "callers": 5,
     "exported": true
@@ -1134,7 +1143,7 @@
     "type": "function",
     "name": "apiUsageGetCost",
     "file": "src/core-foundation.js",
-    "line": 1020,
+    "line": 1063,
     "desc": "return (AppState.apiUsage.inputTokens * COST_PER_INPUT_TOKEN) + (AppState.apiUsage.outputTokens * CO",
     "callers": 2,
     "exported": true
@@ -1143,7 +1152,7 @@
     "type": "function",
     "name": "apiUsageReset",
     "file": "src/core-foundation.js",
-    "line": 1024,
+    "line": 1067,
     "desc": "if (confirm('Reset API usage tracking? This cannot be undone.')) {",
     "callers": 4,
     "exported": true
@@ -1152,7 +1161,7 @@
     "type": "function",
     "name": "recordError",
     "file": "src/core-foundation.js",
-    "line": 1042,
+    "line": 1085,
     "desc": "Writes one row to error_history with a full timestamp.",
     "callers": 4,
     "exported": true
@@ -1161,7 +1170,7 @@
     "type": "function",
     "name": "getApiKey",
     "file": "src/core-foundation.js",
-    "line": 1058,
+    "line": 1101,
     "desc": "return Storage.getApiKey(); }",
     "callers": 80,
     "exported": true
@@ -1170,7 +1179,7 @@
     "type": "function",
     "name": "getOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 1059,
+    "line": 1102,
     "desc": "return Storage.getOpenAIKey(); }",
     "callers": 9,
     "exported": true
@@ -1179,7 +1188,7 @@
     "type": "function",
     "name": "claudeAPI",
     "file": "src/core-foundation.js",
-    "line": 1062,
+    "line": 1105,
     "desc": "const apiKey = getApiKey();",
     "callers": 73,
     "exported": true
@@ -1188,7 +1197,7 @@
     "type": "function",
     "name": "claudeText",
     "file": "src/core-foundation.js",
-    "line": 1098,
+    "line": 1141,
     "desc": "return data.content?.[0]?.text || '';",
     "callers": 23,
     "exported": true
@@ -1197,7 +1206,7 @@
     "type": "function",
     "name": "saveApiKey",
     "file": "src/core-foundation.js",
-    "line": 1102,
+    "line": 1145,
     "desc": "const val = document.getElementById('apikeyInput').value.trim();",
     "callers": 5,
     "exported": true
@@ -1206,7 +1215,7 @@
     "type": "function",
     "name": "saveOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 1116,
+    "line": 1159,
     "desc": "saveHFToken removed — diarization removed",
     "callers": 4,
     "exported": true
@@ -1215,7 +1224,7 @@
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1556,
+    "line": 1599,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer",
     "callers": 1,
     "exported": true
@@ -1224,7 +1233,7 @@
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1558,
+    "line": 1601,
     "desc": "const input = document.createElement('input');",
     "callers": 1,
     "exported": true
@@ -1233,7 +1242,7 @@
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1577,
+    "line": 1620,
     "desc": "Storage.clearAll();",
     "callers": 2,
     "exported": true
@@ -1242,7 +1251,7 @@
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1587,
+    "line": 1630,
     "desc": "STATE",
     "callers": 1,
     "exported": false
@@ -1251,7 +1260,7 @@
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1609,
+    "line": 1652,
     "desc": "Storage.setState(state); }",
     "callers": 6,
     "exported": true
@@ -1260,7 +1269,7 @@
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1612,
+    "line": 1655,
     "desc": "const today = new Date().toDateString();",
     "callers": 1,
     "exported": false
@@ -1269,7 +1278,7 @@
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1629,
+    "line": 1672,
     "desc": "API KEY BAR",
     "callers": 3,
     "exported": true
@@ -1278,7 +1287,7 @@
     "type": "function",
     "name": "wordsSubFromSelect",
     "file": "src/core-foundation.js",
-    "line": 1658,
+    "line": 1701,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 1,
     "exported": false
@@ -1287,7 +1296,7 @@
     "type": "function",
     "name": "wordsSwitchSubRestore",
     "file": "src/core-foundation.js",
-    "line": 1663,
+    "line": 1706,
     "desc": "const last = localStorage.getItem('wordsLastSub') || 'vocab';",
     "callers": 1,
     "exported": false
@@ -1296,7 +1305,7 @@
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1670,
+    "line": 1713,
     "desc": "['vocab','anki','game','counters','days'].forEach(s => {",
     "callers": 6,
     "exported": true
@@ -1305,7 +1314,7 @@
     "type": "function",
     "name": "_panelInteractPing",
     "file": "src/core-foundation.js",
-    "line": 1695,
+    "line": 1738,
     "desc": "_panelLastInteract = Date.now(); }",
     "callers": 1,
     "exported": false
@@ -1314,7 +1323,7 @@
     "type": "function",
     "name": "_panelSessionClose",
     "file": "src/core-foundation.js",
-    "line": 1700,
+    "line": 1743,
     "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;",
     "callers": 1,
     "exported": false
@@ -1323,7 +1332,7 @@
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1723,
+    "line": 1766,
     "desc": "const currentPanel = document.querySelector('.panel.active');",
     "callers": 40,
     "exported": true
@@ -1332,7 +1341,7 @@
     "type": "function",
     "name": "renderMarkdown",
     "file": "src/core-foundation.js",
-    "line": 1849,
+    "line": 1892,
     "desc": "if (!text) return '';",
     "callers": 6,
     "exported": false
@@ -1341,7 +1350,7 @@
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1874,
+    "line": 1917,
     "desc": "const panes = { settings: 'stPaneSettings', grammar: 'stPaneGrammar' };",
     "callers": 8,
     "exported": true
@@ -1350,7 +1359,7 @@
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1896,
+    "line": 1939,
     "desc": "if (window.mgmt?.openWindow) {",
     "callers": 6,
     "exported": true
@@ -1359,7 +1368,7 @@
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1907,
+    "line": 1950,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────",
     "callers": 3,
     "exported": true
@@ -1368,7 +1377,7 @@
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1986,
+    "line": 2029,
     "desc": "if (typeof GrammarModel === 'undefined') return;",
     "callers": 3,
     "exported": true
@@ -1377,7 +1386,7 @@
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 2008,
+    "line": 2051,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);",
     "callers": 11,
     "exported": true
@@ -1386,126 +1395,126 @@
     "type": "storage",
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
-    "line": 1659,
+    "line": 1702,
     "desc": "localStorage"
   },
   {
     "type": "storage",
     "name": "TRANSLATE_CACHE",
     "file": "src/core-foundation.js",
-    "line": 583,
+    "line": 626,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "API_USAGE",
     "file": "src/core-foundation.js",
-    "line": 1004,
+    "line": 1047,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1767,
+    "line": 1810,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 213,
+    "line": 256,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 228,
+    "line": 271,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 236,
+    "line": 279,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 244,
+    "line": 287,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 263,
+    "line": 306,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 275,
+    "line": 318,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 382,
+    "line": 425,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 449,
+    "line": 492,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 458,
+    "line": 501,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 462,
+    "line": 505,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1710,
+    "line": 1753,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1714,
+    "line": 1757,
     "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 664,
+    "line": 707,
     "desc": "Translate this Japanese word/phrase to English. Reply in this exact format only:"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 666,
+    "line": 709,
     "desc": "Translate this English word/phrase to Japanese for an N5-N4 beginner. If multipl"
   },
   {

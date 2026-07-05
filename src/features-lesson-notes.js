@@ -2237,7 +2237,7 @@ function lessonNotesRenderStoryText() {
     if (isNewline(w)) { html += '<br>'; return; }
     if (isPunct(w)) { html += `<span style="color:var(--ink-light)">${w}</span>`; return; }
     if (!isJP(w)) { html += `<span>${w}</span>`; return; }
-    if (LessonNotesState.lnFuriOn && seg.reading && hasKanji(w) && !(App.FURIGANA_EXCLUDE || window.FURIGANA_EXCLUDE || new Set()).has(w)) {
+    if (LessonNotesState.lnFuriOn && seg.reading && hasKanji(w) && !(App.furiganaIsExcluded || window.furiganaIsExcluded || (()=>false))(w)) {
       html += `<ruby class="qr-ruby qr-boundary" data-idx="${i}">${w}<rt style="font-size:0.65em;color:var(--ink-light);pointer-events:none">${seg.reading}</rt></ruby>`;
     } else {
       html += `<span class="qr-word qr-boundary" data-idx="${i}">${w}</span>`;
@@ -2636,8 +2636,8 @@ function lnRenderSentenceFurigana(segments) {
   
   const html = segments.map(seg => {
     const needsRuby = seg.word !== seg.reading && /[一-龯々]/.test(seg.word);
-    const EXCL = App.FURIGANA_EXCLUDE || window.FURIGANA_EXCLUDE || new Set();
-    if (needsRuby && !EXCL.has(seg.word)) {
+    const EXCLUDED = (App.furiganaIsExcluded || window.furiganaIsExcluded || (()=>false))(seg.word);
+    if (needsRuby && !EXCLUDED) {
       return `<ruby>${seg.word}<rt>${seg.reading}</rt></ruby>`;
     }
     return seg.word;

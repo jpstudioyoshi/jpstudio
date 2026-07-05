@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session, shell, ipcMain } = require('electron');
+const { app, BrowserWindow, session, shell, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs   = require('fs');
 
@@ -1309,6 +1309,19 @@ function createMainWindow() {
   // ensures every script tag gets a fresh response for the lifetime of the session.
   const ses = mainWindow.webContents.session;
   ses.clearCache().catch(() => {});
+
+  // Prompt for save location on every download (audio exports, etc).
+  // Without this, <a download> triggers save silently to the OS default
+  // downloads folder with no dialog — inconsistent with the PDF export
+  // above, which already prompts via dialog.showSaveDialog.
+  ses.on('will-download', (event, item) => {
+    const chosen = dialog.showSaveDialogSync(mainWindow, {
+      title: 'Save file',
+      defaultPath: path.join(app.getPath('downloads'), item.getFilename()),
+    });
+    if (!chosen) { item.cancel(); return; }
+    item.setSavePath(chosen);
+  });
   ses.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
