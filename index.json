@@ -911,14 +911,68 @@
     "file": "src/core-foundation.js",
     "line": 9,
     "desc": "╚══════════════════════════════════════════════════════════════════════════════",
-    "callers": 62,
+    "callers": 63,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaExcludeLoad",
+    "file": "src/core-foundation.js",
+    "line": 20,
+    "desc": "",
+    "callers": 2,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaExcludeSave",
+    "file": "src/core-foundation.js",
+    "line": 31,
+    "desc": "Storage.setJSON(FURIGANA_EXCLUDE_KEY, [...FURIGANA_EXCLUDE]);",
+    "callers": 3,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaExcludeRender",
+    "file": "src/core-foundation.js",
+    "line": 35,
+    "desc": "const el = document.getElementById('furiganaExcludeList');",
+    "callers": 5,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaExcludeAdd",
+    "file": "src/core-foundation.js",
+    "line": 51,
+    "desc": "const inp = document.getElementById('furiganaExcludeInput');",
+    "callers": 5,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaExcludeDelete",
+    "file": "src/core-foundation.js",
+    "line": 63,
+    "desc": "FURIGANA_EXCLUDE.delete(word);",
+    "callers": 4,
+    "exported": true
+  },
+  {
+    "type": "function",
+    "name": "furiganaStripExcluded",
+    "file": "src/core-foundation.js",
+    "line": 76,
+    "desc": "Epub reader — the model builds the <ruby> tags itself), use this to strip",
+    "callers": 7,
     "exported": true
   },
   {
     "type": "function",
     "name": "formatDate",
     "file": "src/core-foundation.js",
-    "line": 21,
+    "line": 98,
     "desc": "if (!ts) return '';",
     "callers": 1,
     "exported": true
@@ -927,7 +981,7 @@
     "type": "function",
     "name": "translateCacheSave",
     "file": "src/core-foundation.js",
-    "line": 356,
+    "line": 433,
     "desc": "const keys = Object.keys(_translateCache);",
     "callers": 4,
     "exported": false
@@ -936,7 +990,7 @@
     "type": "function",
     "name": "_corpusWriteLookup",
     "file": "src/core-foundation.js",
-    "line": 367,
+    "line": 444,
     "desc": "Write a single translate-cache entry into corpus_entries + corpus_lookups.",
     "callers": 3,
     "exported": false
@@ -945,7 +999,7 @@
     "type": "function",
     "name": "qtHistoryAdd",
     "file": "src/core-foundation.js",
-    "line": 392,
+    "line": 469,
     "desc": "if (!word || /^(KANJI|READING|MEANING|DICT|JAPANESE):/i.test(word)) return;",
     "callers": 3,
     "exported": false
@@ -954,7 +1008,7 @@
     "type": "function",
     "name": "qtHistoryUpdate",
     "file": "src/core-foundation.js",
-    "line": 404,
+    "line": 481,
     "desc": "const menu = document.getElementById('globalQTHistoryMenu');",
     "callers": 4,
     "exported": true
@@ -963,7 +1017,7 @@
     "type": "function",
     "name": "toggleQTHistory",
     "file": "src/core-foundation.js",
-    "line": 426,
+    "line": 503,
     "desc": "e.stopPropagation();",
     "callers": 4,
     "exported": true
@@ -972,7 +1026,7 @@
     "type": "function",
     "name": "selectQTHistory",
     "file": "src/core-foundation.js",
-    "line": 434,
+    "line": 511,
     "desc": "const input = document.getElementById('globalQTInput');",
     "callers": 2,
     "exported": true
@@ -981,7 +1035,7 @@
     "type": "function",
     "name": "globalQTSelectHistory",
     "file": "src/core-foundation.js",
-    "line": 452,
+    "line": 529,
     "desc": "if (!word) return;",
     "callers": 2,
     "exported": true
@@ -990,7 +1044,7 @@
     "type": "function",
     "name": "globalQuickTranslate",
     "file": "src/core-foundation.js",
-    "line": 509,
+    "line": 586,
     "desc": "const input = document.getElementById('globalQTInput');",
     "callers": 8,
     "exported": true
@@ -999,7 +1053,7 @@
     "type": "function",
     "name": "globalQTSpeak",
     "file": "src/core-foundation.js",
-    "line": 672,
+    "line": 749,
     "desc": "if (!_qtLastJapanese) return;",
     "callers": 1,
     "exported": false
@@ -1008,7 +1062,7 @@
     "type": "function",
     "name": "globalQTClear",
     "file": "src/core-foundation.js",
-    "line": 686,
+    "line": 763,
     "desc": "_qtLastJapanese = '';",
     "callers": 4,
     "exported": true
@@ -1017,7 +1071,7 @@
     "type": "function",
     "name": "renderPitchCurve",
     "file": "src/core-foundation.js",
-    "line": 695,
+    "line": 772,
     "desc": "if (!kana || pitchStr === null || pitchStr === undefined) return '';",
     "callers": 1,
     "exported": false
@@ -1026,7 +1080,7 @@
     "type": "function",
     "name": "renderLookupsTable",
     "file": "src/core-foundation.js",
-    "line": 718,
+    "line": 795,
     "desc": "const tbody    = document.getElementById('lookupsTableBody');",
     "callers": 8,
     "exported": true
@@ -1035,7 +1089,7 @@
     "type": "function",
     "name": "lookupDelete",
     "file": "src/core-foundation.js",
-    "line": 817,
+    "line": 894,
     "desc": "const tmp = document.createElement('div');",
     "callers": 1,
     "exported": false
@@ -1044,7 +1098,7 @@
     "type": "function",
     "name": "clearLookupCache",
     "file": "src/core-foundation.js",
-    "line": 829,
+    "line": 906,
     "desc": "if (!confirm('Clear all cached translations?')) return;",
     "callers": 4,
     "exported": true
@@ -1053,7 +1107,7 @@
     "type": "function",
     "name": "apiUsageLoad",
     "file": "src/core-foundation.js",
-    "line": 919,
+    "line": 996,
     "desc": "AppState.apiUsage — see declaration below",
     "callers": 3,
     "exported": true
@@ -1062,7 +1116,7 @@
     "type": "function",
     "name": "apiUsageSave",
     "file": "src/core-foundation.js",
-    "line": 926,
+    "line": 1003,
     "desc": "Storage.set(STORAGE_KEYS.API_USAGE, JSON.stringify(AppState.apiUsage));",
     "callers": 3,
     "exported": true
@@ -1071,7 +1125,7 @@
     "type": "function",
     "name": "apiUsageTrack",
     "file": "src/core-foundation.js",
-    "line": 930,
+    "line": 1007,
     "desc": "AppState.apiUsage.inputTokens += inputTokens;",
     "callers": 5,
     "exported": true
@@ -1080,7 +1134,7 @@
     "type": "function",
     "name": "apiUsageGetCost",
     "file": "src/core-foundation.js",
-    "line": 943,
+    "line": 1020,
     "desc": "return (AppState.apiUsage.inputTokens * COST_PER_INPUT_TOKEN) + (AppState.apiUsage.outputTokens * CO",
     "callers": 2,
     "exported": true
@@ -1089,7 +1143,7 @@
     "type": "function",
     "name": "apiUsageReset",
     "file": "src/core-foundation.js",
-    "line": 947,
+    "line": 1024,
     "desc": "if (confirm('Reset API usage tracking? This cannot be undone.')) {",
     "callers": 4,
     "exported": true
@@ -1098,7 +1152,7 @@
     "type": "function",
     "name": "recordError",
     "file": "src/core-foundation.js",
-    "line": 965,
+    "line": 1042,
     "desc": "Writes one row to error_history with a full timestamp.",
     "callers": 4,
     "exported": true
@@ -1107,7 +1161,7 @@
     "type": "function",
     "name": "getApiKey",
     "file": "src/core-foundation.js",
-    "line": 981,
+    "line": 1058,
     "desc": "return Storage.getApiKey(); }",
     "callers": 80,
     "exported": true
@@ -1116,7 +1170,7 @@
     "type": "function",
     "name": "getOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 982,
+    "line": 1059,
     "desc": "return Storage.getOpenAIKey(); }",
     "callers": 9,
     "exported": true
@@ -1125,7 +1179,7 @@
     "type": "function",
     "name": "claudeAPI",
     "file": "src/core-foundation.js",
-    "line": 985,
+    "line": 1062,
     "desc": "const apiKey = getApiKey();",
     "callers": 73,
     "exported": true
@@ -1134,7 +1188,7 @@
     "type": "function",
     "name": "claudeText",
     "file": "src/core-foundation.js",
-    "line": 1021,
+    "line": 1098,
     "desc": "return data.content?.[0]?.text || '';",
     "callers": 23,
     "exported": true
@@ -1143,7 +1197,7 @@
     "type": "function",
     "name": "saveApiKey",
     "file": "src/core-foundation.js",
-    "line": 1025,
+    "line": 1102,
     "desc": "const val = document.getElementById('apikeyInput').value.trim();",
     "callers": 5,
     "exported": true
@@ -1152,7 +1206,7 @@
     "type": "function",
     "name": "saveOpenAIKey",
     "file": "src/core-foundation.js",
-    "line": 1039,
+    "line": 1116,
     "desc": "saveHFToken removed — diarization removed",
     "callers": 4,
     "exported": true
@@ -1161,7 +1215,7 @@
     "type": "function",
     "name": "exportAllData",
     "file": "src/core-foundation.js",
-    "line": 1479,
+    "line": 1556,
     "desc": "localStorage interceptor removed — localStorage.setItem is not patchable in Electron renderer",
     "callers": 1,
     "exported": true
@@ -1170,7 +1224,7 @@
     "type": "function",
     "name": "importDataPrompt",
     "file": "src/core-foundation.js",
-    "line": 1481,
+    "line": 1558,
     "desc": "const input = document.createElement('input');",
     "callers": 1,
     "exported": true
@@ -1179,7 +1233,7 @@
     "type": "function",
     "name": "clearAllData",
     "file": "src/core-foundation.js",
-    "line": 1500,
+    "line": 1577,
     "desc": "Storage.clearAll();",
     "callers": 2,
     "exported": true
@@ -1188,7 +1242,7 @@
     "type": "function",
     "name": "loadState",
     "file": "src/core-foundation.js",
-    "line": 1510,
+    "line": 1587,
     "desc": "STATE",
     "callers": 1,
     "exported": false
@@ -1197,7 +1251,7 @@
     "type": "function",
     "name": "saveState",
     "file": "src/core-foundation.js",
-    "line": 1532,
+    "line": 1609,
     "desc": "Storage.setState(state); }",
     "callers": 6,
     "exported": true
@@ -1206,7 +1260,7 @@
     "type": "function",
     "name": "updateStreak",
     "file": "src/core-foundation.js",
-    "line": 1535,
+    "line": 1612,
     "desc": "const today = new Date().toDateString();",
     "callers": 1,
     "exported": false
@@ -1215,7 +1269,7 @@
     "type": "function",
     "name": "initApiKeyBar",
     "file": "src/core-foundation.js",
-    "line": 1552,
+    "line": 1629,
     "desc": "API KEY BAR",
     "callers": 3,
     "exported": true
@@ -1224,7 +1278,7 @@
     "type": "function",
     "name": "wordsSubFromSelect",
     "file": "src/core-foundation.js",
-    "line": 1581,
+    "line": 1658,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 1,
     "exported": false
@@ -1233,7 +1287,7 @@
     "type": "function",
     "name": "wordsSwitchSubRestore",
     "file": "src/core-foundation.js",
-    "line": 1586,
+    "line": 1663,
     "desc": "const last = localStorage.getItem('wordsLastSub') || 'vocab';",
     "callers": 1,
     "exported": false
@@ -1242,7 +1296,7 @@
     "type": "function",
     "name": "wordsSwitchSub",
     "file": "src/core-foundation.js",
-    "line": 1593,
+    "line": 1670,
     "desc": "['vocab','anki','game','counters','days'].forEach(s => {",
     "callers": 6,
     "exported": true
@@ -1251,7 +1305,7 @@
     "type": "function",
     "name": "_panelInteractPing",
     "file": "src/core-foundation.js",
-    "line": 1618,
+    "line": 1695,
     "desc": "_panelLastInteract = Date.now(); }",
     "callers": 1,
     "exported": false
@@ -1260,7 +1314,7 @@
     "type": "function",
     "name": "_panelSessionClose",
     "file": "src/core-foundation.js",
-    "line": 1623,
+    "line": 1700,
     "desc": "if (!_panelSessionStart || !_panelSessionId || !_panelLastInteract) return;",
     "callers": 1,
     "exported": false
@@ -1269,7 +1323,7 @@
     "type": "function",
     "name": "showPanel",
     "file": "src/core-foundation.js",
-    "line": 1646,
+    "line": 1723,
     "desc": "const currentPanel = document.querySelector('.panel.active');",
     "callers": 40,
     "exported": true
@@ -1278,7 +1332,7 @@
     "type": "function",
     "name": "renderMarkdown",
     "file": "src/core-foundation.js",
-    "line": 1772,
+    "line": 1849,
     "desc": "if (!text) return '';",
     "callers": 6,
     "exported": false
@@ -1287,7 +1341,7 @@
     "type": "function",
     "name": "stSwitchTab",
     "file": "src/core-foundation.js",
-    "line": 1797,
+    "line": 1874,
     "desc": "const panes = { settings: 'stPaneSettings', grammar: 'stPaneGrammar' };",
     "callers": 8,
     "exported": true
@@ -1296,7 +1350,7 @@
     "type": "function",
     "name": "openDevWindow",
     "file": "src/core-foundation.js",
-    "line": 1819,
+    "line": 1896,
     "desc": "if (window.mgmt?.openWindow) {",
     "callers": 6,
     "exported": true
@@ -1305,7 +1359,7 @@
     "type": "function",
     "name": "stRenderGrammarOverride",
     "file": "src/core-foundation.js",
-    "line": 1830,
+    "line": 1907,
     "desc": "── Grammar mastery override UI ───────────────────────────────────────────────",
     "callers": 3,
     "exported": true
@@ -1314,7 +1368,7 @@
     "type": "function",
     "name": "stGrammarSetOverride",
     "file": "src/core-foundation.js",
-    "line": 1909,
+    "line": 1986,
     "desc": "if (typeof GrammarModel === 'undefined') return;",
     "callers": 3,
     "exported": true
@@ -1323,7 +1377,7 @@
     "type": "function",
     "name": "setButtonGroupActive",
     "file": "src/core-foundation.js",
-    "line": 1931,
+    "line": 2008,
     "desc": "const btns = document.querySelectorAll(`[data-btn-toggle=\"${group}\"]`);",
     "callers": 11,
     "exported": true
@@ -1332,126 +1386,126 @@
     "type": "storage",
     "name": "wordsLastSub",
     "file": "src/core-foundation.js",
-    "line": 1582,
+    "line": 1659,
     "desc": "localStorage"
   },
   {
     "type": "storage",
     "name": "TRANSLATE_CACHE",
     "file": "src/core-foundation.js",
-    "line": 506,
+    "line": 583,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "API_USAGE",
     "file": "src/core-foundation.js",
-    "line": 927,
+    "line": 1004,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "GRAM_NOTES",
     "file": "src/core-foundation.js",
-    "line": 1690,
+    "line": 1767,
     "desc": "Storage.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 136,
+    "line": 213,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 151,
+    "line": 228,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 159,
+    "line": 236,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 167,
+    "line": 244,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 186,
+    "line": 263,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 198,
+    "line": 275,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 305,
+    "line": 382,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 372,
+    "line": 449,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 381,
+    "line": 458,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 385,
+    "line": 462,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1633,
+    "line": 1710,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-foundation.js",
-    "line": 1637,
+    "line": 1714,
     "desc": "db.run"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 587,
+    "line": 664,
     "desc": "Translate this Japanese word/phrase to English. Reply in this exact format only:"
   },
   {
     "type": "prompt",
     "name": "prompt",
     "file": "src/core-foundation.js",
-    "line": 589,
+    "line": 666,
     "desc": "Translate this English word/phrase to Japanese for an N5-N4 beginner. If multipl"
   },
   {
@@ -6360,7 +6414,7 @@
     "type": "function",
     "name": "resourcesGet",
     "file": "src/features-video.js",
-    "line": 727,
+    "line": 728,
     "desc": "",
     "callers": 7,
     "exported": false
@@ -6369,7 +6423,7 @@
     "type": "function",
     "name": "resourcesSave",
     "file": "src/features-video.js",
-    "line": 735,
+    "line": 736,
     "desc": "",
     "callers": 5,
     "exported": false
@@ -6378,7 +6432,7 @@
     "type": "function",
     "name": "resourcesRender",
     "file": "src/features-video.js",
-    "line": 741,
+    "line": 742,
     "desc": "const grid = document.getElementById('resourcesGrid');",
     "callers": 9,
     "exported": false
@@ -6387,7 +6441,7 @@
     "type": "function",
     "name": "resourcesAdd",
     "file": "src/features-video.js",
-    "line": 811,
+    "line": 812,
     "desc": "const urlEl = document.getElementById('resNewUrl');",
     "callers": 5,
     "exported": true
@@ -6396,7 +6450,7 @@
     "type": "function",
     "name": "resourcesPickIcon",
     "file": "src/features-video.js",
-    "line": 906,
+    "line": 907,
     "desc": "if (url.includes('youtube')) return '▶️';",
     "callers": 3,
     "exported": false
@@ -6405,7 +6459,7 @@
     "type": "function",
     "name": "resourcesEdit",
     "file": "src/features-video.js",
-    "line": 917,
+    "line": 918,
     "desc": "const resources = resourcesGet();",
     "callers": 2,
     "exported": true
@@ -6414,7 +6468,7 @@
     "type": "function",
     "name": "resourcesSaveEdit",
     "file": "src/features-video.js",
-    "line": 942,
+    "line": 943,
     "desc": "const resources = resourcesGet();",
     "callers": 2,
     "exported": true
@@ -6423,7 +6477,7 @@
     "type": "function",
     "name": "resourcesDelete",
     "file": "src/features-video.js",
-    "line": 961,
+    "line": 962,
     "desc": "if (!confirm('Delete this resource?')) return;",
     "callers": 2,
     "exported": true
@@ -6432,7 +6486,7 @@
     "type": "function",
     "name": "resourcesReset",
     "file": "src/features-video.js",
-    "line": 970,
+    "line": 971,
     "desc": "if (!confirm('Reset to default resources? This will remove all your custom links.')) return;",
     "callers": 1,
     "exported": true
@@ -6441,7 +6495,7 @@
     "type": "function",
     "name": "vtAddSavedLink",
     "file": "src/features-video.js",
-    "line": 987,
+    "line": 988,
     "desc": "VideoState.savedFiles → VideoState.savedFiles",
     "callers": 2,
     "exported": true
@@ -6450,7 +6504,7 @@
     "type": "function",
     "name": "vtSaveHistory",
     "file": "src/features-video.js",
-    "line": 1002,
+    "line": 1003,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -6459,7 +6513,7 @@
     "type": "function",
     "name": "vtLoadHistory",
     "file": "src/features-video.js",
-    "line": 1015,
+    "line": 1016,
     "desc": "",
     "callers": 2,
     "exported": true
@@ -6468,7 +6522,7 @@
     "type": "function",
     "name": "vtUpdateHistoryDropdown",
     "file": "src/features-video.js",
-    "line": 1025,
+    "line": 1026,
     "desc": "const select = document.getElementById('vtHistorySelect');",
     "callers": 4,
     "exported": true
@@ -6477,7 +6531,7 @@
     "type": "function",
     "name": "vtLoadFromHistory",
     "file": "src/features-video.js",
-    "line": 1056,
+    "line": 1057,
     "desc": "if (!indexStr) return;",
     "callers": 2,
     "exported": true
@@ -6486,7 +6540,7 @@
     "type": "function",
     "name": "vtTryLoadMatchingTranscript",
     "file": "src/features-video.js",
-    "line": 1091,
+    "line": 1092,
     "desc": "const baseName = videoName.replace(/\\.[^.]+$/, '');",
     "callers": 2,
     "exported": true
@@ -6495,7 +6549,7 @@
     "type": "function",
     "name": "vtRenderSavedLinks",
     "file": "src/features-video.js",
-    "line": 1111,
+    "line": 1112,
     "desc": "vtUpdateHistoryDropdown();",
     "callers": 2,
     "exported": true
@@ -6504,7 +6558,7 @@
     "type": "function",
     "name": "vtWordSelect",
     "file": "src/features-video.js",
-    "line": 1122,
+    "line": 1123,
     "desc": "VideoState.pendingHistoryName → VideoState.pendingHistoryName",
     "callers": 4,
     "exported": true
@@ -6513,7 +6567,7 @@
     "type": "function",
     "name": "vtTranslateWord",
     "file": "src/features-video.js",
-    "line": 1135,
+    "line": 1136,
     "desc": "if (!(App.getApiKey || window.getApiKey)?.()) return;",
     "callers": 2,
     "exported": true
@@ -6522,7 +6576,7 @@
     "type": "function",
     "name": "strokeMagnify",
     "file": "src/features-video.js",
-    "line": 1236,
+    "line": 1237,
     "desc": "In browser we can't access filesystem — hint is shown instead",
     "callers": 2,
     "exported": true
@@ -6531,7 +6585,7 @@
     "type": "function",
     "name": "strokeGetReading",
     "file": "src/features-video.js",
-    "line": 1278,
+    "line": 1279,
     "desc": "const cp = ch.codePointAt(0);",
     "callers": 2,
     "exported": true
@@ -6540,7 +6594,7 @@
     "type": "function",
     "name": "strokeFetchReadings",
     "file": "src/features-video.js",
-    "line": 1287,
+    "line": 1288,
     "desc": "const kanji = chars.filter(ch => {",
     "callers": 2,
     "exported": false
@@ -6549,7 +6603,7 @@
     "type": "function",
     "name": "readSwitchTab",
     "file": "src/features-video.js",
-    "line": 1321,
+    "line": 1322,
     "desc": "═══════════════════════════════════════════════════════════════════════════",
     "callers": 2,
     "exported": true
@@ -6558,7 +6612,7 @@
     "type": "function",
     "name": "epubHandleDrop",
     "file": "src/features-video.js",
-    "line": 1363,
+    "line": 1364,
     "desc": "e.preventDefault();",
     "callers": 2,
     "exported": true
@@ -6567,7 +6621,7 @@
     "type": "function",
     "name": "epubLoadFile",
     "file": "src/features-video.js",
-    "line": 1370,
+    "line": 1371,
     "desc": "const dz = document.getElementById('epubDropZone');",
     "callers": 2,
     "exported": false
@@ -6576,7 +6630,7 @@
     "type": "function",
     "name": "epubParseOPF",
     "file": "src/features-video.js",
-    "line": 1399,
+    "line": 1400,
     "desc": "const containerXml = await EpubState.zip.file('META-INF/container.xml').async('string');",
     "callers": 1,
     "exported": false
@@ -6585,7 +6639,7 @@
     "type": "function",
     "name": "epubLoadChapter",
     "file": "src/features-video.js",
-    "line": 1463,
+    "line": 1464,
     "desc": "idx = parseInt(idx);",
     "callers": 3,
     "exported": false
@@ -6594,7 +6648,7 @@
     "type": "function",
     "name": "epubSetFontSize",
     "file": "src/features-video.js",
-    "line": 1542,
+    "line": 1543,
     "desc": "EpubState.fontSize = parseFloat(val);",
     "callers": 2,
     "exported": true
@@ -6603,7 +6657,7 @@
     "type": "function",
     "name": "epubToggleFuri",
     "file": "src/features-video.js",
-    "line": 1549,
+    "line": 1550,
     "desc": "EpubState.furi = !EpubState.furi;",
     "callers": 2,
     "exported": true
@@ -6612,7 +6666,7 @@
     "type": "function",
     "name": "epubApplyFuri",
     "file": "src/features-video.js",
-    "line": 1556,
+    "line": 1557,
     "desc": "const content = document.getElementById('epubContent');",
     "callers": 2,
     "exported": false
@@ -6621,7 +6675,7 @@
     "type": "function",
     "name": "epubRemoveFuri",
     "file": "src/features-video.js",
-    "line": 1580,
+    "line": 1581,
     "desc": "const sel = document.getElementById('epubChapterSel');",
     "callers": 2,
     "exported": true
@@ -6630,7 +6684,7 @@
     "type": "function",
     "name": "epubGetFurigana",
     "file": "src/features-video.js",
-    "line": 1587,
+    "line": 1588,
     "desc": "const apiKey = (App.getApiKey || window.getApiKey)?.();",
     "callers": 1,
     "exported": false
@@ -6639,7 +6693,7 @@
     "type": "function",
     "name": "epubWireWordTap",
     "file": "src/features-video.js",
-    "line": 1603,
+    "line": 1604,
     "desc": "const content = document.getElementById('epubContent');",
     "callers": 2,
     "exported": true
@@ -6648,7 +6702,7 @@
     "type": "function",
     "name": "epubOnWordSelect",
     "file": "src/features-video.js",
-    "line": 1609,
+    "line": 1610,
     "desc": "const sel = window.getSelection();",
     "callers": 1,
     "exported": false
@@ -6657,7 +6711,7 @@
     "type": "function",
     "name": "epubHidePopup",
     "file": "src/features-video.js",
-    "line": 1648,
+    "line": 1649,
     "desc": "const p = document.getElementById('epubWordPopup');",
     "callers": 4,
     "exported": true
@@ -6666,7 +6720,7 @@
     "type": "function",
     "name": "epubSpeak",
     "file": "src/features-video.js",
-    "line": 1654,
+    "line": 1655,
     "desc": "const btn = document.getElementById('epubTtsBtn');",
     "callers": 2,
     "exported": true
@@ -6675,7 +6729,7 @@
     "type": "function",
     "name": "epubClose",
     "file": "src/features-video.js",
-    "line": 1676,
+    "line": 1677,
     "desc": "EpubState.zip = null; EpubState.spine = []; EpubState.chapterIdx = 0;",
     "callers": 2,
     "exported": true
@@ -6684,7 +6738,7 @@
     "type": "function",
     "name": "vtClearTranslation",
     "file": "src/features-video.js",
-    "line": 1689,
+    "line": 1690,
     "desc": "const jpEl = document.getElementById('vtLineJp');",
     "callers": 3,
     "exported": true
@@ -6693,7 +6747,7 @@
     "type": "function",
     "name": "vtTranslateLine",
     "file": "src/features-video.js",
-    "line": 1699,
+    "line": 1700,
     "desc": "const panel = document.getElementById('vtLineTranslate');",
     "callers": 2,
     "exported": true
@@ -6702,7 +6756,7 @@
     "type": "function",
     "name": "vtBreakdownLine",
     "file": "src/features-video.js",
-    "line": 1762,
+    "line": 1763,
     "desc": "const jpEl = document.getElementById('vtLineJp');",
     "callers": 2,
     "exported": true
@@ -6711,7 +6765,7 @@
     "type": "function",
     "name": "vtGetVocabCacheKey",
     "file": "src/features-video.js",
-    "line": 1812,
+    "line": 1813,
     "desc": "VideoState.vocabListCache → VideoState.vocabListCache",
     "callers": 4,
     "exported": false
@@ -6720,7 +6774,7 @@
     "type": "function",
     "name": "vtShowVocabList",
     "file": "src/features-video.js",
-    "line": 1823,
+    "line": 1824,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');",
     "callers": 3,
     "exported": true
@@ -6729,7 +6783,7 @@
     "type": "function",
     "name": "vtCloseVocabList",
     "file": "src/features-video.js",
-    "line": 1846,
+    "line": 1847,
     "desc": "const overlay = document.getElementById('vtVocabListOverlay');",
     "callers": 4,
     "exported": true
@@ -6738,7 +6792,7 @@
     "type": "function",
     "name": "vtRegenerateVocabList",
     "file": "src/features-video.js",
-    "line": 1851,
+    "line": 1852,
     "desc": "const cacheKey = vtGetVocabCacheKey();",
     "callers": 3,
     "exported": true
@@ -6747,7 +6801,7 @@
     "type": "function",
     "name": "vtGenerateVocabList",
     "file": "src/features-video.js",
-    "line": 1862,
+    "line": 1863,
     "desc": "VideoState.currentVocab → VideoState.currentVocab",
     "callers": 2,
     "exported": false
@@ -6756,7 +6810,7 @@
     "type": "function",
     "name": "vtRenderVocabList",
     "file": "src/features-video.js",
-    "line": 1925,
+    "line": 1926,
     "desc": "const content = document.getElementById('vtVocabListContent');",
     "callers": 4,
     "exported": true
@@ -6765,7 +6819,7 @@
     "type": "function",
     "name": "vtDeleteVocabWord",
     "file": "src/features-video.js",
-    "line": 1962,
+    "line": 1963,
     "desc": "if (!VideoState.currentVocab || idx < 0 || idx >= VideoState.currentVocab.length) return;",
     "callers": 4,
     "exported": true
@@ -6774,7 +6828,7 @@
     "type": "function",
     "name": "vtJumpToTime",
     "file": "src/features-video.js",
-    "line": 1971,
+    "line": 1972,
     "desc": "const video = document.getElementById('vtVideo');",
     "callers": 5,
     "exported": true
@@ -6783,7 +6837,7 @@
     "type": "function",
     "name": "vtCloseLineTranslate",
     "file": "src/features-video.js",
-    "line": 1986,
+    "line": 1987,
     "desc": "const panel = document.getElementById('vtLineTranslate');",
     "callers": 2,
     "exported": true
@@ -8102,7 +8156,7 @@
     "type": "function",
     "name": "yoshiParseWhatsapp",
     "file": "src/features-lesson-notes.js",
-    "line": 2648,
+    "line": 2649,
     "desc": "const lines = raw.split('\\n');",
     "callers": 14,
     "exported": true
@@ -8111,7 +8165,7 @@
     "type": "function",
     "name": "_dlDistance",
     "file": "src/features-lesson-notes.js",
-    "line": 2669,
+    "line": 2670,
     "desc": "Only updates rows where a confident match is found (distance ≤ threshold).",
     "callers": 1,
     "exported": false
@@ -8120,7 +8174,7 @@
     "type": "function",
     "name": "lnPopulateTurnIds",
     "file": "src/features-lesson-notes.js",
-    "line": 2686,
+    "line": 2687,
     "desc": "if (!window.db) return;",
     "callers": 4,
     "exported": false
@@ -8199,7 +8253,7 @@
     "type": "storage",
     "name": "UPDATE",
     "file": "src/features-lesson-notes.js",
-    "line": 2714,
+    "line": 2715,
     "desc": "db.run"
   },
   {
@@ -10229,7 +10283,7 @@
     "file": "lesson-overlay.html",
     "line": 0,
     "desc": "",
-    "callers": 62,
+    "callers": 63,
     "exported": true
   },
   {

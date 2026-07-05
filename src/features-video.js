@@ -667,10 +667,11 @@ Text: ${cue.text}`
       track: 'video'
     });
     const html = (data.content?.[0]?.text || '').trim();
-    if (html && textEl) {
-      textEl.innerHTML = html;
+    const stripped = (App.furiganaStripExcluded || window.furiganaStripExcluded) ? (App.furiganaStripExcluded || window.furiganaStripExcluded)(html) : html;
+    if (stripped && textEl) {
+      textEl.innerHTML = stripped;
       textEl.style.lineHeight = '2.2';
-      cue._furi = html;
+      cue._furi = stripped;
       if (btn) { btn.classList.remove('loading'); btn.classList.add('done'); btn.textContent = 'ふ✓'; }
     }
   } catch(e) {
@@ -1596,7 +1597,7 @@ Text: ${text}` }]
   ,
     track: 'reading'
   });
-  return (data.content?.[0]?.text || text).trim();
+  return (App.furiganaStripExcluded || window.furiganaStripExcluded || (h=>h))((data.content?.[0]?.text || text).trim());
 }
 
 // ── Word tap for translation ──────────────────────────────────────────────

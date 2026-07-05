@@ -49,8 +49,9 @@
   function furiToRuby(str) {
     if (!str) return '';
     const esc = (App.escHtml || window.escHtml) ? (App.escHtml || window.escHtml)(str) : str;
+    const EXCL = App.FURIGANA_EXCLUDE || window.FURIGANA_EXCLUDE;
     return esc.replace(/([\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3005]+)\(([^)]+)\)/g,
-      '<ruby>$1<rt style="font-size:0.7em;color:var(--ink-light)">$2</rt></ruby>');
+      (m, kanji, reading) => (EXCL && EXCL.has(kanji)) ? kanji : '<ruby>' + kanji + '<rt style="font-size:0.7em;color:var(--ink-light)">' + reading + '</rt></ruby>');
   }
 
   // ── Start: call 1 (fast) — intro + activity 1 ──────────────────────────────

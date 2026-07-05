@@ -10,6 +10,83 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// ── Furigana exclusion list ───────────────────────────────────────────────────
+// Words that should never show a reading annotation (already known well enough
+// that furigana is just visual noise). Editable from ⚙ Settings → Furigana
+// Exclusions. Seeded with a default on first run; persisted via Storage after.
+const FURIGANA_EXCLUDE = new Set(['私']);
+const FURIGANA_EXCLUDE_KEY = 'furiganaExcludeList';
+
+function furiganaExcludeLoad() {
+  try {
+    const saved = Storage.getJSON(FURIGANA_EXCLUDE_KEY, null);
+    if (Array.isArray(saved)) {
+      FURIGANA_EXCLUDE.clear();
+      saved.forEach(w => { if (w) FURIGANA_EXCLUDE.add(w); });
+    }
+  } catch(e) {}
+  furiganaExcludeRender();
+}
+
+function furiganaExcludeSave() {
+  Storage.setJSON(FURIGANA_EXCLUDE_KEY, [...FURIGANA_EXCLUDE]);
+}
+
+function furiganaExcludeRender() {
+  const el = document.getElementById('furiganaExcludeList');
+  if (!el) return;
+  const words = [...FURIGANA_EXCLUDE].sort();
+  if (!words.length) {
+    el.innerHTML = '<div style="font-family:var(--ui);font-size:0.78rem;color:var(--ink-light);font-style:italic">No exclusions yet.</div>';
+    return;
+  }
+  el.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:inherit">'
+    + words.map(w => '<tr style="border-bottom:1px solid var(--border)">'
+      + '<td style="padding:6px 10px 6px 0;font-family:var(--jp);font-size:1rem;color:var(--ink)">' + escHtml(w) + '</td>'
+      + '<td style="padding:6px 0;text-align:right;width:32px"><button class="btn-icon btn-icon-del" onclick="furiganaExcludeDelete(' + JSON.stringify(w) + ')" title="Remove">\u2715</button></td>'
+      + '</tr>').join('')
+    + '</table>';
+}
+
+function furiganaExcludeAdd() {
+  const inp = document.getElementById('furiganaExcludeInput');
+  if (!inp) return;
+  const word = inp.value.trim();
+  if (!word) return;
+  FURIGANA_EXCLUDE.add(word);
+  furiganaExcludeSave();
+  furiganaExcludeRender();
+  inp.value = '';
+  inp.focus();
+}
+
+function furiganaExcludeDelete(word) {
+  FURIGANA_EXCLUDE.delete(word);
+  furiganaExcludeSave();
+  furiganaExcludeRender();
+}
+
+// For renderers that build ruby markup client-side from separate word+reading
+// data (Quick Read, Yoshi read view, Focus Sprint): check FURIGANA_EXCLUDE.has(word)
+// before wrapping in <ruby>.
+//
+// For renderers that receive ruby HTML directly from Claude (Video transcript,
+// Epub reader — the model builds the <ruby> tags itself), use this to strip
+// excluded words back down to plain text after the response comes back.
+function furiganaStripExcluded(html) {
+  if (!html) return html;
+  let out = html;
+  FURIGANA_EXCLUDE.forEach(function(w) {
+    const re = new RegExp('<ruby>' + w + '<rt[^>]*>[^<]*</rt></ruby>', 'g');
+    out = out.replace(re, w);
+  });
+  return out;
+}
+
+document.addEventListener('storageReady', furiganaExcludeLoad);
+window['furiganaExcludeAdd']    = furiganaExcludeAdd;
+window['furiganaExcludeDelete'] = furiganaExcludeDelete;
+
 // ── App registry ──────────────────────────────────────────────────────────────
 // Central namespace for all cross-file exports.
 // Files register via Object.assign(App, {...}) at their end.
@@ -1673,7 +1750,7 @@ function showPanel(id) {
   const _pph = document.getElementById('progressPanelHeader'); if (_pph) _pph.style.display = id === 'progress' ? 'flex' : 'none';
   const _vfu = document.getElementById('voiceFooterUpper'); if (_vfu) _vfu.style.display = id === 'voice' ? 'flex' : 'none';
   const _vfl = document.getElementById('voiceFooterLower'); if (_vfl) _vfl.style.display = id === 'voice' ? 'flex' : 'none';
-  if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); try { (App.strandWeightsRender || window.strandWeightsRender)?.(); } catch(e) {} }
+  if (id === 'settings') { goalsRestoreUI(); progressRenderCost(); stSwitchTab('settings'); furiganaExcludeRender(); try { (App.strandWeightsRender || window.strandWeightsRender)?.(); } catch(e) {} }
   if (id === 'read') { (App.qrRestoreSession || window.qrRestoreSession)?.(); }
   if (id === 'words') { wordsSwitchSubRestore(); }
   if (id === 'vocab') { showPanel('words'); return; }
@@ -2001,6 +2078,8 @@ Object.assign(App, {
   showPanel,
   // Core utilities
   escHtml, formatDate, claudeAPI, claudeText,
+  FURIGANA_EXCLUDE, furiganaStripExcluded,
+  furiganaExcludeLoad, furiganaExcludeSave, furiganaExcludeRender, furiganaExcludeAdd, furiganaExcludeDelete,
   getApiKey, getOpenAIKey, saveApiKey, saveOpenAIKey, recordError,
   Storage, STORAGE_KEYS, state, saveState,
   // API usage
