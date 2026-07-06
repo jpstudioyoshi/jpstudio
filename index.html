@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;600;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260706210543">
+<link rel="stylesheet" href="style.css?v=20260706220151">
 <style>
   #shuchu-sprint { --ink-light: #d8d8dc; }
   .shuchu-hide-furi ruby rt { display: none; }
@@ -31,9 +31,9 @@
     nav, header, footer, .panel-nav { display: none !important; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260706210543"></script>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260706210543"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260706210543"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=20260706220151"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js?v=20260706220151"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js?v=20260706220151"></script>
 </head>
 <body>
 
@@ -80,6 +80,7 @@
   </div>
   <span style="margin-left:10px;display:inline-flex;align-items:center;gap:4px"><button class="btn-kana" onclick="globalQTClear()" title="Clear" style="align-self:center">×</button></span>
   <div id="globalQTResult" style="flex:1;font-family:var(--jp);font-size:0.85rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+  <button class="btn-icon" id="globalQTKanjiBtn" onclick="qtConvertScript()" title="Hiragana → kanji, or kanji → reading" style="font-size:0.85rem">漢</button>
   <button class="btn-icon" id="globalQTSpeakBtn" onclick="globalQTSpeak()" title="Read aloud" style="display:none;font-size:0.85rem">🔊</button>
 </div>
 
@@ -2395,37 +2396,37 @@
 </div><!-- end main-area -->
 </div><!-- end app-layout -->
 
-<script src="src/core-foundation.js?v=20260706210543"></script>
-<script src="src/core-anki.js?v=20260706210543"></script>
-<script src="src/core-counters.js?v=20260706210543"></script>
-<script src="src/core-srs.js?v=20260706210543"></script>
-<script src="src/core-stt.js?v=20260706210543"></script>
-<script src="src/core-writing.js?v=20260706210543"></script>
-<script src="src/core-listen.js?v=20260706210543"></script>
-<script src="src/core-vocab.js?v=20260706210543"></script>
-<script src="src/features-db-qa.js?v=20260706210543"></script>
-<script src="src/core.js?v=20260706210543"></script>
+<script src="src/core-foundation.js?v=20260706220151"></script>
+<script src="src/core-anki.js?v=20260706220151"></script>
+<script src="src/core-counters.js?v=20260706220151"></script>
+<script src="src/core-srs.js?v=20260706220151"></script>
+<script src="src/core-stt.js?v=20260706220151"></script>
+<script src="src/core-writing.js?v=20260706220151"></script>
+<script src="src/core-listen.js?v=20260706220151"></script>
+<script src="src/core-vocab.js?v=20260706220151"></script>
+<script src="src/features-db-qa.js?v=20260706220151"></script>
+<script src="src/core.js?v=20260706220151"></script>
 
-<script src="src/features-core.js?v=20260706210543"></script>
+<script src="src/features-core.js?v=20260706220151"></script>
 
-<script src="src/briefing-prompt.js?v=20260706210543"></script>
-<script src="src/GrammarModel.js?v=20260706210543"></script>
-    <script src="src/GrammarPrereqModel.js?v=20260706210543"></script>
-<script src="src/AppEvents.js?v=20260706210543"></script>
-<script src="src/features-lesson-notes.js?v=20260706210543"></script>
-  <script src="src/features-ln-p2.js?v=20260706210543"></script>
-<script src="src/features-grammar.js?v=20260706210543"></script>
-<script src="src/features-reading.js?v=20260706210543"></script>
-<script src="src/features-video.js?v=20260706210543"></script>
-<script src="src/features-progress.js?v=20260706210543"></script>
-  <script src="src/features-listen-log.js?v=20260706210543"></script>
-<script src="src/features-stroke.js?v=20260706210543"></script>
-<script src="src/features-tools.js?v=20260706210543"></script>
-<script src="src/features-voice.js?v=20260706210543"></script>
-<script src="src/features-voice-drill.js?v=20260706210543"></script>
-<script src="src/features-custom-drill.js?v=20260706210543"></script>
-<script src="src/features-shuchu.js?v=20260706210543"></script>
-<script src="src/features-nom.js?v=20260706210543"></script>
+<script src="src/briefing-prompt.js?v=20260706220151"></script>
+<script src="src/GrammarModel.js?v=20260706220151"></script>
+    <script src="src/GrammarPrereqModel.js?v=20260706220151"></script>
+<script src="src/AppEvents.js?v=20260706220151"></script>
+<script src="src/features-lesson-notes.js?v=20260706220151"></script>
+  <script src="src/features-ln-p2.js?v=20260706220151"></script>
+<script src="src/features-grammar.js?v=20260706220151"></script>
+<script src="src/features-reading.js?v=20260706220151"></script>
+<script src="src/features-video.js?v=20260706220151"></script>
+<script src="src/features-progress.js?v=20260706220151"></script>
+  <script src="src/features-listen-log.js?v=20260706220151"></script>
+<script src="src/features-stroke.js?v=20260706220151"></script>
+<script src="src/features-tools.js?v=20260706220151"></script>
+<script src="src/features-voice.js?v=20260706220151"></script>
+<script src="src/features-voice-drill.js?v=20260706220151"></script>
+<script src="src/features-custom-drill.js?v=20260706220151"></script>
+<script src="src/features-shuchu.js?v=20260706220151"></script>
+<script src="src/features-nom.js?v=20260706220151"></script>
 
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- CLAUDE CONTEXT — machine-readable handoff document  -->
@@ -2436,20 +2437,20 @@
 <!-- ═══════════════════════════════════════════════════ -->
 <!-- SERVICE LAYER                                       -->
 <!-- ═══════════════════════════════════════════════════ -->
-<script src="src/StudentModel.js?v=20260706210543"></script>
-<script src="src/IssueTracker.js?v=20260706210543"></script>
-<script src="src/services/LessonSession.js?v=20260706210543"></script>
-<script src="src/services/AudioService.js?v=20260706210543"></script>
-<script src="src/services/PreflightService.js?v=20260706210543"></script>
-<script src="src/services/TranscriptionService.js?v=20260706210543"></script>
-<script src="src/services/AnalysisService.js?v=20260706210543"></script>
-<script src="src/services/StorageService.js?v=20260706210543"></script>
-<script src="src/Orchestrator.js?v=20260706210543"></script>
-<script src="src/ui/DrillCard.js?v=20260706210543"></script>
-<script src="src/ui/TextEntry.js?v=20260706210543"></script>
-<script src="src/ui/YoshiUI.js?v=20260706210543"></script>
+<script src="src/StudentModel.js?v=20260706220151"></script>
+<script src="src/IssueTracker.js?v=20260706220151"></script>
+<script src="src/services/LessonSession.js?v=20260706220151"></script>
+<script src="src/services/AudioService.js?v=20260706220151"></script>
+<script src="src/services/PreflightService.js?v=20260706220151"></script>
+<script src="src/services/TranscriptionService.js?v=20260706220151"></script>
+<script src="src/services/AnalysisService.js?v=20260706220151"></script>
+<script src="src/services/StorageService.js?v=20260706220151"></script>
+<script src="src/Orchestrator.js?v=20260706220151"></script>
+<script src="src/ui/DrillCard.js?v=20260706220151"></script>
+<script src="src/ui/TextEntry.js?v=20260706220151"></script>
+<script src="src/ui/YoshiUI.js?v=20260706220151"></script>
 
-<script src="src/design-overlay.js?v=20260706210543"></script>
+<script src="src/design-overlay.js?v=20260706220151"></script>
 <script>
   // ── DEV TOOLS ──────────────────────────────────────────────────────────
 

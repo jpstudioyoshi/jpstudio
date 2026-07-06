@@ -789,6 +789,92 @@ async function globalQuickTranslate() {
 }
 
 
+// ── Kanji ⇄ reading button ──
+// Hiragana in the field → convert to kanji dictionary form.
+// Kanji present → show its reading.
+// Cache-first (reuses _translateCache's existing kanji/reading fields from
+// normal lookups) — only calls the API if genuinely not cached, and the
+// result is small (max_tokens:60) and merged back into the shared cache.
+async function qtConvertScript() {
+  const input  = document.getElementById('globalQTInput');
+  const result = document.getElementById('globalQTResult');
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  const hasKanji     = /[\u4E00-\u9FAF]/.test(raw);
+  const hasHiragana  = /[\u3040-\u309F]/.test(raw);
+  if (!hasKanji && !hasHiragana) {
+    result.innerHTML = '<span style="color:var(--ink-light);font-size:0.8rem">No kana/kanji to convert</span>';
+    return;
+  }
+
+  // Cache-first — reuse existing lookup data, no API call
+  const cached = _translateCache[raw];
+  if (cached && ((hasKanji && cached.reading) || (!hasKanji && cached.kanji))) {
+    if (hasKanji) {
+      result.innerHTML = `<strong style="color:var(--teal)">${raw}</strong> → <span style="color:var(--ink-light)">${cached.reading}</span>`;
+    } else {
+      input.value = cached.kanji;
+      result.innerHTML = `<span style="color:var(--ink-light)">${raw}</span> → <strong style="color:var(--teal)">${cached.kanji}</strong>`;
+    }
+    return;
+  }
+
+  const apiKey = getApiKey();
+  if (!apiKey) { result.innerHTML = '<span style="color:var(--ink-light)">Set API key first</span>'; return; }
+
+  result.innerHTML = '<span style="color:var(--ink-light)">…</span>';
+  try {
+    const prompt = hasKanji
+      ? `Give the hiragana reading of this Japanese text. Reply with ONLY the reading, nothing else.\n\n${raw}`
+      : `Convert this hiragana to its natural everyday kanji dictionary form. Reply with ONLY the kanji form, nothing else — if it is normally written in kana only, reply with the same kana unchanged.\n\n${raw}`;
+
+    const data = await claudeAPI({ max_tokens: 60, messages: [{ role: 'user', content: prompt }], track: 'translate' });
+    const out = claudeText(data).trim();
+
+    if (!_translateCache[raw]) {
+      _translateCache[raw] = { jp: raw, count: 1, firstLookup: new Date().toISOString(), lastLookup: new Date().toISOString() };
+    }
+    if (hasKanji) _translateCache[raw].reading = out;
+    else          _translateCache[raw].kanji   = out;
+    translateCacheSave();
+
+    if (hasKanji) {
+      result.innerHTML = `<strong style="color:var(--teal)">${raw}</strong> → <span style="color:var(--ink-light)">${out}</span>`;
+    } else {
+      input.value = out;
+      result.innerHTML = `<span style="color:var(--ink-light)">${raw}</span> → <strong style="color:var(--teal)">${out}</strong>`;
+    }
+  } catch(e) {
+    result.innerHTML = '<span style="color:var(--red)">Error</span>';
+  }
+}
+
+// ── Kana → kanji (minimal single-conversion) ──
+// Live call sites: strokeKanjiBtn (index.html), handleStrokeKey() in
+// features-stroke.js. Original picker UI (kanjiPickerShow/kajiPickerClose)
+// was lost with features-kana.js deletion — this is a minimal single-best-
+// candidate replacement, not a multi-candidate popup. Expand later if needed.
+async function kanaToKanji(inputEl, anchorEl) {
+  const existing = document.querySelector('.kanji-picker');
+  if (existing) { existing.remove(); return; }
+  if (!inputEl) return;
+  const text = inputEl.value.trim();
+  if (!text) return;
+  const apiKey = getApiKey();
+  if (!apiKey) { alert('Set API key first'); return; }
+  try {
+    const data = await claudeAPI({
+      max_tokens: 60,
+      messages: [{ role: 'user', content: `Convert this to its natural everyday kanji dictionary form. Reply with ONLY the kanji, nothing else. If normally kana-only, reply unchanged.\n\n${text}` }],
+      track: 'translate'
+    });
+    const kanji = claudeText(data).trim();
+    if (kanji) { inputEl.value = kanji; inputEl.focus(); }
+  } catch(e) { console.warn('[kanaToKanji]', e); }
+}
+window['kanaToKanji'] = kanaToKanji;
+
 function globalQTSpeak() {
   if (!_qtLastJapanese) return;
   if (typeof jpSpeak === 'function') {
@@ -959,6 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window['globalQuickTranslate'] = globalQuickTranslate;
+window['qtConvertScript'] = qtConvertScript;
 window['globalQTClear'] = globalQTClear;
 window['toggleQTHistory'] = toggleQTHistory;
 window['renderLookupsTable'] = renderLookupsTable;
@@ -2101,7 +2188,6 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
     btn.addEventListener('click', fn);
   }
   // hfBtn removed (diarization removed)
-  wireWritingBtn('writingKanjiBtn',  () => kanaToKanji(document.getElementById('writingInput'), document.getElementById('writingKanjiBtn')));
   wireWritingBtn('writingSpeechBtn', () => sttStart('writingInput', 'writingSpeechBtn', 'ja'));
 })();
 
@@ -2109,6 +2195,7 @@ function setButtonGroupActive(group, activeId, activeColor = 'var(--teal)') {
 Object.assign(App, {
   // Quick translate
   globalQuickTranslate, globalQTClear, globalQTSelectHistory,
+  qtConvertScript, kanaToKanji,
   qtHistoryUpdate, toggleQTHistory, selectQTHistory,
   renderLookupsTable, clearLookupCache,
   // Data management

@@ -11,22 +11,6 @@
 // VOCAB
 // ═══════════════════════════════════════════════════════
 // ── Mastery check — SRS interval >= 14 days ─────────────────────────────────
-// ── SRS running indicator — red dot, top-right, shows when the CURRENT card
-// will write to vocab_srs on rating (mirrors markVocab's exact _srsAllowed gate).
-function updateSrsIndicator() {
-  let dot = document.getElementById('srsRunningDot');
-  if (!dot) {
-    dot = document.createElement('div');
-    dot.id = 'srsRunningDot';
-    dot.title = 'This card will update your SRS schedule';
-    dot.style.cssText = 'position:fixed;top:10px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--red);z-index:9999;display:none;box-shadow:0 0 5px var(--red)';
-    document.body.appendChild(dot);
-  }
-  const card = state.vocabItems?.[vocabIdx];
-  const active = !vocabFocusModeActive() && card && (card.source === 'core_vocab' || card.source === 'lookup');
-  dot.style.display = active ? 'block' : 'none';
-}
-
 function isWordMastered(cardIdx) {
   const card = state.vocab[cardIdx];
   if (!card) return false;
@@ -404,7 +388,6 @@ function markVocab(v) {
 
 function renderVocab() {
   _vcCardShownAt = Date.now();
-  updateSrsIndicator();
   const vocabCardEl   = document.getElementById('vocabCard');
   const vocabCounterEl= document.getElementById('vocabCounter');
   const deckStatusEl  = document.getElementById('vocabDeckStatus');
