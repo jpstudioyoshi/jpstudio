@@ -282,6 +282,7 @@ const _sessionKnown = {};  // tracks which cards were marked known THIS session
 function markVocab(v) {
   if (!vocabSession.length) return;
   window._vocabDrillUsedToday = true;
+  try { if (typeof drillLastCompletedWrite === 'function') drillLastCompletedWrite('words'); } catch(e) {}
   try { if (typeof renderFourStrandRecency === 'function') renderFourStrandRecency(); } catch(e) {}
   const card   = state.vocabItems?.[vocabIdx];
   if (!card) return;

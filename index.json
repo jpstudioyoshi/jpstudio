@@ -3825,7 +3825,7 @@
     "type": "function",
     "name": "renderVocab",
     "file": "src/core-vocab.js",
-    "line": 388,
+    "line": 389,
     "desc": "_vcCardShownAt = Date.now();",
     "callers": 17,
     "exported": true
@@ -3834,7 +3834,7 @@
     "type": "function",
     "name": "prevVocab",
     "file": "src/core-vocab.js",
-    "line": 581,
+    "line": 582,
     "desc": "const deck = getSessionDeck();",
     "callers": 4,
     "exported": true
@@ -3843,7 +3843,7 @@
     "type": "function",
     "name": "nextVocab",
     "file": "src/core-vocab.js",
-    "line": 588,
+    "line": 589,
     "desc": "const deck = getSessionDeck();",
     "callers": 5,
     "exported": true
@@ -3852,7 +3852,7 @@
     "type": "function",
     "name": "flipVocab",
     "file": "src/core-vocab.js",
-    "line": 597,
+    "line": 598,
     "desc": "if (_vcSessionComplete) { resetVocabDeck(); return; }",
     "callers": 5,
     "exported": true
@@ -3861,7 +3861,7 @@
     "type": "function",
     "name": "toggleVcDirection",
     "file": "src/core-vocab.js",
-    "line": 610,
+    "line": 611,
     "desc": "const cycle = { jp_en: 'en_jp', en_jp: 'jp_en' };",
     "callers": 3,
     "exported": true
@@ -3870,7 +3870,7 @@
     "type": "function",
     "name": "hideVocabWord",
     "file": "src/core-vocab.js",
-    "line": 629,
+    "line": 630,
     "desc": "junk/incidental lookups that crossed the old promotion threshold before",
     "callers": 3,
     "exported": true
@@ -3879,7 +3879,7 @@
     "type": "function",
     "name": "resetVocabDeck",
     "file": "src/core-vocab.js",
-    "line": 646,
+    "line": 647,
     "desc": "_vcSessionComplete = false;",
     "callers": 4,
     "exported": true
@@ -3888,7 +3888,7 @@
     "type": "function",
     "name": "vocabListCheckChanged",
     "file": "src/core-vocab.js",
-    "line": 656,
+    "line": 657,
     "desc": "const anyChecked = document.querySelectorAll('.vocab-del-cb:checked').length > 0;",
     "callers": 1,
     "exported": false
@@ -3897,7 +3897,7 @@
     "type": "function",
     "name": "vocabListDeleteSelected",
     "file": "src/core-vocab.js",
-    "line": 661,
+    "line": 662,
     "desc": "const checked = document.querySelectorAll('.vocab-del-cb:checked');",
     "callers": 1,
     "exported": false
@@ -3906,7 +3906,7 @@
     "type": "function",
     "name": "toggleVocabList",
     "file": "src/core-vocab.js",
-    "line": 673,
+    "line": 674,
     "desc": "const list = document.getElementById('vocabList');",
     "callers": 3,
     "exported": true
@@ -3915,7 +3915,7 @@
     "type": "function",
     "name": "renderVocabList",
     "file": "src/core-vocab.js",
-    "line": 685,
+    "line": 686,
     "desc": "const _fmtSourceList = (src, dt) => {",
     "callers": 6,
     "exported": false
@@ -3924,7 +3924,7 @@
     "type": "function",
     "name": "printVocabList",
     "file": "src/core-vocab.js",
-    "line": 729,
+    "line": 730,
     "desc": "const cards = state.vocab;",
     "callers": 2,
     "exported": true
@@ -3933,7 +3933,7 @@
     "type": "function",
     "name": "vcToggleHint",
     "file": "src/core-vocab.js",
-    "line": 749,
+    "line": 750,
     "desc": "const hint = document.getElementById('vcHint');",
     "callers": 2,
     "exported": true
@@ -3942,7 +3942,7 @@
     "type": "function",
     "name": "transAddToVocab",
     "file": "src/core-vocab.js",
-    "line": 758,
+    "line": 759,
     "desc": "const src = document.getElementById('transInput').value.trim();",
     "callers": 3,
     "exported": true
@@ -3951,7 +3951,7 @@
     "type": "function",
     "name": "renderGrammar",
     "file": "src/core-vocab.js",
-    "line": 780,
+    "line": 781,
     "desc": "GRAMMAR",
     "callers": 2,
     "exported": true
@@ -3960,7 +3960,7 @@
     "type": "function",
     "name": "toggleGrammar",
     "file": "src/core-vocab.js",
-    "line": 797,
+    "line": 798,
     "desc": "const el = document.getElementById('ge' + i);",
     "callers": 3,
     "exported": true
@@ -3969,7 +3969,7 @@
     "type": "function",
     "name": "appendChatMsg",
     "file": "src/core-vocab.js",
-    "line": 807,
+    "line": 808,
     "desc": "═══════════════════════════════════════════════════════",
     "callers": 5,
     "exported": false
@@ -3978,7 +3978,7 @@
     "type": "function",
     "name": "updateChatMsg",
     "file": "src/core-vocab.js",
-    "line": 854,
+    "line": 855,
     "desc": "const el = document.getElementById(id);",
     "callers": 5,
     "exported": false
@@ -3987,7 +3987,7 @@
     "type": "function",
     "name": "showChatHistoryEntry",
     "file": "src/core-vocab.js",
-    "line": 907,
+    "line": 908,
     "desc": "scraping #chatMessages (that DOM gets wiped by sendChat() on every",
     "callers": 3,
     "exported": true
@@ -3996,7 +3996,7 @@
     "type": "function",
     "name": "transSpeakOutput",
     "file": "src/core-vocab.js",
-    "line": 921,
+    "line": 922,
     "desc": "const inp = document.getElementById('transInput').value.trim();",
     "callers": 3,
     "exported": true
@@ -4005,7 +4005,7 @@
     "type": "function",
     "name": "chatQuick",
     "file": "src/core-vocab.js",
-    "line": 931,
+    "line": 932,
     "desc": "const input = document.getElementById('chatInput');",
     "callers": 2,
     "exported": true
@@ -4014,7 +4014,7 @@
     "type": "function",
     "name": "sendChat",
     "file": "src/core-vocab.js",
-    "line": 937,
+    "line": 938,
     "desc": "const input = document.getElementById('chatInput');",
     "callers": 8,
     "exported": true
@@ -4023,7 +4023,7 @@
     "type": "function",
     "name": "startChatSpeech",
     "file": "src/core-vocab.js",
-    "line": 994,
+    "line": 995,
     "desc": "sttStart('chatInput', 'chatSpeechBtn', 'ja');",
     "callers": 2,
     "exported": true
@@ -4032,7 +4032,7 @@
     "type": "function",
     "name": "kanjiCorpusFilter",
     "file": "src/core-vocab.js",
-    "line": 1016,
+    "line": 1017,
     "desc": "KanjiCorpusState — see above",
     "callers": 7,
     "exported": false
@@ -4041,7 +4041,7 @@
     "type": "function",
     "name": "kanjiCorpusSort",
     "file": "src/core-vocab.js",
-    "line": 1023,
+    "line": 1024,
     "desc": "KanjiCorpusState.sort = sort;",
     "callers": 5,
     "exported": false
@@ -4050,7 +4050,7 @@
     "type": "function",
     "name": "kanjiSetView",
     "file": "src/core-vocab.js",
-    "line": 1032,
+    "line": 1033,
     "desc": "KanjiCorpusState — see below",
     "callers": 2,
     "exported": false
@@ -4059,7 +4059,7 @@
     "type": "function",
     "name": "kanjiCorpusRender",
     "file": "src/core-vocab.js",
-    "line": 1039,
+    "line": 1040,
     "desc": "const grid   = document.getElementById('kanjiCorpusGrid');",
     "callers": 4,
     "exported": false
@@ -4068,7 +4068,7 @@
     "type": "function",
     "name": "kanjiCorpusShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1155,
+    "line": 1156,
     "desc": "const detail = document.getElementById('kanjiCorpusDetail');",
     "callers": 2,
     "exported": false
@@ -4077,7 +4077,7 @@
     "type": "function",
     "name": "vcFilter",
     "file": "src/core-vocab.js",
-    "line": 1230,
+    "line": 1231,
     "desc": "VocabCorpusState — see below",
     "callers": 4,
     "exported": false
@@ -4086,7 +4086,7 @@
     "type": "function",
     "name": "vcSort",
     "file": "src/core-vocab.js",
-    "line": 1237,
+    "line": 1238,
     "desc": "VocabCorpusState.sort = s;",
     "callers": 5,
     "exported": false
@@ -4095,7 +4095,7 @@
     "type": "function",
     "name": "vcLevels",
     "file": "src/core-vocab.js",
-    "line": 1244,
+    "line": 1245,
     "desc": "const levels = new Set();",
     "callers": 1,
     "exported": false
@@ -4104,7 +4104,7 @@
     "type": "function",
     "name": "vcRenderTargets",
     "file": "src/core-vocab.js",
-    "line": 1257,
+    "line": 1258,
     "desc": "Target words are now surfaced via the priority score in the Words drill.",
     "callers": 3,
     "exported": true
@@ -4113,7 +4113,7 @@
     "type": "function",
     "name": "vcRenderTargetsInline",
     "file": "src/core-vocab.js",
-    "line": 1261,
+    "line": 1262,
     "desc": "const list = document.getElementById('vcTargetsList2');",
     "callers": 2,
     "exported": true
@@ -4122,7 +4122,7 @@
     "type": "function",
     "name": "vcDrillWord",
     "file": "src/core-vocab.js",
-    "line": 1267,
+    "line": 1268,
     "desc": "try { gramSentPracticeError(word + ' (' + meaning + ')'); } catch(e) {}",
     "callers": 2,
     "exported": true
@@ -4131,7 +4131,7 @@
     "type": "function",
     "name": "vcBuildList",
     "file": "src/core-vocab.js",
-    "line": 1288,
+    "line": 1289,
     "desc": "srsDue       — SRS due timestamp (ms). Pass Date.now() if unknown.",
     "callers": 4,
     "exported": false
@@ -4140,7 +4140,7 @@
     "type": "function",
     "name": "vcMergeEntry",
     "file": "src/core-vocab.js",
-    "line": 1318,
+    "line": 1319,
     "desc": "const lookupCount   = cached?.count || 0;",
     "callers": 3,
     "exported": false
@@ -4149,7 +4149,7 @@
     "type": "function",
     "name": "vcRender",
     "file": "src/core-vocab.js",
-    "line": 1354,
+    "line": 1355,
     "desc": "const tbody  = document.getElementById('vcTableBody');",
     "callers": 7,
     "exported": false
@@ -4158,7 +4158,7 @@
     "type": "function",
     "name": "vcShowDetail",
     "file": "src/core-vocab.js",
-    "line": 1429,
+    "line": 1430,
     "desc": "const detail = document.getElementById('vcDetail');",
     "callers": 1,
     "exported": false
@@ -4167,7 +4167,7 @@
     "type": "function",
     "name": "migrateLearnedWordsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1517,
+    "line": 1518,
     "desc": "GRAMMAR NOTES",
     "callers": 4,
     "exported": true
@@ -4176,7 +4176,7 @@
     "type": "function",
     "name": "backfillLessonPhrasesToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1553,
+    "line": 1554,
     "desc": "",
     "callers": 4,
     "exported": true
@@ -4185,7 +4185,7 @@
     "type": "function",
     "name": "backfillLookupsToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1578,
+    "line": 1579,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4194,7 +4194,7 @@
     "type": "function",
     "name": "backfillN5ToVocabItems",
     "file": "src/core-vocab.js",
-    "line": 1607,
+    "line": 1608,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4203,7 +4203,7 @@
     "type": "function",
     "name": "extractWritingVocabToItems",
     "file": "src/core-vocab.js",
-    "line": 1631,
+    "line": 1632,
     "desc": "if (!text || text.length < 2) return;",
     "callers": 2,
     "exported": true
@@ -4212,7 +4212,7 @@
     "type": "function",
     "name": "initWritingVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1688,
+    "line": 1689,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4221,7 +4221,7 @@
     "type": "function",
     "name": "initLessonVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1699,
+    "line": 1700,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4230,7 +4230,7 @@
     "type": "function",
     "name": "initLookupVocabListener",
     "file": "src/core-vocab.js",
-    "line": 1742,
+    "line": 1743,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4239,7 +4239,7 @@
     "type": "function",
     "name": "coreVocabDailyIntake",
     "file": "src/core-vocab.js",
-    "line": 1805,
+    "line": 1806,
     "desc": "left untagged for now; retroactive pool-tagging of those is a separate,",
     "callers": 6,
     "exported": true
@@ -4248,7 +4248,7 @@
     "type": "function",
     "name": "backfillCoreVocabPoolTags",
     "file": "src/core-vocab.js",
-    "line": 1908,
+    "line": 1909,
     "desc": "pool IS NULL, never re-tags, never inserts/deletes, and leaves the 63",
     "callers": 4,
     "exported": true
@@ -4257,7 +4257,7 @@
     "type": "function",
     "name": "vocabSettingsLoad",
     "file": "src/core-vocab.js",
-    "line": 1930,
+    "line": 1931,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4266,7 +4266,7 @@
     "type": "function",
     "name": "vocabSettingsSave",
     "file": "src/core-vocab.js",
-    "line": 1973,
+    "line": 1974,
     "desc": "",
     "callers": 3,
     "exported": true
@@ -4275,7 +4275,7 @@
     "type": "function",
     "name": "toggleVcTextEntry",
     "file": "src/core-vocab.js",
-    "line": 2016,
+    "line": 2017,
     "desc": "_vcTextEntry = !_vcTextEntry;",
     "callers": 1,
     "exported": true
@@ -4284,7 +4284,7 @@
     "type": "function",
     "name": "submitVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 2032,
+    "line": 2033,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 4,
     "exported": true
@@ -4293,7 +4293,7 @@
     "type": "function",
     "name": "vocabTypeMarkWrong",
     "file": "src/core-vocab.js",
-    "line": 2063,
+    "line": 2064,
     "desc": "const res = document.getElementById('vocabTypeResult');",
     "callers": 1,
     "exported": true
@@ -4302,7 +4302,7 @@
     "type": "function",
     "name": "skipVocabTypeAnswer",
     "file": "src/core-vocab.js",
-    "line": 2071,
+    "line": 2072,
     "desc": "const inp = document.getElementById('vocabTypeInput');",
     "callers": 2,
     "exported": true
@@ -4311,7 +4311,7 @@
     "type": "function",
     "name": "vocabKnownRecent",
     "file": "src/core-vocab.js",
-    "line": 2082,
+    "line": 2083,
     "desc": "Async version — callers should await. Sync callers get cached value from last call.",
     "callers": 6,
     "exported": true
@@ -4320,147 +4320,140 @@
     "type": "storage",
     "name": "VOCAB_DIRECTION",
     "file": "src/core-vocab.js",
-    "line": 615,
+    "line": 616,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1522,
+    "line": 1523,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1525,
+    "line": 1526,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_MIGRATION_V1",
     "file": "src/core-vocab.js",
-    "line": 1545,
+    "line": 1546,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1558,
+    "line": 1559,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LESSON_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1570,
+    "line": 1571,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1589,
+    "line": 1590,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_LOOKUPS_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1599,
+    "line": 1600,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1612,
+    "line": 1613,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_N5_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1623,
+    "line": 1624,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_POOL_TAG_BACKFILL_V1",
     "file": "src/core-vocab.js",
-    "line": 1922,
+    "line": 1923,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_WEIGHTS",
     "file": "src/core-vocab.js",
-    "line": 2002,
+    "line": 2003,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_THRESHOLDS",
     "file": "src/core-vocab.js",
-    "line": 2003,
+    "line": 2004,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "VOCAB_INTERVALS",
     "file": "src/core-vocab.js",
-    "line": 2004,
+    "line": 2005,
     "desc": "kvAPI.set"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 312,
+    "line": 313,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 326,
+    "line": 327,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 340,
+    "line": 341,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 352,
+    "line": 353,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 356,
+    "line": 357,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 634,
-    "desc": "db.run"
-  },
-  {
-    "type": "storage",
-    "name": "DELETE",
-    "file": "src/core-vocab.js",
-    "line": 667,
+    "line": 635,
     "desc": "db.run"
   },
   {
@@ -4472,79 +4465,86 @@
   },
   {
     "type": "storage",
-    "name": "INSERT",
+    "name": "DELETE",
     "file": "src/core-vocab.js",
-    "line": 1532,
+    "line": 669,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1538,
+    "line": 1533,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1561,
+    "line": 1539,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1593,
+    "line": 1562,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1616,
+    "line": 1594,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1672,
+    "line": 1617,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1721,
+    "line": 1673,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1776,
+    "line": 1722,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "INSERT",
     "file": "src/core-vocab.js",
-    "line": 1872,
+    "line": 1777,
+    "desc": "db.run"
+  },
+  {
+    "type": "storage",
+    "name": "INSERT",
+    "file": "src/core-vocab.js",
+    "line": 1873,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 1912,
+    "line": 1913,
     "desc": "db.run"
   },
   {
     "type": "storage",
     "name": "UPDATE",
     "file": "src/core-vocab.js",
-    "line": 1917,
+    "line": 1918,
     "desc": "db.run"
   },
   {
@@ -6884,7 +6884,7 @@
     "file": "src/features-progress.js",
     "line": 116,
     "desc": "",
-    "callers": 26,
+    "callers": 28,
     "exported": true
   },
   {
