@@ -1199,6 +1199,7 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
     const yoshiForRow = yoshiByOffset[ts] || [];
     const row = document.createElement('div');
     row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid rgba(255,255,255,0.04);min-height:28px';
+    row.dataset.ts = ts;
     const left = document.createElement('div');
     left.style.cssText = 'display:flex;gap:8px;padding:5px 10px 5px 4px;cursor:pointer;align-items:flex-start;border-right:1px solid rgba(255,255,255,0.06)';
     left.classList.add('row-hover-teal');
@@ -1228,6 +1229,7 @@ async function lnLoadTwoColumnTimeline(recId, el, turns, startMs) {
     elFresh.appendChild(row);
   });
   while (uIdx < unassignedSorted.length) { renderUnassignedMsg(unassignedSorted[uIdx++]); }
+  lnHighlightLessonStart();
 }
 
 function lnTtsAndPause(text) {

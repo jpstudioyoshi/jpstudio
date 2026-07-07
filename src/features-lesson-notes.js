@@ -59,6 +59,7 @@ const LessonNotesState = {
   _sessionsLoaded:     false,
   transcriptMode:      'timeline',
   _transcriptRecId:    null,
+  sourceNotesCollapsed: true,
 };
 
 const _fy_getApiKey  = () => (App.getApiKey  || window.getApiKey)?.();
@@ -552,6 +553,17 @@ async function lnTranscribeLinked() {
   }
 }
 
+async function lnRetranscribeLinked() {
+  const btn = document.getElementById('lnRetranscribeBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '\u23F3 Re-transcribing\u2026'; }
+  try {
+    await lnTranscribeLinked();
+    lessonNotesRenderPanel();
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = '\u21BA Re-transcribe'; }
+  }
+}
+
 function lnRenderLinkedRecording(session) {
   if (!session) return '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink-light);padding:20px">No lesson selected.</div>';
   const recId = session.linked_recording_id;
@@ -572,22 +584,10 @@ function lnRenderLinkedRecording(session) {
   const dt = startMatch2
     ? new Date(parseInt(startMatch2[1])).toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
     : rec.created_at ? new Date(rec.created_at).toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : rec.date || '';
-  const apath = rec.audio_path;
-  const tpath = apath.replace('.webm', '_teacher.webm');
 
   let html = '<div>';
-  html += '<div style="font-family:var(--ui);font-size:0.72rem;color:var(--ink-light);margin-bottom:8px">' + dt + '</div>';
-
-  // Audio players
-  html += '<div style="background:var(--paper-dark);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin-bottom:10px">';
-  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-  html += '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);width:52px">\u{1F64B} You</span>';
-  html += '<audio id="lnAudioStudent" src="file://' + apath + '" controls style="flex:1;height:26px;accent-color:var(--teal)"></audio>';
-  html += '</div>';
-  html += '<div style="display:flex;align-items:center;gap:8px">';
-  html += '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);width:52px">\u{1F9D1}\u{200D}\u{1F3EB} Yoshi</span>';
-  html += '<audio id="lnAudioTeacher" src="file://' + tpath + '" controls style="flex:1;height:26px;accent-color:var(--gold)"></audio>';
-  html += '</div></div>';
+  // Date already shown in the sticky header (session dropdown + title) — not repeated here.
+  // Audio players moved to sticky title header (see lnHeaderAudioBarHTML, wired in lessonNotesUpdatePanelHeader) so they don't scroll away with the transcript.
 
   // Source notes with search
   const _lnEsc = App.escHtml || window.escHtml || function(s){return s;};
@@ -621,11 +621,17 @@ function lnRenderLinkedRecording(session) {
     const _tm = LessonNotesState.transcriptMode || 'timeline';
     const _hasAlign = session.waAlignments && Object.keys(session.waAlignments).length > 0;
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)">';
-    html += '<span style="font-family:var(--ui);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-light)">TRANSCRIPT</span>';
-    html += '<button class="yoshi-read-btn' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
-    html += '<button class="yoshi-read-btn' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
-    html += '<button id="lnAlignBtn" class="yoshi-read-btn" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">' + (_hasAlign ? '\u2713 Re-align' : '\u26A1 Align') + '</button>';
-    html += '<button id="lnDataCopyBtn" class="yoshi-read-btn" onclick="recBrowserCopyData(LessonNotesState._transcriptRecId)" style="font-size:0.72rem;padding:3px 10px;opacity:0.7">\uD83D\uDCCB Data</button>';
+    const _showModeToggle = false; // flip to true to restore Audio/Timeline switch — hidden per user request, unclear value-add
+    if (_showModeToggle) {
+      html += '<button class="yoshi-read-btn' + (_tm==='audio'?' active':'') + '" onclick="lnSetTranscriptMode(\'audio\')" style="font-size:0.72rem;padding:3px 10px">\u{1F399} Audio</button>';
+      html += '<button class="yoshi-read-btn' + (_tm==='timeline'?' active':'') + '" onclick="lnSetTranscriptMode(\'timeline\')" style="font-size:0.72rem;padding:3px 10px">\u{1F500} Timeline</button>';
+    }
+    html += _hasAlign ? '' : '<button id="lnAlignBtn" class="yoshi-read-btn" onclick="lnAlignTimeline()" style="font-size:0.72rem;padding:3px 10px">\u26A1 Align</button>';
+    html += '<button id="lnRetranscribeBtn" class="yoshi-read-btn" onclick="lnRetranscribeLinked()" style="font-size:0.72rem;padding:3px 10px" title="Re-run transcription on the linked recording">\u21BA Re-transcribe</button>';
+    const _showDataBtn = false; // flip to true to restore the debug "Data" copy button — hidden per user request, unclear value-add
+    if (_showDataBtn) {
+      html += '<button id="lnDataCopyBtn" class="yoshi-read-btn" onclick="recBrowserCopyData(LessonNotesState._transcriptRecId)" style="font-size:0.72rem;padding:3px 10px;opacity:0.7">\uD83D\uDCCB Data</button>';
+    }
     html += '</div>';
 
     // Transcript area — preserve content across re-renders
@@ -640,6 +646,10 @@ function lnRenderLinkedRecording(session) {
     if (!_taContent) {
       LessonNotesState._transcriptRecId = recId;
       setTimeout(function() { lnLoadTranscript(recId, LessonNotesState.transcriptMode || 'timeline'); }, 50);
+    } else {
+      // Transcript DOM preserved, but the <audio> tag was just rebuilt fresh —
+      // re-wire the highlight listener onto the new element.
+      setTimeout(lnWireAudioHighlight, 50);
     }
   }
 
@@ -711,6 +721,7 @@ function lnFullDocDoSearch(term) {
 async function lnLoadTranscript(recId, mode) {
   const el = document.getElementById('lnTranscriptArea');
   if (!el) return;
+  lnWireAudioHighlight();
   try {
     const rows = await window.db.query(
       'SELECT transcript_json FROM lesson_sessions WHERE id=?', [recId]
@@ -749,6 +760,7 @@ async function lnLoadTranscript(recId, mode) {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;gap:10px;padding:5px 6px;border-radius:4px;cursor:pointer';
       row.classList.add('row-hover');
+      row.dataset.ts = ts;
       row.onclick = (function(sec) { return function() { lnSeekToTime(sec); }; })(ts);
       row.innerHTML =
         '<span title="' + titleStr + '" style="color:var(--teal);flex-shrink:0;font-variant-numeric:tabular-nums;min-width:44px;font-size:0.75rem">' + timeStr + '</span>' +
@@ -756,6 +768,7 @@ async function lnLoadTranscript(recId, mode) {
         '<span style="color:var(--ink);line-height:1.6;font-size:1rem">' + (t.text||'') + '</span>';
       elFresh.appendChild(row);
     });
+    lnHighlightLessonStart();
   } catch(e) {
     const elErr = document.getElementById('lnTranscriptArea');
     if (elErr) elErr.innerHTML = '<span style="color:var(--red)">Error loading transcript: ' + e.message + '</span>';
@@ -786,6 +799,100 @@ function lnSeekToTime(secs) {
   const teacher = document.getElementById('lnAudioTeacher');
   if (student) { student.currentTime = secs; student.play().catch(function(){}); }
   if (teacher) { teacher.currentTime = secs; }
+}
+
+// Marks the first row containing the lesson-opening greeting — lessons
+// reliably start here, so it's a fast visual anchor separate from the
+// moving playback-position outline (which uses style.outline, not background).
+function lnHighlightLessonStart() {
+  const container = document.getElementById('lnTranscriptArea');
+  if (!container) return;
+  const rows = container.querySelectorAll('[data-ts]');
+  for (const row of rows) {
+    if (row.textContent.includes('\u3053\u3093\u306B\u3061\u306F')) {
+      row.style.background = 'rgba(255,214,10,0.14)';
+      row.style.borderLeft = '3px solid var(--gold)';
+      break;
+    }
+  }
+}
+
+// ── Playback-synced transcript highlight ──────────────────────────────────
+// As lnAudioStudent plays, outline the transcript row matching currentTime.
+// Rows (both lnLoadTranscript and lnLoadTwoColumnTimeline) carry data-ts.
+// Flag lives on the <audio> element itself so a freshly re-rendered player
+// (panel re-renders replace the whole <audio> tag) gets re-wired cleanly.
+function lnWireAudioHighlight() {
+  const student = document.getElementById('lnAudioStudent');
+  if (!student || student._lnHighlightWired) return;
+  student._lnHighlightWired = true;
+  student.addEventListener('timeupdate', lnUpdateTranscriptHighlight);
+
+  // Volume boost — native <audio> volume caps at 100%; these lesson
+  // recordings are often captured quiet. Route through a Web Audio API
+  // GainNode to amplify beyond that ceiling. Pure client-side, no API cost.
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = ctx.createMediaElementSource(student);
+    const gain = ctx.createGain();
+    gain.gain.value = 2.5; // ~2.5x boost — adjust here if still too quiet/loud
+    src.connect(gain).connect(ctx.destination);
+    student.addEventListener('play', function() {
+      if (ctx.state === 'suspended') ctx.resume().catch(function(){});
+    });
+  } catch (e) { console.warn('[LN] audio boost setup failed:', e.message); }
+}
+
+function lnUpdateTranscriptHighlight() {
+  const student = document.getElementById('lnAudioStudent');
+  const container = document.getElementById('lnTranscriptArea');
+  if (!student || !container) return;
+  const t = student.currentTime;
+  let match = null;
+  container.querySelectorAll('[data-ts]').forEach(function(row) {
+    if (parseFloat(row.dataset.ts) <= t) match = row;
+  });
+  if (match !== container._lnCurrentRow) {
+    if (container._lnCurrentRow) container._lnCurrentRow.style.outline = '';
+    if (match) {
+      match.style.outline = '2px solid var(--teal)';
+      match.style.outlineOffset = '-1px';
+      if (!container._autoScrollPaused) match.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    container._lnCurrentRow = match;
+  }
+  lnUpdateJumpToCurrentBtn(container);
+}
+
+// Standard "auto-follow" pattern (YouTube captions / Spotify lyrics):
+// manual scroll pauses auto-scroll; a small pill resumes it.
+(function() {
+  function _pause(e) {
+    const ta = e.target && e.target.closest && e.target.closest('#lnTranscriptArea');
+    if (ta) ta._autoScrollPaused = true;
+  }
+  document.addEventListener('wheel', _pause, { passive: true });
+  document.addEventListener('touchmove', _pause, { passive: true });
+})();
+
+function lnUpdateJumpToCurrentBtn(container) {
+  let btn = document.getElementById('lnJumpToCurrentBtn');
+  if (container._autoScrollPaused) {
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'lnJumpToCurrentBtn';
+      btn.textContent = '\u25BC Jump to current';
+      btn.style.cssText = 'position:sticky;bottom:6px;left:50%;transform:translateX(-50%);display:block;margin:6px auto 0;padding:5px 14px;background:var(--teal);color:#1c1c1e;border:none;border-radius:14px;font-family:var(--ui);font-size:0.72rem;cursor:pointer;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,0.3)';
+      btn.onclick = function() {
+        container._autoScrollPaused = false;
+        if (container._lnCurrentRow) container._lnCurrentRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        btn.remove();
+      };
+      container.appendChild(btn);
+    }
+  } else if (btn) {
+    btn.remove();
+  }
 }
 
 
@@ -905,9 +1012,34 @@ Examples of what it extracts:
   `;
 }
 
+function lnHeaderAudioBarInnerHTML(session, viewMode) {
+  if (viewMode !== 'recording' || !session || !session.linked_recording_id) return '';
+  const rec = (window._lessonRecordingSessions || []).find(function(r) { return r.id === session.linked_recording_id; });
+  if (!rec || !rec.audio_path) return '';
+  const apath = rec.audio_path;
+  const tpath = apath.replace('.webm', '_teacher.webm');
+  return '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:260px">'
+    + '<span style="font-family:var(--ui);font-size:0.68rem;color:var(--ink-light);flex-shrink:0">\u{1F64B}</span>'
+    + '<audio id="lnAudioStudent" src="file://' + apath + '" controls style="flex:1;height:26px;accent-color:var(--teal)"></audio>'
+    + '<audio id="lnAudioTeacher" src="file://' + tpath + '" style="display:none"></audio>'
+    + '</div>';
+}
+
+// Combined second row: audio bar (when on the recording tab) + search box,
+// on the same line. Search stays available even without a recording present.
+function lnHeaderSecondRowHTML(session, viewMode, hasContent) {
+  const audioInner = lnHeaderAudioBarInnerHTML(session, viewMode);
+  if (!audioInner && !hasContent) return '';
+  return '<div style="flex-basis:100%;width:100%;margin-top:6px;display:flex;align-items:center;gap:12px">'
+    + audioInner
+    + (hasContent ? '<input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)" style="flex:1;min-width:180px;max-width:320px;padding:6px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.95rem;border-radius:4px">' : '')
+    + '</div>';
+}
+
 function lessonNotesUpdatePanelHeader() {
   const hdr = document.getElementById('yoshiPanelHeader');
   if (!hdr) return;
+  hdr.style.flexWrap = 'wrap';
   const sessions = lessonNotesGetSessions();
   const _cur = LessonNotesState;
   const _vm = _cur.viewMode;
@@ -926,19 +1058,28 @@ function lessonNotesUpdatePanelHeader() {
       ${currentSession ? `<button class="btn-icon btn-icon-del" onclick="lessonNotesDeleteFromPanel()">🗑</button>` : ''}
     </div>
     <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-      ${hasContent ? `
-        <div style="display:flex;gap:4px">
-
-        </div>
-        <input type="text" id="lnHeaderSearch" placeholder="Search lesson\u2026" oninput="lnHeaderSearch(this.value)"
-          style="padding:6px 10px;background:var(--field);border:1px solid var(--field-border);color:var(--ink);font-family:var(--ui);font-size:0.95rem;border-radius:4px;width:320px">
-      ` : ''}
       ${hasContent && _vm !== 'overview' ? `<button class="btn-nav btn-sm" onclick="lessonNotesSetView('overview')">\u2190 Overview</button>` : ''}
     </div>
   `;
+
+  // Second row (search + audio bar when applicable) — appended as a separate
+  // node so this doesn't have to touch the title template's emoji content above.
+  const _secondRowHtml = lnHeaderSecondRowHTML(currentSession, _vm, hasContent);
+  if (_secondRowHtml) {
+    const _row = document.createElement('div');
+    _row.innerHTML = _secondRowHtml;
+    hdr.appendChild(_row.firstElementChild);
+    setTimeout(lnWireAudioHighlight, 60);
+  }
 }
 
 function lnHeaderSearch(term) {
+  // If the recording/transcript tab is open, search in place rather than
+  // navigating away from the very thing being searched.
+  if (LessonNotesState.viewMode === 'recording') {
+    lnFilterTranscriptRows(term);
+    return;
+  }
   if (LessonNotesState.viewMode !== 'sourcenotes') {
     LessonNotesState.viewMode = 'sourcenotes';
     lessonNotesRender();
@@ -946,6 +1087,16 @@ function lnHeaderSearch(term) {
   } else {
     lnFullDocDoSearch(term);
   }
+}
+
+function lnFilterTranscriptRows(term) {
+  const container = document.getElementById('lnTranscriptArea');
+  if (!container) return;
+  const q = (term || '').trim().toLowerCase();
+  container.querySelectorAll('[data-ts]').forEach(function(row) {
+    const text = row.textContent.toLowerCase();
+    row.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
 }
 
 function lessonNotesSetView(mode) {
@@ -1028,12 +1179,12 @@ function lessonNotesRenderOverview(session) {
   const _storyCount = LessonNotesState.stories.length;
 
   html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">';
-  html += lnOverviewCard('\u{1F4DA}', 'Words', _vocabCount, "lessonNotesSetView('allwords')");
-  html += lnOverviewCard('\u{1F4DD}', 'Grammar', _grammarCount, "lessonNotesSetView('grammar')");
-  html += lnOverviewCard('\u{1F511}', 'Phrases', _phraseCount, "lessonNotesSetView('keyphrases')");
-  html += lnOverviewCard('\u{1F4D6}', 'Stories', _storyCount, "lessonNotesSetView('stories')");
-  html += lnOverviewCard('\u{1F4DC}', 'Notes', null, "lessonNotesSetView('sourcenotes')");
-  html += lnOverviewCard('\u25B6', _hasRecording ? 'Recording' : 'Link Recording', _hasRecording ? '' : null, _hasRecording ? "lessonNotesSetView('recording')" : "lnShowLinkPicker()");
+  html += lnOverviewCard('Words', _vocabCount, "lessonNotesSetView('allwords')");
+  html += lnOverviewCard('Grammar', _grammarCount, "lessonNotesSetView('grammar')");
+  html += lnOverviewCard('Phrases', _phraseCount, "lessonNotesSetView('keyphrases')");
+  html += lnOverviewCard('Stories', _storyCount, "lessonNotesSetView('stories')");
+  html += lnOverviewCard('Notes', null, "lessonNotesSetView('sourcenotes')");
+  html += lnOverviewCard(_hasRecording ? 'Recording' : 'Link Recording', null, _hasRecording ? "lessonNotesSetView('recording')" : "lnShowLinkPicker()");
   html += '</div>';
   html += '</div>';
   return html;
@@ -1064,9 +1215,8 @@ function lnToggleShowHidden() {
   lessonNotesRender();
 }
 
-function lnOverviewCard(icon, label, count, onclick) {
-  return '<div onclick="' + onclick + '" class="row-hover-border" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:18px;cursor:pointer;text-align:center">'
-    + '<div style="font-size:1.6rem;margin-bottom:6px">' + icon + '</div>'
+function lnOverviewCard(label, count, onclick) {
+  return '<div onclick="' + onclick + '" class="row-hover-border" style="background:var(--paper-dark);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;text-align:center">'
     + '<div style="font-family:var(--ui);font-size:inherit;color:var(--ink)">' + label + (count !== null ? ' (' + count + ')' : '') + '</div>'
     + '</div>';
 }
