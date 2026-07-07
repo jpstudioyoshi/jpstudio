@@ -127,6 +127,7 @@ const TranscriptionService = (() => {
   // Known Whisper hallucinations — segments matching these are dropped
   const _HALLUCINATIONS = [
     'ご視聴ありがとうございました',
+    'ご視聴ありがとうございます',
     'チャンネル登録よろしくお願いします',
     'ありがとうございました',
     'お疲れ様でした',
