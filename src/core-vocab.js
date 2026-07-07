@@ -28,6 +28,28 @@ let vcDirection = 'jp_en'; // 'jp_en', 'en_jp', or 'speaking'
 let _vcLastAutoSpoken = null; // dedupe auto-TTS on redundant re-renders
 let vocabSession = [];      // indices in current session
 let vocabSessionPos = 0;    // position within session
+
+// Small badge in the Words panel showing whether today's session is
+// already marked done, matching the four-strand tile's teal-done /
+// ink-light-not-done color convention (see features-progress.js).
+// Reads the same DRILL_LAST_COMPLETED_KEY that drillLastCompletedWrite('words')
+// already writes to on every markVocab() call — no new tracking needed.
+function _renderVocabDailyStatus() {
+  const el = document.getElementById('vocabDailyStatus');
+  if (!el) return;
+  try {
+    const _Storage = App.Storage || window.Storage;
+    const rec = _Storage.getJSON('drillLastCompleted', {});
+    const today = new Date().toISOString().slice(0, 10);
+    if (rec.words === today) {
+      el.textContent = '\u2713 Today\u2019s vocab done';
+      el.style.color = 'var(--teal)';
+    } else {
+      el.textContent = 'Today\u2019s vocab: not done yet';
+      el.style.color = 'var(--ink-light)';
+    }
+  } catch(e) {}
+}
 // Per-direction session state cache
 const _vcDirState = {};
 function _vcSaveDirState(dir) {
@@ -247,7 +269,7 @@ function startNewSession() {
   // the same slots — matches coreVocabDailyIntake's default of 12/day.
   const MAX_NEW_YOSHI = 8;  // cap new yoshi_vocab/yoshi_phrases per session
   const MAX_NEW_OTHER = 7;  // cap new non-Yoshi, non-core-vocab words per session
-  const MAX_NEW_CORE  = 12; // cap new core_vocab (sprint pool) words per session
+  const MAX_NEW_CORE  = _vcThresholds.max_new_core ?? 12; // cap new core_vocab (sprint pool) words per session — editable via the ? popup
   const newYoshi = [], newOther = [], newCore = [], dueIdx = [];
   state.vocabItems.forEach((r, i) => {
     if (!r._isNew) { dueIdx.push(i); return; }
@@ -273,8 +295,151 @@ function startNewSession() {
   renderVocab();
 }
 
+// ── Session settings + monitoring popup ("?" button in Words drill) ────────
+// Extends the existing keyboard-shortcuts popup rather than adding a new
+// button/panel. Settings write into the same _vcThresholds object and
+// VOCAB_THRESHOLDS kvAPI key already used by the Settings > Vocabulary tab,
+// so both stay in sync.
+function vcToggleShortcutPopup() {
+  const el = document.getElementById('vcShortcutPopup');
+  if (!el) return;
+  const opening = el.style.display === 'none';
+  el.style.display = opening ? 'block' : 'none';
+  if (opening) {
+    vcPopulateSessionSettingsInputs();
+    _renderVcTodayStats();
+  }
+}
+
+function vcPopulateSessionSettingsInputs() {
+  const newCoreEl = document.getElementById('vcMaxNewCore');
+  const sizeEl = document.getElementById('vcSessionSize');
+  if (newCoreEl) newCoreEl.value = _vcThresholds.max_new_core ?? 12;
+  if (sizeEl) {
+    const key = vcDirection === 'en_jp' ? 'session_size_en_jp' : 'session_size_jp_en';
+    sizeEl.value = _vcThresholds[key] ?? 100;
+  }
+}
+
+function vcSaveSessionSettings() {
+  const newCoreEl = document.getElementById('vcMaxNewCore');
+  const sizeEl = document.getElementById('vcSessionSize');
+  if (newCoreEl) _vcThresholds.max_new_core = parseInt(newCoreEl.value) || 12;
+  if (sizeEl) {
+    const key = vcDirection === 'en_jp' ? 'session_size_en_jp' : 'session_size_jp_en';
+    _vcThresholds[key] = parseInt(sizeEl.value) || 100;
+  }
+  window.kvAPI.set('VOCAB_THRESHOLDS', JSON.stringify(_vcThresholds)).catch(() => {});
+}
+
+// Live "today" readout — only queried when the popup is actually opened,
+// not on every card render, to avoid unnecessary DB hits.
+async function _renderVcTodayStats() {
+  const el = document.getElementById('vcTodayStats');
+  if (!el || !window.db) return;
+  el.textContent = 'Loading\u2026';
+  try {
+    const reviewRows = await window.db.query(
+      "SELECT COUNT(*) as n, AVG(correct) as acc FROM drill_results WHERE drill_type='words' AND date(created_at)=date('now','localtime')"
+    );
+    const newRows = await window.db.query(
+      "SELECT COUNT(*) as n FROM vocab_items WHERE pool IN ('core_n5','core_n4') AND date(created_at)=date('now','localtime')"
+    );
+    const n5LeftRows = await window.db.query(
+      "SELECT COUNT(*) as n FROM words w WHERE w.level='N5' AND NOT EXISTS (SELECT 1 FROM vocab_items v WHERE v.word_id = w.id)"
+    );
+    const reviews  = reviewRows?.[0]?.n ?? 0;
+    const acc      = reviewRows?.[0]?.acc != null ? Math.round(reviewRows[0].acc * 100) : null;
+    const newToday = newRows?.[0]?.n ?? 0;
+    const n5Left   = n5LeftRows?.[0]?.n ?? 0;
+    el.innerHTML =
+      reviews + ' reviewed' + (acc !== null ? ' (' + acc + '% correct)' : '') + '<br>' +
+      newToday + ' new words introduced<br>' +
+      n5Left + ' N5 words remaining';
+  } catch(e) {
+    el.textContent = 'Stats unavailable';
+    console.warn('[vocab] today stats error', e);
+  }
+}
+
 function getSessionDeck() {
   return vocabSession.filter(i => !_sessionKnown[i]);
+}
+
+// ── Review use ────────────────────────────────────────────
+// On-demand summary vs. the SM-2/spaced-repetition benchmarks (85–90%
+// accuracy, 10–20 new words/day — general SRS literature, not Nation-
+// specific). Reads existing drill_results / panel_sessions / vocab_items
+// rows only — no new tracking, no API calls.
+async function vcReviewUse() {
+  const el = document.getElementById('vcReviewUseResult');
+  if (!el || !window.db) return;
+  el.textContent = 'Loading\u2026';
+  try {
+    const days = await window.db.query(
+      "SELECT date(created_at) as day, COUNT(*) as cards, SUM(correct) as correct, AVG(response_ms) as avg_ms " +
+      "FROM drill_results WHERE drill_type='words' GROUP BY day ORDER BY day DESC LIMIT 14"
+    );
+    const sessions = await window.db.query(
+      "SELECT duration_s FROM panel_sessions WHERE panel='words' AND duration_s IS NOT NULL " +
+      "ORDER BY started_at DESC LIMIT 30"
+    );
+    const newWords = await window.db.query(
+      "SELECT date(created_at) as day, COUNT(*) as n FROM vocab_items " +
+      "WHERE pool IN ('core_n5','core_n4') GROUP BY day ORDER BY day DESC LIMIT 14"
+    );
+
+    if (!days || !days.length) {
+      el.innerHTML = '<span style="color:var(--ink-light)">No drill data yet.</span>';
+      return;
+    }
+
+    const totalCards   = days.reduce((s,d) => s + d.cards, 0);
+    const totalCorrect = days.reduce((s,d) => s + (d.correct || 0), 0);
+    const acc          = totalCards ? Math.round(totalCorrect / totalCards * 100) : null;
+    const daysPracticed = days.length;
+    const avgNewPerDay = newWords && newWords.length
+      ? Math.round(newWords.reduce((s,d) => s + d.n, 0) / newWords.length)
+      : 0;
+    const avgSessionMin = sessions && sessions.length
+      ? Math.round(sessions.reduce((s,d) => s + d.duration_s, 0) / sessions.length / 60)
+      : null;
+
+    const flags = [];
+    if (acc !== null && acc < 85) flags.push('Accuracy below 85% \u2014 intervals may be growing faster than retention supports, or fatigue late in sessions');
+    if (acc !== null && acc > 92) flags.push('Accuracy above 92% \u2014 intervals may be too conservative, room to push harder');
+    if (avgNewPerDay > 20)        flags.push('New words/day above the 10\u201320 benchmark range');
+    if (avgSessionMin !== null && avgSessionMin > 25) flags.push('Sessions running long \u2014 fatigue-driven errors more likely toward the end');
+
+    el.innerHTML =
+      '<div style="margin-bottom:6px">' + daysPracticed + ' active day' + (daysPracticed === 1 ? '' : 's') + ' with data</div>' +
+      '<div>Accuracy: ' + (acc !== null ? acc + '%' : '\u2014') + ' <span style="opacity:0.6">(benchmark 85\u201390%)</span></div>' +
+      '<div>New words/day: ' + avgNewPerDay + ' <span style="opacity:0.6">(benchmark 10\u201320)</span></div>' +
+      (avgSessionMin !== null ? '<div>Avg session length: ' + avgSessionMin + ' min</div>' : '') +
+      (flags.length
+        ? '<div style="margin-top:8px;color:var(--gold)">' + flags.map(f => '\u26A0 ' + f).join('<br>') + '</div>'
+        : '<div style="margin-top:8px;color:var(--teal)">\u2713 Within benchmark ranges</div>');
+  } catch(e) {
+    el.textContent = 'Review unavailable: ' + e.message;
+    console.warn('[vocab] review use error', e);
+  }
+}
+
+// Top-right header indicator: new vs. review words still to come in this
+// run. Reuses the _isNew flag already computed per-item in loadVocabItemsDeck
+// — no new data source, just a count over the existing session deck.
+function _renderVocabRunIndicator() {
+  const el = document.getElementById('vocabRunIndicator');
+  if (!el) return;
+  if (!vocabSession.length) { el.textContent = ''; return; }
+  const deck = getSessionDeck();
+  if (!deck.length) { el.textContent = ''; return; }
+  let newCount = 0, reviewCount = 0;
+  deck.forEach(function(i) {
+    const item = state.vocabItems && state.vocabItems[i];
+    if (item && item._isNew) newCount++; else reviewCount++;
+  });
+  el.textContent = newCount + ' new \u00b7 ' + reviewCount + ' review left';
 }
 
 const _sessionKnown = {};  // tracks which cards were marked known THIS session
@@ -388,6 +553,8 @@ function markVocab(v) {
 
 function renderVocab() {
   _vcCardShownAt = Date.now();
+  _renderVocabDailyStatus();
+  _renderVocabRunIndicator();
   const vocabCardEl   = document.getElementById('vocabCard');
   const vocabCounterEl= document.getElementById('vocabCounter');
   const deckStatusEl  = document.getElementById('vocabDeckStatus');
@@ -619,6 +786,13 @@ function toggleVcDirection() {
   if (_vcRestoreDirState(vcDirection)) {
     renderVocab();
   } else {
+    // No cached state for this direction (e.g. first switch since app
+    // launch, since _vcDirState is in-memory only). _sessionKnown holds
+    // index-based flags from the OTHER direction's now-discarded
+    // state.vocabItems array — since indices are reused across directions,
+    // stale flags would silently mark words "already known" in the fresh
+    // deck. Same fix as vocabLevelFilterChanged() for the same reason.
+    Object.keys(_sessionKnown).forEach(k => delete _sessionKnown[k]);
     if (App.loadVocabItemsDeck) App.loadVocabItemsDeck(vcDirection, true);
   }
 }
